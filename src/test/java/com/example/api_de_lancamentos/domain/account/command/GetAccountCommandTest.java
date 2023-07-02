@@ -15,7 +15,7 @@ class GetAccountCommandTest {
         Account account = new Account();
         account = account.getAccountCommand(getAccountCommand);
 
-        assertEquals(new BigDecimal("3000"), account.getBalance());
-        assertEquals(new BigDecimal("5000"), account.getCreditBalance());
+        assertEquals(new BigDecimal("3000.00"), account.getBalance());
+        assertEquals(new BigDecimal("5000.00"), account.getCreditBalance());
     }
 }

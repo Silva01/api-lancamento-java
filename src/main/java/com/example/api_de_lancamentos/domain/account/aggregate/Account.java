@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public final class Account {
-
     private final BigDecimal balance;
     private final BigDecimal creditBalance;
     private final long accountNumber;
@@ -36,10 +35,11 @@ public final class Account {
     }
 
     public BalanceResponseDTO solicitationBalanceCommand(final SolicitationBalanceCommand solicitationBalanceCommand) {
-        return new BalanceResponseDTO(this.creditBalance, this.balance);
+        Account account = getAccountCommand(new GetAccountCommand(solicitationBalanceCommand.getAccountNumber()));
+        return new BalanceResponseDTO(account.getCreditBalance(), account.getBalance());
     }
 
     public Account getAccountCommand(final GetAccountCommand getAccountCommand) {
-        return new Account(new BigDecimal("3000"), new BigDecimal("5000"), getAccountCommand.getAccountNumber(), "Daniel");
+        return new Account(new BigDecimal("3000.00"), new BigDecimal("5000.00"), getAccountCommand.getAccountNumber(), "Daniel");
     }
 }
