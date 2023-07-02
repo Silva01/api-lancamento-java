@@ -1,13 +1,12 @@
 package com.example.api_de_lancamentos.domain.account.command;
 
 import com.example.api_de_lancamentos.domain.account.aggregate.Account;
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.example.api_de_lancamentos.domain.account.object_value.BalanceResponseDTO;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 //@SpringBootTest(classes = {SolicitationBalanceCommand.class, Account.class})
