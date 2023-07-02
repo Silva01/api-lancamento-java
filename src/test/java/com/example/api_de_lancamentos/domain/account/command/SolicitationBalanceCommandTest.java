@@ -13,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SolicitationBalanceCommandTest {
     @Test
     public void deve_retornar_saldo_da_conta_corrente() {
-
-        boolean isCredit = false;
         SolicitationBalanceCommand solicitationBalanceCommand = new SolicitationBalanceCommand(4321111L);
 
         Account account = new Account(new BigDecimal("3000.00"), new BigDecimal("5000.00"), 4321111L, "Daniel");
@@ -25,7 +23,6 @@ public class SolicitationBalanceCommandTest {
 
     @Test
     void deve_retornar_saldo_da_conta_credito() {
-        boolean isCredit = true;
         SolicitationBalanceCommand solicitationBalanceCommand = new SolicitationBalanceCommand(4321111L);
 
         Account account = new Account(new BigDecimal("3000.00"), new BigDecimal("5000.00"), 4321111L, "Daniel");
