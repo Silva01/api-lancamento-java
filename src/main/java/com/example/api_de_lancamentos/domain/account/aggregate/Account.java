@@ -1,5 +1,6 @@
 package com.example.api_de_lancamentos.domain.account.aggregate;
 
+import com.example.api_de_lancamentos.domain.account.command.GetAccountCommand;
 import com.example.api_de_lancamentos.domain.account.command.SolicitationBalanceCommand;
 import com.example.api_de_lancamentos.domain.account.object_value.BalanceResponseDTO;
 
@@ -22,6 +23,10 @@ public final class Account {
         this.id = UUID.randomUUID();
     }
 
+    public Account () {
+        this(new BigDecimal(0), new BigDecimal(0), 0, "");
+    }
+
     public BigDecimal getBalance() {
         return balance;
     }
@@ -30,7 +35,11 @@ public final class Account {
         return creditBalance;
     }
 
-    public BalanceResponseDTO solicitationBalanceCommand(SolicitationBalanceCommand solicitationBalanceCommand) {
+    public BalanceResponseDTO solicitationBalanceCommand(final SolicitationBalanceCommand solicitationBalanceCommand) {
         return new BalanceResponseDTO(this.creditBalance, this.balance);
+    }
+
+    public Account getAccountCommand(final GetAccountCommand getAccountCommand) {
+        return new Account(new BigDecimal("3000"), new BigDecimal("5000"), getAccountCommand.getAccountNumber(), "Daniel");
     }
 }
