@@ -14,12 +14,16 @@ public final class Account {
     private final String name;
     private final UUID id;
 
-    public Account(BigDecimal balance, BigDecimal creditBalance, long accountNumber, String name) {
+    public Account(BigDecimal balance, BigDecimal creditBalance, long accountNumber, String name, UUID id) {
         this.balance = balance;
         this.creditBalance = creditBalance;
         this.accountNumber = accountNumber;
         this.name = name;
-        this.id = UUID.randomUUID();
+        this.id = id;
+    }
+
+    public Account(BigDecimal balance, BigDecimal creditBalance, long accountNumber, String name) {
+        this(balance, creditBalance, accountNumber, name, UUID.randomUUID());
     }
 
     public Account () {
