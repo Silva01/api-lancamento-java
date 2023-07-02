@@ -1,4 +1,4 @@
 package com.example.api_de_lancamentos.domain.account.command;
 
-public final class SolicitationBalanceCommand {
+public final class RegisterBalanceCommand {
 }

@@ -1,4 +1,4 @@
 package com.example.api_de_lancamentos.domain.transaction.command;
 
-public class RegisterTransactionCommand {
+public final class RegisterTransactionCommand {
 }
