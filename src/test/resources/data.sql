@@ -6,4 +6,4 @@ CREATE TABLE account (
                          balance DECIMAL(10, 2)
 );
 
-INSERT INTO account (id, name, account_number, credit_balance, balance) VALUES ('ksjdgjkqsdgh-kjsdkhd', 'John', 4321111, 5000, 3000);
+INSERT INTO account (account_number, id, name, credit_balance, balance) VALUES (4321111, 'ksjdgjkqsdgh-kjsdkhd', 'John', 5000, 3000);
