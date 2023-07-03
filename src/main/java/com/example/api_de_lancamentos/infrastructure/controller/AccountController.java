@@ -33,7 +33,7 @@ public class AccountController {
     }
 
     @GetMapping("/balance/{accountNumber}")
-    public BalanceDTO getBalance(@PathParam("accountNumber") Long accountNumber) {
+    public BalanceDTO getBalance(@PathVariable("accountNumber") Long accountNumber) {
         return getBalanceAccountUseCase.execute(accountNumber);
     }
 }
