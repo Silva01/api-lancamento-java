@@ -5,21 +5,19 @@ import com.example.api_de_lancamentos.domain.account.entity.Account;
 import com.example.api_de_lancamentos.domain.account.factory.AccountFactory;
 import com.example.api_de_lancamentos.domain.shared.interfaces.UseCase;
 import com.example.api_de_lancamentos.infrastructure.ApiDeLancamentosApplication;
-import com.example.api_de_lancamentos.infrastructure.repository.impl.FindRepositoryModelIMPL;
+import com.example.api_de_lancamentos.infrastructure.repository.impl.AccountModelRepositoryIMPL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
-
 @SpringBootTest(classes = {ApiDeLancamentosApplication.class})
 class CreateAccountUseCaseTest {
 
-    private final FindRepositoryModelIMPL accountRepository;
+    private final AccountModelRepositoryIMPL accountRepository;
 
     @Autowired
-    CreateAccountUseCaseTest(FindRepositoryModelIMPL accountRepository) {
+    CreateAccountUseCaseTest(AccountModelRepositoryIMPL accountRepository) {
         this.accountRepository = accountRepository;
     }
 

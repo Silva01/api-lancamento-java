@@ -6,7 +6,7 @@ import com.example.api_de_lancamentos.domain.account.entity.Account;
 import com.example.api_de_lancamentos.domain.account.use_case.CreateAccountUseCase;
 import com.example.api_de_lancamentos.domain.account.use_case.GetBalanceAccountUseCase;
 import com.example.api_de_lancamentos.domain.shared.interfaces.UseCase;
-import com.example.api_de_lancamentos.infrastructure.repository.impl.FindRepositoryModelIMPL;
+import com.example.api_de_lancamentos.infrastructure.repository.impl.AccountModelRepositoryIMPL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AccountComponent {
 
-    private final FindRepositoryModelIMPL accountRepository;
+    private final AccountModelRepositoryIMPL accountRepository;
 
     @Autowired
-    public AccountComponent(FindRepositoryModelIMPL accountRepository) {
+    public AccountComponent(AccountModelRepositoryIMPL accountRepository) {
         this.accountRepository = accountRepository;
     }
 

@@ -6,7 +6,7 @@ import com.example.api_de_lancamentos.domain.shared.interfaces.UseCase;
 import com.example.api_de_lancamentos.infrastructure.ApiDeLancamentosApplication;
 import com.example.api_de_lancamentos.infrastructure.model.AccountModel;
 import com.example.api_de_lancamentos.infrastructure.repository.AccountModelRepository;
-import com.example.api_de_lancamentos.infrastructure.repository.impl.FindRepositoryModelIMPL;
+import com.example.api_de_lancamentos.infrastructure.repository.impl.AccountModelRepositoryIMPL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(classes = {ApiDeLancamentosApplication.class})
 class GetBalanceAccountUseCaseTestModel {
 
-    private final FindRepositoryModelIMPL accountRepository;
+    private final AccountModelRepositoryIMPL accountRepository;
 
     private final AccountModelRepository repository;
 
     @Autowired
-    GetBalanceAccountUseCaseTestModel(FindRepositoryModelIMPL accountRepository, AccountModelRepository repository) {
+    GetBalanceAccountUseCaseTestModel(AccountModelRepositoryIMPL accountRepository, AccountModelRepository repository) {
         this.accountRepository = accountRepository;
         this.repository = repository;
     }

@@ -11,15 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Random;
 
 @Service
-public class FindRepositoryModelIMPL implements FindRepository<Long>, CreateRepository<Account> {
+public class AccountModelRepositoryIMPL implements FindRepository<Long>, CreateRepository<Account> {
 
     private final AccountModelRepository repository;
 
     @Autowired
-    public FindRepositoryModelIMPL(AccountModelRepository repository) {
+    public AccountModelRepositoryIMPL(AccountModelRepository repository) {
         this.repository = repository;
     }
 
