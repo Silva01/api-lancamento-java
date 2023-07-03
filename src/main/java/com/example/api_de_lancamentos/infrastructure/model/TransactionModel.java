@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
 public final class TransactionModel {
 
     @Id
-    @Column(name = "id", unique = true)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "description", length = 200, nullable = false)
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "type", nullable = false)
+    @Column(name = "type")
     private TypeTransactionEnum type;
 
-    @Column(name = "value", nullable = false)
+    @Column(name = "transaction_value")
     private BigDecimal value;
 
     @Column(name = "date")

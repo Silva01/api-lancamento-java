@@ -32,7 +32,7 @@ class GetBalanceAccountUseCaseTestModel {
     @BeforeEach
     void loadContext() {
         AccountModel accountModel = new AccountModel();
-        accountModel.setAccountNumber(4321111L);
+        accountModel.setAccountNumber(1L);
         accountModel.setName("Teste");
         accountModel.setBalance(new BigDecimal("3000.00"));
         accountModel.setCreditBalance(new BigDecimal("5000.00"));
@@ -42,7 +42,7 @@ class GetBalanceAccountUseCaseTestModel {
     @Test
     public void deve_trazer_saldo_conta_valida() throws AccountNotExistsException {
         UseCase<BalanceDTO, Long> obterSaldoUseCase = new GetBalanceAccountUseCase(accountRepository);
-        BalanceDTO responseBalance = obterSaldoUseCase.execute(4321111L);
+        BalanceDTO responseBalance = obterSaldoUseCase.execute(1L);
 
         assertEquals(responseBalance.getAccountBalance().toString(), "3000.00");
         assertEquals(responseBalance.getAccountCreditBalance().toString(), "5000.00");
