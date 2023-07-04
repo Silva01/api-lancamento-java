@@ -25,6 +25,6 @@ public class DebitTransactionPolicy extends TransactionPolicy<Account> {
 
     @Override
     protected Account updateBalance() {
-        return AccountFactory.createAccount(account.getAccountNumber(), account.getAccountName(), account.getAccountBalance().min(amount), account.getAccountCreditBalance(), account.getTransactions());
+        return AccountFactory.createAccount(account.getAccountNumber(), account.getAccountName(), account.getAccountBalance().subtract(amount), account.getAccountCreditBalance(), account.getTransactions());
     }
 }

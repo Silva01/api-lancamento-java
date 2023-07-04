@@ -9,6 +9,7 @@ import com.example.api_de_lancamentos.domain.account.factory.AccountFactory;
 import com.example.api_de_lancamentos.domain.shared.interfaces.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -26,13 +27,13 @@ public class AccountController {
         this.createAccountUseCase = createAccountUseCase;
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public CreatedAccountNumberDTO createAccount(@RequestBody CreateAccountDTO createAccountDTO) {
         return createAccountUseCase.execute(AccountFactory.createAccount(createAccountDTO.getName()));
     }
 
-    @GetMapping("/balance/{accountNumber}")
+    @GetMapping(value = "/balance/{accountNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
     public BalanceDTO getBalance(@PathVariable("accountNumber") Long accountNumber) {
         return getBalanceAccountUseCase.execute(accountNumber);
     }

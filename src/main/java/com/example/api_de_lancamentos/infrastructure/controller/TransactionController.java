@@ -5,6 +5,7 @@ import com.example.api_de_lancamentos.domain.transaction.dto.TransactionRequestD
 import com.example.api_de_lancamentos.domain.transaction.entity.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class TransactionController {
         this.registerPurchaseLaunchUseCase = registerPurchaseLaunchUseCase;
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void postTransaction(@RequestBody TransactionRequestDTO transactionRequestDTO) {
         registerPurchaseLaunchUseCase.execute(transactionRequestDTO);

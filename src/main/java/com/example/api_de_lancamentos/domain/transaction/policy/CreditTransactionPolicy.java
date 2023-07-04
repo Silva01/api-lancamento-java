@@ -24,6 +24,6 @@ public class CreditTransactionPolicy extends TransactionPolicy<Account> {
 
     @Override
     protected Account updateBalance() {
-        return AccountFactory.createAccount(account.getAccountNumber(), account.getAccountName(), account.getAccountBalance(), account.getAccountCreditBalance().min(amount), account.getTransactions());
+        return AccountFactory.createAccount(account.getAccountNumber(), account.getAccountName(), account.getAccountBalance(), account.getAccountCreditBalance().subtract(amount), account.getTransactions());
     }
 }
