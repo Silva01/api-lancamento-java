@@ -27,6 +27,10 @@ public final class TransactionModel {
     @Column(name = "date")
     private LocalDateTime date;
 
+    @ManyToOne
+    @JoinColumn(name = "account_number")
+    private AccountModel account;
+
     public TransactionModel(Long id, String description, TypeTransactionEnum type, BigDecimal value, LocalDateTime date) {
         this.id = id;
         this.description = description;
