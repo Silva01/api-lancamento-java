@@ -1,4 +1,5 @@
 # API de Lançamento de Transações Financeiras
+[![Java CI with Maven](https://github.com/Silva01/api-lancamento-java/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/Silva01/api-lancamento-java/actions/workflows/maven.yml)
 
 Este projeto é uma API desenvolvida utilizando Java 8 e Spring Boot 2.5.5. A API é responsável por lidar com lançamentos de transações financeiras.
 
