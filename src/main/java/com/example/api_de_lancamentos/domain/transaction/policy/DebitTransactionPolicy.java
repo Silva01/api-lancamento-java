@@ -8,18 +8,19 @@ import com.example.api_de_lancamentos.domain.transaction.enuns.TypeTransactionEn
 import com.example.api_de_lancamentos.domain.transaction.exception.TransactionNotValidException;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public class DebitTransactionPolicy extends TransactionPolicy<Account> {
-    public DebitTransactionPolicy(Account account) {
-        super(account, account.getTransactions().stream().filter(t -> t.getType().equals(TypeTransactionEnum.DEBIT)).map(Transaction::getValue).reduce(BigDecimal.ZERO, BigDecimal::add));
-    }
 
     @Override
     protected void validateAmount() {
         if (account.getAccountBalance().compareTo(amount) < 0) {
             throw new TransactionNotValidException("Saldo insuficiente");
         }
+    }
+
+    @Override
+    public void addAccount(Account account) {
+        super.addAccount(account, account.getTransactions().stream().filter(t -> t.getType().equals(TypeTransactionEnum.DEBIT)).map(Transaction::getValue).reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     @Override

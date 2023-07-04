@@ -10,11 +10,6 @@ public abstract class TransactionPolicy<R> {
     protected BigDecimal amount;
     protected Account account;
 
-    protected TransactionPolicy(Account account, BigDecimal amount) {
-        this.amount = amount;
-        this.account = account;
-    }
-
     public final R executeTransaction() {
         validateAccount();
         validateAmount();
@@ -26,6 +21,13 @@ public abstract class TransactionPolicy<R> {
             throw new AccountNotExistsException("Conta não foi encontrada");
         }
     }
+
+    protected void addAccount(Account account, BigDecimal amount) {
+        this.account = account;
+        this.amount = amount;
+    };
+
+    public abstract void addAccount(R param);
 
     protected abstract void validateAmount();
     protected abstract R updateBalance();

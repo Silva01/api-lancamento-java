@@ -5,8 +5,7 @@ import com.example.api_de_lancamentos.domain.shared.interfaces.*;
 import com.example.api_de_lancamentos.domain.transaction.dto.TransactionRequestDTO;
 import com.example.api_de_lancamentos.domain.transaction.entity.Transaction;
 import com.example.api_de_lancamentos.domain.transaction.factory.TransactionFactory;
-import com.example.api_de_lancamentos.domain.transaction.policy.CreditTransactionPolicy;
-import com.example.api_de_lancamentos.domain.transaction.policy.DebitTransactionPolicy;
+import com.example.api_de_lancamentos.domain.transaction.factory.TransactionPolicyFactory;
 
 import java.util.List;
 
@@ -28,11 +27,11 @@ public class RegisterPurchaseLaunchUseCase implements UseCase<List<Transaction>,
         Account account = accountFindRepository.findBy(entity.getAccountNumber());
         account.addTransactions(transactions);
 
-        TransactionPolicy<Account> creditTransactionPolicy = new CreditTransactionPolicy(account);
-        TransactionPolicy<Account> debitTransactionPolicy = new DebitTransactionPolicy(account);
-
-        account = creditTransactionPolicy.executeTransaction();
-        account = debitTransactionPolicy.executeTransaction();
+        List<TransactionPolicy<Account>> policies = TransactionPolicyFactory.getTransactionPolicy();
+        for (TransactionPolicy<Account> policy : policies) {
+            policy.addAccount(account);
+            account = policy.executeTransaction();
+        }
 
         accountUpdateRepository.update(account);
         return repository.create(transactions);

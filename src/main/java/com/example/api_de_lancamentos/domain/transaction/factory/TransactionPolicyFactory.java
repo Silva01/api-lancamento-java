@@ -10,7 +10,7 @@ import java.util.List;
 
 public class TransactionPolicyFactory {
 
-    public static List<TransactionPolicy> getTransactionPolicy(Account account) {
-        return Arrays.asList(new CreditTransactionPolicy(account), new DebitTransactionPolicy(account));
+    public static List<TransactionPolicy<Account>> getTransactionPolicy() {
+        return Arrays.asList(new CreditTransactionPolicy(), new DebitTransactionPolicy());
     }
 }
