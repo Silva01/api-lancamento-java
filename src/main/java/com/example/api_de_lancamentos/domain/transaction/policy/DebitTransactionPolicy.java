@@ -9,7 +9,7 @@ import com.example.api_de_lancamentos.domain.transaction.exception.TransactionNo
 
 import java.math.BigDecimal;
 
-public class DebitTransactionPolicy extends TransactionPolicy<Account> {
+public class DebitTransactionPolicy extends TransactionPolicy<BigDecimal> {
 
     @Override
     protected void validateAmount() {
@@ -24,7 +24,7 @@ public class DebitTransactionPolicy extends TransactionPolicy<Account> {
     }
 
     @Override
-    protected Account updateBalance() {
-        return AccountFactory.createAccount(account.getAccountNumber(), account.getAccountName(), account.getAccountBalance().subtract(amount), account.getAccountCreditBalance(), account.getTransactions());
+    protected BigDecimal updateBalance() {
+        return account.getAccountBalance().subtract(amount);
     }
 }

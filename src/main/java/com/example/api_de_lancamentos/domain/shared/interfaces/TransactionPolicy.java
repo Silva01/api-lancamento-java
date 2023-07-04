@@ -27,7 +27,7 @@ public abstract class TransactionPolicy<R> {
         this.amount = amount;
     };
 
-    public abstract void addAccount(R param);
+    public abstract void addAccount(Account account);
 
     protected abstract void validateAmount();
     protected abstract R updateBalance();

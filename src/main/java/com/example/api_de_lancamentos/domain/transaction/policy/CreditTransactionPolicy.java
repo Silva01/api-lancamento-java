@@ -9,7 +9,7 @@ import com.example.api_de_lancamentos.domain.transaction.exception.TransactionNo
 
 import java.math.BigDecimal;
 
-public class CreditTransactionPolicy extends TransactionPolicy<Account> {
+public class CreditTransactionPolicy extends TransactionPolicy<BigDecimal> {
     @Override
     protected void validateAmount() {
         if (account.getAccountCreditBalance().compareTo(amount) < 0) {
@@ -23,7 +23,7 @@ public class CreditTransactionPolicy extends TransactionPolicy<Account> {
     }
 
     @Override
-    protected Account updateBalance() {
-        return AccountFactory.createAccount(account.getAccountNumber(), account.getAccountName(), account.getAccountBalance(), account.getAccountCreditBalance().subtract(amount), account.getTransactions());
+    protected BigDecimal updateBalance() {
+        return account.getAccountCreditBalance().subtract(amount);
     }
 }
