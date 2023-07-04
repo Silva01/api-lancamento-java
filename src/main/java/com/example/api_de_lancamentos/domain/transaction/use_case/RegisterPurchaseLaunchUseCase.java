@@ -1,7 +1,10 @@
 package com.example.api_de_lancamentos.domain.transaction.use_case;
 
 import com.example.api_de_lancamentos.domain.account.entity.Account;
-import com.example.api_de_lancamentos.domain.shared.interfaces.*;
+import com.example.api_de_lancamentos.domain.shared.interfaces.CreateRepository;
+import com.example.api_de_lancamentos.domain.shared.interfaces.FindRepository;
+import com.example.api_de_lancamentos.domain.shared.interfaces.PolicyStrategy;
+import com.example.api_de_lancamentos.domain.shared.interfaces.UseCase;
 import com.example.api_de_lancamentos.domain.transaction.dto.TransactionRequestDTO;
 import com.example.api_de_lancamentos.domain.transaction.entity.Transaction;
 import com.example.api_de_lancamentos.domain.transaction.factory.TransactionFactory;
@@ -15,13 +18,13 @@ public class RegisterPurchaseLaunchUseCase implements UseCase<List<Transaction>,
 
     private final CreateRepository<List<Transaction>> repository;
     private final FindRepository<Account, Long> accountFindRepository;
-    private final UpdateRepository<Account> accountUpdateRepository;
+    private final UseCase<Boolean, Account> updateBalanceUseCase;
     private final PolicyStrategy<Account, BigDecimal> policyStrategy;
 
-    public RegisterPurchaseLaunchUseCase(CreateRepository<List<Transaction>> repository, FindRepository<Account, Long> accountFindRepository, UpdateRepository<Account> accountUpdateRepository) {
+    public RegisterPurchaseLaunchUseCase(CreateRepository<List<Transaction>> repository, FindRepository<Account, Long> accountFindRepository, UseCase<Boolean, Account> updateBalanceUseCase) {
         this.repository = repository;
         this.accountFindRepository = accountFindRepository;
-        this.accountUpdateRepository = accountUpdateRepository;
+        this.updateBalanceUseCase = updateBalanceUseCase;
         this.policyStrategy = new RegisterTransactionStrategy(TransactionPolicyFactory.getTransactionPolicy());
     }
 
@@ -33,7 +36,7 @@ public class RegisterPurchaseLaunchUseCase implements UseCase<List<Transaction>,
 
         Account accountUpdated = policyStrategy.execute(account);
 
-        accountUpdateRepository.update(accountUpdated);
+        updateBalanceUseCase.execute(accountUpdated);
         return repository.create(transactions);
     }
 }

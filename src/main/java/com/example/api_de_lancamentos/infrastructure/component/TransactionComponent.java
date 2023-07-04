@@ -1,6 +1,7 @@
 package com.example.api_de_lancamentos.infrastructure.component;
 
 import com.example.api_de_lancamentos.domain.account.entity.Account;
+import com.example.api_de_lancamentos.domain.account.use_case.UpdateBalanceUseCase;
 import com.example.api_de_lancamentos.domain.shared.interfaces.CreateRepository;
 import com.example.api_de_lancamentos.domain.shared.interfaces.FindRepository;
 import com.example.api_de_lancamentos.domain.shared.interfaces.UpdateRepository;
@@ -28,6 +29,6 @@ public class TransactionComponent {
 
     @Bean
     public UseCase<List<Transaction>, TransactionRequestDTO> registerPurchaseLaunchUseCase () {
-        return new RegisterPurchaseLaunchUseCase(repository, accountFindRepository, accountUpdateRepository);
+        return new RegisterPurchaseLaunchUseCase(repository, accountFindRepository, new UpdateBalanceUseCase(accountUpdateRepository));
     }
 }
