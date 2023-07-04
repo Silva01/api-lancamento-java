@@ -6,7 +6,7 @@ import com.example.api_de_lancamentos.domain.account.exception.AccountNotExistsE
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public abstract class TransactionPolicy {
+public abstract class TransactionPolicy<R> {
     protected BigDecimal amount;
     protected Account account;
 
@@ -15,10 +15,10 @@ public abstract class TransactionPolicy {
         this.account = account;
     }
 
-    public final void executeTransaction() {
+    public final R executeTransaction() {
         validateAccount();
         validateAmount();
-        updateBalance();
+        return updateBalance();
     }
 
     private void validateAccount() {
@@ -28,5 +28,5 @@ public abstract class TransactionPolicy {
     }
 
     protected abstract void validateAmount();
-    protected abstract Account updateBalance();
+    protected abstract R updateBalance();
 }

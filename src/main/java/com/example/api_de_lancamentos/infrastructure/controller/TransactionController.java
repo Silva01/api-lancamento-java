@@ -13,16 +13,16 @@ import java.util.List;
 @RequestMapping("/transaction")
 public class TransactionController {
 
-    private final UseCase<List<Transaction>, List<Transaction>> registerPurchaseLaunchUseCase;
+    private final UseCase<List<Transaction>, TransactionRequestDTO> registerPurchaseLaunchUseCase;
 
     @Autowired
-    public TransactionController(UseCase<List<Transaction>, List<Transaction>> registerPurchaseLaunchUseCase) {
+    public TransactionController(UseCase<List<Transaction>, TransactionRequestDTO> registerPurchaseLaunchUseCase) {
         this.registerPurchaseLaunchUseCase = registerPurchaseLaunchUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void postTransaction(@RequestBody TransactionRequestDTO transactionRequestDTO) {
-        registerPurchaseLaunchUseCase.execute(transactionRequestDTO.getTransactions());
+        registerPurchaseLaunchUseCase.execute(transactionRequestDTO);
     }
 }

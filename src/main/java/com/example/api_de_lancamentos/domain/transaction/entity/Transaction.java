@@ -20,6 +20,10 @@ public final class Transaction {
         this.value = value;
     }
 
+    public Transaction(String description, TypeTransactionEnum type, LocalDateTime date, BigDecimal value) {
+        this(0L, description, type, date, value);
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,17 +1,21 @@
 package com.example.api_de_lancamentos.domain.transaction.dto;
 
-import com.example.api_de_lancamentos.domain.transaction.entity.Transaction;
-
 import java.util.List;
 
 public final class TransactionRequestDTO {
-    private final List<Transaction> transactions;
 
-    public TransactionRequestDTO(List<Transaction> transactions) {
+    private final long accountNumber;
+    private final List<TransactionDTO> transactions;
+
+    public TransactionRequestDTO(long accountNumber, List<TransactionDTO> transactions) {
+        this.accountNumber = accountNumber;
         this.transactions = transactions;
     }
 
-    public List<Transaction> getTransactions() {
+    public List<TransactionDTO> getTransactions() {
         return transactions;
+    }
+    public long getAccountNumber() {
+        return accountNumber;
     }
 }

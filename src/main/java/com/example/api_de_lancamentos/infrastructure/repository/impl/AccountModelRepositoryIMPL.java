@@ -5,6 +5,7 @@ import com.example.api_de_lancamentos.domain.account.exception.AccountNotExistsE
 import com.example.api_de_lancamentos.domain.account.factory.AccountFactory;
 import com.example.api_de_lancamentos.domain.shared.interfaces.CreateRepository;
 import com.example.api_de_lancamentos.domain.shared.interfaces.FindRepository;
+import com.example.api_de_lancamentos.domain.shared.interfaces.UpdateRepository;
 import com.example.api_de_lancamentos.infrastructure.model.AccountModel;
 import com.example.api_de_lancamentos.infrastructure.repository.AccountModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AccountModelRepositoryIMPL implements FindRepository<Long>, CreateRepository<Account> {
+public class AccountModelRepositoryIMPL implements FindRepository<Account, Long>, CreateRepository<Account>, UpdateRepository<Account> {
 
     private final AccountModelRepository repository;
 
@@ -47,5 +48,22 @@ public class AccountModelRepositoryIMPL implements FindRepository<Long>, CreateR
 
     private Account createAccount(AccountModel accountModel) {
         return AccountFactory.createAccount(accountModel.getAccountNumber(), accountModel.getName(), accountModel.getBalance(), accountModel.getCreditBalance());
+    }
+
+    @Override
+    public Account update(Account entity) {
+        Optional<AccountModel> accountModel = repository.findById(entity.getAccountNumber());
+
+        if (accountModel.isEmpty()) {
+            throw new AccountNotExistsException("Conta não encontrada");
+        }
+
+        AccountModel accountModelSaved = accountModel.get();
+        accountModelSaved.setBalance(entity.getAccountBalance());
+        accountModelSaved.setCreditBalance(entity.getAccountCreditBalance());
+        accountModelSaved.setName(entity.getAccountName());
+        repository.save(accountModelSaved);
+
+        return entity;
     }
 }
