@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = {ApiDeLancamentosApplication.class})
 class GetBalanceAccountUseCaseTestModel {
@@ -46,6 +47,14 @@ class GetBalanceAccountUseCaseTestModel {
 
         assertEquals(responseBalance.getAccountBalance().toString(), "3000.00");
         assertEquals(responseBalance.getAccountCreditBalance().toString(), "5000.00");
+    }
+
+    @Test
+    public void deve_dar_erro_ao_nao_encontrar_saldo() throws AccountNotExistsException {
+        UseCase<BalanceDTO, Long> obterSaldoUseCase = new GetBalanceAccountUseCase(accountRepository);
+        AccountNotExistsException exception = assertThrows(AccountNotExistsException.class, () -> obterSaldoUseCase.execute(9000000L));
+
+        assertEquals(exception.getMessage(), "Conta não encontrada");
     }
 
 }

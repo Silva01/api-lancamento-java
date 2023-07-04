@@ -27,10 +27,6 @@ public final class Account {
         this(accountNumber, accountName, accountBalance, accountCreditBalance, new ArrayList<>());
     }
 
-    public Account(long accountNumber, String accountName) {
-        this(accountNumber, accountName, new BigDecimal("3000.00"), new BigDecimal("5000.00"), new ArrayList<>());
-    }
-
     public Account(String accountName) {
         this(0, accountName, new BigDecimal("3000.00"), new BigDecimal("5000.00"), new ArrayList<>());
     }
