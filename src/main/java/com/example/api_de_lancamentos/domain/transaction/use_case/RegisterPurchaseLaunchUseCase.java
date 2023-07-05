@@ -30,7 +30,7 @@ public class RegisterPurchaseLaunchUseCase implements UseCase<List<Transaction>,
 
     @Override
     public List<Transaction> execute(TransactionRequestDTO entity) {
-        List<Transaction> transactions = TransactionFactory.createTransactions(entity.getTransactions());
+        List<Transaction> transactions = TransactionFactory.createTransactions(entity.getTransactions(), entity.getAccountNumber());
         Account account = accountFindRepository.findBy(entity.getAccountNumber());
         account.addTransactions(transactions);
 
