@@ -27,20 +27,20 @@ public final class TransactionModel {
     @Column(name = "date")
     private LocalDateTime date;
 
-    @ManyToOne
-    @JoinColumn(name = "account_number")
-    private AccountModel account;
+    @Column(name = "account_number")
+    private Long accountNumber;
 
-    public TransactionModel(Long id, String description, TypeTransactionEnum type, BigDecimal value, LocalDateTime date) {
+    public TransactionModel(Long id, String description, TypeTransactionEnum type, BigDecimal value, LocalDateTime date, Long accountNumber) {
         this.id = id;
         this.description = description;
         this.type = type;
         this.value = value;
         this.date = date;
+        this.accountNumber = accountNumber;
     }
 
     public TransactionModel() {
-        this(0L, "Objeto vazio", null, null, null);
+        this(0L, "Objeto vazio", null, null, null, 0L);
     }
 
     public Long getId() {
@@ -61,5 +61,9 @@ public final class TransactionModel {
 
     public LocalDateTime getDate() {
         return date;
+    }
+
+    public Long getAccountNumber() {
+        return accountNumber;
     }
 }

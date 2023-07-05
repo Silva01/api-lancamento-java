@@ -11,17 +11,19 @@ public final class Transaction {
     private final TypeTransactionEnum type;
     private final LocalDateTime date;
     private final BigDecimal value;
+    private final Long accountNumber;
 
-    public Transaction(Long id, String description, TypeTransactionEnum type, LocalDateTime date, BigDecimal value) {
+    public Transaction(Long id, String description, TypeTransactionEnum type, LocalDateTime date, BigDecimal value, Long accountNumber) {
         this.id = id;
         this.description = description;
         this.type = type;
         this.date = date;
         this.value = value;
+        this.accountNumber = accountNumber;
     }
 
-    public Transaction(String description, TypeTransactionEnum type, LocalDateTime date, BigDecimal value) {
-        this(0L, description, type, date, value);
+    public Transaction(String description, TypeTransactionEnum type, LocalDateTime date, BigDecimal value, Long accountNumber) {
+        this(0L, description, type, date, value, accountNumber);
     }
 
     public Long getId() {
@@ -42,5 +44,9 @@ public final class Transaction {
 
     public BigDecimal getValue() {
         return value;
+    }
+
+    public Long getAccountNumber() {
+        return accountNumber;
     }
 }

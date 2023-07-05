@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 
 public class TransactionFactory {
 
-    public static List<Transaction> createTransactions(List<TransactionDTO> transactions) {
+    public static List<Transaction> createTransactions(List<TransactionDTO> transactions, long accountNumber) {
         return transactions
                 .stream()
-                .map(t -> new Transaction(t.getDescription(), t.getType(), t.getDate(), t.getValue()))
+                .map(t -> new Transaction(t.getDescription(), t.getType(), t.getDate(), t.getValue(), accountNumber))
                 .collect(Collectors.toList());
     }
 }

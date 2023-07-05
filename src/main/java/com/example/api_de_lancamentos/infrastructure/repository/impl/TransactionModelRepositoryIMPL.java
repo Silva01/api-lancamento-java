@@ -22,7 +22,7 @@ public class TransactionModelRepositoryIMPL implements CreateRepository<List<Tra
 
     @Override
     public List<Transaction> create(List<Transaction> entList) {
-        List<TransactionModel> models = entList.stream().map(transaction -> new TransactionModel(transaction.getId(), transaction.getDescription(), transaction.getType(), transaction.getValue(), transaction.getDate())).collect(Collectors.toList());
+        List<TransactionModel> models = entList.stream().map(transaction -> new TransactionModel(transaction.getId(), transaction.getDescription(), transaction.getType(), transaction.getValue(), transaction.getDate(), transaction.getAccountNumber())).collect(Collectors.toList());
         repository.saveAll(models);
         return entList;
     }
