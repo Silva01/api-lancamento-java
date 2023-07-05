@@ -26,7 +26,7 @@ Clone o repositório e execute `mvn install` para instalar as dependências do p
 
 ## Documentação API
 
-Para uma descrição mais detalhada de cada rota, incluindo parâmetros de consulta, corpo da solicitação e resposta, visite a documentação Swagger UI na URL `http://localhost:8080/swagger-ui.html` após iniciar o servidor.
+Para uma descrição mais detalhada de cada rota, incluindo parâmetros de consulta, corpo da solicitação e resposta, visite a documentação Swagger UI na URL `http://localhost:8080/swagger-ui/` após iniciar o servidor.
 
 ## Executando testes
 
