@@ -24,6 +24,6 @@ public class RegisterTransactionStrategy extends PolicyStrategy<Account, BigDeci
             responseCal.add(policy.executeTransaction());
         }
 
-        return new Account(entity.getAccountNumber(), entity.getAccountName(), responseCal.get(BALANCE_CREDIT), responseCal.get(BALANCE_DEBIT));
+        return new Account(entity.getAccountNumber(), entity.getAccountName(), responseCal.get(BALANCE_DEBIT), responseCal.get(BALANCE_CREDIT));
     }
 }
