@@ -34,4 +34,4 @@ Execute `mvn test` para rodar os testes unitários.
 
 ## Informação de Contato
 
-Para qualquer dúvida ou problema, por favor, entre em contato conosco em `seu-email@email.com`.
+Para qualquer dúvida ou problema, por favor, entre em contato conosco em `silva20102@gmail.com`.
