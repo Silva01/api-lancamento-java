@@ -14,7 +14,6 @@
     <url>http://maven.apache.org</url>
     <modules>
         <module>client</module>
-        <module>address</module>
     </modules>
 
     <properties>

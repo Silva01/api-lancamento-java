@@ -1,4 +1,4 @@
-package br.net.silva.daniel.address;
+package net.br.silva.daniel.client;
 
 import java.util.UUID;
 
@@ -12,10 +12,13 @@ public class Address {
     private String city;
     private String state;
     private String zipCode;
-    private boolean active;
 
     public Address(String street, String number, String complement, String neighborhood, String city, String state, String zipCode) {
-        this.id = UUID.randomUUID().toString();
+        this(UUID.randomUUID().toString(), street, number, complement, neighborhood, city, state, zipCode);
+    }
+
+    public Address(String id, String street, String number, String complement, String neighborhood, String city, String state, String zipCode) {
+        this.id = id;
         this.street = street;
         this.number = number;
         this.complement = complement;
@@ -23,7 +26,6 @@ public class Address {
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
-        activate();
         validate();
     }
 
@@ -62,14 +64,6 @@ public class Address {
         validate();
     }
 
-    public void activate() {
-        this.active = true;
-    }
-
-    public void deactivate() {
-        this.active = false;
-    }
-
     private void validate() {
         if (this.street == null || this.street.isEmpty()) {
             throw new IllegalArgumentException("Street is required");
@@ -102,7 +96,6 @@ public class Address {
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", zipCode='" + zipCode + '\'' +
-                ", active=" + active +
                 '}';
     }
 }
