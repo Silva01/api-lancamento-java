@@ -6,25 +6,25 @@ public class ClientTest extends TestCase {
 
     public void testShouldCreateANewClientActive() {
         Client client = new Client(1L, "12345678901", "Daniel", "999999999", createAddress());
-        assertEquals("Client{id=1, cpf='12345678901', name='Daniel', telephone='999999999', address=Address{id='abc', street='Rua 1', number='123', complement='Casa', neighborhood='Bairro 1', city='Cidade 1', state='Estado 1', zipCode='12345678'}, isActive=true}", client.toString());
+        assertEquals("Client{id=1, cpf='12345678901', name='Daniel', telephone='999999999', address=Address{street='Rua 1', number='123', complement='Casa', neighborhood='Bairro 1', city='Cidade 1', state='Estado 1', zipCode='12345678'}, isActive=true}", client.toString());
     }
 
     public void testShouldDesactivateClient() {
         Client client = new Client(1L, "12345678901", "Daniel", "999999999", createAddress());
         client.desactivateClient();
-        assertEquals("Client{id=1, cpf='12345678901', name='Daniel', telephone='999999999', address=Address{id='abc', street='Rua 1', number='123', complement='Casa', neighborhood='Bairro 1', city='Cidade 1', state='Estado 1', zipCode='12345678'}, isActive=false}", client.toString());
+        assertEquals("Client{id=1, cpf='12345678901', name='Daniel', telephone='999999999', address=Address{street='Rua 1', number='123', complement='Casa', neighborhood='Bairro 1', city='Cidade 1', state='Estado 1', zipCode='12345678'}, isActive=false}", client.toString());
     }
 
     public void testShouldEditName() {
         Client client = new Client(1L, "12345678901", "Daniel", "999999999", createAddress());
         client.editName("Daniel Silva");
-        assertEquals("Client{id=1, cpf='12345678901', name='Daniel Silva', telephone='999999999', address=Address{id='abc', street='Rua 1', number='123', complement='Casa', neighborhood='Bairro 1', city='Cidade 1', state='Estado 1', zipCode='12345678'}, isActive=true}", client.toString());
+        assertEquals("Client{id=1, cpf='12345678901', name='Daniel Silva', telephone='999999999', address=Address{street='Rua 1', number='123', complement='Casa', neighborhood='Bairro 1', city='Cidade 1', state='Estado 1', zipCode='12345678'}, isActive=true}", client.toString());
     }
 
     public void testShouldEditTelephone() {
         Client client = new Client(1L, "12345678901", "Daniel", "999999999", createAddress());
         client.editTelephone("888888888");
-        assertEquals("Client{id=1, cpf='12345678901', name='Daniel', telephone='888888888', address=Address{id='abc', street='Rua 1', number='123', complement='Casa', neighborhood='Bairro 1', city='Cidade 1', state='Estado 1', zipCode='12345678'}, isActive=true}", client.toString());
+        assertEquals("Client{id=1, cpf='12345678901', name='Daniel', telephone='888888888', address=Address{street='Rua 1', number='123', complement='Casa', neighborhood='Bairro 1', city='Cidade 1', state='Estado 1', zipCode='12345678'}, isActive=true}", client.toString());
     }
 
     public void testShouldNotEditNameWhenClientIsDesactivated() {
@@ -81,8 +81,18 @@ public class ClientTest extends TestCase {
         }
     }
 
+    public void testShouldRegisterAddressByClient() {
+        Address address1 = new Address("Rua 1", "123", "Casa", "Bairro 1", "Cidade 1", "Estado 1", "12345678");
+        Client client = new Client(1L, "12345678901", "Daniel", "999999999", address1);
+        assertEquals("Client{id=1, cpf='12345678901', name='Daniel', telephone='999999999', address=Address{street='Rua 1', number='123', complement='Casa', neighborhood='Bairro 1', city='Cidade 1', state='Estado 1', zipCode='12345678'}, isActive=true}", client.toString());
+
+        Address address2 = new Address("Rua 2", "456", "Casa", "Bairro 2", "Cidade 2", "Estado 2", "12345678");
+        client.registerAddress(address2);
+        assertEquals("Client{id=1, cpf='12345678901', name='Daniel', telephone='999999999', address=Address{street='Rua 2', number='456', complement='Casa', neighborhood='Bairro 2', city='Cidade 2', state='Estado 2', zipCode='12345678'}, isActive=true}", client.toString());
+    }
+
     private Address createAddress() {
-        return new Address("abc","Rua 1", "123", "Casa", "Bairro 1", "Cidade 1", "Estado 1", "12345678");
+        return new Address("Rua 1", "123", "Casa", "Bairro 1", "Cidade 1", "Estado 1", "12345678");
     }
 
 }

@@ -38,6 +38,11 @@ public class Client {
         this.telephone = telephone;
     }
 
+    public void registerAddress(Address address) {
+        this.validateIfAllowToEdit();
+        this.address = address;
+    }
+
     private void validate() {
         Objects.requireNonNull(this.name, "Name is not null");
         Objects.requireNonNull(this.telephone, "Telephone is not null");
