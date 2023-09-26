@@ -1,6 +1,6 @@
 package net.br.silva.daniel.client.domain;
 
-import net.br.silva.daniel.client.domain.Address;
+import net.br.silva.daniel.client.value_object.Address;
 
 import java.util.Objects;
 

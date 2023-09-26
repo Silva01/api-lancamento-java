@@ -1,4 +1,4 @@
-package net.br.silva.daniel.client.domain;
+package net.br.silva.daniel.client.value_object;
 
 
 public final class Address {

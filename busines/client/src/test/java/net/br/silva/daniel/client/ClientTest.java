@@ -1,7 +1,7 @@
 package net.br.silva.daniel.client;
 
 import junit.framework.TestCase;
-import net.br.silva.daniel.client.domain.Address;
+import net.br.silva.daniel.client.value_object.Address;
 import net.br.silva.daniel.client.domain.Client;
 
 public class ClientTest extends TestCase {
