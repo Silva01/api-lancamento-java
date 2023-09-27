@@ -1,10 +1,12 @@
 package net.br.silva.daniel.client.domain;
 
+import net.br.silva.daniel.client.factory.ClientFactory;
 import net.br.silva.daniel.client.value_object.Address;
+import net.br.silva.daniel.client.value_object.ClientDTO;
 
 import java.util.Objects;
 
-public class Client {
+public class Client implements ClientFactory {
     private final Long id;
     private final String cpf;
     private String name;
@@ -70,14 +72,7 @@ public class Client {
     }
 
     @Override
-    public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", cpf='" + cpf + '\'' +
-                ", name='" + name + '\'' +
-                ", telephone='" + telephone + '\'' +
-                ", address=" + address +
-                ", isActive=" + isActive +
-                '}';
+    public ClientDTO createDTO() {
+        return new ClientDTO(this.id, this.cpf, this.name, this.telephone, this.address, this.isActive);
     }
 }
