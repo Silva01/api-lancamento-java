@@ -1,10 +1,11 @@
 package br.net.silva.daniel.domain;
 
 import br.net.silva.daniel.enuns.TransactionType;
+import br.net.silva.daniel.interfaces.TransactionComponent;
 
 import java.math.BigDecimal;
 
-public class Transaction {
+public class Transaction implements TransactionComponent {
     private final Long id;
     private final String description;
     private final BigDecimal price;
@@ -27,7 +28,19 @@ public class Transaction {
         this.secretKey = secretKey;
     }
 
-    public boolean isCreditTransaction() {
-        return TransactionType.CREDIT.equals(type);
+
+    @Override
+    public BigDecimal sumPricePeerType(TransactionType type) {
+        return type.equals(this.type) ? price : BigDecimal.ZERO;
     }
+
+    @Override
+    public Transaction get() {
+        return this;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
 }
