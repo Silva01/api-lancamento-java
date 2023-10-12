@@ -51,7 +51,7 @@ Aqui temos Classes e Interfaces que são comuns entre todos os modulos que repre
 
 ### Modelagem da API de Lançamentos
 
-![](./images/Screenshot 2023-10-12 at 10.21.03.png)
+![](./images/domain-model.png)
 
 ### Fluxo do Transaction Business
 
