@@ -15,9 +15,10 @@
     <name>api de lancamentos</name>
     <description>api de lancamentos</description>
     <modules>
-        <module>busines</module>
+        <module>core-module</module>
+        <module>core-module/shared-business-module</module>
     </modules>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
 </project>

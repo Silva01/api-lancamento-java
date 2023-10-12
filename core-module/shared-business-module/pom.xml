@@ -3,14 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>br.net.silva.daniel</groupId>
-        <artifactId>busines</artifactId>
+        <artifactId>api_de_lancamentos</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>current-account</artifactId>
+    <artifactId>shared-business-module</artifactId>
     <packaging>jar</packaging>
 
-    <name>current-account</name>
+    <name>shared-business-module</name>
     <url>http://maven.apache.org</url>
 
     <properties>
