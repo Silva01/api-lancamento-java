@@ -33,7 +33,7 @@ Aqui acopla as interfaces que serão comuns entre todos os modulos de regra de n
 
 ##### Domain Business Module
 
-Aqui acopla outros modulos que representam os Bounded Context do dominio da aplicação desenvolvida. Cada Bounded Context é um modulo próprio. Dentro deste Modulo iremos possuir dois Modulos (Bounded Context), O Modulo do Cliente (**Client Module**) e o Modulo de Conta Corrente (**Current Module**).
+Aqui acopla outros modulos que representam os Bounded Context do dominio da aplicação desenvolvida. Cada Bounded Context é um modulo próprio. Dentro deste Modulo iremos possuir dois Modulos (Bounded Context), O Modulo do Cliente (**Client Module**) e o Modulo de Conta Corrente (**Current Account Module**).
 
 ---
 
@@ -48,6 +48,30 @@ Aqui é onde encontramos os modulos que representam os casos de uso da aplicaç�
 ##### Shared Application Module
 
 Aqui temos Classes e Interfaces que são comuns entre todos os modulos que representam o caso de uso. Lembrando que esse modulo é apenas para uso interno ao Modulo de Application.
+
+---
+
+##### Domain Application Module
+
+Aqui temos os modulos que possuem os casos de uso da aplicação, é aqui que os Drivers se comunicam, toda comunicação relaizada para um caso de uso é realizado por uma Porta (Ports) assim como sugere a arquitetura hexagonal.
+
+---
+
+#### Adapter Module
+
+![](/Users/silva01/workspace/api%20de%20lancamentos/documents/gift/adapter-module-representation.gif)
+
+
+
+Aqui é onde temos as interfaces e abstrações para adaptadores, quando um caso de uso precisar utilizar um banco de dados, um fila de mensageria, etc. É utilizado um adaptador, assim como o acesso dos casos de uso são realizados por meio de portas (Ports), os Adaptadores (Adapters) são usados por casos de uso para acesso externo a recursos ou aplicações externas.
+
+---
+
+#### Driver Module
+
+![](/Users/silva01/workspace/api%20de%20lancamentos/documents/gift/drive-module-representation.gif)
+
+Aqui é a camada onde podemos criar nossas APIs, Jobs, Listeners, Persistencia. Esse módulo permite a criação desses drivers usando framworks distintos, essa é a camada de infraestrutura que fornece recursos para usuários acessarem a aplicação.
 
 ### Modelagem da API de Lançamentos
 
