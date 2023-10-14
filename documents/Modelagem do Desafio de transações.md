@@ -109,8 +109,6 @@ Representa um cliente cadastrado e válido em nossa aplicação, dessa forma per
     
     - Address
 
-
-
 - **<u>Address</u>**
   
   - Endereço só pode referenciar apenas um unico Cliente
@@ -154,10 +152,60 @@ Representa uma conta bancária onde o cliente poderá realizar transações de d
   - Quando uma conta é criada, seu status é ativo de forma automatica.
   
   - Não pode registrar transações se a conta não tiver saldo ou for desativada.
+  
+  - Quando criada, não possui cartão de crédito vinculado.
+  
+  - Não é obrigatorio ter cartão de credito vinculado, o vinculo é opcional e pode ser solicitado a qualquer momento.
+  
+  - Não pode processar comprar caso a validade do cartão esteja vencida
 
-
+---
 
 - **<u>Credit Card</u>**
+  - Numero do cartão é unico, não pode haver o mesmo numero para clientes diferentes
+  - Numero do cartão é gerado automaticamente, seguir [regras de geração de cartão]([Como são criados os números de cartão de crédito](https://gizmodo.uol.com.br/como-sao-criados-os-numeros-de-cartao-de-credito/))
+  - Um cliente só poderá ter apenas um cartão de credito.
+  - Cartão de Credito só pode ter vinculo com apenas um cliente
+  - Saldo inicial do cartão de credito é R$ 1000,00
+  - O Cartão precisa ter um conta vinculada.
+  - Não pode vincular um cartão a uma conta desativada.
+  - O cartão é desativado automaticamente se a conta for desativada.
+
+---
+
+- **<u>Transaction</u>**
+  
+  - Pode ser existir diversas transações para uma mesma conta
+  
+  - As transações precisam ser separadas por tipo (*DEBIT* or *CREDIT*) e processadas de forma paralela
+  
+  - Se ocorrer um erro no processamento de um dos tipos, toda a transação não pode ser processada.
+  
+  - Não pode existir transações com valores Nulos ou com zeros
+  
+  - Não pode existir transações com quantidade 0 ou nulo
+  
+  - O tipo precisa ser ***DEBIT*** ou ***CREDIT***
+  
+  - Para compras do tipo ***DEBIT*** é necessário realizar as seguintes regras:
+    
+    - Conta de origem não pode ser vazia, nulo, negativa ou zero, precisa ter o valor da conta na qual fez a transação.
+    
+    - Conta de destino não pode ser vazia, nulo, negativa ou zero.
+  
+  - Para compras do tipo ***CREDIT*** é necessário realizar as seguintes regras:
+    
+    - Numero do cartão de credito não pode ser vazio, nulo, negativo ou zero
+    
+    - A secret Key não pode ser vazia, nula, negativa ou zero
+  
+  - IdempotencyID é um uuid gerado pela origem que precisa existir, caso não seja enviado a transação não pode ser processada.
+
+---
+
+### Casos de Uso
+
+[Ver Documento de Casos de Uso](./documento-caso-de-uso.md)
 
 ### Fluxo do Transaction Business
 
