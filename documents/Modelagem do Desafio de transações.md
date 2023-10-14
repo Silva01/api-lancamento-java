@@ -167,7 +167,7 @@ Representa uma conta bancária onde o cliente poderá realizar transações de d
 
 - **<u>Credit Card</u>**
   - Numero do cartão é unico, não pode haver o mesmo numero para clientes diferentes
-  - Numero do cartão é gerado automaticamente, seguir [regras de geração de cartão]([Como são criados os números de cartão de crédito](https://gizmodo.uol.com.br/como-sao-criados-os-numeros-de-cartao-de-credito/))
+  - Numero do cartão é gerado automaticamente, seguir [regras de geração de cartão](https://gizmodo.uol.com.br/como-sao-criados-os-numeros-de-cartao-de-credito/)
   - Um cliente só poderá ter apenas um cartão de credito.
   - Cartão de Credito só pode ter vinculo com apenas um cliente
   - Saldo inicial do cartão de credito é R$ 1000,00
