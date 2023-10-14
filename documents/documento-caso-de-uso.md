@@ -1,79 +1,76 @@
-# Documento de Casos de Uso
+# User Stories
 
-## Visão Geral
+###### Sumario
 
-Este documento descreve os casos de uso para o Projeto de Transações Financeiras. Os casos de uso são representações das interações entre atores (usuários) e o sistema. Este documento serve como um guia para entender como o sistema funcionará do ponto de vista do usuário.
+[Criar Cliente](#user-story-criar-cliente)
 
-## Tabela de Conteúdo
+[Criar Conta Corrente](#user-story-criar-conta-corrente)
 
-- [1. Casos de Uso do Modulo de Cliente](#1-casos-de-uso-do-modulo-de-cliente)
-  - [1.1 Caso de Uso 1: Criar Cliente](#11-caso-de-uso-1-criar-cliente)
-    - [1.1.1 Descrição](#111-descrição)
-    - [1.1.2 Ator Principal](#112-ator-principal)
-    - [1.1.3 Pré-condições](#113-pré-condições)
-    - [1.1.4 Fluxo Principal](#114-fluxo-principal)
-    - [1.1.5 Fluxo de Erro: Cliente Inválido](#115-fluxo-de-erro-cliente-inválido)
-    - [1.1.6 Fluxo de Erro: Conta Inválida](#116-fluxo-de-erro-conta-inválida)
-    - [1.1.7 Pós-condições](#117-pós-condições)
-- [2. Glossário](#2-glossário)
-- [3. Referências](#3-referências)
+## Introdução
 
-## 1. Casos de Uso do Modulo de Cliente
+Este documento descreve várias User Stories para Projeto de Transações. As User Stories são usadas para definir requisitos de software de uma maneira centrada no usuário e simplificada. Cada User Story representa uma funcionalidade do sistema do ponto de vista do usuário.
 
-### 1.1 Caso de Uso 1: Criar Cliente
+## User Story: Criar Cliente
 
-#### 1.1.1 Descrição
+- **Nome**: Como um cliente em potencial, desejo me cadastrar para obter uma conta e realizar transações de compras.
 
-O proposito desde caso de uso é permitir o cliente consiga de se cadastrar e gerar um conta corrrente em seu nome. Quando o Cliente é cadastrado pela primeira vez, uma Conta correnta é vinculada a ele de forma automatica.
+- **Descrição**: Para permitir que os clientes realizem transações de compras, é essencial que eles se cadastrem no sistema e tenham uma conta corrente associada.
 
-#### 1.1.2 Ator Principal
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer um processo de cadastro que inclui a coleta de informações necessárias, esses campos são:
+     
+     - Nome do Cliente (Obrigatório)
+     - CPF (Obrigatório)
+     - Telefone (Obrigatório)
+     - Agência
+     - Endereço (Obrigatório)
+       - Rua (Obrigatório)
+       - Numero (Obrigatório)
+       - Complemento (Opcional)
+       - Estado (Obrigatório)
+       - Cidade (Obrigatório)
+       - Cep (Obrigatório)
+  
+  2. Após o cadastro, o sistema deve criar automaticamente uma conta corrente para o cliente.
+  
+  3. O cliente deve ter a opção de solicitar a emissão de um cartão de crédito no momento do cadastro.
+  
+  4. API irá devolver os seguintes dados:
+     
+     - Agência
+     - Numero da Conta Corrente
+     - Senha Provisória
 
-![[Nome e descrição do ator principal envolvido neste caso de uso]](./images/use-case-create-client.png)
+## User Story: Criar Conta Corrente
 
-#### 1.1.3 Pré-condições
+- **Nome**: Como Cliente, desejo abrir uma nova conta corrente.
 
-É necessário informar os dados de usuário junto com o endereço e a informação da Agência
+- **Descrição**: Os clientes têm a opção de criar novas contas correntes, desde que não possuam uma conta corrente ativa.
 
-#### 1.1.4 Fluxo Principal
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita aos clientes enviar as seguintes informações necessárias para a abertura da conta:
+     
+     - CPF do Cliente (Obrigatório)
+     - Agência (Obrigatório)
+     - Senha da Conta (Obrigatório)
+  
+  2. Antes de processar a solicitação, o sistema deve realizar uma validação para verificar se o cliente já possui uma conta corrente ativa e válida. Se uma conta ativa for encontrada, o processo de abertura não pode ser concluído.
+  
+  3. O cliente deve ter a opção de indicar se deseja receber um cartão de crédito associado à nova conta corrente.
+  
+  4. Após a abertura da nova conta, o cliente receberá como resposta os seguintes campos:
+     
+     - Agência
+     - Numero da Conta Corrente
+     - Senha Provisória
 
-1. Cliente envia seus dados para cadastro no sistema de Transações
-2. Os dados do cliente são validados com base nas Regras de Negocio
-3. Os dados estando validos o usuário é persistido
-4. Após ser persistido, um conta corrente é criada e vinculado a seu registro
-5. É devolvido as informações da nova conta criada
+## Glossário
 
-#### 1.1.5 Fluxo de Erro : Cliente inválido
+- [Termo 1]: [Definição]
+- [Termo 2]: [Definição]
 
-1. Cliente Envia seus dados para cadastro no sistema de Transações
+## Referências
 
-2. Os dados do cliente não passa na validação
-
-3. É devolvido para o solicitante erro 400 com a mensagem do campo que não passou na validação
-
-#### 1.1.6 Fluxo de Erro : Conta inválida
-
-1. Cliente envia seus dados para cadastro no sistema de Transações
-
-2. Os dados do cliente são validados com base nas Regras de Negocio
-
-3. Os dados estando corretos validos o usuário é persistido.
-
-4. Após ser persistido, uma tentativa de criação da conta corrente é realizada.
-
-5. A criação da conta sofre erros
-
-6. É realizado uma transação de rollback na criação do usuário
-
-7. É devolvido para o solicitante erro 400 com a mensagem do campo que não passou pela validação.
-
-#### 1.1.7 Pós-condições
-
-Deve Existir um cliente válido cadastrado e vinculado a uma conta corrente ativa e válida.
-
-## 2. Glossário
-
-- RollBack: Transação reversa no banco de dados, exclui um registro que acabou de ser criado. 
-
-## 3. Referências
-
-- [Liste quaisquer documentos, padrões ou fontes de referência usados na criação deste documento]
+- [Liste quaisquer documentos, padrões ou fontes de referência usados na criação destas User Stories]
