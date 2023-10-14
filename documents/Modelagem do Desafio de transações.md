@@ -41,7 +41,7 @@ Aqui, integramos outros módulos que representam os Bounded Contexts do domínio
 
 ![](./gift/application-module-representation.gif)
 
-Aqui é onde encontramos os módulos que representam os casos de uso da aplicação. Esta é a área em que a camada de drivers consome funcionalidades. É importante lembrar que essa camada pode se comunicar diretamente com a camada de regras de negócio. No entanto, toda comunicação direcionada a este módulo deve ser realizada por meio de portas (Ports), conforme recomendado pela arquitetura hexagonal.([Hexagonal Architecture]([Hexagonal architecture &#8211; Alistair Cockburn](https://alistair.cockburn.us/hexagonal-architecture/))).
+Aqui é onde encontramos os módulos que representam os casos de uso da aplicação. Esta é a área em que a camada de drivers consome funcionalidades. É importante lembrar que essa camada pode se comunicar diretamente com a camada de regras de negócio. No entanto, toda comunicação direcionada a este módulo deve ser realizada por meio de portas (Ports), conforme recomendado pela arquitetura hexagonal.([Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)).
 
 ---
 
