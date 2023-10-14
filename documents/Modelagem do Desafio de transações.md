@@ -89,6 +89,8 @@ Representa um cliente cadastrado e válido em nossa aplicação, dessa forma per
   
   - Cliente só poderá ter apenas um unico endereço
   
+  - Quando um cliente é criado, automaticamente é vinculado uma conta corrente, não pode existir um cliente sem uma conta corrente vinculada.
+  
   - Cliente precisa ter um CPF
   
   - Cliente Precisa ter um nome, não é permitido deixar vazio ou Nulo
@@ -140,6 +142,8 @@ Representa uma conta bancária onde o cliente poderá realizar transações de d
 - **<u>Account</u>**
   
   - O numero da conta possui 6 digitos e é gerado automaticamente
+  
+  - Não pode existir uma conta corrente sem um cliente vinculado
   
   - O número da conta não pode existir dentro de uma mesma agência para clientes diferentes
   
