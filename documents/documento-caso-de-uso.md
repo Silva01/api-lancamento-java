@@ -28,7 +28,7 @@ O proposito desde caso de uso é permitir o cliente consiga de se cadastrar e ge
 
 #### 1.1.2 Ator Principal
 
-![[Nome e descrição do ator principal envolvido neste caso de uso]](/Users/silva01/workspace/api%20de%20lancamentos/documents/images/use-case-create-client.png)
+![[Nome e descrição do ator principal envolvido neste caso de uso]](./images/use-case-create-client.png)
 
 #### 1.1.3 Pré-condições
 
@@ -42,8 +42,6 @@ O proposito desde caso de uso é permitir o cliente consiga de se cadastrar e ge
 4. Após ser persistido, um conta corrente é criada e vinculado a seu registro
 5. É devolvido as informações da nova conta criada
 
-
-
 #### 1.1.5 Fluxo de Erro : Cliente inválido
 
 1. Cliente Envia seus dados para cadastro no sistema de Transações
@@ -51,8 +49,6 @@ O proposito desde caso de uso é permitir o cliente consiga de se cadastrar e ge
 2. Os dados do cliente não passa na validação
 
 3. É devolvido para o solicitante erro 400 com a mensagem do campo que não passou na validação
-
-
 
 #### 1.1.6 Fluxo de Erro : Conta inválida
 
