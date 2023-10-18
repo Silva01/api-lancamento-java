@@ -66,8 +66,6 @@ Este documento descreve várias User Stories para Projeto de Transações. As Us
      - Numero da Conta Corrente
      - Senha Provisória
 
-
-
 ## User Story: Definir Senha
 
 - **Nome**: Como Cliente, desejo trocar a senha provisória por minha própria senha.
@@ -87,8 +85,6 @@ Este documento descreve várias User Stories para Projeto de Transações. As Us
   
   3. O sistema deve validar se a senha atual fornecida pelo cliente corresponde à senha atual da conta. Se as senhas não coincidirem, o processo de troca de senha deve ser encerrado.
 
-
-
 ## User Story: Desativar Cliente
 
 - **Nome**: Como Cliente, desejo me desativar do sistema.
@@ -106,8 +102,6 @@ Este documento descreve várias User Stories para Projeto de Transações. As Us
   3. Sistema deve validar se o cliente já está desabilitado, caso esteja o sistema deve encerrar o processo.
   
   4. Ao desabilitar o cliente, sua conta ativa deve ser desabilitada de forma automatica.
-
-
 
 ## User Story: Desativar Conta
 
@@ -128,8 +122,6 @@ Este documento descreve várias User Stories para Projeto de Transações. As Us
   
   4. Após a desativação da conta, a API deve fornecer uma confirmação da operação bem-sucedida.
 
-
-
 ## User Story: Reativar Cliente
 
 - **Nome**: Como Cliente, desejo reativar meu cadastro para retomar o uso dos serviços de transações.
@@ -147,8 +139,6 @@ Este documento descreve várias User Stories para Projeto de Transações. As Us
   3. O sistema deve verificar se o cliente já está ativado. Se o cliente já estiver ativado, o processo de reativação deve ser encerrado.
   
   4. Ao reativar o cadastro do cliente, a última conta habilitada associada ao CPF do cliente deve ser reativada.
-
-
 
 ## User Story: Reativar Conta Corrente
 
@@ -168,6 +158,141 @@ Este documento descreve várias User Stories para Projeto de Transações. As Us
   3. O sistema deve verificar se a conta está habilitada, caso esteja o processo deve ser encerrado.
   
   4. API deve devolver uma confirmação informando que a conta solicitada está habilitada.
+
+## User Story: Listar contas correntes do cliente
+
+- **Nome**: Como Cliente, desejo saber quais contas correntes estão vinculadas a mim.
+
+- **Descrição**: Os clientes tem a opção de listar todas as suas contas.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita aos clientes obterem todas as contas correntes vinculadas a seu CPF, os seguintes campos precisam ser enviados:
+     
+     - CPF
+  
+  2. Antes de processar a solicitação, o sistema deve validar se o CPF existe no sistema. Caso não exista o processo deve encerrar o processo.
+  
+  3. API deve devolver uma lista com todas as contas do usuário com os seguintes campos:
+     
+     - Agencia
+     - Conta
+     - Status
+
+## User Story: Obter Informação da Conta Corrente Ativa
+
+- **Nome**: Como Cliente, desejo saber as informações da minha conta, tal como saldo, cartões de credito, status, etc.
+
+- **Descrição**: Os clientes tem a opção de consultar as informações de sua conta corrente ativa.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita aos clientes consultar todas as informações sobre a conta corrente ativa:
+     
+     - CPF
+  
+  2. Antes de processar a solicitação, o sistema deve validar se o CPF existe no sistema. Caso não exista o processo deve encerrar o processo.
+  
+  3. API deve devolver informações da conta corrente ativa, os seguintes campos são devolvidos pela API:
+     
+     - Agencia
+     - Conta
+     - Status
+     - Saldo
+     - Cartão de credito
+     - 10 ultimas transações paginadas
+
+## User Story: Obter Informação do cliente ativo
+
+- **Nome**: Como Cliente, desejo recuperar as informações que foram cadastrada por mim.
+
+- **Descrição**: Os clientes tem a opção de consultar as informações de seu cadastro.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita aos clientes consultar todas as informações sobre seu cadastro, é preciso informar os seguintes campos:
+     
+     - CPF
+  
+  2. Antes de processar a solicitação, o sistema deve validar se o CPF existe no sistema. Caso não exista o processo deve encerrar o processo.
+  
+  3. API deve devolver informações do cadastro do cliente, os seguintes campos são devolvidos pela API:
+     
+     - Nome do Cliente 
+     - CPF 
+     - Telefone 
+     - Endereço 
+       - Rua 
+       - Numero 
+       - Complemento 
+       - Estado 
+       - Cidade 
+       - Cep 
+
+## User Story: Editar informações do Cliente
+
+- **Nome**: Como Cliente, desejo editar meus dados caso necessário.
+
+- **Descrição**: Os clientes tem a opção editar seus dados caso necessário.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita o cliente editar seus dados, os seguintes campos precisam ser enviados:
+     
+     - Nome do Cliente
+     - CPF
+     - Telefone
+  
+  2. Antes de processar a solicitação, o sistema deve validar se o CPF existe no sistema. Caso não exista o processo deve encerrar o processo.
+  
+  3. API deve devolver a confirmação de que o processo foi concluído sem erros, retornando assim o status 200.
+
+## User Story: Editar endereço do cliente
+
+- **Nome**: Como Cliente, desejo editar meus dados de endereço caso necessário.
+
+- **Descrição**: Os clientes tem a opção editar seus dados de endereço caso necessário.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita o cliente editar seus dados, os seguintes campos precisam ser enviados:
+     
+     - CPF
+     - Rua
+     - Numero
+     - Complemento
+     - Estado
+     - Cidade
+     - Cep
+  
+  2. Antes de processar a solicitação, o sistema deve validar se o CPF existe no sistema. Caso não exista o processo deve encerrar o processo.
+  
+  3. API deve devolver a confirmação de que o processo foi concluído sem erros, retornando assim o status 200.
+
+## User Story: Alterar Agencia da Conta Corrente
+
+- **Nome**: Como Cliente, desejo mudar a agencia da minha conta corrente caso necessário.
+
+- **Descrição**: Os clientes tem a opção alterar a agencia de suas contas correntes.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita o cliente editar seus dados, os seguintes campos precisam ser enviados:
+     
+     - CPF
+     - Conta
+     - Agencia Antiga
+     - Agencia Nova
+  
+  2. Antes de processar a solicitação, o sistema deve validar se o CPF existe no sistema. Caso não exista o processo deve encerrar o processo.
+  
+  3. Sistema deve validar se a conta a ser alterada é uma conta existente ou ativa do cliente solicitante. Caso não seja valida o processo deve ser encerrado.
+  
+  4. Sistema deve validar se a agencia para qual o cliente deseja mudar a conta corrente existe. Caso não exista o sistema deve encerrar o processo.
+  
+  5. Sistema deve validar se já não existe um conta com o mesmo numero na agencia nova. Caso exista o processo deve ser encerrado
+  
+  6. API deve devolver a confirmação de que o processo foi concluído sem erros, retornando assim o status 200.
 
 ## Glossário
 
