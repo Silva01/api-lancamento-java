@@ -294,6 +294,59 @@ Este documento descreve várias User Stories para Projeto de Transações. As Us
   
   6. API deve devolver a confirmação de que o processo foi concluído sem erros, retornando assim o status 200.
 
+## User Story: Solicitar cartão de credito
+
+- **Nome**: Como Cliente, desejo solicitar um cartão de credito para realizar minhas compras.
+
+- **Descrição**: Os clientes tem a opção de solicitar um cartão de credito via API no qual podem realizar transações financeiras.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita o cliente solicitar um cartão de credito, as seguintes informações precisam ser enviadas:
+     
+     - CPF
+     - Conta
+     - Agencia
+  
+  2. Antes de processar a solicitação, o sistema deve validar se o CPF existe no sistema. Caso não exista o processo deve encerrar o processo.
+  
+  3. Sistema deve validar se a conta informada é uma conta existente ou ativa do cliente solicitante. Caso não seja valida o processo deve ser encerrado.
+  
+  4. Sistema deve validar se a agencia na qual pertence a conta corrente existe. Caso não exista o sistema deve encerrar o processo.
+  
+  5. Sistema deve validar se o cliente que solicitou já não possui um cartão vinculado, caso tenha o processo deve ser encerrado.
+  
+  6. Sistema gera um cartão e vincula a conta corrente.
+  
+  7. API deve devolver a confirmação de que o processo foi concluído sem erros, retornando assim o status 200.
+
+## User Story: Desativar cartão de credito
+
+- **Nome**: Como Cliente, desejo desativar meu cartão para não usa-lo.
+
+- **Descrição**: Os clientes tem a opção de solicitar a desativação do cartão de credito caso necessário.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita o cliente solicitar a desativação de um cartão de credito, as seguintes informações precisam ser enviadas:
+     
+     - CPF
+     - Conta
+     - Agencia
+     - Numero do Cartão
+  
+  2. Antes de processar a solicitação, o sistema deve validar se o CPF existe no sistema. Caso não exista o processo deve encerrar o processo.
+  
+  3. Sistema deve validar se a conta informada é uma conta existente ou ativa do cliente solicitante. Caso não seja valida o processo deve ser encerrado.
+  
+  4. Sistema deve validar se a agencia na qual pertence a conta corrente existe. Caso não exista o sistema deve encerrar o processo.
+  
+  5. Sistema precisa validar se o cartão de credito existe e se de fato pertence as informações fornecidas, caso contrário o processo deve ser encerrado
+  
+  6. Sistema desativa o cartão de credito.
+  
+  7. API deve devolver a confirmação de que o processo foi concluído sem erros, retornando assim o status 200.
+
 ## Glossário
 
 - [Termo 1]: [Definição]
