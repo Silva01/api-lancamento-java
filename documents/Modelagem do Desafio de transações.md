@@ -207,9 +207,9 @@ Representa uma conta bancária onde o cliente poderá realizar transações de d
 
 ---
 
-### Casos de Uso
+### User Stories
 
-[Ver Documento de Casos de Uso](./documento-caso-de-uso.md)
+[Ver Documento de User Story Fase 1](./documento-caso-de-uso.md)
 
 ### Fluxo do Transaction Business
 
