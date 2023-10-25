@@ -347,6 +347,56 @@ Este documento descreve várias User Stories para Projeto de Transações. As Us
   
   7. API deve devolver a confirmação de que o processo foi concluído sem erros, retornando assim o status 200.
 
+## User Story: Enviar Transações
+
+- **Nome**: Como Cliente, desejo fazer comprar e registrar em minha conta.
+
+- **Descrição**: Os clientes tem a opção de usar o saldo da conta ou cartão de credito para realizarem compras.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita o cliente enviar as informações de compras, os seguintes campos devem ser enviados:
+     
+     - Id
+     - Descrição
+     - Preco
+     - Quantidade
+     - Tipo
+     - Conta Origem
+     - Conta Destino
+     - IdempotencyId
+     - Numero do cartão de credito (apenas para compras no credito)
+     - Segredo do cartão (apenas para compras no credito)
+  
+  2. Antes de processar a solicitação, O sistema deve validar a transação, caso a transação seja inválida, o processo deve ser encerrado.
+  
+  3. O sistema deve validar se a conta de origem é valida, caso não seja o processo deve ser encerrado.
+  
+  4. O Sistema deve somar o valor total das transações separando por tipo e validando se existe saldo para processamento. Se algum deles não tiver saldo, o processo deve ser encerrado.
+  
+  5. Se todas as validações forem válidas, o sistema deve registrar as transações na conta de origem e atualizar o saldo da conta.
+  
+  6. O Sistema deve retornar uma resposta de sucesso caso a transação seja processada com sucesso, deve retornar um status HTTP 200.
+
+## User Story: Estornar Transação
+
+- **Nome**: Como Cliente, desejo estornar uma compra feita de maneira errada.
+
+- **Descrição**: Os clientes tem a opção de estornar transações realizadas.
+
+- **Critérios de Aceitação**:
+  
+  1. O sistema deve fornecer uma API que permita o cliente enviar as informações de compras, os seguintes campos devem ser enviados:
+     
+     - Id
+     - IdempotencyId
+  
+  2. Antes de processar a solicitação, O sistema deve validar se o ID e o IdempotencyID existem, se não existirem o sistema deve encerrar o processo.
+  
+  3. Caso encontre a transação, o sistema deve registrar a transação de estorno com valor negativo e com o Tipo estorno e deve devolver o saldo para conta.
+  
+  4. O Sistema deve retornar uma resposta de sucesso caso a transação seja processada com sucesso, deve retornar um status HTTP 200.
+
 ## Glossário
 
 - [Termo 1]: [Definição]
