@@ -2,7 +2,7 @@
 
 ### Arquitetura do Sistema de Lançamento de Transações
 
-![](/Users/silva01/Documents/Desafios/Matera/initial-architecture-transaction-api.gif)
+![](./gift/initial-architecture-transaction-api.gif)
 
 ## Gateway
 
