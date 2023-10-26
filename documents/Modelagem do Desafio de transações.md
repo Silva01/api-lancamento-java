@@ -211,6 +211,10 @@ Representa uma conta bancária onde o cliente poderá realizar transações de d
 
 [Ver Documento de User Story Fase 1](./documento-caso-de-uso.md)
 
+### Arquitetura da Solução
+
+[Ver Documento de Arquitetura Fase 1](./ARCHITECTURE.md)
+
 ### Fluxo do Transaction Business
 
 Usuário envia os dados para lançamento, o dado é enviado no seguinte JSON
