@@ -3,19 +3,24 @@ package br.net.silva.daniel.validation;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public interface Validation {
-    void validate();
+public abstract class Validation {
+    protected abstract void validate();
 
-    default void validateAttributeNonNull(Object attribute, String messageError) {
+    public void validateAttributeNonNull(Object attribute, String messageError) {
         Objects.requireNonNull(attribute, messageError);
     }
 
-    default void validateAttributeNotEmpty(String attribute, String messageError) {
+    public void validateAttributeNotEmpty(String attribute, String messageError) {
         if (attribute.isEmpty()) {
             throw new IllegalArgumentException(messageError);
         }
     }
-    default void validateAttributeLessThanZero(BigDecimal attribute, String messageError) {
+    public void validateAttributeNotNullAndNotEmpty(String attribute, String messageError) {
+        if (attribute == null || attribute.isEmpty()) {
+            throw new IllegalArgumentException(messageError);
+        }
+    }
+    public void validateAttributeLessThanZero(BigDecimal attribute, String messageError) {
         if (attribute.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException(messageError);
         }
