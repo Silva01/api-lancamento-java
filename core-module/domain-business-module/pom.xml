@@ -3,22 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>br.net.silva.daniel</groupId>
-        <artifactId>api_de_lancamentos</artifactId>
+        <artifactId>core-module</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>shared-business-module</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>domain-business-module</artifactId>
+    <packaging>pom</packaging>
 
-    <name>shared-business-module</name>
+    <name>domain-business-module</name>
     <url>http://maven.apache.org</url>
+    <modules>
+        <module>client-module</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <java.version>17</java.version>
     </properties>
 
     <dependencies>

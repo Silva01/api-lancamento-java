@@ -3,15 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>br.net.silva.daniel</groupId>
-        <artifactId>api_de_lancamentos</artifactId>
+        <artifactId>domain-business-module</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>shared-business-module</artifactId>
+    <artifactId>client-module</artifactId>
     <packaging>jar</packaging>
 
-    <name>shared-business-module</name>
+    <name>client-module</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -27,6 +26,11 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.net.silva.daniel</groupId>
+            <artifactId>shared-business-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

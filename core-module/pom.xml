@@ -8,13 +8,19 @@
     </parent>
 
     <artifactId>core-module</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>core-module</name>
     <url>http://maven.apache.org</url>
+    <modules>
+        <module>domain-business-module</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
