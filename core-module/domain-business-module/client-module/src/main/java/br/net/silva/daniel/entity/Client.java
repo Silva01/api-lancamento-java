@@ -63,7 +63,7 @@ public class Client extends Validation implements AggregateRoot, IFactory<Client
     }
 
     @Override
-    protected void validate() {
+    public void validate() {
         validateAttributeNotNullAndNotEmpty(cpf, "CPF is required");
         validateAttributeNotNullAndNotEmpty(name, "Name is required");
         validateAttributeNotNullAndNotEmpty(telephone, "Telephone is required");
