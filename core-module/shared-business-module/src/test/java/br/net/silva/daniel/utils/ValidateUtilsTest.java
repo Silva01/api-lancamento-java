@@ -44,4 +44,69 @@ public class ValidateUtilsTest extends TestCase {
             assertEquals("Balance is less than value", e.getMessage());
         }
     }
+    public void testShouldValidateIsNotEmpty() {
+        ValidateUtils.isNotEmpty("test", "Attribute is empty");
+
+        // If no exception is thrown, the test passes
+        assertTrue(true);
+    }
+
+    public void testShouldErrorValidateIsNotEmpty() {
+        try {
+            ValidateUtils.isNotEmpty("", "Attribute is empty");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is empty", e.getMessage());
+        }
+    }
+
+    public void testShouldValidateIsNotNull() {
+        ValidateUtils.isNotNull("test", "Attribute is null");
+
+        // If no exception is thrown, the test passes
+        assertTrue(true);
+    }
+
+    public void testShouldErrorValidateIsNotNull() {
+        try {
+            ValidateUtils.isNotNull(null, "Attribute is null");
+        } catch (NullPointerException e) {
+            assertEquals("Attribute is null", e.getMessage());
+        }
+    }
+
+    public void testShouldValidateStringIsNotNullAndNotEmpty() {
+        ValidateUtils.isTextNotNullAndNotEmpty("test", "Attribute is null or empty");
+
+        // If no exception is thrown, the test passes
+        assertTrue(true);
+    }
+
+    public void testShouldErrorValidateStringIsNotNullAndNotEmpty() {
+        try {
+            ValidateUtils.isTextNotNullAndNotEmpty(null, "Attribute is null or empty");
+        } catch (NullPointerException e) {
+            assertEquals("Attribute is null or empty", e.getMessage());
+        }
+
+        try {
+            ValidateUtils.isTextNotNullAndNotEmpty("", "Attribute is null or empty");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is null or empty", e.getMessage());
+        }
+    }
+
+    public void testShouldValidateAttributeLessThanZero() {
+        ValidateUtils.isLessThanZero(new BigDecimal(10), "Attribute is less than zero");
+
+        // If no exception is thrown, the test passes
+        assertTrue(true);
+    }
+
+    public void testShouldErrorValidateAttributeLessThanZero() {
+        try {
+            ValidateUtils.isLessThanZero(new BigDecimal(-10), "Attribute is less than zero");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is less than zero", e.getMessage());
+        }
+    }
 }
