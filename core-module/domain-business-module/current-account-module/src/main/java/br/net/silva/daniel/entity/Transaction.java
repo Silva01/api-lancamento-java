@@ -46,9 +46,11 @@ public class Transaction extends Validation implements Aggregate {
         validateAttributeLessThanZero(BigDecimal.valueOf(destinationAccountNumber), "Destination account number is less than zero");
         validateAttributeNonNull(idempotencyId, "Idempotency id is null");
 
-        if (type.equals("CREDIT_CARD")) {
+        if (type.equals("CREDIT")) {
             validateAttributeNotNullAndNotEmpty(creditCardNumber, "Credit card number is null or empty");
-            validateAttributeNotNullAndNotEmpty(creditCardNumber, "Credit card cvv is null or empty");
+            validateAttributeNonNull(creditCardCvv, "Credit card cvv is null");
+            validateAttributeEqualsZero(BigDecimal.valueOf(creditCardCvv), "Credit card cvv is equals zero");
+
         }
     }
 
