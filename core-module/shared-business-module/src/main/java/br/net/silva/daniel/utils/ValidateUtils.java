@@ -9,13 +9,13 @@ public class ValidateUtils {
         Objects.requireNonNull(value, "Value is null");
 
         if (balance.compareTo(value) < 0) {
-            throw new IllegalArgumentException("Balance is less than value");
+            executeException("Balance is less than value");
         }
     }
 
     public static void isNotEmpty(String attribute, String messageError) {
         if (attribute.isEmpty()) {
-            throw new IllegalArgumentException(messageError);
+            executeException(messageError);
         }
     }
 
@@ -30,7 +30,17 @@ public class ValidateUtils {
 
     public static void isLessThanZero(BigDecimal attribute, String messageError) {
         if (attribute.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException(messageError);
+            executeException(messageError);
         }
+    }
+
+    public static void isEqualsZero(BigDecimal attribute, String messageError) {
+        if (attribute.compareTo(BigDecimal.ZERO) == 0) {
+            executeException(messageError);
+        }
+    }
+
+    private static void executeException(String messageError) {
+        throw new IllegalArgumentException(messageError);
     }
 }
