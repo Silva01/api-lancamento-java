@@ -21,4 +21,8 @@ public abstract class Validation {
     protected void validateAttributeLessThanZero(BigDecimal attribute, String messageError) {
         ValidateUtils.isLessThanZero(attribute, messageError);
     }
+
+    protected void validateBalance(BigDecimal balance, BigDecimal value) {
+        ValidateUtils.balance(balance, value);
+    }
 }
