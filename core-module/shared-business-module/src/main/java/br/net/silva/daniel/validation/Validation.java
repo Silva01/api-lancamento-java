@@ -25,4 +25,8 @@ public abstract class Validation {
     protected void validateBalance(BigDecimal balance, BigDecimal value) {
         ValidateUtils.balance(balance, value);
     }
+
+    protected void validateAttributeEqualsZero(BigDecimal attribute, String messageError) {
+        ValidateUtils.isEqualsZero(attribute, messageError);
+    }
 }
