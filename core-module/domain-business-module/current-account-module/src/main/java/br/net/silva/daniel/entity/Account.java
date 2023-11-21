@@ -36,4 +36,9 @@ public class Account extends Validation implements AggregateRoot {
     public void validate() {
         // criar método de validação para numeros
     }
+
+    private void validateBalance() {
+        var sumTransactionPrice = transactions.stream().reduce(BigDecimal.ZERO, (acc, transaction) -> acc.add(transaction.getPrice()), BigDecimal::add);
+        validateBalance(balance, sumTransactionPrice);
+    }
 }
