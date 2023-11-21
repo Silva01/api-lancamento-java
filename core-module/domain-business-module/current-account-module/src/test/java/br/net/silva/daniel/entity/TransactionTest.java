@@ -133,4 +133,35 @@ public class TransactionTest extends TestCase {
         }
     }
 
+    public void testCreateCreditTransactionWithCreditCardNumberNullOrEmpty() {
+        try {
+            new Transaction(1L, "Credit Transaction", BigDecimal.valueOf(10), 1, "CREDIT", 1, 2, 1L, null, 123);
+            fail();
+        } catch (Exception e) {
+            assertEquals("Credit card number is null or empty", e.getMessage());
+        }
+
+        try {
+            new Transaction(1L, "Credit Transaction", BigDecimal.valueOf(10), 1, "CREDIT", 1, 2, 1L, "", 123);
+            fail();
+        } catch (Exception e) {
+            assertEquals("Credit card number is null or empty", e.getMessage());
+        }
+    }
+
+    public void testCreateCreditTransactionWithCreditCardCvvNullOrEmpty() {
+        try {
+            new Transaction(1L, "Credit Transaction", BigDecimal.valueOf(10), 1, "CREDIT", 1, 2, 1L, "123456789", null);
+            fail();
+        } catch (Exception e) {
+            assertEquals("Credit card cvv is null", e.getMessage());
+        }
+
+        try {
+            new Transaction(1L, "Credit Transaction", BigDecimal.valueOf(10), 1, "CREDIT", 1, 2, 1L, "123456789", 0);
+            fail();
+        } catch (Exception e) {
+            assertEquals("Credit card cvv is equals zero", e.getMessage());
+        }
+    }
 }
