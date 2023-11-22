@@ -1,17 +1,20 @@
 package br.net.silva.daniel.entity;
 
+import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.interfaces.AggregateRoot;
+import br.net.silva.daniel.interfaces.IFactory;
 import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Account extends Validation implements AggregateRoot {
+public class Account extends Validation implements AggregateRoot, IFactory<AccountDTO> {
 
     private final Integer number;
     private final Integer bankAgencyNumber;
-    private final BigDecimal balance;
+    private BigDecimal balance;
     private final String password;
     private boolean active;
     private final String cpf;
@@ -47,8 +50,39 @@ public class Account extends Validation implements AggregateRoot {
 
     }
 
-    private void validateBalance() {
-        var sumTransactionPrice = transactions.stream().map(Transaction::create).reduce(BigDecimal.ZERO, (acc, transaction) -> acc.add(transaction.price()), BigDecimal::add);
-        validateBalance(balance, sumTransactionPrice);
+    public void registerTransaction(List<TransactionDTO> transactions) {
+        var total = transactions.stream().map(TransactionDTO::price).reduce(BigDecimal.ZERO, BigDecimal::add);
+        validateBalance(balance, total);
+        transactions.forEach(transaction -> this.transactions.add(new Transaction(
+                transaction.id(),
+                transaction.description(),
+                transaction.price(),
+                transaction.quantity(),
+                transaction.type(),
+                transaction.originAccountNumber(),
+                transaction.destinationAccountNumber(),
+                transaction.idempotencyId(),
+                transaction.creditCardNumber(),
+                transaction.creditCardCvv())));
+
+        this.balance = this.balance.subtract(total);
+    }
+
+    public void activate() {
+        active = true;
+    }
+
+    public void deactivate() {
+        active = false;
+    }
+
+    public Integer generateAccountNumber() {
+        //TODO: Implementar
+        return 0;
+    }
+
+    @Override
+    public AccountDTO create() {
+        return new AccountDTO(number, bankAgencyNumber, balance, password, active, cpf, transactions.stream().map(Transaction::create).toList());
     }
 }
