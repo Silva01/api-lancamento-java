@@ -34,11 +34,21 @@ public class Account extends Validation implements AggregateRoot {
 
     @Override
     public void validate() {
-        // criar método de validação para numeros
+        validateAttributeNotNullAndNotEmpty(cpf, "CPF is required");
+        validateAttributeNotNullAndNotEmpty(password, "Password is required");
+        validateAttributeNonNull(bankAgencyNumber, "Bank agency number is required");
+        validateAttributeNonNull(number, "Account number is required");
+        validateAttributeNonNull(balance, "Balance is required");
+        validateAttributeLessThanZero(BigDecimal.valueOf(bankAgencyNumber), "Bank agency number must be greater than zero");
+        validateAttributeEqualsZero(BigDecimal.valueOf(bankAgencyNumber), "Bank agency number must be greater than zero");
+        validateAttributeLessThanZero(BigDecimal.valueOf(number), "Account number must be greater than zero");
+        validateAttributeEqualsZero(BigDecimal.valueOf(number), "Account number must be greater than zero");
+        validateAttributeLessThanZero(balance, "Balance must be greater than zero");
+
     }
 
     private void validateBalance() {
-        var sumTransactionPrice = transactions.stream().reduce(BigDecimal.ZERO, (acc, transaction) -> acc.add(transaction.getPrice()), BigDecimal::add);
+        var sumTransactionPrice = transactions.stream().map(Transaction::create).reduce(BigDecimal.ZERO, (acc, transaction) -> acc.add(transaction.price()), BigDecimal::add);
         validateBalance(balance, sumTransactionPrice);
     }
 }
