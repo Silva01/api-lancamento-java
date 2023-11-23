@@ -13,6 +13,19 @@ public class AccountTest extends TestCase {
         assertNotNull(dto);
     }
 
+    public void testShouldCreateAccountBasicWithSuccess() {
+        var account = new Account(1, "123456", "12345678910");
+        var dto = account.create();
+
+        assertNotNull(dto);
+        assertEquals(Integer.valueOf(1), dto.bankAgencyNumber());
+        assertEquals("123456", dto.password());
+        assertEquals("12345678910", dto.cpf());
+        assertNotNull(dto.number());
+        assertFalse(dto.number() < 0);
+        assertFalse(dto.number().equals(0));
+    }
+
     public void testShouldErrorWhenCreateAccountWithNullNumberAndLessZeroAndEqualZero() {
         try {
             new Account(null, 1, "123456", "12345678910");
