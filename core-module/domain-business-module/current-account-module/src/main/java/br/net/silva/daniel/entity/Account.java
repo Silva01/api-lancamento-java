@@ -4,6 +4,7 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.interfaces.AggregateRoot;
 import br.net.silva.daniel.interfaces.IFactory;
+import br.net.silva.daniel.utils.GeneratorRandomNumber;
 import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class Account extends Validation implements AggregateRoot, IFactory<AccountDTO> {
 
-    private final Integer number;
+    private Integer number;
     private final Integer bankAgencyNumber;
     private BigDecimal balance;
     private final String password;
@@ -33,6 +34,11 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
 
     public Account(Integer number, Integer bankAgencyNumber, String password, String cpf) {
         this(number, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, new ArrayList<>());
+    }
+
+    public Account (Integer bankAgencyNumber, String password, String cpf) {
+        this(1, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, new ArrayList<>());
+        generateAccountNumber();
     }
 
     @Override
@@ -76,9 +82,8 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
         active = false;
     }
 
-    public Integer generateAccountNumber() {
-        //TODO: Implementar
-        return 0;
+    public void generateAccountNumber() {
+        this.number = GeneratorRandomNumber.generate(10000);
     }
 
     @Override
