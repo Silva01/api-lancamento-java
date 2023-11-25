@@ -26,6 +26,10 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
         this.active = active;
     }
 
+    public CreditCard() {
+        this(null, null, null, null, null, true);
+    }
+
     public CreditCard(String number, Integer secretKey, String flag, BigDecimal balance, LocalDate expirationDate) {
         this(number, secretKey, flag, balance, expirationDate, true);
     }
@@ -37,11 +41,47 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
 
     @Override
     public void validate() {
+        validateAttributeNotNullAndNotEmpty(number, "Number of credit card cannot be null or empty");
+        validateAttributeNonNull(secretKey, "Key secret of credit card cannot be null");
+        validateAttributeEqualsZero(BigDecimal.valueOf(secretKey), "Key secret of credit card cannot be zero");
+        validateAttributeLessThanZero(BigDecimal.valueOf(secretKey), "Key secret of credit card cannot be less than zero");
+        validateAttributeNotNullAndNotEmpty(flag, "This flag of credit card cannot be null or empty");
+        validateAttributeNonNull(balance, "This balance of credit card cannot be null");
+        validateAttributeNonNull(expirationDate, "Date of expiration of credit card cannot be null");
+    }
 
+    public void activate() {
+        this.active = true;
+    }
+
+    public void deactivate() {
+        this.active = false;
+    }
+
+    public String getNumber() {
+        return this.number;
+    }
+
+    public boolean isActive() {
+        return this.active;
     }
 
     @Override
     public CreditCardDTO create() {
-        return null;
+        return new CreditCardDTO(number, secretKey, flag, balance, expirationDate, active);
+    }
+
+    private void validateBalance(BigDecimal value) {
+        validateBalance(balance, value);
+    }
+
+    private String generateCardNumber() {
+        //TODO: Here is where generating the card number
+        return "";
+    }
+
+    private Integer generateSecretKey() {
+        //TODO: Here is where generating the secret key
+        return 0;
     }
 }
