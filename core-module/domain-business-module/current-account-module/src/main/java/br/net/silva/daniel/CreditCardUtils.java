@@ -20,8 +20,7 @@ public class CreditCardUtils {
     }
 
     private static boolean isValidGenerateNumber(Long number, StringBuilder ccNumber) {
-        List<Integer> masterCardRange = Arrays.asList(51, 52, 53, 54, 55);
-        for (Integer range : masterCardRange) {
+        for (Integer range : MASTER_CARD_RANGE) {
             String numberString = String.format("%d%d", range, number);
             if (isValidLuhn(numberString)) {
                 ccNumber.append(numberString);
