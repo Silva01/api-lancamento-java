@@ -1,5 +1,6 @@
 package br.net.silva.daniel.entity;
 
+import br.net.silva.daniel.CreditCardUtils;
 import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.interfaces.Aggregate;
 import br.net.silva.daniel.interfaces.IFactory;
@@ -7,6 +8,7 @@ import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class CreditCard extends Validation implements Aggregate, IFactory<CreditCardDTO> {
 
@@ -18,12 +20,13 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
     private boolean active;
 
     public CreditCard(String number, Integer secretKey, String flag, BigDecimal balance, LocalDate expirationDate, boolean active) {
-        this.number = number;
+        this.number = Objects.isNull(number) ? generateCardNumber() : number;
         this.secretKey = secretKey;
         this.flag = flag;
         this.balance = balance;
         this.expirationDate = expirationDate;
         this.active = active;
+        validate();
     }
 
     public CreditCard() {
@@ -76,8 +79,7 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
     }
 
     private String generateCardNumber() {
-        //TODO: Here is where generating the card number
-        return "";
+        return CreditCardUtils.generateCreditCardNumber();
     }
 
     private Integer generateSecretKey() {
