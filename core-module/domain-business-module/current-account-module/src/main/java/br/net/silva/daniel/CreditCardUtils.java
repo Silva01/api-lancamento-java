@@ -1,6 +1,6 @@
 package br.net.silva.daniel;
 
-import java.util.Arrays;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +17,20 @@ public class CreditCardUtils {
         } while (!trava);
 
         return ccNumber.toString();
+    }
+
+    public static Integer generateCvv() {
+        Random random = new Random();
+        return random.nextInt(900) + 100;
+    }
+
+    public static LocalDate generateExpirationDate() {
+        Random random = new Random();
+        var dateNow = LocalDate.now().plusYears(1);
+        int year = random.nextInt(5) + dateNow.getYear();
+        int month = random.nextInt(12) + 1;
+        int day = random.nextInt(28) + 1;
+        return LocalDate.of(year, month, day);
     }
 
     private static boolean isValidGenerateNumber(Long number, StringBuilder ccNumber) {
