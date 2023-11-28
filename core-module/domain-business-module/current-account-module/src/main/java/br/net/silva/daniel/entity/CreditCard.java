@@ -2,6 +2,7 @@ package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.CreditCardUtils;
 import br.net.silva.daniel.dto.CreditCardDTO;
+import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.interfaces.Aggregate;
 import br.net.silva.daniel.interfaces.IFactory;
 import br.net.silva.daniel.validation.Validation;
@@ -13,15 +14,15 @@ import java.util.Objects;
 public class CreditCard extends Validation implements Aggregate, IFactory<CreditCardDTO> {
 
     private final String number;
-    private final Integer secretKey;
-    private final String flag;
+    private final Integer cvv;
+    private final FlagEnum flag;
     private final BigDecimal balance;
     private final LocalDate expirationDate;
     private boolean active;
 
-    public CreditCard(String number, Integer secretKey, String flag, BigDecimal balance, LocalDate expirationDate, boolean active) {
+    public CreditCard(String number, Integer cvv, FlagEnum flag, BigDecimal balance, LocalDate expirationDate, boolean active) {
         this.number = Objects.isNull(number) ? generateCardNumber() : number;
-        this.secretKey = secretKey;
+        this.cvv = Objects.isNull(cvv) ? generateSecretKey() : cvv;
         this.flag = flag;
         this.balance = balance;
         this.expirationDate = expirationDate;
@@ -30,25 +31,24 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
     }
 
     public CreditCard() {
-        this(null, null, null, null, null, true);
+        this(null, null, FlagEnum.MASTER_CARD, BigDecimal.valueOf(2000), CreditCardUtils.generateExpirationDate(), true);
     }
 
-    public CreditCard(String number, Integer secretKey, String flag, BigDecimal balance, LocalDate expirationDate) {
-        this(number, secretKey, flag, balance, expirationDate, true);
+    public CreditCard(String number, Integer cvv, FlagEnum flag, BigDecimal balance, LocalDate expirationDate) {
+        this(number, cvv, flag, balance, expirationDate, true);
     }
 
-    public CreditCard(String flag) {
-        //TODO: Deve gerar um cartão de forma automatica, implementar formas de gerar os atributos que estão nulos
-        this(null, null, flag, null, null, true);
+    public CreditCard(FlagEnum flag) {
+        this(null, null, flag, BigDecimal.valueOf(2000), CreditCardUtils.generateExpirationDate(), true);
     }
 
     @Override
     public void validate() {
         validateAttributeNotNullAndNotEmpty(number, "Number of credit card cannot be null or empty");
-        validateAttributeNonNull(secretKey, "Key secret of credit card cannot be null");
-        validateAttributeEqualsZero(BigDecimal.valueOf(secretKey), "Key secret of credit card cannot be zero");
-        validateAttributeLessThanZero(BigDecimal.valueOf(secretKey), "Key secret of credit card cannot be less than zero");
-        validateAttributeNotNullAndNotEmpty(flag, "This flag of credit card cannot be null or empty");
+        validateAttributeNonNull(cvv, "Key secret of credit card cannot be null");
+        validateAttributeEqualsZero(BigDecimal.valueOf(cvv), "Key secret of credit card cannot be zero");
+        validateAttributeLessThanZero(BigDecimal.valueOf(cvv), "Key secret of credit card cannot be less than zero");
+        validateAttributeNonNull(flag, "This flag of credit card cannot be null or empty");
         validateAttributeNonNull(balance, "This balance of credit card cannot be null");
         validateAttributeNonNull(expirationDate, "Date of expiration of credit card cannot be null");
     }
@@ -71,10 +71,10 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
 
     @Override
     public CreditCardDTO create() {
-        return new CreditCardDTO(number, secretKey, flag, balance, expirationDate, active);
+        return new CreditCardDTO(number, cvv, flag, balance, expirationDate, active);
     }
 
-    private void validateBalance(BigDecimal value) {
+    public void validateBalance(BigDecimal value) {
         validateBalance(balance, value);
     }
 
@@ -83,7 +83,6 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
     }
 
     private Integer generateSecretKey() {
-        //TODO: Here is where generating the secret key
-        return 0;
+        return CreditCardUtils.generateCvv();
     }
 }
