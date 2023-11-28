@@ -9,7 +9,6 @@ import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 public class CreditCard extends Validation implements Aggregate, IFactory<CreditCardDTO> {
 
@@ -21,8 +20,8 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
     private boolean active;
 
     public CreditCard(String number, Integer cvv, FlagEnum flag, BigDecimal balance, LocalDate expirationDate, boolean active) {
-        this.number = Objects.isNull(number) ? generateCardNumber() : number;
-        this.cvv = Objects.isNull(cvv) ? generateSecretKey() : cvv;
+        this.number = number;
+        this.cvv = cvv;
         this.flag = flag;
         this.balance = balance;
         this.expirationDate = expirationDate;
@@ -31,7 +30,7 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
     }
 
     public CreditCard() {
-        this(null, null, FlagEnum.MASTER_CARD, BigDecimal.valueOf(2000), CreditCardUtils.generateExpirationDate(), true);
+        this(CreditCardUtils.generateCreditCardNumber(), CreditCardUtils.generateCvv(), FlagEnum.MASTER_CARD, BigDecimal.valueOf(2000), CreditCardUtils.generateExpirationDate(), true);
     }
 
     public CreditCard(String number, Integer cvv, FlagEnum flag, BigDecimal balance, LocalDate expirationDate) {
@@ -39,7 +38,7 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
     }
 
     public CreditCard(FlagEnum flag) {
-        this(null, null, flag, BigDecimal.valueOf(2000), CreditCardUtils.generateExpirationDate(), true);
+        this(CreditCardUtils.generateCreditCardNumber(), CreditCardUtils.generateCvv(), flag, BigDecimal.valueOf(2000), CreditCardUtils.generateExpirationDate(), true);
     }
 
     @Override
@@ -76,13 +75,5 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
 
     public void validateBalance(BigDecimal value) {
         validateBalance(balance, value);
-    }
-
-    private String generateCardNumber() {
-        return CreditCardUtils.generateCreditCardNumber();
-    }
-
-    private Integer generateSecretKey() {
-        return CreditCardUtils.generateCvv();
     }
 }
