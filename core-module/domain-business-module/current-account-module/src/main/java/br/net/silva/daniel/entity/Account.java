@@ -6,6 +6,7 @@ import br.net.silva.daniel.interfaces.AggregateRoot;
 import br.net.silva.daniel.interfaces.IFactory;
 import br.net.silva.daniel.utils.GeneratorRandomNumber;
 import br.net.silva.daniel.validation.Validation;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -19,25 +20,27 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
     private final String password;
     private boolean active;
     private final String cpf;
+    private CreditCard creditCard;
     private final List<Transaction> transactions;
 
-    public Account(Integer number, Integer bankAgencyNumber, BigDecimal balance, String password, boolean active, String cpf, List<Transaction> transactions) {
+    public Account(Integer number, Integer bankAgencyNumber, BigDecimal balance, String password, boolean active, String cpf, CreditCard creditCard, List<Transaction> transactions) {
         this.number = number;
         this.bankAgencyNumber = bankAgencyNumber;
         this.balance = balance;
         this.password = password;
         this.active = active;
         this.cpf = cpf;
+        this.creditCard = creditCard;
         this.transactions = transactions;
         validate();
     }
 
-    public Account(Integer number, Integer bankAgencyNumber, String password, String cpf) {
-        this(number, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, new ArrayList<>());
+    public Account(Integer number, Integer bankAgencyNumber, String password, String cpf, CreditCard creditCard) {
+        this(number, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, creditCard, new ArrayList<>());
     }
 
-    public Account (Integer bankAgencyNumber, String password, String cpf) {
-        this(1, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, new ArrayList<>());
+    public Account (Integer bankAgencyNumber, String password, String cpf, CreditCard creditCard) {
+        this(1, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, creditCard, new ArrayList<>());
         generateAccountNumber();
     }
 
@@ -53,7 +56,6 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
         validateAttributeLessThanZero(BigDecimal.valueOf(number), "Account number must be greater than zero");
         validateAttributeEqualsZero(BigDecimal.valueOf(number), "Account number must be greater than zero");
         validateAttributeLessThanZero(balance, "Balance must be greater than zero");
-
     }
 
     public void registerTransaction(List<TransactionDTO> transactions) {
@@ -86,8 +88,18 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
         this.number = GeneratorRandomNumber.generate(10000);
     }
 
+    public void vinculateCreditCard(CreditCard creditCard) {
+        this.creditCard = creditCard;
+    }
+
     @Override
     public AccountDTO create() {
         return new AccountDTO(number, bankAgencyNumber, balance, password, active, cpf, transactions.stream().map(Transaction::create).toList());
+    }
+
+    private void validatePassword() {
+        if (password.length() < 6) {
+            throw new IllegalArgumentException("Password must be greater than 6");
+        }
     }
 }

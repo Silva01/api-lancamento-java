@@ -1,6 +1,6 @@
 package br.net.silva.daniel.entity;
 
-import br.net.silva.daniel.CreditCardUtils;
+import br.net.silva.daniel.utils.CreditCardUtils;
 import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.interfaces.Aggregate;
