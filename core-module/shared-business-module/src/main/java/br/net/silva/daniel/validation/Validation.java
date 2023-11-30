@@ -18,7 +18,7 @@ public abstract class Validation {
     protected void validateAttributeNotNullAndNotEmpty(String attribute, String messageError) {
         ValidateUtils.isTextNotNullAndNotEmpty(attribute, messageError);
     }
-    protected void validateAttributeLessThanZero(BigDecimal attribute, String messageError) {
+    protected void validateAttributeLessThanZero(Object attribute, String messageError) {
         ValidateUtils.isLessThanZero(attribute, messageError);
     }
 
