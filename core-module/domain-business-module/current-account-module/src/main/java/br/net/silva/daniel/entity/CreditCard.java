@@ -45,8 +45,8 @@ public class CreditCard extends Validation implements Aggregate, IFactory<Credit
     public void validate() {
         validateAttributeNotNullAndNotEmpty(number, "Number of credit card cannot be null or empty");
         validateAttributeNonNull(cvv, "Key secret of credit card cannot be null");
-        validateAttributeEqualsZero(BigDecimal.valueOf(cvv), "Key secret of credit card cannot be zero");
-        validateAttributeLessThanZero(BigDecimal.valueOf(cvv), "Key secret of credit card cannot be less than zero");
+        validateAttributeEqualsZero(cvv, "Key secret of credit card cannot be zero");
+        validateAttributeLessThanZero(cvv, "Key secret of credit card cannot be less than zero");
         validateAttributeNonNull(flag, "This flag of credit card cannot be null");
         validateAttributeNonNull(balance, "This balance of credit card cannot be null");
         validateAttributeNonNull(expirationDate, "Date of expiration of credit card cannot be null");
