@@ -34,10 +34,27 @@ public class ValidateUtils {
         }
     }
 
-    public static void isEqualsZero(BigDecimal attribute, String messageError) {
-        if (attribute.compareTo(BigDecimal.ZERO) == 0) {
-            executeException(messageError);
+    public static void isEqualsZero(Object attribute, String messageError) {
+        if (attribute instanceof BigDecimal attributeValue && (attributeValue.compareTo(BigDecimal.ZERO) == 0)) {
+                executeException(messageError);
+
         }
+
+        if (attribute instanceof Integer attributeValue && (attributeValue.equals(0))) {
+                executeException(messageError);
+
+        }
+
+        if (attribute instanceof Long attributeValue && (attributeValue.equals(0L))) {
+                executeException(messageError);
+
+        }
+
+        if (attribute instanceof Double attributeValue && (attributeValue.equals(0.0))) {
+                executeException(messageError);
+
+        }
+
     }
 
     private static void executeException(String messageError) {
