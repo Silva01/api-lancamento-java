@@ -6,7 +6,6 @@ import br.net.silva.daniel.interfaces.AggregateRoot;
 import br.net.silva.daniel.interfaces.IFactory;
 import br.net.silva.daniel.utils.GeneratorRandomNumber;
 import br.net.silva.daniel.validation.Validation;
-import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
