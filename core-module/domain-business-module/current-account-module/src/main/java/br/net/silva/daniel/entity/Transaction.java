@@ -41,18 +41,18 @@ public class Transaction extends Validation implements Aggregate, IFactory<Trans
         validateAttributeNonNull(price, "Price is null");
         validateAttributeLessThanZero(price, "Price is less than zero");
         validateAttributeNonNull(quantity, "Quantity is null");
-        validateAttributeLessThanZero(BigDecimal.valueOf(quantity), "Quantity is less than zero");
+        validateAttributeLessThanZero(quantity, "Quantity is less than zero");
         validateAttributeNonNull(type, "Type is required");
         validateAttributeNonNull(originAccountNumber, "Origin account number is null");
-        validateAttributeLessThanZero(BigDecimal.valueOf(originAccountNumber), "Origin account number is less than zero");
+        validateAttributeLessThanZero(originAccountNumber, "Origin account number is less than zero");
         validateAttributeNonNull(destinationAccountNumber, "Destination account number is null");
-        validateAttributeLessThanZero(BigDecimal.valueOf(destinationAccountNumber), "Destination account number is less than zero");
+        validateAttributeLessThanZero(destinationAccountNumber, "Destination account number is less than zero");
         validateAttributeNonNull(idempotencyId, "Idempotency id is null");
 
         if (type.equals(TransactionTypeEnum.CREDIT)) {
             validateAttributeNotNullAndNotEmpty(creditCardNumber, "Credit card number is null or empty");
             validateAttributeNonNull(creditCardCvv, "Credit card cvv is null");
-            validateAttributeEqualsZero(BigDecimal.valueOf(creditCardCvv), "Credit card cvv is equals zero");
+            validateAttributeEqualsZero(creditCardCvv, "Credit card cvv is equals zero");
 
         }
     }
