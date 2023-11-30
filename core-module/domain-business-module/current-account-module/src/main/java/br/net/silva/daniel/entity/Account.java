@@ -9,7 +9,11 @@ import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Account extends Validation implements AggregateRoot, IFactory<AccountDTO> {
 
@@ -46,14 +50,14 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
     @Override
     public void validate() {
         validateAttributeNotNullAndNotEmpty(cpf, "CPF is required");
-        validateAttributeNotNullAndNotEmpty(password, "Password is required");
+        validatePassword();
         validateAttributeNonNull(bankAgencyNumber, "Bank agency number is required");
         validateAttributeNonNull(number, "Account number is required");
         validateAttributeNonNull(balance, "Balance is required");
-        validateAttributeLessThanZero(BigDecimal.valueOf(bankAgencyNumber), "Bank agency number must be greater than zero");
-        validateAttributeEqualsZero(BigDecimal.valueOf(bankAgencyNumber), "Bank agency number must be greater than zero");
-        validateAttributeLessThanZero(BigDecimal.valueOf(number), "Account number must be greater than zero");
-        validateAttributeEqualsZero(BigDecimal.valueOf(number), "Account number must be greater than zero");
+        validateAttributeLessThanZero(bankAgencyNumber, "Bank agency number must be greater than zero");
+        validateAttributeEqualsZero(bankAgencyNumber, "Bank agency number must be greater than zero");
+        validateAttributeLessThanZero(number, "Account number must be greater than zero");
+        validateAttributeEqualsZero(number, "Account number must be greater than zero");
         validateAttributeLessThanZero(balance, "Balance must be greater than zero");
     }
 
@@ -97,8 +101,31 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
     }
 
     private void validatePassword() {
+        validateAttributeNotNullAndNotEmpty(password, "Password is required");
+        validateAttributeEqualsZero(password.length(), "Password must be greater than 6 Characters");
+        validateRepeatedNumberPassword();
+        validateIfPasswordOnlyNumbers();
         if (password.length() < 6) {
             throw new IllegalArgumentException("Password must be greater than 6");
+        }
+    }
+
+    private void validateRepeatedNumberPassword() {
+        Set<Character> seenCharacters = new HashSet<>();
+        for (char character : password.toCharArray()) {
+            if (Character.isDigit(character) && !seenCharacters.add(character)) {
+                throw new IllegalArgumentException("Password cannot have repeated numbers");
+            }
+        }
+    }
+
+    private void validateIfPasswordOnlyNumbers() {
+        Pattern pattern = Pattern.compile("\\d");
+        Matcher matcher = pattern.matcher(password);
+        var isOnlyNumbers =  matcher.find();
+
+        if (!isOnlyNumbers) {
+            throw new IllegalArgumentException("Password cannot have only numbers");
         }
     }
 }
