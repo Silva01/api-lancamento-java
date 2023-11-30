@@ -28,8 +28,20 @@ public class ValidateUtils {
         isNotEmpty(attribute, messageError);
     }
 
-    public static void isLessThanZero(BigDecimal attribute, String messageError) {
-        if (attribute.compareTo(BigDecimal.ZERO) < 0) {
+    public static void isLessThanZero(Object attribute, String messageError) {
+        if (attribute instanceof BigDecimal attributeValue && (attributeValue.compareTo(BigDecimal.ZERO) < 0)) {
+            executeException(messageError);
+        }
+
+        if (attribute instanceof Integer attributeValue && (attributeValue < 0)) {
+            executeException(messageError);
+        }
+
+        if (attribute instanceof Long attributeValue && (attributeValue < 0L)) {
+            executeException(messageError);
+        }
+
+        if (attribute instanceof Double attributeValue && (attributeValue < 0.0)) {
             executeException(messageError);
         }
     }
@@ -37,22 +49,18 @@ public class ValidateUtils {
     public static void isEqualsZero(Object attribute, String messageError) {
         if (attribute instanceof BigDecimal attributeValue && (attributeValue.compareTo(BigDecimal.ZERO) == 0)) {
                 executeException(messageError);
-
         }
 
         if (attribute instanceof Integer attributeValue && (attributeValue.equals(0))) {
                 executeException(messageError);
-
         }
 
         if (attribute instanceof Long attributeValue && (attributeValue.equals(0L))) {
                 executeException(messageError);
-
         }
 
         if (attribute instanceof Double attributeValue && (attributeValue.equals(0.0))) {
                 executeException(messageError);
-
         }
 
     }
