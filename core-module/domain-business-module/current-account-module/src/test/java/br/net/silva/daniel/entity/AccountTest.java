@@ -14,7 +14,7 @@ public class AccountTest extends TestCase {
     }
 
     public void testShouldCreateAccountBasicWithSuccess() {
-        var account = new Account(1, "123456", "12345678910", null);
+        var account = new Account(1, "123456", "12345678910");
         var dto = account.create();
 
         assertNotNull(dto);
