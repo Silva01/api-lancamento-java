@@ -109,4 +109,60 @@ public class ValidateUtilsTest extends TestCase {
             assertEquals("Attribute is less than zero", e.getMessage());
         }
     }
+
+    public void testShouldErrorValidateAttributeIntegerLessThanZero() {
+        try {
+            ValidateUtils.isLessThanZero(-10, "Attribute is less than zero");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is less than zero", e.getMessage());
+        }
+    }
+
+    public void testShouldErrorValidateAttributeLongLessThanZero() {
+        try {
+            ValidateUtils.isLessThanZero(-10L, "Attribute is less than zero");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is less than zero", e.getMessage());
+        }
+    }
+
+    public void testShouldErrorValidateAttributeDoubleLessThanZero() {
+        try {
+            ValidateUtils.isLessThanZero(-2.2D, "Attribute is less than zero");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is less than zero", e.getMessage());
+        }
+    }
+
+    public void testShouldErrorValidateAttributeIntegerEqualsZero() {
+        try {
+            ValidateUtils.isEqualsZero(0, "Attribute is equals zero");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is equals zero", e.getMessage());
+        }
+    }
+
+    public void testShouldErrorValidateAttributeLongEqualsZero() {
+        try {
+            ValidateUtils.isEqualsZero(0L, "Attribute is equals zero");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is equals zero", e.getMessage());
+        }
+    }
+
+    public void testShouldErrorValidateAttributeDoubleEqualsZero() {
+        try {
+            ValidateUtils.isEqualsZero(0.0D, "Attribute is equals zero");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is equals zero", e.getMessage());
+        }
+    }
+
+    public void testShouldErrorValidateAttributeBigDecimalEqualsZero() {
+        try {
+            ValidateUtils.isEqualsZero(BigDecimal.ZERO, "Attribute is equals zero");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Attribute is equals zero", e.getMessage());
+        }
+    }
 }
