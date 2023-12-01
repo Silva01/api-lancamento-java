@@ -42,8 +42,8 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
         this(number, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, creditCard, new ArrayList<>());
     }
 
-    public Account (Integer bankAgencyNumber, String password, String cpf, CreditCard creditCard) {
-        this(1, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, creditCard, new ArrayList<>());
+    public Account (Integer bankAgencyNumber, String password, String cpf) {
+        this(1, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, null, new ArrayList<>());
         generateAccountNumber();
     }
 
