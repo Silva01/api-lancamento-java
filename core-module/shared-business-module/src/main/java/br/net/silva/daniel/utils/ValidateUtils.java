@@ -9,13 +9,13 @@ public class ValidateUtils {
         Objects.requireNonNull(value, "Value is null");
 
         if (balance.compareTo(value) < 0) {
-            executeException("Balance is less than value");
+            GenericErrorUtils.executeException("Balance is less than value");
         }
     }
 
     public static void isNotEmpty(String attribute, String messageError) {
         if (attribute.isEmpty()) {
-            executeException(messageError);
+            GenericErrorUtils.executeException(messageError);
         }
     }
 
@@ -30,42 +30,37 @@ public class ValidateUtils {
 
     public static void isLessThanZero(Object attribute, String messageError) {
         if (attribute instanceof BigDecimal attributeValue && (attributeValue.compareTo(BigDecimal.ZERO) < 0)) {
-            executeException(messageError);
+            GenericErrorUtils.executeException(messageError);
         }
 
         if (attribute instanceof Integer attributeValue && (attributeValue < 0)) {
-            executeException(messageError);
+            GenericErrorUtils.executeException(messageError);
         }
 
         if (attribute instanceof Long attributeValue && (attributeValue < 0L)) {
-            executeException(messageError);
+            GenericErrorUtils.executeException(messageError);
         }
 
         if (attribute instanceof Double attributeValue && (attributeValue < 0.0)) {
-            executeException(messageError);
+            GenericErrorUtils.executeException(messageError);
         }
     }
 
     public static void isEqualsZero(Object attribute, String messageError) {
         if (attribute instanceof BigDecimal attributeValue && (attributeValue.compareTo(BigDecimal.ZERO) == 0)) {
-                executeException(messageError);
+            GenericErrorUtils.executeException(messageError);
         }
 
         if (attribute instanceof Integer attributeValue && (attributeValue.equals(0))) {
-                executeException(messageError);
+            GenericErrorUtils.executeException(messageError);
         }
 
         if (attribute instanceof Long attributeValue && (attributeValue.equals(0L))) {
-                executeException(messageError);
+            GenericErrorUtils.executeException(messageError);
         }
 
         if (attribute instanceof Double attributeValue && (attributeValue.equals(0.0))) {
-                executeException(messageError);
+            GenericErrorUtils.executeException(messageError);
         }
-
-    }
-
-    private static void executeException(String messageError) {
-        throw new IllegalArgumentException(messageError);
     }
 }
