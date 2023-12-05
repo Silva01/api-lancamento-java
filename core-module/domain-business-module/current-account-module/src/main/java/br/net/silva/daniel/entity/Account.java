@@ -97,7 +97,7 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
 
     @Override
     public AccountDTO create() {
-        return new AccountDTO(number, bankAgencyNumber, balance, password, active, cpf, transactions.stream().map(Transaction::create).toList());
+        return new AccountDTO(number, bankAgencyNumber, balance, password, active, cpf, transactions.stream().map(Transaction::create).toList(), creditCard.create());
     }
 
     private void validatePassword() {

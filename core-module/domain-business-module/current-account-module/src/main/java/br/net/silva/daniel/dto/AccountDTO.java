@@ -10,6 +10,7 @@ public record AccountDTO(
         String password,
         boolean active,
         String cpf,
-        List<TransactionDTO>transactions
+        List<TransactionDTO>transactions,
+        CreditCardDTO creditCard
 ) {
 }
