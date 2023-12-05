@@ -3,7 +3,6 @@ package br.net.silva.daniel.validation;
 import br.net.silva.daniel.utils.ValidateUtils;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public abstract class Validation {
     public abstract void validate();

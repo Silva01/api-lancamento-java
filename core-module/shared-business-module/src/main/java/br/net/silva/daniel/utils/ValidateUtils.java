@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class ValidateUtils {
+
+    private ValidateUtils() {
+        throw GenericErrorUtils.executeException("Utility class");
+    }
+
     public static void balance(BigDecimal balance, BigDecimal value) {
         Objects.requireNonNull(balance, "Balance is null");
         Objects.requireNonNull(value, "Value is null");

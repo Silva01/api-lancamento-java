@@ -1,10 +1,6 @@
 package br.net.silva.daniel.utils;
 
 import junit.framework.TestCase;
-import org.mockito.ArgumentMatchers;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.mockito.internal.matchers.Any;
 
 import java.math.BigDecimal;
 
