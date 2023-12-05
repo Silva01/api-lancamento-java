@@ -1,6 +1,10 @@
 package br.net.silva.daniel.utils;
 
 import junit.framework.TestCase;
+import org.mockito.ArgumentMatchers;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.internal.matchers.Any;
 
 import java.math.BigDecimal;
 
@@ -44,6 +48,15 @@ public class ValidateUtilsTest extends TestCase {
             assertEquals("Balance is less than value", e.getMessage());
         }
     }
+
+    public void testShouldErrorValidateBalanceLessThanZero() {
+        try {
+            ValidateUtils.balance(new BigDecimal(-10), new BigDecimal(20));
+        } catch (IllegalArgumentException e) {
+            assertEquals("Balance is less than value", e.getMessage());
+        }
+    }
+
     public void testShouldValidateIsNotEmpty() {
         ValidateUtils.isNotEmpty("test", "Attribute is empty");
 
