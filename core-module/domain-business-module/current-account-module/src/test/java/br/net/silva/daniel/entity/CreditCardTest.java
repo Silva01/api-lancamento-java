@@ -1,6 +1,7 @@
 package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.enuns.FlagEnum;
+import br.net.silva.daniel.utils.CreditCardUtils;
 import junit.framework.TestCase;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ public class CreditCardTest extends TestCase {
     public void testShouldCreateCreditCardWithSuccess() {
         CreditCard creditCard = new CreditCard();
         assertNotNull(creditCard);
+        assertNotNull(creditCard.getNumber());
 
         var dto = creditCard.create();
         assertNotNull(dto);
@@ -19,6 +21,19 @@ public class CreditCardTest extends TestCase {
         assertEquals(BigDecimal.valueOf(2000), dto.balance());
         assertNotNull(dto.expirationDate());
         assertTrue(dto.active());
+
+        var creditCard2 = new CreditCard(CreditCardUtils.generateCreditCardNumber(), CreditCardUtils.generateCvv(), FlagEnum.MASTER_CARD, BigDecimal.valueOf(2000), CreditCardUtils.generateExpirationDate());
+        assertNotNull(creditCard2);
+        assertNotNull(creditCard2.getNumber());
+
+        var dto2 = creditCard2.create();
+        assertNotNull(dto2);
+        assertNotNull(dto2.number());
+        assertNotNull(dto2.cvv());
+        assertEquals(FlagEnum.MASTER_CARD, dto2.flag());
+        assertEquals(BigDecimal.valueOf(2000), dto2.balance());
+        assertNotNull(dto2.expirationDate());
+        assertTrue(dto2.active());
     }
 
     public void testShouldCreateCreditCardWithSuccessWithFlag() {
@@ -98,6 +113,46 @@ public class CreditCardTest extends TestCase {
             fail();
         } catch (Exception e) {
             assertEquals("Date of expiration of credit card cannot be null", e.getMessage());
+        }
+    }
+
+    public void testShouldActivateCreditCardWithSuccess() {
+        CreditCard creditCard = new CreditCard();
+        assertNotNull(creditCard);
+        assertTrue(creditCard.isActive());
+        creditCard.deactivate();
+        assertFalse(creditCard.isActive());
+        creditCard.activate();
+        assertTrue(creditCard.isActive());
+    }
+
+    public void testShouldDeactivateCreditCardWithSuccess() {
+        CreditCard creditCard = new CreditCard();
+        assertNotNull(creditCard);
+        assertTrue(creditCard.isActive());
+        creditCard.deactivate();
+        assertFalse(creditCard.isActive());
+    }
+
+    public void testShouldValidateBalanceCreditCardWithSuccess() {
+        CreditCard creditCard = new CreditCard();
+        var value = BigDecimal.valueOf(100);
+
+        creditCard.validateBalance(value);
+
+        // se chegou aqui é pq passou
+        assertTrue(true);
+    }
+
+    public void testShouldErrorValidateBalanceCreditCardWithSuccess() {
+        CreditCard creditCard = new CreditCard();
+        var value = BigDecimal.valueOf(10000);
+
+        try {
+            creditCard.validateBalance(value);
+            fail();
+        } catch (Exception e) {
+            assertEquals("Balance is insufficient", e.getMessage());
         }
     }
 
