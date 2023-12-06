@@ -139,7 +139,7 @@ public class ValidationTest extends TestCase {
             validation.validateBalance(BigDecimal.ZERO, BigDecimal.valueOf(10));
             fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("Balance is less than value", e.getMessage());
+            assertEquals("Balance is insufficient", e.getMessage());
         }
     }
 

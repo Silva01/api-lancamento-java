@@ -160,4 +160,9 @@ public class TransactionTest extends TestCase {
             assertEquals("Credit card cvv is equals zero", e.getMessage());
         }
     }
+
+    public void testShouldValidateTransactionIsCredit() {
+        var transaction = new Transaction(1L, "Credit Transaction", BigDecimal.valueOf(10), 1, TransactionTypeEnum.CREDIT, 1, 2, 1L, "123456789", 123);
+        assertTrue(transaction.isCreditTransaction());
+    }
 }

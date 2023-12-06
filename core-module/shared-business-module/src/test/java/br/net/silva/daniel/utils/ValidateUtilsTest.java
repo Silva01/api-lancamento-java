@@ -41,7 +41,7 @@ public class ValidateUtilsTest extends TestCase {
         try {
             ValidateUtils.balance(new BigDecimal(10), new BigDecimal(20));
         } catch (IllegalArgumentException e) {
-            assertEquals("Balance is less than value", e.getMessage());
+            assertEquals("Balance is insufficient", e.getMessage());
         }
     }
 
@@ -49,7 +49,7 @@ public class ValidateUtilsTest extends TestCase {
         try {
             ValidateUtils.balance(new BigDecimal(-10), new BigDecimal(20));
         } catch (IllegalArgumentException e) {
-            assertEquals("Balance is less than value", e.getMessage());
+            assertEquals("Balance is insufficient", e.getMessage());
         }
     }
 
