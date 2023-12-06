@@ -14,7 +14,7 @@ public class ValidateUtils {
         Objects.requireNonNull(value, "Value is null");
 
         if (balance.compareTo(value) < 0) {
-            throw GenericErrorUtils.executeException("Balance is less than value");
+            throw GenericErrorUtils.executeException("Balance is insufficient");
         }
     }
 

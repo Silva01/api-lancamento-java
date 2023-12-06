@@ -1,9 +1,12 @@
 package br.net.silva.daniel.entity;
 
+import br.net.silva.daniel.dto.TransactionDTO;
+import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import junit.framework.TestCase;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AccountTest extends TestCase {
 
@@ -118,6 +121,109 @@ public class AccountTest extends TestCase {
         } catch (Exception e) {
             assertEquals("CPF is required", e.getMessage());
         }
+    }
+
+    public void testShouldRegisterTransactionWithSuccess() {
+        var transactionDTO = new TransactionDTO(
+                1L,
+                "Test",
+                BigDecimal.valueOf(100),
+                1,
+                TransactionTypeEnum.DEBIT,
+                1,
+                2,
+                123456L,
+                "12345678910",
+                123);
+
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        account.registerTransaction(List.of(transactionDTO));
+
+        var accountDTO = account.create();
+        assertEquals(BigDecimal.valueOf(1900), accountDTO.balance());
+    }
+
+    public void testShouldErrorWhenRegisterTransactionWithBalanceLessThanZero() {
+        var transactionDTO = new TransactionDTO(
+                1L,
+                "Test",
+                BigDecimal.valueOf(2001),
+                1,
+                TransactionTypeEnum.DEBIT,
+                1,
+                2,
+                123456L,
+                "12345678910",
+                123);
+
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        try {
+            account.registerTransaction(List.of(transactionDTO));
+            fail();
+        } catch (Exception e) {
+            assertEquals("Balance is insufficient", e.getMessage());
+        }
+    }
+
+    public void testShouldActivateAccountWithSuccess() {
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        account.activate();
+
+        var dto = account.create();
+        assertTrue(dto.active());
+    }
+
+    public void testShouldDeactivateAccountWithSuccess() {
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        account.deactivate();
+
+        var dto = account.create();
+        assertFalse(dto.active());
+    }
+
+    public void testShouldErrorCreateAccountWithPasswordLessThanSixDigits() {
+        try {
+            new Account(1, 1, "12345", "12345678910", null);
+            fail();
+        } catch (Exception e) {
+            assertEquals("Password must be greater than 6", e.getMessage());
+        }
+    }
+
+    public void testShouldErrorCreateAccountWithPasswordWithRepeatDigits() {
+        try {
+            new Account(1, 1, "111111", "12345678910", null);
+            fail();
+        } catch (Exception e) {
+            assertEquals("Password cannot have repeated numbers", e.getMessage());
+        }
+    }
+
+    public void testShouldErrorCreateAccountWithPasswordWithWords() {
+        try {
+            new Account(1, 1, "123ABC", "12345678910", null);
+            fail();
+        } catch (Exception e) {
+            assertEquals("Password cannot have only numbers", e.getMessage());
+        }
+    }
+
+    public void testShouldErrorCreateAccountWithPasswordWithSpecialCharacters() {
+        try {
+            new Account(1, 1, "123@#$", "12345678910", null);
+            fail();
+        } catch (Exception e) {
+            assertEquals("Password cannot have only numbers", e.getMessage());
+        }
+    }
+
+    public void testShouldRegisterCreditCardWithSuccess() {
+        var creditCard = new CreditCard();
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        account.vinculateCreditCard(creditCard);
+
+        var dto = account.create();
+        assertNotNull(dto.creditCard());
     }
 
 }

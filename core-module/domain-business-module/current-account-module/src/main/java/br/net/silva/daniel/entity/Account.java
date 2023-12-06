@@ -8,10 +8,7 @@ import br.net.silva.daniel.utils.GeneratorRandomNumber;
 import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,11 +36,11 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
     }
 
     public Account(Integer number, Integer bankAgencyNumber, String password, String cpf, CreditCard creditCard) {
-        this(number, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, creditCard, new ArrayList<>());
+        this(number, bankAgencyNumber, BigDecimal.valueOf(2000), password, true, cpf, creditCard, new ArrayList<>());
     }
 
     public Account (Integer bankAgencyNumber, String password, String cpf) {
-        this(1, bankAgencyNumber, BigDecimal.ZERO, password, true, cpf, null, new ArrayList<>());
+        this(1, bankAgencyNumber, BigDecimal.valueOf(2000), password, true, cpf, null, new ArrayList<>());
         generateAccountNumber();
     }
 
@@ -97,7 +94,15 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
 
     @Override
     public AccountDTO create() {
-        return new AccountDTO(number, bankAgencyNumber, balance, password, active, cpf, transactions.stream().map(Transaction::create).toList(), null);
+        return new AccountDTO(
+                number,
+                bankAgencyNumber,
+                balance,
+                password,
+                active,
+                cpf,
+                transactions.stream().map(Transaction::create).toList(),
+                Objects.nonNull(creditCard) ? creditCard.create() : null);
     }
 
     private void validatePassword() {
@@ -120,9 +125,7 @@ public class Account extends Validation implements AggregateRoot, IFactory<Accou
     }
 
     private void validateIfPasswordOnlyNumbers() {
-        Pattern pattern = Pattern.compile("\\d");
-        Matcher matcher = pattern.matcher(password);
-        var isOnlyNumbers =  matcher.find();
+        var isOnlyNumbers =  password.chars().allMatch(Character::isDigit);
 
         if (!isOnlyNumbers) {
             throw new IllegalArgumentException("Password cannot have only numbers");
