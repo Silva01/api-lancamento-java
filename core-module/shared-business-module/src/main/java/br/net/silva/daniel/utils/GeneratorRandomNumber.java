@@ -4,6 +4,10 @@ import java.util.Random;
 
 public class GeneratorRandomNumber {
 
+    private GeneratorRandomNumber() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final Random RANDOM = new Random();
 
     public static Integer generate(int max) {
