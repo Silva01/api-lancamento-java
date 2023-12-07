@@ -30,7 +30,7 @@ public class Client extends Validation implements AggregateRoot, IFactory<Client
         this(UUID.randomUUID().toString(), cpf, name, telephone, true, address);
     }
 
-    public void desactivate() {
+    public void deactivate() {
         this.active = false;
     }
 

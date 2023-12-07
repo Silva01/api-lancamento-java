@@ -176,7 +176,7 @@ public class ClientTest extends TestCase {
     public void testShouldDesactivateClientWithSuccess() {
         var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
         var client = new Client("99988877766", "Daniel", "665555444222", address);
-        client.desactivate();
+        client.deactivate();
 
         var dto = client.create();
 
@@ -186,7 +186,7 @@ public class ClientTest extends TestCase {
     public void testShouldActivateClientWithSuccess() {
         var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
         var client = new Client("99988877766", "Daniel", "665555444222", address);
-        client.desactivate();
+        client.deactivate();
         var dto = client.create();
         assertFalse(dto.active());
 
@@ -224,7 +224,7 @@ public class ClientTest extends TestCase {
             var dto = client.create();
             assertEquals("Daniel", dto.name());
 
-            client.desactivate();
+            client.deactivate();
             client.editName("Daniel Silva");
         } catch (Exception e) {
             assertEquals("Client is not active", e.getMessage());
@@ -238,7 +238,7 @@ public class ClientTest extends TestCase {
             var dto = client.create();
             assertEquals("665555444222", dto.telephone());
 
-            client.desactivate();
+            client.deactivate();
             client.editTelephone("665555444333");
         } catch (Exception e) {
             assertEquals("Client is not active", e.getMessage());
@@ -282,7 +282,7 @@ public class ClientTest extends TestCase {
             assertEquals("Cidade 1", dto.address().city());
             assertEquals("11111111", dto.address().zipCode());
 
-            client.desactivate();
+            client.deactivate();
             var newAddress = new Address("Rua 2", "4321", "test2", "test2", "Estado 2", "Cidade 2", "22222222");
             client.registerAddress(newAddress);
         } catch (Exception e) {
