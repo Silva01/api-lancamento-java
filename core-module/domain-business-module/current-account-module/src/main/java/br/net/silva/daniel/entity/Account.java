@@ -9,8 +9,6 @@ import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Account extends Validation implements AggregateRoot, IFactory<AccountDTO> {
 
