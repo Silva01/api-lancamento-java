@@ -54,7 +54,7 @@ public class CreditCardUtils {
         int total = 0;
 
         for (int i = number.length() - 2; i >= 0; i--) {
-            int sum = 0;
+            int sum;
             int digit = Character.getNumericValue(number.charAt(i));
             if (i % 2 == 0) {
                 digit *= 2;
