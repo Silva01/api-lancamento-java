@@ -6,6 +6,10 @@ import java.util.Random;
 
 public class CreditCardUtils {
 
+    private CreditCardUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final List<Integer> MASTER_CARD_RANGE = List.of(51, 52, 53, 54, 55);
 
     public static String generateCreditCardNumber() {
@@ -20,12 +24,12 @@ public class CreditCardUtils {
     }
 
     public static Integer generateCvv() {
-        Random random = new Random();
+        Random random = createRandom();
         return random.nextInt(900) + 100;
     }
 
     public static LocalDate generateExpirationDate() {
-        Random random = new Random();
+        Random random = createRandom();
         var dateNow = LocalDate.now().plusYears(1);
         int year = random.nextInt(5) + dateNow.getYear();
         int month = random.nextInt(12) + 1;
@@ -50,7 +54,7 @@ public class CreditCardUtils {
         int total = 0;
 
         for (int i = number.length() - 2; i >= 0; i--) {
-            int sum = 0;
+            int sum;
             int digit = Character.getNumericValue(number.charAt(i));
             if (i % 2 == 0) {
                 digit *= 2;
@@ -65,16 +69,14 @@ public class CreditCardUtils {
 
     public static long generateRandomNumber() {
         // Gera um número aleatório de 13 dígitos
-        Random random = new Random();
-        long randomNumber = 1000000000000L + ((long) random.nextInt(9000000) * 1000000L) + random.nextInt(1000000);
+        Random random = createRandom();
+        long randomNumber = 1000000000000L + (random.nextInt(9000000) * 1000000L) + random.nextInt(1000000);
 
         // Calcula o dígito verificador usando o algoritmo de Luhn
         int checkDigit = calculateLuhnCheckDigit(randomNumber);
 
         // Combina o número original com o dígito verificador
-        long result = randomNumber * 10 + checkDigit;
-
-        return result;
+        return randomNumber * 10 + checkDigit;
     }
 
     private static int calculateLuhnCheckDigit(long baseNumber) {
@@ -99,8 +101,10 @@ public class CreditCardUtils {
         }
 
         // Calcula o dígito verificador
-        int checkDigit = (10 - (totalSum % 10)) % 10;
+        return (10 - (totalSum % 10)) % 10;
+    }
 
-        return checkDigit;
+    private static Random createRandom() {
+        return new Random();
     }
 }
