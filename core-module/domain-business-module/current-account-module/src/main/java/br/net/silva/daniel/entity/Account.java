@@ -3,14 +3,14 @@ package br.net.silva.daniel.entity;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.interfaces.AggregateRoot;
-import br.net.silva.daniel.interfaces.IFactory;
+import br.net.silva.daniel.factory.IFactoryDto;
 import br.net.silva.daniel.utils.GeneratorRandomNumber;
 import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
 import java.util.*;
 
-public class Account extends Validation implements AggregateRoot, IFactory<AccountDTO> {
+public class Account extends Validation implements AggregateRoot, IFactoryDto<AccountDTO> {
 
     private Integer number;
     private final Integer bankAgencyNumber;
