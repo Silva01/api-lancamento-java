@@ -1,15 +1,15 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.GenericException;
+import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.factory.CreateNewAddressFactory;
 import br.net.silva.daniel.factory.CreateNewClientFactory;
 import br.net.silva.daniel.repository.SaveRepository;
-import br.net.silva.daniel.template.BasicUseCase;
+import br.net.silva.daniel.template.UseCase;
 
-public class CreateNewClientUseCase extends BasicUseCase<ClientDTO> {
+public class CreateNewClientUseCase extends UseCase<ClientDTO> {
     private final SaveRepository<Client> saveRepository;
     private final CreateNewClientFactory createNewClientFactory;
 
