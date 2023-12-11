@@ -16,6 +16,7 @@
         <module>domain-application-module</module>
         <module>shared-application-module</module>
         <module>domain-application-module/client-application-module</module>
+        <module>domain-application-module/account-application-module</module>
     </modules>
 
     <properties>
