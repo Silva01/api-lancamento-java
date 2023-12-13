@@ -1,30 +1,38 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.ClientDtoMapper;
 import br.net.silva.daniel.dto.ClientDTO;
+import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
+import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAddressFactory;
 import br.net.silva.daniel.factory.CreateNewClientFactory;
-import br.net.silva.daniel.repository.SaveRepository;
-import br.net.silva.daniel.template.UseCase;
+import br.net.silva.daniel.factory.IFactoryAggregate;
+import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.mapper.IMapper;
+import br.net.silva.daniel.repository.Repository;
 
-public class CreateNewClientUseCase extends UseCase<ClientDTO> {
-    private final SaveRepository<Client> saveRepository;
-    private final CreateNewClientFactory createNewClientFactory;
+public class CreateNewClientUseCase implements UseCase<ClientRequestDTO, ClientDTO> {
+    private final Repository<Client> saveRepository;
+    private final IFactoryAggregate<Client, ClientDTO> createNewClientFactory;
+    private final IMapper<ClientDTO, ClientRequestDTO> clientMapper;
 
-    public CreateNewClientUseCase(SaveRepository<Client> saveRepository) {
+    public CreateNewClientUseCase(Repository<Client> saveRepository) {
         this.saveRepository = saveRepository;
         this.createNewClientFactory = new CreateNewClientFactory(new CreateNewAddressFactory());
+        this.clientMapper = new ClientDtoMapper();
     }
 
     @Override
-    public void exec(ClientDTO dto) throws GenericException {
+    public ClientDTO exec(ClientRequestDTO request) throws GenericException {
         try {
-            var aggregate = createNewClientFactory.create(dto);
-            saveRepository.save(aggregate);
+            return saveRepository.exec(buildClient(request)).create();
         } catch (Exception e) {
             throw new ExistsClientRegistredException(e.getMessage());
         }
+    }
+    private Client buildClient(ClientRequestDTO request) {
+        return createNewClientFactory.create(clientMapper.map(request));
     }
 }
