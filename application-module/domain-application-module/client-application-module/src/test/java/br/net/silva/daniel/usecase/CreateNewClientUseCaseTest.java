@@ -3,8 +3,10 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.dto.AddressRequestDTO;
 import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Address;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -33,6 +35,24 @@ class CreateNewClientUseCaseTest {
         createNewClientUseCase.exec(clientDto);
 
         verify(saveRepository, times(1)).exec(any(Client.class));
+    }
+
+    @Test
+    void testShouldCreateANewClientWithErrorExistsClient() throws ExistsClientRegistredException {
+        // Arrange
+        var address = new AddressRequestDTO("Street 1", "1234", "Brazil", "Brasilia", "DF", "Brasilia", "12344-556");
+        var clientDto = new ClientRequestDTO("1234", "00099988877", "Daniel", "61933334444", true, 1234, address);
+
+        // Mock the repository
+        when(saveRepository.exec(any())).thenThrow(new RuntimeException("Exists client"));
+
+        // Act & Assert
+        Assert.assertThrows(ExistsClientRegistredException.class, () -> {
+            createNewClientUseCase.exec(clientDto);
+        });
+
+        // Verify that saveRepository.exec was called exactly once
+        verify(saveRepository, times(1)).exec(any());
     }
 
     private Client createClient() {
