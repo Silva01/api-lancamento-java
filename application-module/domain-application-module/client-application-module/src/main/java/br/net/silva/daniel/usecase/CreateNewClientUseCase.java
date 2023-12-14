@@ -25,7 +25,7 @@ public class CreateNewClientUseCase implements UseCase<ClientRequestDTO, ClientD
     }
 
     @Override
-    public ClientDTO exec(ClientRequestDTO request) throws GenericException {
+    public ClientDTO exec(ClientRequestDTO request) throws ExistsClientRegistredException {
         try {
             return saveRepository.exec(buildClient(request)).create();
         } catch (Exception e) {
