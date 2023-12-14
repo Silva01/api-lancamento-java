@@ -1,11 +1,10 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.ClientDtoMapper;
+import br.net.silva.daniel.mapper.ClientDtoMapper;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
-import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAddressFactory;
 import br.net.silva.daniel.factory.CreateNewClientFactory;
 import br.net.silva.daniel.factory.IFactoryAggregate;

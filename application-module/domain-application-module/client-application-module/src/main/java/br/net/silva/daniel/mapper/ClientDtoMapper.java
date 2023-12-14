@@ -1,4 +1,4 @@
-package br.net.silva.daniel;
+package br.net.silva.daniel.mapper;
 
 import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.dto.AddressRequestDTO;
