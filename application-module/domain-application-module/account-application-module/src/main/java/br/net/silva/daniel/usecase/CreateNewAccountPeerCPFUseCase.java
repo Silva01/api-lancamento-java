@@ -7,12 +7,13 @@ import br.net.silva.daniel.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
 import br.net.silva.daniel.factory.IFactoryAggregate;
+import br.net.silva.daniel.interfaces.IAccountPord;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 
 public class CreateNewAccountPeerCPFUseCase implements UseCase<CreateNewAccountForCpfDTO, AccountDTO> {
 
-    private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
+    private final IFactoryAggregate<Account, IAccountPord> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
     private final Repository<Account> saveRepository;
 
@@ -27,10 +28,7 @@ public class CreateNewAccountPeerCPFUseCase implements UseCase<CreateNewAccountF
         if (isExistsAccountActiveForCPF(dto.cpf())) {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
-
-        //TODO: Refatorar a instrução abaixo
-        var accountDTO = new AccountDTO(null, dto.agency(), null, "123456",  true, dto.cpf(), null, null);
-        var newAccount = saveRepository.exec(createNewAccountByCpfFactory.create(accountDTO));
+        var newAccount = saveRepository.exec(createNewAccountByCpfFactory.create(dto));
         return newAccount.create();
     }
 
