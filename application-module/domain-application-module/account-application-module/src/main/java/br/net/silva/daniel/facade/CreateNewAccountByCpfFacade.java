@@ -17,7 +17,7 @@ public class CreateNewAccountByCpfFacade implements IFacade<CreateNewAccountForC
     }
 
     @Override
-    public AccountDTO execute(CreateNewAccountForCpfDTO dto) throws GenericException { //TODO: Refatorar exception
+    public AccountDTO execute(CreateNewAccountForCpfDTO dto) throws GenericException {
         return createNewAccountPeerCPFUseCase.exec(dto);
     }
 }
