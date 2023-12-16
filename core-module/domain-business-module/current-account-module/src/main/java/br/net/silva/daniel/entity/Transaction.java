@@ -3,12 +3,12 @@ package br.net.silva.daniel.entity;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.interfaces.Aggregate;
-import br.net.silva.daniel.interfaces.IFactory;
+import br.net.silva.daniel.factory.IFactoryDto;
 import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
 
-public class Transaction extends Validation implements Aggregate, IFactory<TransactionDTO> {
+public class Transaction extends Validation implements Aggregate, IFactoryDto<TransactionDTO> {
 
     private final Long id;
     private final String description;

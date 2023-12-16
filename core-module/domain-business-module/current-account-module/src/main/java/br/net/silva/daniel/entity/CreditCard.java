@@ -4,13 +4,13 @@ import br.net.silva.daniel.utils.CreditCardUtils;
 import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.interfaces.Aggregate;
-import br.net.silva.daniel.interfaces.IFactory;
+import br.net.silva.daniel.factory.IFactoryDto;
 import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class CreditCard extends Validation implements Aggregate, IFactory<CreditCardDTO> {
+public class CreditCard extends Validation implements Aggregate, IFactoryDto<CreditCardDTO> {
 
     private final String number;
     private final Integer cvv;

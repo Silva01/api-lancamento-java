@@ -3,13 +3,13 @@ package br.net.silva.daniel.entity;
 import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.interfaces.AggregateRoot;
-import br.net.silva.daniel.interfaces.IFactory;
+import br.net.silva.daniel.factory.IFactoryDto;
 import br.net.silva.daniel.validation.Validation;
 import br.net.silva.daniel.value_object.Address;
 
 import java.util.UUID;
 
-public class Client extends Validation implements AggregateRoot, IFactory<ClientDTO> {
+public class Client extends Validation implements AggregateRoot, IFactoryDto<ClientDTO> {
     private final String id;
     private final String cpf;
     private String name;
