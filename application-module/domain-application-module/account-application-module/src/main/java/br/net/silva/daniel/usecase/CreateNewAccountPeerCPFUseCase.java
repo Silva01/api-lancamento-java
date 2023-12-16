@@ -7,13 +7,13 @@ import br.net.silva.daniel.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
 import br.net.silva.daniel.factory.IFactoryAggregate;
-import br.net.silva.daniel.interfaces.IAccountPord;
+import br.net.silva.daniel.interfaces.ICreateAccountPord;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 
 public class CreateNewAccountPeerCPFUseCase implements UseCase<CreateNewAccountForCpfDTO, AccountDTO> {
 
-    private final IFactoryAggregate<Account, IAccountPord> createNewAccountByCpfFactory;
+    private final IFactoryAggregate<Account, ICreateAccountPord> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
     private final Repository<Account> saveRepository;
 

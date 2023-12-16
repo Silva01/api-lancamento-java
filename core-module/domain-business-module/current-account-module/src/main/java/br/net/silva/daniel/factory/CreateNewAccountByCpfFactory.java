@@ -1,12 +1,12 @@
 package br.net.silva.daniel.factory;
 
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.interfaces.IAccountPord;
+import br.net.silva.daniel.interfaces.ICreateAccountPord;
 
-public class CreateNewAccountByCpfFactory implements IFactoryAggregate<Account, IAccountPord> {
+public class CreateNewAccountByCpfFactory implements IFactoryAggregate<Account, ICreateAccountPord> {
 
     @Override
-    public Account create(IAccountPord accountPord) {
-        return new Account(accountPord.bankAgencyNumber(), "123456", accountPord.cpf());
+    public Account create(ICreateAccountPord accountPord) {
+        return new Account(accountPord.bankAgencyNumber(), accountPord.password(), accountPord.cpf());
     }
 }
