@@ -37,17 +37,17 @@ class FindClientUseCaseTest {
 
         assertNotNull(client);
         assertEquals(client.cpf(), cpf);
-        assertEquals(client.name(), "Daniel");
-        assertEquals(client.id(), "1");
-        assertEquals(client.telephone(), "22344445555");
+        assertEquals("Daniel", client.name());
+        assertEquals("1", client.id());
+        assertEquals("22344445555", client.telephone());
         assertTrue(client.active());
-        assertEquals(client.address().street(), "Rua 1");
-        assertEquals(client.address().number(), "1234");
-        assertEquals(client.address().complement(), "nao tem");
-        assertEquals(client.address().neighborhood(), "Bairro 1");
-        assertEquals(client.address().city(), "Cidade 1");
-        assertEquals(client.address().state(), "Estado 1");
-        assertEquals(client.address().zipCode(), "11111111");
+        assertEquals("Rua 1", client.address().street());
+        assertEquals("1234", client.address().number());
+        assertEquals("nao tem", client.address().complement());
+        assertEquals("Bairro 1", client.address().neighborhood());
+        assertEquals("Cidade 1", client.address().city());
+        assertEquals("Estado 1", client.address().state());
+        assertEquals("11111111", client.address().zipCode());
 
         verify(findClientRepository, times(1)).exec(cpf);
     }
