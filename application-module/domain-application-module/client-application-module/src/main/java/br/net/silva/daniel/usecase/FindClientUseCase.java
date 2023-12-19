@@ -10,15 +10,15 @@ import java.util.Optional;
 
 public class FindClientUseCase implements UseCase<String, ClientDTO> {
 
-    private final Repository<Optional<Client>> repository;
+    private final Repository<Optional<Client>> findClientRepository;
 
-    public FindClientUseCase(Repository<Optional<Client>> repository) {
-        this.repository = repository;
+    public FindClientUseCase(Repository<Optional<Client>> findClientRepository) {
+        this.findClientRepository = findClientRepository;
     }
 
     @Override
     public ClientDTO exec(String cpf) throws ClientNotExistsException {
-        var optionalClient = repository.exec(cpf);
+        var optionalClient = findClientRepository.exec(cpf);
         var client = optionalClient.orElseThrow(() -> new ClientNotExistsException("Client not exists in database"));
         return client.create();
     }
