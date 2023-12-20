@@ -11,13 +11,13 @@ import br.net.silva.daniel.interfaces.ICreateAccountPord;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 
-public class CreateNewAccountPeerCPFUseCase implements UseCase<CreateNewAccountByCpfDTO, AccountDTO> {
+public class CreateNewAccountByCpfUseCase implements UseCase<CreateNewAccountByCpfDTO, AccountDTO> {
 
     private final IFactoryAggregate<Account, ICreateAccountPord> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
     private final Repository<Account> saveRepository;
 
-    public CreateNewAccountPeerCPFUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository) {
+    public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository) {
         this.findIsExistsPeerCPFRepository = findIsExistsPeerCPFRepository;
         this.saveRepository = saveRepository;
         this.createNewAccountByCpfFactory = new CreateNewAccountByCpfFactory();

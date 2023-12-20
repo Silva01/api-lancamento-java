@@ -23,12 +23,12 @@ class CreateNewAccountFacadePeerCPFUseCaseTest {
     @Mock
     private Repository<Account> saveRepository;
 
-    private CreateNewAccountPeerCPFUseCase useCase;
+    private CreateNewAccountByCpfUseCase useCase;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        useCase = new CreateNewAccountPeerCPFUseCase(findIsExistsPeerCPFRepository, saveRepository);
+        useCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository);
     }
 
     @Test
