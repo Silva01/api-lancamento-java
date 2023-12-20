@@ -2,7 +2,7 @@ package br.net.silva.daniel.dto;
 
 import br.net.silva.daniel.interfaces.ICreateAccountPord;
 
-public record CreateNewAccountForCpfDTO(
+public record CreateNewAccountByCpfDTO(
         String cpf,
         Integer agency
 ) implements ICreateAccountPord {
