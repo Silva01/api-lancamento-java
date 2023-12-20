@@ -1,6 +1,6 @@
 package br.net.silva.daniel.facade;
 
-import br.net.silva.daniel.dto.CreateNewAccountForCpfDTO;
+import br.net.silva.daniel.dto.CreateNewAccountByCpfDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.repository.Repository;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-class CreateNewAccountByCpfFacadeTest {
+class CreateNewAccountFacadeByCpfFacadeTest {
 
     @Mock
     private Repository<Boolean> findIsExistsPeerCPFRepository;
@@ -37,7 +37,7 @@ class CreateNewAccountByCpfFacadeTest {
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(build());
 
         var createNewAccountByCpfFacade = new CreateNewAccountByCpfFacade(findIsExistsPeerCPFRepository, saveRepository);
-        var accountDTO = createNewAccountByCpfFacade.execute(new CreateNewAccountForCpfDTO("11122233344", 4567));
+        var accountDTO = createNewAccountByCpfFacade.execute(new CreateNewAccountByCpfDTO("11122233344", 4567));
 
         assertNotNull(accountDTO);
         assertEquals(4567, accountDTO.bankAgencyNumber());
@@ -49,7 +49,7 @@ class CreateNewAccountByCpfFacadeTest {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
 
         var createNewAccountByCpfFacade = new CreateNewAccountByCpfFacade(findIsExistsPeerCPFRepository, saveRepository);
-        Assertions.assertThrows(GenericException.class, () -> createNewAccountByCpfFacade.execute(new CreateNewAccountForCpfDTO("11122233344", 4567)));
+        Assertions.assertThrows(GenericException.class, () -> createNewAccountByCpfFacade.execute(new CreateNewAccountByCpfDTO("11122233344", 4567)));
     }
 
     @Test
@@ -58,7 +58,7 @@ class CreateNewAccountByCpfFacadeTest {
         when(saveRepository.exec(Mockito.any(Account.class))).thenThrow(new RuntimeException("Unknown error"));
 
         var createNewAccountByCpfFacade = new CreateNewAccountByCpfFacade(findIsExistsPeerCPFRepository, saveRepository);
-        Assertions.assertThrows(GenericException.class, () -> createNewAccountByCpfFacade.execute(new CreateNewAccountForCpfDTO("11122233344", 4567)));
+        Assertions.assertThrows(GenericException.class, () -> createNewAccountByCpfFacade.execute(new CreateNewAccountByCpfDTO("11122233344", 4567)));
     }
 
     private Account build() {

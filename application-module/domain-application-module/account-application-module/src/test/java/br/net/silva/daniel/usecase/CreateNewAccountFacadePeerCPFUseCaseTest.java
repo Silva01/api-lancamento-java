@@ -1,7 +1,7 @@
 package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.dto.CreateNewAccountForCpfDTO;
+import br.net.silva.daniel.dto.CreateNewAccountByCpfDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.daniel.exception.GenericException;
@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class CreateNewAccountPeerCPFUseCaseTest {
+class CreateNewAccountFacadePeerCPFUseCaseTest {
     @Mock
     private Repository<Boolean> findIsExistsPeerCPFRepository;
 
@@ -35,7 +35,7 @@ class CreateNewAccountPeerCPFUseCaseTest {
     public void testExec_accountDoesNotExist_createsNewAccount() throws GenericException {
         // Arrange
         String cpf = "12345678901";
-        CreateNewAccountForCpfDTO dto = new CreateNewAccountForCpfDTO(cpf, 1234);
+        CreateNewAccountByCpfDTO dto = new CreateNewAccountByCpfDTO(cpf, 1234);
         Mockito.when(findIsExistsPeerCPFRepository.exec(cpf)).thenReturn(false);
         Mockito.when(saveRepository.exec(ArgumentMatchers.any(Account.class))).thenReturn(buildMockAccount());
 
@@ -51,7 +51,7 @@ class CreateNewAccountPeerCPFUseCaseTest {
     public void testExec_accountExists_throwsException() {
         // Arrange
         String cpf = "12345678901";
-        CreateNewAccountForCpfDTO dto = new CreateNewAccountForCpfDTO(cpf, 1234);
+        CreateNewAccountByCpfDTO dto = new CreateNewAccountByCpfDTO(cpf, 1234);
         Mockito.when(findIsExistsPeerCPFRepository.exec(cpf)).thenReturn(true);
 
         // Act and Assert
