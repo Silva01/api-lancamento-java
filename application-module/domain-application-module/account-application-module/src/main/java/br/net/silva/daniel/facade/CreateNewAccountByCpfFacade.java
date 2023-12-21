@@ -7,13 +7,13 @@ import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IFacade;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.usecase.CreateNewAccountPeerCPFUseCase;
+import br.net.silva.daniel.usecase.CreateNewAccountByCpfUseCase;
 
 public class CreateNewAccountByCpfFacade implements IFacade<CreateNewAccountByCpfDTO, AccountDTO> {
     private final UseCase<CreateNewAccountByCpfDTO, AccountDTO> createNewAccountPeerCPFUseCase;
 
     public CreateNewAccountByCpfFacade(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository) {
-        this.createNewAccountPeerCPFUseCase = new CreateNewAccountPeerCPFUseCase(findIsExistsPeerCPFRepository, saveRepository);
+        this.createNewAccountPeerCPFUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository);
     }
 
     @Override
