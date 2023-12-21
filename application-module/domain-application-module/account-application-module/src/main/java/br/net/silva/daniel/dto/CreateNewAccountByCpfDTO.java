@@ -4,15 +4,16 @@ import br.net.silva.daniel.interfaces.ICreateAccountPord;
 
 public record CreateNewAccountByCpfDTO(
         String cpf,
-        Integer agency
+        Integer agency,
+        String password
 ) implements ICreateAccountPord {
-    @Override
-    public Integer bankAgencyNumber() {
-        return agency;
+
+    public CreateNewAccountByCpfDTO(String cpf, Integer agency) {
+        this(cpf, agency, "123456");
     }
 
     @Override
-    public String password() {
-        return "123456";
+    public Integer bankAgencyNumber() {
+        return agency;
     }
 }
