@@ -2,17 +2,14 @@ package br.net.silva.daniel.dto;
 
 import br.net.silva.daniel.interfaces.ICreateAccountPord;
 
-public record CreateNewAccountForCpfDTO(
+public record CreateNewAccontDTO(
         String cpf,
-        Integer agency
+        Integer agency,
+        String password,
+        boolean isWithCreditCard
 ) implements ICreateAccountPord {
     @Override
     public Integer bankAgencyNumber() {
         return agency;
-    }
-
-    @Override
-    public String password() {
-        return "123456";
     }
 }
