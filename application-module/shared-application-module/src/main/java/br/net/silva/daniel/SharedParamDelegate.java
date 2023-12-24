@@ -1,23 +1,26 @@
 package br.net.silva.daniel;
 
-public class SharedParamDelegate<P, R> {
+import br.net.silva.daniel.interfaces.IProcessResponse;
 
-    private P param;
-    private R response;
+public class SharedParamDelegate implements IProcessResponse {
 
-    public void addParam(P param) {
+    private Object param;
+    private Object response;
+
+    public void addParam(Object param) {
         this.param = param;
     }
 
-    public void addResponse(R response) {
+    public void addResponse(Object response) {
         this.response = response;
     }
 
-    public P getParam() {
+    public Object getParam() {
         return param;
     }
 
-    public R getResponse() {
+    @Override
+    public Object processResponse() {
         return response;
     }
 }
