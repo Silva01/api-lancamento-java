@@ -69,7 +69,7 @@ public class CreditCard extends Validation implements Aggregate, IFactoryDto<Cre
     }
 
     @Override
-    public CreditCardDTO create() {
+    public CreditCardDTO build() {
         return new CreditCardDTO(number, cvv, flag, balance, expirationDate, active);
     }
 

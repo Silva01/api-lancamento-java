@@ -72,7 +72,7 @@ public class Client extends Validation implements AggregateRoot, IFactoryDto<Cli
     }
 
     @Override
-    public ClientDTO create() {
+    public ClientDTO build() {
         var addressDTO = new AddressDTO(address.street(), address.number(), address.complement(), address.neighborhood(), address.state(), address.city(), address.zipCode());
         return new ClientDTO(id, cpf, name, telephone, active, addressDTO);
     }

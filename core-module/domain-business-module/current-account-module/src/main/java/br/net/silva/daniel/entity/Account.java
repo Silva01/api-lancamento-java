@@ -91,7 +91,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
     }
 
     @Override
-    public AccountDTO create() {
+    public AccountDTO build() {
         return new AccountDTO(
                 number,
                 bankAgencyNumber,
@@ -99,8 +99,8 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
                 password,
                 active,
                 cpf,
-                transactions.stream().map(Transaction::create).toList(),
-                Objects.nonNull(creditCard) ? creditCard.create() : null);
+                transactions.stream().map(Transaction::build).toList(),
+                Objects.nonNull(creditCard) ? creditCard.build() : null);
     }
 
     private void validatePassword() {

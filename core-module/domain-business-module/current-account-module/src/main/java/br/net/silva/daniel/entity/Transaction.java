@@ -62,7 +62,7 @@ public class Transaction extends Validation implements Aggregate, IFactoryDto<Tr
     }
 
     @Override
-    public TransactionDTO create() {
+    public TransactionDTO build() {
         return new TransactionDTO(
                 id,
                 description,

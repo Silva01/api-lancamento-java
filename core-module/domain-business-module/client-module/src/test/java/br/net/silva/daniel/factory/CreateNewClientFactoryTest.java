@@ -16,7 +16,7 @@ public class CreateNewClientFactoryTest extends TestCase {
 
         // Act
         Client client = clientFactory.create(mockClientDTO);
-        var clientResponse = client.create();
+        var clientResponse = client.build();
 
         // Assert
         assertEquals(clientResponse.cpf(), mockClientDTO.cpf());

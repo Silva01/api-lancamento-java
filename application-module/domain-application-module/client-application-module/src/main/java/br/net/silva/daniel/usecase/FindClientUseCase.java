@@ -20,6 +20,6 @@ public class FindClientUseCase implements UseCase<String, ClientDTO> {
     public ClientDTO exec(String cpf) throws ClientNotExistsException {
         var optionalClient = findClientRepository.exec(cpf);
         var client = optionalClient.orElseThrow(() -> new ClientNotExistsException("Client not exists in database"));
-        return client.create();
+        return client.build();
     }
 }

@@ -11,7 +11,7 @@ public class TransactionTest extends TestCase {
         var transaction = new Transaction(1L, "Debit Transaction", BigDecimal.valueOf(10), 1, TransactionTypeEnum.DEBIT, 1, 2, 1L, null, null);
         assertNotNull(transaction);
 
-        var dto = transaction.create();
+        var dto = transaction.build();
         assertEquals(TransactionTypeEnum.DEBIT, dto.type());
     }
 
@@ -19,7 +19,7 @@ public class TransactionTest extends TestCase {
         var transaction = new Transaction(1L, "Credit Transaction", BigDecimal.valueOf(10), 1, TransactionTypeEnum.CREDIT, 1, 2, 1L, "123456789", 123);
         assertNotNull(transaction);
 
-        var dto = transaction.create();
+        var dto = transaction.build();
         assertEquals(TransactionTypeEnum.CREDIT, dto.type());
     }
 

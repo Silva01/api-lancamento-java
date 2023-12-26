@@ -12,13 +12,13 @@ public class AccountTest extends TestCase {
 
     public void testShouldCreateAccountWithSuccess() {
         var account = new Account(1, 1, "123456", "12345678910", null);
-        var dto = account.create();
+        var dto = account.build();
         assertNotNull(dto);
     }
 
     public void testShouldCreateAccountBasicWithSuccess() {
         var account = new Account(1, "123456", "12345678910");
-        var dto = account.create();
+        var dto = account.build();
 
         assertNotNull(dto);
         assertEquals(Integer.valueOf(1), dto.bankAgencyNumber());
@@ -139,7 +139,7 @@ public class AccountTest extends TestCase {
         var account = new Account(1, 1, "123456", "12345678910", null);
         account.registerTransaction(List.of(transactionDTO));
 
-        var accountDTO = account.create();
+        var accountDTO = account.build();
         assertEquals(BigDecimal.valueOf(1900), accountDTO.balance());
     }
 
@@ -169,7 +169,7 @@ public class AccountTest extends TestCase {
         var account = new Account(1, 1, "123456", "12345678910", null);
         account.activate();
 
-        var dto = account.create();
+        var dto = account.build();
         assertTrue(dto.active());
     }
 
@@ -177,7 +177,7 @@ public class AccountTest extends TestCase {
         var account = new Account(1, 1, "123456", "12345678910", null);
         account.deactivate();
 
-        var dto = account.create();
+        var dto = account.build();
         assertFalse(dto.active());
     }
 
@@ -222,7 +222,7 @@ public class AccountTest extends TestCase {
         var account = new Account(1, 1, "123456", "12345678910", null);
         account.vinculateCreditCard(creditCard);
 
-        var dto = account.create();
+        var dto = account.build();
         assertNotNull(dto.creditCard());
     }
 

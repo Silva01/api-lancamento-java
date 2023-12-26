@@ -26,7 +26,7 @@ public class CreateNewClientUseCase implements UseCase<ClientRequestDTO, ClientD
     @Override
     public ClientDTO exec(ClientRequestDTO request) throws ExistsClientRegistredException {
         try {
-            return saveRepository.exec(buildClient(request)).create();
+            return saveRepository.exec(buildClient(request)).build();
         } catch (Exception e) {
             throw new ExistsClientRegistredException(e.getMessage());
         }

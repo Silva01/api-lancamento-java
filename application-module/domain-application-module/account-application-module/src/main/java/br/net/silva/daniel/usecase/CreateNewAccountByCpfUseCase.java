@@ -29,7 +29,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase<CreateNewAccountByC
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
         var newAccount = saveRepository.exec(createNewAccountByCpfFactory.create(dto));
-        return newAccount.create();
+        return newAccount.build();
     }
 
     private boolean isExistsAccountActiveForCPF(String cpf) {
