@@ -1,38 +1,36 @@
 package br.net.silva.daniel.interfaces;
 
-import br.net.silva.daniel.SharedParamDelegate;
 import br.net.silva.daniel.exception.GenericException;
 
 import java.util.List;
 import java.util.Queue;
 
-public abstract class AbstractFacade<U extends UseCase<SharedParamDelegate, IProcessResponse>> {
+public abstract class AbstractFacade<P extends IGenericPort, U extends UseCase<P, IProcessResponse<?>>> {
 
     private final Queue<U> useCases;
-    private final List<IValidations<SharedParamDelegate>> validationsList;
+    private final List<IValidations<P>> validationsList;
 
-    protected AbstractFacade(Queue<U> useCases, List<IValidations<SharedParamDelegate>> validationsList) {
+    protected AbstractFacade(Queue<U> useCases, List<IValidations<P>> validationsList) {
         this.useCases = useCases;
         this.validationsList = validationsList;
     }
 
-    public IProcessResponse exec(SharedParamDelegate delegate) throws GenericException {
-        validate(delegate);
-        return execProcess(delegate);
+    public IProcessResponse<?> exec(P param) throws GenericException {
+        validate(param);
+        return execProcess(param);
     }
 
-    private void validate(SharedParamDelegate delegate) throws GenericException {
-        for (IValidations<SharedParamDelegate> validations : validationsList) {
-            validations.validate(delegate);
+    private void validate(P param) throws GenericException {
+        for (IValidations<P> validations : validationsList) {
+            validations.validate(param);
         }
     }
 
-    private IProcessResponse execProcess(SharedParamDelegate delegate) throws GenericException {
+    private IProcessResponse<?> execProcess(P param) throws GenericException {
         for (U useCase : useCases) {
-            var response = useCase.exec(delegate);
-            delegate.addResponse(response);
+            useCase.exec(param);//TODO: precisa pensar na implementação do retorno do use case
         }
 
-        return delegate;
+        throw new GenericException("Use case not found");
     }
 }
