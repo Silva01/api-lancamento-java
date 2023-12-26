@@ -1,6 +1,5 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.SharedParamDelegate;
 import br.net.silva.daniel.dto.FindAccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.AccountNotExistsException;
@@ -11,7 +10,7 @@ import br.net.silva.daniel.repository.Repository;
 
 import java.util.Optional;
 
-public class FindAccountUseCase implements UseCase<SharedParamDelegate, IProcessResponse> {
+public class FindAccountUseCase implements UseCase<FindAccountDTO, IProcessResponse<?>> {
 
     private final Repository<Optional<Account>> findAccountRepository;
 
@@ -20,11 +19,8 @@ public class FindAccountUseCase implements UseCase<SharedParamDelegate, IProcess
     }
 
     @Override
-    public IProcessResponse exec(SharedParamDelegate param) throws GenericException {
-        var findAccountDTO = (FindAccountDTO) param.getParam();
-        var accountOptional = findAccountRepository.exec(findAccountDTO.accountNumber(), findAccountDTO.agency());
-        var account = accountOptional.orElseThrow(() -> new AccountNotExistsException("Account not found"));
-        param.addResponse(account);
-        return param;
+    public IProcessResponse<?> exec(FindAccountDTO param) throws GenericException {
+        var accountOptional = findAccountRepository.exec(param.accountNumber(), param.agency());
+        return accountOptional.orElseThrow(() -> new AccountNotExistsException("Account not found"));
     }
 }
