@@ -1,5 +1,6 @@
 package br.net.silva.daniel.factory;
 
-public interface IFactoryDto<T> {
-    T create();
+import br.net.silva.daniel.interfaces.IProcessResponse;
+
+public interface IFactoryDto<T> extends IProcessResponse<T> {
 }
