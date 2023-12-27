@@ -28,9 +28,9 @@ public abstract class AbstractFacade<P extends IGenericPort, U extends UseCase<P
 
     private IProcessResponse<?> execProcess(P param) throws GenericException {
         for (U useCase : useCases) {
-            useCase.exec(param);//TODO: precisa pensar na implementação do retorno do use case
+            param = (P) useCase.exec(param).build();
         }
 
-        throw new GenericException("Use case not found");
+        return (IProcessResponse<?>) param;
     }
 }
