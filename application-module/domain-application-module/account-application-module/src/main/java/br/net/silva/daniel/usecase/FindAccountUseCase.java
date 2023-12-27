@@ -4,13 +4,14 @@ import br.net.silva.daniel.dto.FindAccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.AccountNotExistsException;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.interfaces.IGenericPort;
 import br.net.silva.daniel.interfaces.IProcessResponse;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 
 import java.util.Optional;
 
-public class FindAccountUseCase implements UseCase<FindAccountDTO, IProcessResponse<?>> {
+public class FindAccountUseCase implements UseCase<FindAccountDTO, IProcessResponse<? extends IGenericPort>> {
 
     private final Repository<Optional<Account>> findAccountRepository;
 
