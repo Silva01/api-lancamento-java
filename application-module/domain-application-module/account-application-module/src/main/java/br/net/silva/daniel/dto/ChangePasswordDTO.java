@@ -1,6 +1,6 @@
 package br.net.silva.daniel.dto;
 
-import br.net.silva.daniel.interfaces.IAccountPort;
+import br.net.silva.daniel.interfaces.IGenericPort;
 
 public record ChangePasswordDTO(
         String cpf,
@@ -8,19 +8,16 @@ public record ChangePasswordDTO(
         Integer account,
         String password,
         String oldPassword
-) implements IAccountPort {
+) implements IGenericPort {
+
     @Override
-    public Integer accountNumber() {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void accept(Class<?> clazz) {
+        if (!clazz.isInstance(ChangePasswordDTO.class))
+            throw new IllegalArgumentException("Class must be assignable from IAccountPort");
     }
 
     @Override
-    public String newPassword() {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public boolean isWithCreditCard() {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public ChangePasswordDTO get() {
+        return this;
     }
 }
