@@ -5,6 +5,7 @@ import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.interfaces.AggregateRoot;
 import br.net.silva.daniel.factory.IFactoryDto;
 import br.net.silva.daniel.utils.GeneratorRandomNumber;
+import br.net.silva.daniel.utils.GenericErrorUtils;
 import br.net.silva.daniel.validation.Validation;
 
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
     private Integer number;
     private final Integer bankAgencyNumber;
     private BigDecimal balance;
-    private final String password;
+    private final String password; //TODO: Refactor to use Crypto and validation too
     private boolean active;
     private final String cpf;
     private CreditCard creditCard;
@@ -88,6 +89,12 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
 
     public void vinculateCreditCard(CreditCard creditCard) {
         this.creditCard = creditCard;
+    }
+
+    public void validatePassword(String password) {
+        if (!this.password.equals(password)) {
+            throw GenericErrorUtils.executeException("Password is different");
+        }
     }
 
     @Override
