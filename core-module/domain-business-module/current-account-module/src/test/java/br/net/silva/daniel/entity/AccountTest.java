@@ -226,4 +226,19 @@ public class AccountTest extends TestCase {
         assertNotNull(dto.creditCard());
     }
 
+    public void testMustValidateWithSuccessExternalPassword() {
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        account.validatePassword("123456");
+    }
+
+    public void testMustValidateWithErrorInternalPassword() {
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        try {
+            account.validatePassword("1234567");
+            fail();
+        } catch (Exception e) {
+            assertEquals("Password is different", e.getMessage());
+        }
+    }
+
 }
