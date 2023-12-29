@@ -26,7 +26,9 @@ public abstract class AbstractFacade<P extends IGenericPort, U extends UseCase<P
         }
     }
 
+    @SuppressWarnings("unchecked")
     private IProcessResponse<?> execProcess(P param) throws GenericException {
+        //TODO: Revisar se precisa de refatoracao
         for (U useCase : useCases) {
             param = (P) useCase.exec(param).build();
         }
