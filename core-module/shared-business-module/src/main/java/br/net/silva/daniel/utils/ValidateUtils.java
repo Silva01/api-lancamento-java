@@ -68,4 +68,10 @@ public class ValidateUtils {
             throw GenericErrorUtils.executeException(messageError);
         }
     }
+
+    public static void isTypeOf(Object attribute, Class<?> clazz, String messageError) {
+        if (!clazz.isInstance(attribute)) {
+            throw GenericErrorUtils.executeException(messageError);
+        }
+    }
 }
