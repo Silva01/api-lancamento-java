@@ -1,6 +1,7 @@
 package br.net.silva.daniel.dto;
 
 import br.net.silva.daniel.interfaces.IGenericPort;
+import br.net.silva.daniel.utils.ValidateUtils;
 
 public record ChangePasswordDTO(
         String cpf,
@@ -12,8 +13,7 @@ public record ChangePasswordDTO(
 
     @Override
     public void accept(Class<?> clazz) {
-        if (!clazz.isInstance(ChangePasswordDTO.class))
-            throw new IllegalArgumentException("Class must be assignable from IAccountPort");
+        ValidateUtils.isTypeOf(clazz, ChangePasswordDTO.class, "Type of class is incompatible with ChangePasswordDTO");
     }
 
     @Override
