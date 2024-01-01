@@ -5,12 +5,12 @@ import br.net.silva.daniel.exception.GenericException;
 import java.util.List;
 import java.util.Queue;
 
-public abstract class AbstractFacade<P extends IGenericPort, U extends UseCase<P, IProcessResponse<?>>> {
+public abstract class AbstractFacade<P extends IGenericPort, U extends UseCase<IProcessResponse<?>>> {
 
     private final Queue<U> useCases;
-    private final List<IValidations<P>> validationsList;
+    private final List<? extends IValidations> validationsList;
 
-    protected AbstractFacade(Queue<U> useCases, List<IValidations<P>> validationsList) {
+    protected AbstractFacade(Queue<U> useCases, List<? extends IValidations> validationsList) {
         this.useCases = useCases;
         this.validationsList = validationsList;
     }
@@ -21,7 +21,7 @@ public abstract class AbstractFacade<P extends IGenericPort, U extends UseCase<P
     }
 
     private void validate(P param) throws GenericException {
-        for (IValidations<P> validations : validationsList) {
+        for (IValidations validations : validationsList) {
             validations.validate(param);
         }
     }
