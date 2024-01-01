@@ -1,9 +1,10 @@
 package br.net.silva.daniel.usecase;
 
+import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.dto.CreateNewAccountByCpfDTO;
+import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.exception.AccountExistsForCPFInformatedException;
+import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.repository.Repository;
 import org.junit.jupiter.api.BeforeEach;

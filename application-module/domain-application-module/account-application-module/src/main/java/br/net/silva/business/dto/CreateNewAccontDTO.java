@@ -1,4 +1,4 @@
-package br.net.silva.daniel.dto;
+package br.net.silva.business.dto;
 
 import br.net.silva.daniel.interfaces.ICreateAccountPord;
 

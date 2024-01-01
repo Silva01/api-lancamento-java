@@ -1,13 +1,13 @@
-package br.net.silva.daniel.facade;
+package br.net.silva.business.facade;
 
 import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.dto.CreateNewAccountByCpfDTO;
+import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IFacade;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.usecase.CreateNewAccountByCpfUseCase;
+import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 
 public class CreateNewAccountByCpfFacade implements IFacade<CreateNewAccountByCpfDTO, AccountDTO> {
     private final UseCase<CreateNewAccountByCpfDTO, AccountDTO> createNewAccountPeerCPFUseCase;

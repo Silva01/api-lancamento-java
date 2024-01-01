@@ -4,6 +4,7 @@ import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.dto.AddressRequestDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.dto.ClientRequestDTO;
+import br.net.silva.daniel.interfaces.IMapper;
 
 public class ClientDtoMapper implements IMapper<ClientDTO, ClientRequestDTO> {
     @Override

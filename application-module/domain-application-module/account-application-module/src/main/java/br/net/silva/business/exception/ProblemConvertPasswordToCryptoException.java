@@ -1,4 +1,4 @@
-package br.net.silva.daniel.exception;
+package br.net.silva.business.exception;
 
 public class ProblemConvertPasswordToCryptoException extends RuntimeException {
 

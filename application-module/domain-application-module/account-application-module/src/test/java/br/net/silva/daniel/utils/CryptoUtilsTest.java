@@ -1,5 +1,6 @@
 package br.net.silva.daniel.utils;
 
+import br.net.silva.business.utils.CryptoUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

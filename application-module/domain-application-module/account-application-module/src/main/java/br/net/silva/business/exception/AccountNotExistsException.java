@@ -1,4 +1,6 @@
-package br.net.silva.daniel.exception;
+package br.net.silva.business.exception;
+
+import br.net.silva.daniel.exception.GenericException;
 
 public class AccountNotExistsException extends GenericException {
     public AccountNotExistsException(String message) {
