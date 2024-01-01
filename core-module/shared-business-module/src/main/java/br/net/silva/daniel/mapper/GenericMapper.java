@@ -2,11 +2,12 @@ package br.net.silva.daniel.mapper;
 
 import br.net.silva.daniel.exception.MapperNotConvertErrorException;
 import br.net.silva.daniel.interfaces.IGenericPort;
+import br.net.silva.daniel.interfaces.IMapper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
-public class GenericMapper<T extends IGenericPort> implements IMapper<T, IGenericPort>{
+public class GenericMapper<T extends IGenericPort> implements IMapper<T, IGenericPort> {
 
     private final Class<T> clazz;
 
