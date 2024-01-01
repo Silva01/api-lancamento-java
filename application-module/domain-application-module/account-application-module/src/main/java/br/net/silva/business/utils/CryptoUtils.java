@@ -1,6 +1,6 @@
-package br.net.silva.daniel.utils;
+package br.net.silva.business.utils;
 
-import br.net.silva.daniel.exception.ProblemConvertPasswordToCryptoException;
+import br.net.silva.business.exception.ProblemConvertPasswordToCryptoException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
