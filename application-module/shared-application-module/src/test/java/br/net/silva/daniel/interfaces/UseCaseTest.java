@@ -13,7 +13,7 @@ import static org.mockito.ArgumentMatchers.any;
 class UseCaseTest {
 
     @Mock
-    UseCase<String, Integer> useCaseMock;
+    UseCase<Integer> useCaseMock;
 
     @BeforeEach
     public void setUp() {
@@ -26,7 +26,7 @@ class UseCaseTest {
         Mockito.when(useCaseMock.exec(any())).thenReturn(expected);
 
         // Act
-        Integer result = useCaseMock.exec("any argument");
+        Integer result = useCaseMock.exec(null);
 
         // Assert
         Assert.assertEquals(expected, result);
@@ -38,7 +38,7 @@ class UseCaseTest {
 
         // Act
         try {
-            useCaseMock.exec("any argument");
+            useCaseMock.exec(null);
         } catch (GenericException e) {
             // Assert
             Assert.assertEquals("Generic error", e.getMessage());

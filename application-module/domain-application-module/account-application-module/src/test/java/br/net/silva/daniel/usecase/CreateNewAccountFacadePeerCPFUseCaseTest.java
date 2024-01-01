@@ -36,7 +36,7 @@ class CreateNewAccountFacadePeerCPFUseCaseTest {
     public void testExec_accountDoesNotExist_createsNewAccount() throws GenericException {
         // Arrange
         String cpf = "12345678901";
-        CreateNewAccountByCpfDTO dto = new CreateNewAccountByCpfDTO(cpf, 1234);
+        CreateNewAccountByCpfDTO dto = new CreateNewAccountByCpfDTO(cpf, 1234, "");
         Mockito.when(findIsExistsPeerCPFRepository.exec(cpf)).thenReturn(false);
         Mockito.when(saveRepository.exec(ArgumentMatchers.any(Account.class))).thenReturn(buildMockAccount());
 
@@ -52,7 +52,7 @@ class CreateNewAccountFacadePeerCPFUseCaseTest {
     public void testExec_accountExists_throwsException() {
         // Arrange
         String cpf = "12345678901";
-        CreateNewAccountByCpfDTO dto = new CreateNewAccountByCpfDTO(cpf, 1234);
+        CreateNewAccountByCpfDTO dto = new CreateNewAccountByCpfDTO(cpf, 1234, "");
         Mockito.when(findIsExistsPeerCPFRepository.exec(cpf)).thenReturn(true);
 
         // Act and Assert
