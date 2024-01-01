@@ -1,12 +1,21 @@
 package br.net.silva.daniel.factory;
 
+import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.interfaces.ICreateAccountPord;
+import br.net.silva.daniel.interfaces.IGenericPort;
+import br.net.silva.daniel.mapper.GenericMapper;
 
-public class CreateNewAccountByCpfFactory implements IFactoryAggregate<Account, ICreateAccountPord> {
+public class CreateNewAccountByCpfFactory implements IFactoryAggregate<Account, IGenericPort> {
+
+    private final GenericMapper<AccountDTO> mapper;
+
+    public CreateNewAccountByCpfFactory() {
+        this.mapper = new GenericMapper<>(AccountDTO.class);
+    }
 
     @Override
-    public Account create(ICreateAccountPord accountPord) {
-        return new Account(accountPord.bankAgencyNumber(), accountPord.password(), accountPord.cpf());
+    public Account create(IGenericPort accountPord) {
+        var accountDTO = mapper.map(accountPord);
+        return new Account(accountDTO.bankAgencyNumber(), accountDTO.password(), accountDTO.cpf());
     }
 }
