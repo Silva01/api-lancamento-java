@@ -1,9 +1,10 @@
 package br.net.silva.daniel.facade;
 
+import br.net.silva.business.facade.CreateNewAccountByCpfFacade;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.dto.ClientRequestDTO;
-import br.net.silva.daniel.dto.CreateNewAccountByCpfDTO;
+import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
