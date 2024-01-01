@@ -1,4 +1,4 @@
-package br.net.silva.daniel.mapper;
+package br.net.silva.daniel.interfaces;
 
 public interface IMapper<R, P> {
     R map(P param);
