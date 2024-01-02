@@ -42,6 +42,11 @@
             <artifactId>current-account-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>br.net.silva.daniel</groupId>
+            <artifactId>shared-business-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
