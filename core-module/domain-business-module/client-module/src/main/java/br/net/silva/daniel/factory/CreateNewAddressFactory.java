@@ -1,9 +1,10 @@
 package br.net.silva.daniel.factory;
 
 import br.net.silva.daniel.dto.AddressDTO;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.value_object.Address;
 
-public class CreateNewAddressFactory implements IFactoryAggregate<Address, AddressDTO>{
+public class CreateNewAddressFactory implements IFactoryAggregate<Address, AddressDTO> {
     @Override
     public Address create(AddressDTO addressDTO) {
         return new Address(

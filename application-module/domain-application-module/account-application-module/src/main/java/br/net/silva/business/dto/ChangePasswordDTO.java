@@ -1,7 +1,7 @@
 package br.net.silva.business.dto;
 
-import br.net.silva.daniel.interfaces.IGenericPort;
-import br.net.silva.daniel.utils.ValidateUtils;
+import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
 public record ChangePasswordDTO(
         String cpf,

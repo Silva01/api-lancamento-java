@@ -1,13 +1,13 @@
-package br.net.silva.daniel.mapper;
+package br.net.silva.daniel.shared.business.mapper;
 
-import br.net.silva.daniel.exception.MapperNotConvertErrorException;
-import br.net.silva.daniel.interfaces.IGenericPort;
-import br.net.silva.daniel.interfaces.IMapper;
+import br.net.silva.daniel.shared.business.exception.MapperNotConvertErrorException;
+import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.interfaces.IMapper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
-public class GenericMapper<T extends IGenericPort> implements IMapper<T, IGenericPort> {
+public class GenericMapper<T> implements IMapper<T, IGenericPort> {
 
     private final Class<T> clazz;
 

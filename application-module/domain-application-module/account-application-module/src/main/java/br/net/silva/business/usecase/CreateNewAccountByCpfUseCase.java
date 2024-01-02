@@ -6,13 +6,14 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
-import br.net.silva.daniel.factory.IFactoryAggregate;
-import br.net.silva.daniel.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
+import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.mapper.GenericMapper;
+import br.net.silva.daniel.shared.business.mapper.GenericMapper;
 import br.net.silva.daniel.repository.Repository;
 
-public class CreateNewAccountByCpfUseCase implements UseCase<AccountDTO> {
+public class CreateNewAccountByCpfUseCase implements UseCase<IProcessResponse<AccountDTO>> {
 
     private final IFactoryAggregate<Account, IGenericPort> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
@@ -27,13 +28,12 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountDTO> {
     }
 
     @Override
-    public AccountDTO exec(IGenericPort dto) throws GenericException {
+    public IProcessResponse<AccountDTO> exec(IGenericPort dto) throws GenericException {
         var createNewAccountByCpfDTO = mapper.map(dto);
         if (isExistsAccountActiveForCPF(createNewAccountByCpfDTO.cpf())) {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
-        var newAccount = saveRepository.exec(createNewAccountByCpfFactory.create(createNewAccountByCpfDTO));
-        return newAccount.build();
+        return saveRepository.exec(createNewAccountByCpfFactory.create(createNewAccountByCpfDTO));
     }
 
     private boolean isExistsAccountActiveForCPF(String cpf) {

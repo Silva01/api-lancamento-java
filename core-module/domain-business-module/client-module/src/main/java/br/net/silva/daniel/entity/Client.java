@@ -2,9 +2,9 @@ package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.interfaces.AggregateRoot;
-import br.net.silva.daniel.factory.IFactoryDto;
-import br.net.silva.daniel.validation.Validation;
+import br.net.silva.daniel.shared.business.interfaces.AggregateRoot;
+import br.net.silva.daniel.shared.business.factory.IFactoryDto;
+import br.net.silva.daniel.shared.business.validation.Validation;
 import br.net.silva.daniel.value_object.Address;
 
 import java.util.UUID;

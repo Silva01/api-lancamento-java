@@ -1,7 +1,7 @@
 package br.net.silva.daniel.dto;
 
 import br.net.silva.daniel.enuns.FlagEnum;
-import br.net.silva.daniel.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

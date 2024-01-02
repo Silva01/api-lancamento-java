@@ -1,4 +1,4 @@
-package br.net.silva.daniel.utils;
+package br.net.silva.daniel.shared.business.utils;
 
 import java.util.Random;
 

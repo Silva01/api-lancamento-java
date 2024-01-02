@@ -1,6 +1,6 @@
 package br.net.silva.daniel.dto;
 
-import br.net.silva.daniel.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 
 public record ClientDTO(
         String id,

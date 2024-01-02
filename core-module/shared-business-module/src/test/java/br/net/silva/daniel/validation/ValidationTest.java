@@ -1,5 +1,6 @@
 package br.net.silva.daniel.validation;
 
+import br.net.silva.daniel.shared.business.validation.Validation;
 import junit.framework.TestCase;
 
 import java.math.BigDecimal;

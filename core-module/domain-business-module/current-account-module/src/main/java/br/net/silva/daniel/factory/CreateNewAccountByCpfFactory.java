@@ -2,8 +2,9 @@ package br.net.silva.daniel.factory;
 
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.interfaces.IGenericPort;
-import br.net.silva.daniel.mapper.GenericMapper;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
+import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.mapper.GenericMapper;
 
 public class CreateNewAccountByCpfFactory implements IFactoryAggregate<Account, IGenericPort> {
 

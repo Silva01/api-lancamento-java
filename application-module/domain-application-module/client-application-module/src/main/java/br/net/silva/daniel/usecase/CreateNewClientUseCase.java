@@ -1,6 +1,6 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.mapper.ClientDtoMapper;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.dto.ClientRequestDTO;
@@ -8,10 +8,10 @@ import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.factory.CreateNewAddressFactory;
 import br.net.silva.daniel.factory.CreateNewClientFactory;
-import br.net.silva.daniel.factory.IFactoryAggregate;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.interfaces.IMapper;
-import br.net.silva.daniel.mapper.GenericMapper;
+import br.net.silva.daniel.shared.business.interfaces.IMapper;
+import br.net.silva.daniel.shared.business.mapper.GenericMapper;
 import br.net.silva.daniel.repository.Repository;
 
 public class CreateNewClientUseCase implements UseCase<ClientDTO> {

@@ -4,11 +4,11 @@ import br.net.silva.business.dto.FindAccountDTO;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.IGenericPort;
-import br.net.silva.daniel.interfaces.IMapper;
-import br.net.silva.daniel.interfaces.IProcessResponse;
+import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.interfaces.IMapper;
+import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.mapper.GenericMapper;
+import br.net.silva.daniel.shared.business.mapper.GenericMapper;
 import br.net.silva.daniel.repository.Repository;
 
 import java.util.Optional;

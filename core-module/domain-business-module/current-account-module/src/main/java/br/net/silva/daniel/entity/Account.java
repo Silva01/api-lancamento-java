@@ -2,11 +2,11 @@ package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
-import br.net.silva.daniel.interfaces.AggregateRoot;
-import br.net.silva.daniel.factory.IFactoryDto;
-import br.net.silva.daniel.utils.GeneratorRandomNumber;
-import br.net.silva.daniel.utils.GenericErrorUtils;
-import br.net.silva.daniel.validation.Validation;
+import br.net.silva.daniel.shared.business.interfaces.AggregateRoot;
+import br.net.silva.daniel.shared.business.factory.IFactoryDto;
+import br.net.silva.daniel.shared.business.utils.GeneratorRandomNumber;
+import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
+import br.net.silva.daniel.shared.business.validation.Validation;
 
 import java.math.BigDecimal;
 import java.util.*;
