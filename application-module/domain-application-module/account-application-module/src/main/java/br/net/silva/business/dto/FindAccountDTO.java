@@ -8,6 +8,7 @@ public class FindAccountDTO implements IGenericPort {
     private String cpf;
     private Integer agency;
     private Integer accountNumber;
+    private String password;
 
     public FindAccountDTO(String cpf, Integer agency, Integer accountNumber) {
         this.cpf = cpf;
@@ -31,7 +32,10 @@ public class FindAccountDTO implements IGenericPort {
         return accountNumber;
     }
 
-    String password;
+    public String password() {
+        return password;
+    }
+
     @Override
     public void accept(Class<?> clazz) {
         ValidateUtils.isTypeOf(clazz, FindAccountDTO.class, "Type of class is incompatible with FindAccountDTO");
