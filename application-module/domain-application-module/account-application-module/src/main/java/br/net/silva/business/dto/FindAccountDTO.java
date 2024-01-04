@@ -3,12 +3,35 @@ package br.net.silva.business.dto;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
-public record FindAccountDTO(
-        String cpf,
-        Integer agency,
-        Integer accountNumber,
-        String password
-) implements IGenericPort {
+public class FindAccountDTO implements IGenericPort {
+
+    private String cpf;
+    private Integer agency;
+    private Integer accountNumber;
+
+    public FindAccountDTO(String cpf, Integer agency, Integer accountNumber) {
+        this.cpf = cpf;
+        this.agency = agency;
+        this.accountNumber = accountNumber;
+    }
+
+    public FindAccountDTO() {
+        this(null, 0, 0);
+    }
+
+    public String cpf() {
+        return cpf;
+    }
+
+    public Integer agency() {
+        return agency;
+    }
+
+    public Integer accountNumber() {
+        return accountNumber;
+    }
+
+    String password;
     @Override
     public void accept(Class<?> clazz) {
         ValidateUtils.isTypeOf(clazz, FindAccountDTO.class, "Type of class is incompatible with FindAccountDTO");
