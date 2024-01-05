@@ -17,7 +17,7 @@ public class FindAccountDTO implements IGenericPort {
     }
 
     public FindAccountDTO() {
-        this(null, 0, 0);
+        this("", 0, 0);
     }
 
     public String cpf() {
