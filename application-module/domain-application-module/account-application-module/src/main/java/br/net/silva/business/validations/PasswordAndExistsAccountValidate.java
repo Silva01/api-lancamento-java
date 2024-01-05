@@ -1,6 +1,6 @@
 package br.net.silva.business.validations;
 
-import br.net.silva.business.utils.CryptoUtils;
+import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.business.dto.FindAccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -23,7 +23,7 @@ public class PasswordAndExistsAccountValidate implements IValidations {
     @Override
     public void validate(IGenericPort param) throws GenericException {
         var findAccountParamDTO = this.mapper.map(param);
-        var account = (Account) findAccountUseCase.exec(findAccountParamDTO).build();
+        var account = (Account) findAccountUseCase.exec(findAccountParamDTO);
         account.validatePassword(CryptoUtils.convertToSHA256(findAccountParamDTO.password()));
     }
 }

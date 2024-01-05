@@ -1,15 +1,11 @@
 package br.net.silva.daniel.utils;
 
-import br.net.silva.business.utils.CryptoUtils;
-import org.junit.jupiter.api.Test;
+import br.net.silva.daniel.shared.business.utils.CryptoUtils;
+import junit.framework.TestCase;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+public class CryptoUtilsTest extends TestCase {
 
-class CryptoUtilsTest {
-
-    @Test
-    void mustCryptoPasswordsToSha256() {
+    public void testMustCryptoPasswordsToSha256() {
         var password1 = "123890";
         var passwordCrypto1 = CryptoUtils.convertToSHA256(password1);
 
@@ -22,8 +18,7 @@ class CryptoUtilsTest {
         assertEquals(passwordCrypto1, passwordCrypto2);
     }
 
-    @Test
-    void mustCryptoPasswordsToMD5() {
+    public void testMustCryptoPasswordsToMD5() {
         var password1 = "123890";
         var passwordCrypto1 = CryptoUtils.convertToMD5(password1);
 
