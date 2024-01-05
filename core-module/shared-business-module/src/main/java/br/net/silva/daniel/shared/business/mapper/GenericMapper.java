@@ -1,11 +1,10 @@
 package br.net.silva.daniel.shared.business.mapper;
 
-import br.net.silva.daniel.shared.business.exception.MapperNotConvertErrorException;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.interfaces.IMapper;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class GenericMapper<T> implements IMapper<T, IGenericPort> {
 
@@ -17,30 +16,36 @@ public class GenericMapper<T> implements IMapper<T, IGenericPort> {
 
     @Override
     public T map(IGenericPort param) {
-        return toMap(param.get(), this.clazz);
+        return convert(param.get(), this.clazz);
     }
 
-    @SuppressWarnings("unchecked")
-    private T toMap(Object object, Class<T> clazz) {
+    public static <T, U> U convert(T source, Class<U> targetClass) {
         try {
-            Class<T> targetClass = (Class<T>) object.getClass();
-            // Find the constructor of the targetClass with the appropriate parameters
-            Constructor<T> constructor = targetClass.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            T dto = constructor.newInstance();
+            U target = targetClass.getDeclaredConstructor().newInstance();
 
-            for (Field targetField : targetClass.getDeclaredFields()) {
-                Field sourceField = clazz.getDeclaredField(targetField.getName());
-                sourceField.setAccessible(true);
-                targetField.setAccessible(true);
+            Field[] sourceFields = source.getClass().getDeclaredFields();
+            Field[] targetFields = targetClass.getDeclaredFields();
 
-                Object value = sourceField.get(object);
-                targetField.set(dto, value);
+            for (Field targetField : targetFields) {
+                Field sourceField = findMatchingField(targetField, sourceFields);
+                if (sourceField != null) {
+                    sourceField.setAccessible(true);
+                    targetField.setAccessible(true);
+                    Object value = sourceField.get(source);
+                    targetField.set(target, value);
+                }
             }
 
-            return dto;
+            return target;
         } catch (Exception e) {
-            throw new MapperNotConvertErrorException(e);
+            throw new RuntimeException("Erro ao mapear records", e);
         }
+    }
+
+    private static Field findMatchingField(Field targetField, Field[] sourceFields) {
+        return Arrays.stream(sourceFields)
+                .filter(field -> field.getName().equals(targetField.getName()))
+                .findFirst()
+                .orElse(null);
     }
 }
