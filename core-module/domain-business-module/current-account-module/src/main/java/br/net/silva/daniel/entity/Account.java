@@ -2,8 +2,8 @@ package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
-import br.net.silva.daniel.shared.business.interfaces.AggregateRoot;
 import br.net.silva.daniel.shared.business.factory.IFactoryDto;
+import br.net.silva.daniel.shared.business.interfaces.AggregateRoot;
 import br.net.silva.daniel.shared.business.utils.GeneratorRandomNumber;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 import br.net.silva.daniel.shared.business.validation.Validation;
@@ -112,28 +112,5 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
 
     private void validatePassword() {
         validateAttributeNotNullAndNotEmpty(password, "Password is required");
-        validateAttributeEqualsZero(password.length(), "Password must be greater than 6 Characters");
-        validateRepeatedNumberPassword();
-        validateIfPasswordOnlyNumbers();
-        if (password.length() < 6) {
-            throw new IllegalArgumentException("Password must be greater than 6");
-        }
-    }
-
-    private void validateRepeatedNumberPassword() {
-        Set<Character> seenCharacters = new HashSet<>();
-        for (char character : password.toCharArray()) {
-            if (Character.isDigit(character) && !seenCharacters.add(character)) {
-                throw new IllegalArgumentException("Password cannot have repeated numbers");
-            }
-        }
-    }
-
-    private void validateIfPasswordOnlyNumbers() {
-        var isOnlyNumbers =  password.chars().allMatch(Character::isDigit);
-
-        if (!isOnlyNumbers) {
-            throw new IllegalArgumentException("Password cannot have only numbers");
-        }
     }
 }
