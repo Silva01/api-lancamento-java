@@ -7,12 +7,12 @@ import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import java.util.List;
 import java.util.Queue;
 
-public abstract class AbstractFacade<P extends IGenericPort, U extends UseCase<IProcessResponse<?>>> {
+public class GenericFacadeDelegate<P extends IGenericPort, U extends UseCase<IProcessResponse<?>>> {
 
     private final Queue<U> useCases;
     private final List<? extends IValidations> validationsList;
 
-    protected AbstractFacade(Queue<U> useCases, List<? extends IValidations> validationsList) {
+    public GenericFacadeDelegate(Queue<U> useCases, List<? extends IValidations> validationsList) {
         this.useCases = useCases;
         this.validationsList = validationsList;
     }
