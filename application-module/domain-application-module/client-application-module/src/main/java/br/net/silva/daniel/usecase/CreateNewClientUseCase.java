@@ -14,7 +14,7 @@ import br.net.silva.daniel.shared.business.interfaces.IMapper;
 import br.net.silva.daniel.shared.business.mapper.GenericMapper;
 import br.net.silva.daniel.repository.Repository;
 
-public class CreateNewClientUseCase implements UseCase<ClientDTO> {
+public class CreateNewClientUseCase implements UseCase<Client> {
     private final Repository<Client> saveRepository;
     private final IFactoryAggregate<Client, ClientDTO> createNewClientFactory;
     private final IMapper<ClientDTO, ClientRequestDTO> clientMapper;
@@ -28,10 +28,10 @@ public class CreateNewClientUseCase implements UseCase<ClientDTO> {
     }
 
     @Override
-    public ClientDTO exec(IGenericPort request) throws ExistsClientRegistredException {
+    public Client exec(IGenericPort request) throws ExistsClientRegistredException {
         try {
             var clientRequestDto = genericMapper.map(request);
-            return saveRepository.exec(buildClient(clientRequestDto)).build();
+            return saveRepository.exec(buildClient(clientRequestDto));
         } catch (Exception e) {
             throw new ExistsClientRegistredException(e.getMessage());
         }
