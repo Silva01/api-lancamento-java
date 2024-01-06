@@ -1,5 +1,6 @@
 package br.net.silva.daniel.utils;
 
+import br.net.silva.daniel.shared.business.exception.ProblemConvertPasswordToCryptoException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import junit.framework.TestCase;
 
@@ -29,6 +30,16 @@ public class CryptoUtilsTest extends TestCase {
 
         assertNotNull(passwordCrypto2);
         assertEquals(passwordCrypto1, passwordCrypto2);
+    }
+
+    public void testMustErrorConvertToSHA256() {
+        try {
+            var password1 = "Teste";
+            var passwordCrypto1 = CryptoUtils.convertTo(password1, "lalalala");
+        } catch (ProblemConvertPasswordToCryptoException e) {
+            assertEquals("lalalala algorithm not found", e.getMessage());
+        }
+
     }
 
 }
