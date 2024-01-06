@@ -6,12 +6,12 @@ import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 public class CreateNewAccountByCpfDTO implements IGenericPort {
 
     private String cpf;
-    private Integer agency;
+    private Integer bankAgencyNumber;
     private String password;
 
-    public CreateNewAccountByCpfDTO(String cpf, Integer agency, String password) {
+    public CreateNewAccountByCpfDTO(String cpf, Integer bankAgencyNumber, String password) {
         this.cpf = cpf;
-        this.agency = agency;
+        this.bankAgencyNumber = bankAgencyNumber;
         this.password = password;
     }
 
@@ -24,7 +24,7 @@ public class CreateNewAccountByCpfDTO implements IGenericPort {
     }
 
     public Integer agency() {
-        return agency;
+        return bankAgencyNumber;
     }
 
     public String password() {
