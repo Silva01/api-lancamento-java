@@ -12,23 +12,22 @@ public final class CryptoUtils {
     }
 
     public static String convertToSHA256(String pass) {
-        try {
-            return convertTo(pass, "SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new ProblemConvertPasswordToCryptoException("SHA-256 algorithm not found", e);
-        }
+        return convertTo(pass, "SHA-256");
     }
 
     public static String convertToMD5(String pass) {
-        try {
-            return convertTo(pass, "MD5");
-        } catch (NoSuchAlgorithmException e) {
-            throw new ProblemConvertPasswordToCryptoException("SHA-256 algorithm not found", e);
-        }
+        return convertTo(pass, "MD5");
     }
 
-    private static String convertTo(String password, String algorithm) throws NoSuchAlgorithmException {
-        MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+    public static String convertTo(String password, String algorithm) {
+        MessageDigest messageDigest = null;
+        try {
+            messageDigest = MessageDigest.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new ProblemConvertPasswordToCryptoException(String.format("%s algorithm not found", algorithm), e);
+        }
+
+
         byte[] hash = messageDigest.digest(password.getBytes());
 
         StringBuilder hexString = new StringBuilder();
