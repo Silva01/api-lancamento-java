@@ -7,6 +7,7 @@ import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
@@ -58,7 +59,7 @@ class AccountFacadeTest {
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
-        AccountFacade accountFacade = new AccountFacade(useCases, validationsList);
+        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
 
         IProcessResponse<AccountDTO> response = accountFacade.exec(createNewAccountByCpfDTO);
