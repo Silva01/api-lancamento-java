@@ -1,5 +1,6 @@
 package br.net.silva.daniel.shared.business.mapper;
 
+import br.net.silva.daniel.shared.business.exception.MapperNotConvertErrorException;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.interfaces.IMapper;
 
@@ -38,7 +39,7 @@ public class GenericMapper<T> implements IMapper<T, IGenericPort> {
 
             return target;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao mapear records", e);
+            throw new MapperNotConvertErrorException("Erro ao mapear records", e);
         }
     }
 
