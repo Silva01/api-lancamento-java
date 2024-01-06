@@ -16,7 +16,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
     private Integer number;
     private final Integer bankAgencyNumber;
     private BigDecimal balance;
-    private final String password; //TODO: Refactor to use Crypto and validation too
+    private final String password;
     private boolean active;
     private final String cpf;
     private CreditCard creditCard;
