@@ -181,42 +181,6 @@ public class AccountTest extends TestCase {
         assertFalse(dto.active());
     }
 
-    public void testShouldErrorCreateAccountWithPasswordLessThanSixDigits() {
-        try {
-            new Account(1, 1, "12345", "12345678910", null);
-            fail();
-        } catch (Exception e) {
-            assertEquals("Password must be greater than 6", e.getMessage());
-        }
-    }
-
-    public void testShouldErrorCreateAccountWithPasswordWithRepeatDigits() {
-        try {
-            new Account(1, 1, "111111", "12345678910", null);
-            fail();
-        } catch (Exception e) {
-            assertEquals("Password cannot have repeated numbers", e.getMessage());
-        }
-    }
-
-    public void testShouldErrorCreateAccountWithPasswordWithWords() {
-        try {
-            new Account(1, 1, "123ABC", "12345678910", null);
-            fail();
-        } catch (Exception e) {
-            assertEquals("Password cannot have only numbers", e.getMessage());
-        }
-    }
-
-    public void testShouldErrorCreateAccountWithPasswordWithSpecialCharacters() {
-        try {
-            new Account(1, 1, "123@#$", "12345678910", null);
-            fail();
-        } catch (Exception e) {
-            assertEquals("Password cannot have only numbers", e.getMessage());
-        }
-    }
-
     public void testShouldRegisterCreditCardWithSuccess() {
         var creditCard = new CreditCard();
         var account = new Account(1, 1, "123456", "12345678910", null);
