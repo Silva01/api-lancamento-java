@@ -11,7 +11,7 @@ import br.net.silva.daniel.repository.Repository;
 
 import java.util.Optional;
 
-public class FindClientUseCase implements UseCase<ClientDTO> {
+public class FindClientUseCase implements UseCase<Client> {
 
     private final Repository<Optional<Client>> findClientRepository;
     private final IMapper<ClientDTO, IGenericPort> genericMapper;
@@ -22,10 +22,9 @@ public class FindClientUseCase implements UseCase<ClientDTO> {
     }
 
     @Override
-    public ClientDTO exec(IGenericPort param) throws ClientNotExistsException {
+    public Client exec(IGenericPort param) throws ClientNotExistsException {
         var clientDto = genericMapper.map(param);
         var optionalClient = findClientRepository.exec(clientDto.cpf());
-        var client = optionalClient.orElseThrow(() -> new ClientNotExistsException("Client not exists in database"));
-        return client.build();
+        return optionalClient.orElseThrow(() -> new ClientNotExistsException("Client not exists in database"));
     }
 }
