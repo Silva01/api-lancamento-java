@@ -1,5 +1,7 @@
 package br.net.silva.daniel.entity;
 
+import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import junit.framework.TestCase;
@@ -20,6 +22,8 @@ public class AccountTest extends TestCase {
         var account = new Account(1, "123456", "12345678910");
         var dto = account.build();
 
+        dto.accept(AccountDTO.class);
+
         assertNotNull(dto);
         assertEquals(Integer.valueOf(1), dto.bankAgencyNumber());
         assertEquals("123456", dto.password());
@@ -27,6 +31,15 @@ public class AccountTest extends TestCase {
         assertNotNull(dto.number());
         assertFalse(dto.number() < 0);
         assertFalse(dto.number().equals(0));
+
+        var dto2 = dto.get();
+        assertNotNull(dto2);
+        assertEquals(Integer.valueOf(1), dto2.bankAgencyNumber());
+        assertEquals("123456", dto2.password());
+        assertEquals("12345678910", dto2.cpf());
+        assertNotNull(dto2.number());
+        assertFalse(dto2.number() < 0);
+        assertFalse(dto2.number().equals(0));
     }
 
     public void testShouldErrorWhenCreateAccountWithNullNumberAndLessZeroAndEqualZero() {
@@ -136,8 +149,10 @@ public class AccountTest extends TestCase {
                 "12345678910",
                 123);
 
+        transactionDTO.accept(TransactionDTO.class);
+
         var account = new Account(1, 1, "123456", "12345678910", null);
-        account.registerTransaction(List.of(transactionDTO));
+        account.registerTransaction(List.of(transactionDTO.get()));
 
         var accountDTO = account.build();
         assertEquals(BigDecimal.valueOf(1900), accountDTO.balance());
@@ -156,9 +171,11 @@ public class AccountTest extends TestCase {
                 "12345678910",
                 123);
 
+        transactionDTO.accept(TransactionDTO.class);
+
         var account = new Account(1, 1, "123456", "12345678910", null);
         try {
-            account.registerTransaction(List.of(transactionDTO));
+            account.registerTransaction(List.of(transactionDTO.get()));
             fail();
         } catch (Exception e) {
             assertEquals("Balance is insufficient", e.getMessage());
@@ -203,6 +220,15 @@ public class AccountTest extends TestCase {
         } catch (Exception e) {
             assertEquals("Password is different", e.getMessage());
         }
+    }
+
+    public void testMustValidateCreditCardDTO() {
+        var creditCard = new CreditCard();
+
+        var dto = creditCard.build();
+        dto.accept(CreditCardDTO.class);
+
+        assertNotNull(dto.get());
     }
 
 }

@@ -69,8 +69,8 @@ public class ValidateUtils {
         }
     }
 
-    public static void isTypeOf(Object attribute, Class<?> clazz, String messageError) {
-        if (!clazz.isInstance(attribute)) {
+    public static void isTypeOf(Class<?> attribute, Class<?> clazz, String messageError) {
+        if (!clazz.equals(attribute)) {
             throw GenericErrorUtils.executeException(messageError);
         }
     }

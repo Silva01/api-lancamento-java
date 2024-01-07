@@ -2,6 +2,7 @@ package br.net.silva.daniel.dto;
 
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
 import java.math.BigDecimal;
 
@@ -19,8 +20,7 @@ public record TransactionDTO(
 ) implements IGenericPort {
     @Override
     public void accept(Class<?> clazz) {
-        if (!clazz.isInstance(TransactionDTO.class))
-            throw new IllegalArgumentException("Class must be assignable from IAccountPort");
+        ValidateUtils.isTypeOf(clazz, TransactionDTO.class, "Class must be assignable from TransactionDTO");
     }
 
     @Override

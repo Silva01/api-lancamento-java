@@ -1,6 +1,7 @@
 package br.net.silva.daniel.dto;
 
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -65,8 +66,7 @@ public class AccountDTO implements IGenericPort {
 
     @Override
     public void accept(Class<?> clazz) {
-        if (!clazz.isInstance(AccountDTO.class))
-            throw new IllegalArgumentException("Class must be assignable from IAccountPort");
+        ValidateUtils.isTypeOf(clazz, AccountDTO.class, "Class must be assignable from AccountDTO");
     }
 
     @Override
