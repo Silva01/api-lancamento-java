@@ -10,14 +10,15 @@ public class FindAccountDTO implements IGenericPort {
     private Integer accountNumber;
     private String password;
 
-    public FindAccountDTO(String cpf, Integer agency, Integer accountNumber) {
+    public FindAccountDTO(String cpf, Integer agency, Integer accountNumber, String password) {
         this.cpf = cpf;
         this.agency = agency;
         this.accountNumber = accountNumber;
+        this.password = password;
     }
 
     public FindAccountDTO() {
-        this("", 0, 0);
+        this("", 0, 0, "");
     }
 
     public String cpf() {
