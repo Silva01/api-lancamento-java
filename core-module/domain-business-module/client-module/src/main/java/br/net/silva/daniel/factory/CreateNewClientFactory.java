@@ -2,6 +2,7 @@ package br.net.silva.daniel.factory;
 
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 
 public class CreateNewClientFactory implements IFactoryAggregate<Client, ClientDTO> {
 

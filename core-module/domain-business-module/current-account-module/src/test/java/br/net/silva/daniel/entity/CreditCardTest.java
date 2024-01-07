@@ -13,7 +13,7 @@ public class CreditCardTest extends TestCase {
         assertNotNull(creditCard);
         assertNotNull(creditCard.getNumber());
 
-        var dto = creditCard.create();
+        var dto = creditCard.build();
         assertNotNull(dto);
         assertNotNull(dto.number());
         assertNotNull(dto.cvv());
@@ -26,7 +26,7 @@ public class CreditCardTest extends TestCase {
         assertNotNull(creditCard2);
         assertNotNull(creditCard2.getNumber());
 
-        var dto2 = creditCard2.create();
+        var dto2 = creditCard2.build();
         assertNotNull(dto2);
         assertNotNull(dto2.number());
         assertNotNull(dto2.cvv());
@@ -40,7 +40,7 @@ public class CreditCardTest extends TestCase {
         CreditCard creditCard = new CreditCard(FlagEnum.MASTER_CARD);
         assertNotNull(creditCard);
 
-        var dto = creditCard.create();
+        var dto = creditCard.build();
         assertNotNull(dto);
         assertNotNull(dto.number());
         assertNotNull(dto.cvv());

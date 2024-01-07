@@ -3,9 +3,9 @@ package br.net.silva.daniel.entity;
 import br.net.silva.daniel.utils.CreditCardUtils;
 import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.enuns.FlagEnum;
-import br.net.silva.daniel.interfaces.Aggregate;
-import br.net.silva.daniel.factory.IFactoryDto;
-import br.net.silva.daniel.validation.Validation;
+import br.net.silva.daniel.shared.business.interfaces.Aggregate;
+import br.net.silva.daniel.shared.business.factory.IFactoryDto;
+import br.net.silva.daniel.shared.business.validation.Validation;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -69,7 +69,7 @@ public class CreditCard extends Validation implements Aggregate, IFactoryDto<Cre
     }
 
     @Override
-    public CreditCardDTO create() {
+    public CreditCardDTO build() {
         return new CreditCardDTO(number, cvv, flag, balance, expirationDate, active);
     }
 

@@ -2,10 +2,11 @@ package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
-import br.net.silva.daniel.interfaces.AggregateRoot;
-import br.net.silva.daniel.factory.IFactoryDto;
-import br.net.silva.daniel.utils.GeneratorRandomNumber;
-import br.net.silva.daniel.validation.Validation;
+import br.net.silva.daniel.shared.business.factory.IFactoryDto;
+import br.net.silva.daniel.shared.business.interfaces.AggregateRoot;
+import br.net.silva.daniel.shared.business.utils.GeneratorRandomNumber;
+import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
+import br.net.silva.daniel.shared.business.validation.Validation;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -15,7 +16,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
     private Integer number;
     private final Integer bankAgencyNumber;
     private BigDecimal balance;
-    private final String password;
+    private String password;
     private boolean active;
     private final String cpf;
     private CreditCard creditCard;
@@ -90,8 +91,14 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
         this.creditCard = creditCard;
     }
 
+    public void validatePassword(String password) {
+        if (!this.password.equals(password)) {
+            throw GenericErrorUtils.executeException("Password is different");
+        }
+    }
+
     @Override
-    public AccountDTO create() {
+    public AccountDTO build() {
         return new AccountDTO(
                 number,
                 bankAgencyNumber,
@@ -99,34 +106,15 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
                 password,
                 active,
                 cpf,
-                transactions.stream().map(Transaction::create).toList(),
-                Objects.nonNull(creditCard) ? creditCard.create() : null);
+                transactions.stream().map(Transaction::build).toList(),
+                Objects.nonNull(creditCard) ? creditCard.build() : null);
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
 
     private void validatePassword() {
         validateAttributeNotNullAndNotEmpty(password, "Password is required");
-        validateAttributeEqualsZero(password.length(), "Password must be greater than 6 Characters");
-        validateRepeatedNumberPassword();
-        validateIfPasswordOnlyNumbers();
-        if (password.length() < 6) {
-            throw new IllegalArgumentException("Password must be greater than 6");
-        }
-    }
-
-    private void validateRepeatedNumberPassword() {
-        Set<Character> seenCharacters = new HashSet<>();
-        for (char character : password.toCharArray()) {
-            if (Character.isDigit(character) && !seenCharacters.add(character)) {
-                throw new IllegalArgumentException("Password cannot have repeated numbers");
-            }
-        }
-    }
-
-    private void validateIfPasswordOnlyNumbers() {
-        var isOnlyNumbers =  password.chars().allMatch(Character::isDigit);
-
-        if (!isOnlyNumbers) {
-            throw new IllegalArgumentException("Password cannot have only numbers");
-        }
     }
 }

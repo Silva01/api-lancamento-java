@@ -9,7 +9,7 @@ public class ClientTest extends TestCase {
         var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
         var client = new Client("99988877766", "Daniel", "665555444222", address);
 
-        var clientDTO = client.create();
+        var clientDTO = client.build();
 
         assertFalse(clientDTO.id().isEmpty());
         assertEquals("99988877766", clientDTO.cpf());
@@ -178,7 +178,7 @@ public class ClientTest extends TestCase {
         var client = new Client("99988877766", "Daniel", "665555444222", address);
         client.deactivate();
 
-        var dto = client.create();
+        var dto = client.build();
 
         assertFalse(dto.active());
     }
@@ -187,33 +187,33 @@ public class ClientTest extends TestCase {
         var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
         var client = new Client("99988877766", "Daniel", "665555444222", address);
         client.deactivate();
-        var dto = client.create();
+        var dto = client.build();
         assertFalse(dto.active());
 
         client.activate();
-        dto = client.create();
+        dto = client.build();
         assertTrue(dto.active());
     }
 
     public void testShouldEditNameWithSuccess() {
         var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
         var client = new Client("99988877766", "Daniel", "665555444222", address);
-        var dto = client.create();
+        var dto = client.build();
         assertEquals("Daniel", dto.name());
 
         client.editName("Daniel Silva");
-        dto = client.create();
+        dto = client.build();
         assertEquals("Daniel Silva", dto.name());
     }
 
     public void testShouldEditTelephoneWithSuccess() {
         var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
         var client = new Client("99988877766", "Daniel", "665555444222", address);
-        var dto = client.create();
+        var dto = client.build();
         assertEquals("665555444222", dto.telephone());
 
         client.editTelephone("665555444333");
-        dto = client.create();
+        dto = client.build();
         assertEquals("665555444333", dto.telephone());
     }
 
@@ -221,7 +221,7 @@ public class ClientTest extends TestCase {
         try {
             var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
             var client = new Client("99988877766", "Daniel", "665555444222", address);
-            var dto = client.create();
+            var dto = client.build();
             assertEquals("Daniel", dto.name());
 
             client.deactivate();
@@ -235,7 +235,7 @@ public class ClientTest extends TestCase {
         try {
             var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
             var client = new Client("99988877766", "Daniel", "665555444222", address);
-            var dto = client.create();
+            var dto = client.build();
             assertEquals("665555444222", dto.telephone());
 
             client.deactivate();
@@ -248,7 +248,7 @@ public class ClientTest extends TestCase {
     public void testShouldEditAddressWithSuccess() {
         var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
         var client = new Client("99988877766", "Daniel", "665555444222", address);
-        var dto = client.create();
+        var dto = client.build();
         assertEquals("Rua 1", dto.address().street());
         assertEquals("1234", dto.address().number());
         assertEquals("test", dto.address().neighborhood());
@@ -259,7 +259,7 @@ public class ClientTest extends TestCase {
 
         var newAddress = new Address("Rua 2", "4321", "test2", "test2", "Estado 2", "Cidade 2", "22222222");
         client.registerAddress(newAddress);
-        dto = client.create();
+        dto = client.build();
         assertEquals("Rua 2", dto.address().street());
         assertEquals("4321", dto.address().number());
         assertEquals("test2", dto.address().neighborhood());
@@ -273,7 +273,7 @@ public class ClientTest extends TestCase {
         try {
             var address = new Address("Rua 1", "1234", "test", "test", "Estado 1", "Cidade 1", "11111111");
             var client = new Client("99988877766", "Daniel", "665555444222", address);
-            var dto = client.create();
+            var dto = client.build();
             assertEquals("Rua 1", dto.address().street());
             assertEquals("1234", dto.address().number());
             assertEquals("test", dto.address().neighborhood());

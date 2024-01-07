@@ -1,5 +1,6 @@
 package br.net.silva.daniel.mapper;
 
+import br.net.silva.daniel.shared.business.interfaces.IMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

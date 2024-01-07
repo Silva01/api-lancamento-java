@@ -1,5 +1,6 @@
 package br.net.silva.daniel.usecase;
 
+import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.repository.Repository;
@@ -32,11 +33,11 @@ class FindClientUseCaseTest {
 
     @Test
     void must_looking_for_client_in_database_with_success() throws ClientNotExistsException {
-        var cpf = "22233344455";
-        var client = findClientUseCase.exec(cpf);
+        var request = new ClientRequestDTO(null, "22233344455", null, null, false, null, null);
+        var client = findClientUseCase.exec(request).build();
 
         assertNotNull(client);
-        assertEquals(client.cpf(), cpf);
+        assertEquals(client.cpf(), request.cpf());
         assertEquals("Daniel", client.name());
         assertEquals("1", client.id());
         assertEquals("22344445555", client.telephone());
@@ -49,14 +50,14 @@ class FindClientUseCaseTest {
         assertEquals("Estado 1", client.address().state());
         assertEquals("11111111", client.address().zipCode());
 
-        verify(findClientRepository, times(1)).exec(cpf);
+        verify(findClientRepository, times(1)).exec(request.cpf());
     }
 
     @Test
     void must_looking_for_client_in_database_what_not_exists() {
-        var cpf = "22233344455";
+        var request = new ClientRequestDTO(null, "22233344455", null, null, false, null, null);
         when(findClientRepository.exec(anyString())).thenReturn(Optional.empty());
-        Assertions.assertThrows(ClientNotExistsException.class, () -> findClientUseCase.exec(cpf));
+        Assertions.assertThrows(ClientNotExistsException.class, () -> findClientUseCase.exec(request));
     }
 
     private Client buildClient() {

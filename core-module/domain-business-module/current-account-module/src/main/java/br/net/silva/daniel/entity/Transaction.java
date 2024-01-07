@@ -2,9 +2,9 @@ package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
-import br.net.silva.daniel.interfaces.Aggregate;
-import br.net.silva.daniel.factory.IFactoryDto;
-import br.net.silva.daniel.validation.Validation;
+import br.net.silva.daniel.shared.business.interfaces.Aggregate;
+import br.net.silva.daniel.shared.business.factory.IFactoryDto;
+import br.net.silva.daniel.shared.business.validation.Validation;
 
 import java.math.BigDecimal;
 
@@ -62,7 +62,7 @@ public class Transaction extends Validation implements Aggregate, IFactoryDto<Tr
     }
 
     @Override
-    public TransactionDTO create() {
+    public TransactionDTO build() {
         return new TransactionDTO(
                 id,
                 description,

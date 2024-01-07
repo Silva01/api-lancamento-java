@@ -1,5 +1,6 @@
 package br.net.silva.daniel.utils;
 
+import br.net.silva.daniel.shared.business.utils.GeneratorRandomNumber;
 import junit.framework.TestCase;
 
 public class GeneratorRandomNumberTest extends TestCase {

@@ -1,5 +1,7 @@
 package br.net.silva.daniel.entity;
 
+import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import junit.framework.TestCase;
@@ -12,13 +14,15 @@ public class AccountTest extends TestCase {
 
     public void testShouldCreateAccountWithSuccess() {
         var account = new Account(1, 1, "123456", "12345678910", null);
-        var dto = account.create();
+        var dto = account.build();
         assertNotNull(dto);
     }
 
     public void testShouldCreateAccountBasicWithSuccess() {
         var account = new Account(1, "123456", "12345678910");
-        var dto = account.create();
+        var dto = account.build();
+
+        dto.accept(AccountDTO.class);
 
         assertNotNull(dto);
         assertEquals(Integer.valueOf(1), dto.bankAgencyNumber());
@@ -27,6 +31,15 @@ public class AccountTest extends TestCase {
         assertNotNull(dto.number());
         assertFalse(dto.number() < 0);
         assertFalse(dto.number().equals(0));
+
+        var dto2 = dto.get();
+        assertNotNull(dto2);
+        assertEquals(Integer.valueOf(1), dto2.bankAgencyNumber());
+        assertEquals("123456", dto2.password());
+        assertEquals("12345678910", dto2.cpf());
+        assertNotNull(dto2.number());
+        assertFalse(dto2.number() < 0);
+        assertFalse(dto2.number().equals(0));
     }
 
     public void testShouldErrorWhenCreateAccountWithNullNumberAndLessZeroAndEqualZero() {
@@ -136,10 +149,12 @@ public class AccountTest extends TestCase {
                 "12345678910",
                 123);
 
-        var account = new Account(1, 1, "123456", "12345678910", null);
-        account.registerTransaction(List.of(transactionDTO));
+        transactionDTO.accept(TransactionDTO.class);
 
-        var accountDTO = account.create();
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        account.registerTransaction(List.of(transactionDTO.get()));
+
+        var accountDTO = account.build();
         assertEquals(BigDecimal.valueOf(1900), accountDTO.balance());
     }
 
@@ -156,9 +171,11 @@ public class AccountTest extends TestCase {
                 "12345678910",
                 123);
 
+        transactionDTO.accept(TransactionDTO.class);
+
         var account = new Account(1, 1, "123456", "12345678910", null);
         try {
-            account.registerTransaction(List.of(transactionDTO));
+            account.registerTransaction(List.of(transactionDTO.get()));
             fail();
         } catch (Exception e) {
             assertEquals("Balance is insufficient", e.getMessage());
@@ -169,7 +186,7 @@ public class AccountTest extends TestCase {
         var account = new Account(1, 1, "123456", "12345678910", null);
         account.activate();
 
-        var dto = account.create();
+        var dto = account.build();
         assertTrue(dto.active());
     }
 
@@ -177,44 +194,8 @@ public class AccountTest extends TestCase {
         var account = new Account(1, 1, "123456", "12345678910", null);
         account.deactivate();
 
-        var dto = account.create();
+        var dto = account.build();
         assertFalse(dto.active());
-    }
-
-    public void testShouldErrorCreateAccountWithPasswordLessThanSixDigits() {
-        try {
-            new Account(1, 1, "12345", "12345678910", null);
-            fail();
-        } catch (Exception e) {
-            assertEquals("Password must be greater than 6", e.getMessage());
-        }
-    }
-
-    public void testShouldErrorCreateAccountWithPasswordWithRepeatDigits() {
-        try {
-            new Account(1, 1, "111111", "12345678910", null);
-            fail();
-        } catch (Exception e) {
-            assertEquals("Password cannot have repeated numbers", e.getMessage());
-        }
-    }
-
-    public void testShouldErrorCreateAccountWithPasswordWithWords() {
-        try {
-            new Account(1, 1, "123ABC", "12345678910", null);
-            fail();
-        } catch (Exception e) {
-            assertEquals("Password cannot have only numbers", e.getMessage());
-        }
-    }
-
-    public void testShouldErrorCreateAccountWithPasswordWithSpecialCharacters() {
-        try {
-            new Account(1, 1, "123@#$", "12345678910", null);
-            fail();
-        } catch (Exception e) {
-            assertEquals("Password cannot have only numbers", e.getMessage());
-        }
     }
 
     public void testShouldRegisterCreditCardWithSuccess() {
@@ -222,8 +203,32 @@ public class AccountTest extends TestCase {
         var account = new Account(1, 1, "123456", "12345678910", null);
         account.vinculateCreditCard(creditCard);
 
-        var dto = account.create();
+        var dto = account.build();
         assertNotNull(dto.creditCard());
+    }
+
+    public void testMustValidateWithSuccessExternalPassword() {
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        account.validatePassword("123456");
+    }
+
+    public void testMustValidateWithErrorInternalPassword() {
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        try {
+            account.validatePassword("1234567");
+            fail();
+        } catch (Exception e) {
+            assertEquals("Password is different", e.getMessage());
+        }
+    }
+
+    public void testMustValidateCreditCardDTO() {
+        var creditCard = new CreditCard();
+
+        var dto = creditCard.build();
+        dto.accept(CreditCardDTO.class);
+
+        assertNotNull(dto.get());
     }
 
 }
