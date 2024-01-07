@@ -1,8 +1,10 @@
 package br.net.silva.business.facade;
 
+import br.net.silva.business.dto.ChangePasswordDTO;
 import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
@@ -32,6 +34,8 @@ class AccountFacadeTest {
 
     private UseCase<IProcessResponse<AccountDTO>> createNewAccountByCpfUseCase;
 
+    private UseCase<IProcessResponse<AccountDTO>> changePasswordAccountUseCase;
+
     private IValidations passwordAndExistsAccountValidate;
 
     @Mock
@@ -49,6 +53,7 @@ class AccountFacadeTest {
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository);
         UseCase<IProcessResponse<? extends IGenericPort>> findAccountUseCase = new FindAccountUseCase(findAccountRepository);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountUseCase);
+        changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(findAccountRepository), saveRepository);
     }
 
     @Test
@@ -122,6 +127,24 @@ class AccountFacadeTest {
         var exceptionResponse = assertThrows(IllegalArgumentException.class, () -> accountFacade.exec(createNewAccountByCpfDTO));
         assertNotNull(exceptionResponse);
         assertEquals("Password is different", exceptionResponse.getMessage());
+    }
+
+    @Test
+    void mustChangePasswordWithSuccess() throws GenericException {
+        when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
+        when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
+
+        Queue<UseCase<?>> useCases = new LinkedList<>();
+        useCases.add(changePasswordAccountUseCase);
+
+        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
+
+        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
+
+        AccountDTO accountDTO = (AccountDTO) accountFacade.exec(changePasswordDTO).build().get();
+        assertNotNull(accountDTO);
     }
 
     private Account buildMockAccount() {
