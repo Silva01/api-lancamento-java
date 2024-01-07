@@ -130,7 +130,7 @@ class GenericFacadeDelegateTest {
             }
         };
 
-        var exceptionResponse = Assertions.assertThrows(NullPointerException.class, () -> genericFacadeDelegate.exec(port));
+        Assertions.assertThrows(NullPointerException.class, () -> genericFacadeDelegate.exec(port));
     }
 
 }
