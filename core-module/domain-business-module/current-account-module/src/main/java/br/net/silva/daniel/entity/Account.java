@@ -111,7 +111,6 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
     }
 
     public void changePassword(String newPassword) {
-        validatePassword(newPassword);
         this.password = newPassword;
     }
 
