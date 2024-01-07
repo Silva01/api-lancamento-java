@@ -9,14 +9,14 @@ public class ChangePasswordDTO implements IGenericPort {
     private Integer agency;
     private Integer account;
     private String password;
-    private String oldPassword;
+    private String newPassword;
 
-    public ChangePasswordDTO(String cpf, Integer agency, Integer account, String password, String oldPassword) {
+    public ChangePasswordDTO(String cpf, Integer agency, Integer account, String password, String newPassword) {
         this.cpf = cpf;
         this.agency = agency;
         this.account = account;
         this.password = password;
-        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
     }
 
     public ChangePasswordDTO() {
@@ -39,8 +39,8 @@ public class ChangePasswordDTO implements IGenericPort {
         return password;
     }
 
-    public String oldPassword() {
-        return oldPassword;
+    public String newPassword() {
+        return newPassword;
     }
 
     @Override
