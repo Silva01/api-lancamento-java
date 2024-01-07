@@ -122,7 +122,7 @@ class AccountFacadeTest {
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
-        CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "222222");
+        CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "123456");
 
         var exceptionResponse = assertThrows(IllegalArgumentException.class, () -> accountFacade.exec(createNewAccountByCpfDTO));
         assertNotNull(exceptionResponse);
