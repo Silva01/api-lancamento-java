@@ -1,6 +1,8 @@
 package br.net.silva.business.facade;
 
 import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
+import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
+import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
@@ -23,7 +25,7 @@ import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class AccountFacadeTest {
@@ -66,6 +68,60 @@ class AccountFacadeTest {
         AccountDTO accountDTO = (AccountDTO) response.build();
 
         assertNotNull(accountDTO);
+    }
+
+    @Test
+    void mustErrorCreateNewAccountByCpfAccountNotExists() {
+        when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
+        when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
+        Queue<UseCase<?>> useCases = new LinkedList<>();
+        useCases.add(createNewAccountByCpfUseCase);
+
+        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
+
+        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
+
+        var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(createNewAccountByCpfDTO));
+        assertNotNull(exceptionResponse);
+        assertEquals("Exists account active for CPF informated", exceptionResponse.getMessage());
+    }
+
+    @Test
+    void mustErrorCreateNewAccountByCpfAccountNotExistsValidation() {
+        when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
+        when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.empty());
+        Queue<UseCase<?>> useCases = new LinkedList<>();
+        useCases.add(createNewAccountByCpfUseCase);
+
+        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
+
+        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
+
+        var exceptionResponse = assertThrows(AccountNotExistsException.class, () -> accountFacade.exec(createNewAccountByCpfDTO));
+        assertNotNull(exceptionResponse);
+        assertEquals("Account not found", exceptionResponse.getMessage());
+    }
+
+    @Test
+    void mustErrorCreateNewAccountByCpfPasswordInvalid() {
+        when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
+        when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
+        Queue<UseCase<?>> useCases = new LinkedList<>();
+        useCases.add(createNewAccountByCpfUseCase);
+
+        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
+
+        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "222222");
+
+        var exceptionResponse = assertThrows(IllegalArgumentException.class, () -> accountFacade.exec(createNewAccountByCpfDTO));
+        assertNotNull(exceptionResponse);
+        assertEquals("Password is different", exceptionResponse.getMessage());
     }
 
     private Account buildMockAccount() {
