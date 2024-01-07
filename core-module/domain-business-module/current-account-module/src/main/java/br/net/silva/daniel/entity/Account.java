@@ -16,7 +16,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
     private Integer number;
     private final Integer bankAgencyNumber;
     private BigDecimal balance;
-    private final String password;
+    private String password;
     private boolean active;
     private final String cpf;
     private CreditCard creditCard;
@@ -108,6 +108,11 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
                 cpf,
                 transactions.stream().map(Transaction::build).toList(),
                 Objects.nonNull(creditCard) ? creditCard.build() : null);
+    }
+
+    public void changePassword(String newPassword) {
+        validatePassword(newPassword);
+        this.password = newPassword;
     }
 
     private void validatePassword() {
