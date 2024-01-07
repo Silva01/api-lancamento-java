@@ -15,10 +15,10 @@ import br.net.silva.daniel.utils.AccountUtils;
 public class ChangePasswordAccountUseCase implements UseCase<IProcessResponse<AccountDTO>> {
 
     private final GenericMapper<ChangePasswordDTO> mapper;
-    private final UseCase<IProcessResponse<AccountDTO>> findAccountUseCase;
+    private final UseCase<IProcessResponse<? extends IGenericPort>> findAccountUseCase;
     private final Repository<Account> updatePasswordRepository;
 
-    public ChangePasswordAccountUseCase(UseCase<IProcessResponse<AccountDTO>> findAccountUseCase, Repository<Account> updatePasswordRepository) {
+    public ChangePasswordAccountUseCase(UseCase<IProcessResponse<? extends IGenericPort>> findAccountUseCase, Repository<Account> updatePasswordRepository) {
         this.mapper = new GenericMapper<>(ChangePasswordDTO.class);
         this.findAccountUseCase = findAccountUseCase;
         this.updatePasswordRepository = updatePasswordRepository;
