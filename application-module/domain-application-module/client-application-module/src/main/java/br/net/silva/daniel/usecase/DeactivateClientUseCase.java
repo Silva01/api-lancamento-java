@@ -24,8 +24,8 @@ public class DeactivateClientUseCase implements UseCase<Client> {
     }
 
     @Override
-    public Client exec(IGenericPort dto) throws GenericException {
-        var request = mapper.map(dto);
+    public Client exec(IGenericPort param) throws GenericException {
+        var request = mapper.map(param);
         var client = findClientUseCase.exec(request);
         client.deactivate();
 
