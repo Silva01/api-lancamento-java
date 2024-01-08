@@ -6,6 +6,7 @@ import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
+import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.daniel.dto.AccountDTO;
@@ -36,6 +37,8 @@ class AccountFacadeTest {
 
     private UseCase<IProcessResponse<AccountDTO>> changePasswordAccountUseCase;
 
+    private UseCase<IProcessResponse<AccountDTO>> deactivateAccountUseCase;
+
     private IValidations passwordAndExistsAccountValidate;
 
     @Mock
@@ -47,6 +50,9 @@ class AccountFacadeTest {
     @Mock
     private Repository<Optional<Account>> findAccountRepository;
 
+    @Mock
+    private Repository<Account> deactivateAccountRepository;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
@@ -54,6 +60,7 @@ class AccountFacadeTest {
         UseCase<IProcessResponse<? extends IGenericPort>> findAccountUseCase = new FindAccountUseCase(findAccountRepository);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountUseCase);
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(findAccountRepository), saveRepository);
+        this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
     }
 
     @Test
@@ -139,6 +146,22 @@ class AccountFacadeTest {
         useCases.add(changePasswordAccountUseCase);
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
+
+        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
+
+        AccountDTO accountDTO = (AccountDTO) accountFacade.exec(changePasswordDTO).build().get();
+        assertNotNull(accountDTO);
+    }
+
+    @Test
+    void mustDeactivateAccountWithSuccess() throws GenericException {
+        when(deactivateAccountRepository.exec(Mockito.any(String.class))).thenReturn(buildMockAccount());
+
+        Queue<UseCase<?>> useCases = new LinkedList<>();
+        useCases.add(deactivateAccountUseCase);
+
+        List<IValidations> validationsList = Collections.emptyList();
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");

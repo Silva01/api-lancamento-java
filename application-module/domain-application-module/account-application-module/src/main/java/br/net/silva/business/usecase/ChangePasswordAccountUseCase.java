@@ -25,8 +25,8 @@ public class ChangePasswordAccountUseCase implements UseCase<IProcessResponse<Ac
     }
 
     @Override
-    public IProcessResponse<AccountDTO> exec(IGenericPort dto) throws GenericException {
-        var changePasswordDTO = mapper.map(dto);
+    public IProcessResponse<AccountDTO> exec(IGenericPort param) throws GenericException {
+        var changePasswordDTO = mapper.map(param);
         AccountUtils.validatePassword(changePasswordDTO.newPassword());
         var account = (Account) findAccountUseCase.exec(changePasswordDTO);
         account.changePassword(CryptoUtils.convertToSHA256(changePasswordDTO.newPassword()));

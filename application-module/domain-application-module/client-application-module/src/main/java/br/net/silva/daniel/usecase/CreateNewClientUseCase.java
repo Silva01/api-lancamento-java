@@ -28,9 +28,9 @@ public class CreateNewClientUseCase implements UseCase<Client> {
     }
 
     @Override
-    public Client exec(IGenericPort request) throws ExistsClientRegistredException {
+    public Client exec(IGenericPort param) throws ExistsClientRegistredException {
         try {
-            var clientRequestDto = genericMapper.map(request);
+            var clientRequestDto = genericMapper.map(param);
             return saveRepository.exec(buildClient(clientRequestDto));
         } catch (Exception e) {
             throw new ExistsClientRegistredException(e.getMessage());

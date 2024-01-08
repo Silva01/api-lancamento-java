@@ -6,19 +6,28 @@ import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 
-public class ClientExistsValidate implements IValidations {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClientNotExistsValidate implements IValidations {
     private final UseCase<Client> findClientUseCase;
 
-    public ClientExistsValidate(UseCase<Client> findClientUseCase) {
+    public ClientNotExistsValidate(UseCase<Client> findClientUseCase) {
         this.findClientUseCase = findClientUseCase;
     }
 
     @Override
     public void validate(IGenericPort param) throws GenericException {
+        List<GenericException> errors = new ArrayList<>();
+
         try {
             findClientUseCase.exec(param);
         } catch (GenericException e) {
-            throw new GenericException("Client not exists in database");
+           errors.add(e);
+        }
+
+        if (errors.isEmpty()) {
+            throw new GenericException("Client exists in database");
         }
     }
 }

@@ -28,8 +28,8 @@ public class CreateNewAccountByCpfUseCase implements UseCase<IProcessResponse<Ac
     }
 
     @Override
-    public IProcessResponse<AccountDTO> exec(IGenericPort dto) throws GenericException {
-        var createNewAccountByCpfDTO = mapper.map(dto);
+    public IProcessResponse<AccountDTO> exec(IGenericPort param) throws GenericException {
+        var createNewAccountByCpfDTO = mapper.map(param);
         if (isExistsAccountActiveForCPF(createNewAccountByCpfDTO.cpf())) {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
