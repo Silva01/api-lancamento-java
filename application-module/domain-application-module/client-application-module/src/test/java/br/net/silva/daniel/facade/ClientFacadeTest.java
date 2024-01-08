@@ -10,6 +10,7 @@ import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
+import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
@@ -39,6 +40,8 @@ class ClientFacadeTest {
 
     private UseCase<IProcessResponse<ClientDTO>> findClientUseCase;
 
+    private UseCase<IProcessResponse<ClientDTO>> activateClientUseCase;
+
     private DeactivateClientUseCase deactivateClientUseCase;
 
     @Mock
@@ -56,6 +59,7 @@ class ClientFacadeTest {
         this.clientExistsValidate = new ClientExistsValidate(findClientUseCase);
         this.clientNotExistsValidate = new ClientNotExistsValidate(findClientUseCase);
         this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository);
+        this.activateClientUseCase = new ActivateClientUseCase(saveRepository);
     }
 
     @Test
@@ -156,6 +160,37 @@ class ClientFacadeTest {
         var request = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
         var exceptionResponse = assertThrows(GenericException.class, () -> clientFacade.exec(request).build());
         assertEquals("Client not exists in database", exceptionResponse.getMessage());
+    }
+
+    @Test
+    void mustActivateClientWithSuccess() throws GenericException {
+        var client = buildClient();
+        when(saveRepository.exec(Mockito.any(String.class))).thenReturn(client);
+        when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
+
+        Queue<UseCase<?>> useCases = new LinkedList<>();
+        useCases.add(activateClientUseCase);
+
+        List<IValidations> validationsList = List.of(clientExistsValidate);
+        var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
+
+        var request = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
+        var resultProcess = (ClientDTO) clientFacade.exec(request).build();
+        var clientDTO = client.build();
+
+        assertNotNull(resultProcess);
+        assertEquals(clientDTO.id(), resultProcess.id());
+        assertEquals(clientDTO.cpf(), resultProcess.cpf());
+        assertEquals(clientDTO.name(), resultProcess.name());
+        assertEquals(clientDTO.telephone(), resultProcess.telephone());
+        assertTrue(resultProcess.active());
+        assertEquals(clientDTO.address().street(), resultProcess.address().street());
+        assertEquals(clientDTO.address().number(), resultProcess.address().number());
+        assertEquals(clientDTO.address().complement(), resultProcess.address().complement());
+        assertEquals(clientDTO.address().neighborhood(), resultProcess.address().neighborhood());
+        assertEquals(clientDTO.address().city(), resultProcess.address().city());
+        assertEquals(clientDTO.address().state(), resultProcess.address().state());
+        assertEquals(clientDTO.address().zipCode(), resultProcess.address().zipCode());
     }
 
     private Client buildClient() {
