@@ -6,12 +6,13 @@ import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.interfaces.IMapper;
 import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import br.net.silva.daniel.shared.business.mapper.GenericMapper;
 import br.net.silva.daniel.repository.Repository;
 
 import java.util.Optional;
 
-public class FindClientUseCase implements UseCase<Client> {
+public class FindClientUseCase implements UseCase<IProcessResponse<ClientDTO>> {
 
     private final Repository<Optional<Client>> findClientRepository;
     private final IMapper<ClientDTO, IGenericPort> genericMapper;

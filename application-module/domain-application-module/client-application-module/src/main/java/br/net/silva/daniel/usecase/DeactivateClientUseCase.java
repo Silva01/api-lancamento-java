@@ -1,16 +1,18 @@
 package br.net.silva.daniel.usecase;
 
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import br.net.silva.daniel.shared.business.mapper.GenericMapper;
 
 import java.util.Optional;
 
-public class DeactivateClientUseCase implements UseCase<Client> {
+public class DeactivateClientUseCase implements UseCase<IProcessResponse<ClientDTO>> {
 
     private final FindClientUseCase findClientUseCase;
     private final Repository<Client> saveRepository;
