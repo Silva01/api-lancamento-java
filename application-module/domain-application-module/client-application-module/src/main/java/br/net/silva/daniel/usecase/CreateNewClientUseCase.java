@@ -11,10 +11,11 @@ import br.net.silva.daniel.factory.CreateNewClientFactory;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.shared.business.interfaces.IMapper;
+import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import br.net.silva.daniel.shared.business.mapper.GenericMapper;
 import br.net.silva.daniel.repository.Repository;
 
-public class CreateNewClientUseCase implements UseCase<Client> {
+public class CreateNewClientUseCase implements UseCase<IProcessResponse<ClientDTO>> {
     private final Repository<Client> saveRepository;
     private final IFactoryAggregate<Client, ClientDTO> createNewClientFactory;
     private final IMapper<ClientDTO, ClientRequestDTO> clientMapper;

@@ -9,6 +9,7 @@ import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
@@ -34,9 +35,9 @@ class ClientFacadeTest {
     private IValidations clientExistsValidate;
     private IValidations clientNotExistsValidate;
 
-    private UseCase<Client> createNewClientUseCase;
+    private UseCase<IProcessResponse<ClientDTO>> createNewClientUseCase;
 
-    private UseCase<Client> findClientUseCase;
+    private UseCase<IProcessResponse<ClientDTO>> findClientUseCase;
 
     private DeactivateClientUseCase deactivateClientUseCase;
 

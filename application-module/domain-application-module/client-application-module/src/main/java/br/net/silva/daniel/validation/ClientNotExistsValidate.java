@@ -1,18 +1,19 @@
 package br.net.silva.daniel.validation;
 
-import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClientNotExistsValidate implements IValidations {
-    private final UseCase<Client> findClientUseCase;
+    private final UseCase<IProcessResponse<ClientDTO>> findClientUseCase;
 
-    public ClientNotExistsValidate(UseCase<Client> findClientUseCase) {
+    public ClientNotExistsValidate(UseCase<IProcessResponse<ClientDTO>> findClientUseCase) {
         this.findClientUseCase = findClientUseCase;
     }
 
