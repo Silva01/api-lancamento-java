@@ -1,9 +1,13 @@
 package br.net.silva.daniel.template;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class UseCaseTest extends TestCase {
-        public void testInit() {
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class UseCaseTest {
+
+    @Test
+    void testInit() {
             assertTrue(true);
         }
 

@@ -1,13 +1,13 @@
 package br.net.silva.daniel.interfaces;
 
 import br.net.silva.daniel.exception.GenericException;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 class UseCaseTest {
@@ -29,7 +29,7 @@ class UseCaseTest {
         Integer result = useCaseMock.exec(null);
 
         // Assert
-        Assert.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -41,7 +41,7 @@ class UseCaseTest {
             useCaseMock.exec(null);
         } catch (GenericException e) {
             // Assert
-            Assert.assertEquals("Generic error", e.getMessage());
+            assertEquals("Generic error", e.getMessage());
         }
     }
 }

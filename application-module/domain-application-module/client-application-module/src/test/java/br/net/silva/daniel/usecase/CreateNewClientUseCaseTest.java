@@ -6,11 +6,11 @@ import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Address;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -47,7 +47,7 @@ class CreateNewClientUseCaseTest {
         when(saveRepository.exec(any())).thenThrow(new RuntimeException("Exists client"));
 
         // Act & Assert
-        Assert.assertThrows(ExistsClientRegistredException.class, () -> {
+        assertThrows(ExistsClientRegistredException.class, () -> {
             createNewClientUseCase.exec(clientDto);
         });
 
