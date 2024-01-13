@@ -1,5 +1,6 @@
 package br.net.silva.business.utils;
 
+import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.mapper.MapToAccountMapper;
 import br.net.silva.business.mapper.MapToAccountMapperImpl;
 import br.net.silva.daniel.dto.CreditCardDTO;
@@ -35,10 +36,10 @@ class CreditCardMapperUtilsTest {
         creditCardMap.put("flag", FlagEnum.MASTER_CARD);
 
         Map<String, Object> accountMap = new HashMap<>();
-        accountMap.put("creditCard", creditCardMap);
+        accountMap.put(TypeAccountMapperEnum.CREDIT_CARD.name(), creditCardMap);
 
         Map<String, Object> principalMap = new HashMap<>();
-        principalMap.put("account", accountMap);
+        principalMap.put(TypeAccountMapperEnum.ACCOUNT.name(), accountMap);
 
         var source = new Source(principalMap);
 
