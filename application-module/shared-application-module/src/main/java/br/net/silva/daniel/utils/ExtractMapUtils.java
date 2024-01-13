@@ -16,6 +16,13 @@ public abstract class ExtractMapUtils {
         return clazz.cast(mapAccount.get(key));
     }
 
+    public static <T> T extractMapValue(Map<String, Object> map, String key, Class<T> clazz) {
+        if (!map.containsKey(key)) {
+            return null;
+        }
+        return clazz.cast(map.get(key));
+    }
+
     private static boolean validateMapKey(Map<String, Object> map, String domainKey, String key) {
         if (!map.containsKey(domainKey)) {
             return false;
