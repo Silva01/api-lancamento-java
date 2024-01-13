@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,18 +38,21 @@ class TransactionMapperUtilsTest {
         transactionMap.put("creditCardNumber", "12345678910");
         transactionMap.put("creditCardCvv", 222);
 
-        Map<String, Object> accountMap = new HashMap<>();
-        accountMap.put(TypeAccountMapperEnum.TRANSACTION.name(), transactionMap);
-
-        Map<String, Object> principalMap = new HashMap<>();
-        principalMap.put(TypeAccountMapperEnum.ACCOUNT.name(), accountMap);
-
-        var source = new Source(principalMap);
+        var source = new Source(transactionMap);
 
         var transactionDTO = mapper.mapToTransactionDTO(source);
 
         assertNotNull(transactionDTO);
+        assertEquals(123L, transactionDTO.id());
+        assertEquals("description", transactionDTO.description());
+        assertEquals(BigDecimal.valueOf(1000.00), transactionDTO.price());
+        assertEquals(1, transactionDTO.quantity());
+        assertEquals(TransactionTypeEnum.CREDIT, transactionDTO.type());
+        assertEquals(555, transactionDTO.originAccountNumber());
+        assertEquals(444, transactionDTO.destinationAccountNumber());
+        assertEquals(333L, transactionDTO.idempotencyId());
+        assertEquals("12345678910", transactionDTO.creditCardNumber());
+        assertEquals(222, transactionDTO.creditCardCvv());
 
     }
-
 }
