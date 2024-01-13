@@ -10,16 +10,16 @@ public class ClientRequestDTO implements IGenericPort {
     private String name;
     private String telephone;
     private boolean active;
-    private Integer agencyNumber;
+    private Integer agency;
     private AddressRequestDTO addressRequestDTO;
 
-    public ClientRequestDTO(String id, String cpf, String name, String telephone, boolean active, Integer agencyNumber, AddressRequestDTO addressRequestDTO) {
+    public ClientRequestDTO(String id, String cpf, String name, String telephone, boolean active, Integer agency, AddressRequestDTO addressRequestDTO) {
         this.id = id;
         this.cpf = cpf;
         this.name = name;
         this.telephone = telephone;
         this.active = active;
-        this.agencyNumber = agencyNumber;
+        this.agency = agency;
         this.addressRequestDTO = addressRequestDTO;
     }
 
@@ -48,7 +48,7 @@ public class ClientRequestDTO implements IGenericPort {
     }
 
     public Integer agencyNumber() {
-        return agencyNumber;
+        return agency;
     }
 
     public AddressRequestDTO addressRequestDTO() {
