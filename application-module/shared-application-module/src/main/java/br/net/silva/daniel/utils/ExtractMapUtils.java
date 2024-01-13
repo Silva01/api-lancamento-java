@@ -1,6 +1,7 @@
 package br.net.silva.daniel.utils;
 
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class ExtractMapUtils {
 
@@ -8,7 +9,7 @@ public abstract class ExtractMapUtils {
     }
 
     public static <T> T extractMapValue(Map<String, Object> map, String domainKey, String key, Class<T> clazz) {
-        if (!validateMapKey(map, domainKey, key)) {
+        if (Objects.isNull(map) || !validateMapKey(map, domainKey, key)) {
             return null;
         }
         var mapAccount = (Map<String, Object>) map.get(domainKey);
@@ -17,7 +18,7 @@ public abstract class ExtractMapUtils {
     }
 
     public static <T> T extractMapValue(Map<String, Object> map, String key, Class<T> clazz) {
-        if (!map.containsKey(key)) {
+        if (Objects.isNull(map) || !map.containsKey(key)) {
             return null;
         }
         return clazz.cast(map.get(key));
