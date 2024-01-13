@@ -9,17 +9,17 @@ import java.util.List;
 public class AccountDTO implements IGenericPort {
 
     private Integer number;
-    private Integer bankAgencyNumber;
+    private Integer agency;
     private BigDecimal balance;
     private String password;
     private boolean active;
     private String cpf;
-    private List<TransactionDTO>transactions;
+    private List<TransactionDTO> transactions;
     private CreditCardDTO creditCard;
 
-    public AccountDTO(Integer number, Integer bankAgencyNumber, BigDecimal balance, String password, boolean active, String cpf, List<TransactionDTO> transactions, CreditCardDTO creditCard) {
+    public AccountDTO(Integer number, Integer agency, BigDecimal balance, String password, boolean active, String cpf, List<TransactionDTO> transactions, CreditCardDTO creditCard) {
         this.number = number;
-        this.bankAgencyNumber = bankAgencyNumber;
+        this.agency = agency;
         this.balance = balance;
         this.password = password;
         this.active = active;
@@ -37,7 +37,7 @@ public class AccountDTO implements IGenericPort {
     }
 
     public Integer bankAgencyNumber() {
-        return bankAgencyNumber;
+        return agency;
     }
 
     public BigDecimal balance() {
