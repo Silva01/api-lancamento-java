@@ -1,4 +1,4 @@
-package br.net.silva.business.annotations;
+package br.net.silva.business.annotations.account;
 
 import org.mapstruct.Qualifier;
 
@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Qualifier
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface Balance {
+public @interface Number {
 }
