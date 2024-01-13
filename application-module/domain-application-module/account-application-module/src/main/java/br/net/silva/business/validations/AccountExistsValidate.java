@@ -25,7 +25,7 @@ public class AccountExistsValidate implements IValidations {
     @Override
     public void validate(IGenericPort param) throws GenericException {
         var dto = this.mapper.map(param);
-        var optionalAccount = findAccountRepository.exec(dto.accountNumber(), dto.agency(), dto.cpf());
+        var optionalAccount = findAccountRepository.exec(dto.account(), dto.agency(), dto.cpf());
 
         if (optionalAccount.isEmpty()) {
             throw new AccountNotExistsException("Account not exists");

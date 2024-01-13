@@ -26,7 +26,7 @@ public class FindAccountUseCase implements UseCase<IProcessResponse<? extends IG
     @Override
     public IProcessResponse<?> exec(IGenericPort param) throws GenericException {
         var findAccountDto = genericMapper.map(param);
-        var accountOptional = findAccountRepository.exec(findAccountDto.accountNumber(), findAccountDto.agency());
+        var accountOptional = findAccountRepository.exec(findAccountDto.account(), findAccountDto.agency());
         return accountOptional.orElseThrow(() -> new AccountNotExistsException("Account not found"));
     }
 }

@@ -26,7 +26,7 @@ public class ActivateAccountUseCase implements UseCase<IProcessResponse<AccountD
     public IProcessResponse<AccountDTO> exec(IGenericPort param) throws GenericException {
         try {
             var dto = mapper.map(param);
-            var account = findAccountRepository.exec(dto.accountNumber(), dto.agency(), dto.cpf());
+            var account = findAccountRepository.exec(dto.account(), dto.agency(), dto.cpf());
             account.activate();
             return activateAccountRepository.exec(account);
         } catch (Exception e) {
