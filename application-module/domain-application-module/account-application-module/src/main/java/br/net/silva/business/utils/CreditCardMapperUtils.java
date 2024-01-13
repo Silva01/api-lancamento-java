@@ -1,7 +1,6 @@
 package br.net.silva.business.utils;
 
 import br.net.silva.business.annotations.creditcard.*;
-import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.utils.ExtractMapUtils;
 
@@ -13,37 +12,31 @@ public class CreditCardMapperUtils {
 
     @CreditCardNumber
     public String number(Map<String, Object> map) {
-        var subDomainMap = ExtractMapUtils.extractMapValue(map, TypeAccountMapperEnum.ACCOUNT.name(), TypeAccountMapperEnum.CREDIT_CARD.name(), Map.class);
-        return ExtractMapUtils.extractMapValue(subDomainMap, "number", String.class);
+        return ExtractMapUtils.extractMapValue(map, "number", String.class);
     }
 
     @CreditCardCvv
     public Integer cvv(Map<String, Object> map) {
-        var subDomainMap = ExtractMapUtils.extractMapValue(map, TypeAccountMapperEnum.ACCOUNT.name(), TypeAccountMapperEnum.CREDIT_CARD.name(), Map.class);
-        return ExtractMapUtils.extractMapValue(subDomainMap, "cvv", Integer.class);
+        return ExtractMapUtils.extractMapValue(map, "cvv", Integer.class);
     }
 
     @CreditCardBalance
     public BigDecimal balance(Map<String, Object> map) {
-        var subDomainMap = ExtractMapUtils.extractMapValue(map, TypeAccountMapperEnum.ACCOUNT.name(), TypeAccountMapperEnum.CREDIT_CARD.name(), Map.class);
-        return ExtractMapUtils.extractMapValue(subDomainMap, "balance", BigDecimal.class);
+        return ExtractMapUtils.extractMapValue(map, "balance", BigDecimal.class);
     }
 
     @CreditCardExpirationDate
     public LocalDate expirationDate(Map<String, Object> map) {
-        var subDomainMap = ExtractMapUtils.extractMapValue(map, TypeAccountMapperEnum.ACCOUNT.name(), TypeAccountMapperEnum.CREDIT_CARD.name(), Map.class);
-        return ExtractMapUtils.extractMapValue(subDomainMap, "expirationDate", LocalDate.class);
+        return ExtractMapUtils.extractMapValue(map, "expirationDate", LocalDate.class);
     }
 
     @CreditCardActive
     public Boolean active(Map<String, Object> map) {
-        var subDomainMap = ExtractMapUtils.extractMapValue(map, TypeAccountMapperEnum.ACCOUNT.name(), TypeAccountMapperEnum.CREDIT_CARD.name(), Map.class);
-        return ExtractMapUtils.extractMapValue(subDomainMap, "active", Boolean.class);
+        return ExtractMapUtils.extractMapValue(map, "active", Boolean.class);
     }
 
     @CreditCardFlag
     public FlagEnum flag(Map<String, Object> map) {
-        var subDomainMap = ExtractMapUtils.extractMapValue(map, TypeAccountMapperEnum.ACCOUNT.name(), TypeAccountMapperEnum.CREDIT_CARD.name(), Map.class);
-        return ExtractMapUtils.extractMapValue(subDomainMap, "flag", FlagEnum.class);
+        return ExtractMapUtils.extractMapValue(map, "flag", FlagEnum.class);
     }
 }

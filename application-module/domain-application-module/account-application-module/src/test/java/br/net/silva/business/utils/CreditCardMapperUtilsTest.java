@@ -34,14 +34,7 @@ class CreditCardMapperUtilsTest {
         creditCardMap.put("expirationDate", LocalDate.of(2023, 1,13));
         creditCardMap.put("active", true);
         creditCardMap.put("flag", FlagEnum.MASTER_CARD);
-
-        Map<String, Object> accountMap = new HashMap<>();
-        accountMap.put(TypeAccountMapperEnum.CREDIT_CARD.name(), creditCardMap);
-
-        Map<String, Object> principalMap = new HashMap<>();
-        principalMap.put(TypeAccountMapperEnum.ACCOUNT.name(), accountMap);
-
-        var source = new Source(principalMap);
+        var source = new Source(creditCardMap);
 
         var creditCardDTO = mapper.mapToCreditCardDTO(source);
         assertNotNull(creditCardDTO);
