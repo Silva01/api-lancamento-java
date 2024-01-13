@@ -2,10 +2,12 @@ package br.net.silva.daniel.dto;
 
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Setter
 public class AccountDTO implements IGenericPort {
 
     private Integer number;

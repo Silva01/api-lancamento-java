@@ -3,10 +3,12 @@ package br.net.silva.daniel.dto;
 import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Setter
 public class CreditCardDTO implements IGenericPort {
 
     private String number;
