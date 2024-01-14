@@ -1,6 +1,5 @@
 package br.net.silva.business.utils;
 
-import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.mapper.MapToAccountMapper;
 import br.net.silva.business.mapper.MapToAccountMapperImpl;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
