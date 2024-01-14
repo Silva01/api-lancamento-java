@@ -15,6 +15,7 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import static br.net.silva.business.enums.TypeAccountMapperEnum.*;
 
 @Mapper(uses = {AccountMapperUtils.class, CreditCardMapperUtils.class, TransactionMapperUtils.class})
 public interface MapToAccountMapper {
+
+    MapToAccountMapper INSTANCE = Mappers.getMapper(MapToAccountMapper.class);
 
     @Mapping(source = "map", target = "number", qualifiedBy = Number.class)
     @Mapping(source = "map", target = "agency", qualifiedBy = Agency.class)

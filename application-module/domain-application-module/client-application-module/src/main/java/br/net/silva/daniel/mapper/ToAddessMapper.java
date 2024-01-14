@@ -2,12 +2,13 @@ package br.net.silva.daniel.mapper;
 
 import br.net.silva.daniel.annotations.address.*;
 import br.net.silva.daniel.dto.AddressDTO;
+import br.net.silva.daniel.utils.AddressMapperUtils;
 import br.net.silva.daniel.value_object.Source;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = AddressMapperUtils.class)
 public interface ToAddessMapper {
 
     ToAddessMapper INSTANCE = Mappers.getMapper(ToAddessMapper.class);
