@@ -1,7 +1,6 @@
 package br.net.silva.business.utils;
 
 import br.net.silva.business.mapper.MapToAccountMapper;
-import br.net.silva.business.mapper.MapToAccountMapperImpl;
 import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +19,7 @@ class CreditCardMapperUtilsTest {
 
     @BeforeEach
     void setUp() {
-        this.mapper = new MapToAccountMapperImpl();
+        this.mapper = MapToAccountMapper.INSTANCE;
     }
 
     @Test

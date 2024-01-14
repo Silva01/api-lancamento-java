@@ -51,7 +51,7 @@ class ActivateAccountFacadeTest {
         when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(false)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
         List<IValidations> validationsList = List.of(accountExistsValidate);
@@ -75,7 +75,7 @@ class ActivateAccountFacadeTest {
         when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.empty());
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
         List<IValidations> validationsList = List.of(accountExistsValidate);
@@ -94,7 +94,7 @@ class ActivateAccountFacadeTest {
         when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
         List<IValidations> validationsList = List.of(accountExistsValidate);
