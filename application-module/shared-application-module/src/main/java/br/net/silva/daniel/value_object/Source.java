@@ -10,4 +10,7 @@ public record Source(
     public Source(Map<String, Object> map) {
         this(map, new HashMap<>());
     }
+    public Source() {
+        this(new HashMap<>(), new HashMap<>());
+    }
 }
