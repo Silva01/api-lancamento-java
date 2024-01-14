@@ -30,6 +30,8 @@ public interface MapToAccountMapper {
     @Mapping(source = "map", target = "password", qualifiedBy = Password.class)
     @Mapping(source = "map", target = "active", qualifiedBy = Active.class)
     @Mapping(source = "map", target = "cpf", qualifiedBy = Cpf.class)
+    @Mapping(target = "creditCard", ignore = true)
+    @Mapping(target = "transactions", ignore = true)
     AccountDTO mapToAccountDTO(Source source);
 
     @SuppressWarnings("unchecked")
