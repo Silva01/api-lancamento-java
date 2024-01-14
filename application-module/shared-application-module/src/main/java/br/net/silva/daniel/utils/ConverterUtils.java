@@ -19,4 +19,8 @@ public class ConverterUtils {
     public static Map<String, Object> convertJsonToMap(String json) {
         return gson.fromJson(json, new TypeToken<Map<String, Object>>() {}.getType());
     }
+
+    public static Map<String, String> convertJsonToInputMap(String json) {
+        return gson.fromJson(json, new TypeToken<Map<String, String>>() {}.getType());
+    }
 }
