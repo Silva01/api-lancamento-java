@@ -2,7 +2,6 @@ package br.net.silva.business.usecase;
 
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.mapper.MapToFindAccountMapper;
-import br.net.silva.business.mapper.MapToFindAccountMapperImpl;
 import br.net.silva.business.utils.ConverterUtils;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -16,7 +15,7 @@ public class DeactivateAccountUseCase implements UseCase {
     private final MapToFindAccountMapper mapper;
     public DeactivateAccountUseCase(Repository<Account> deactivateAccountRepository) {
         this.deactivateAccountRepository = deactivateAccountRepository;
-        this.mapper = new MapToFindAccountMapperImpl();
+        this.mapper = MapToFindAccountMapper.INSTANCE;
     }
 
     @Override

@@ -2,9 +2,7 @@ package br.net.silva.business.usecase;
 
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.mapper.MapToAccountMapper;
-import br.net.silva.business.mapper.MapToAccountMapperImpl;
 import br.net.silva.business.mapper.MapToChangePasswordMapper;
-import br.net.silva.business.mapper.MapToChangePasswordMapperImpl;
 import br.net.silva.business.utils.ConverterUtils;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
@@ -26,11 +24,11 @@ public class ChangePasswordAccountUseCase implements UseCase {
     private final MapToAccountMapper accountMapper;
 
     public ChangePasswordAccountUseCase(UseCase findAccountUseCase, Repository<Account> updatePasswordRepository) {
-        this.mapper = new MapToChangePasswordMapperImpl();
+        this.mapper = MapToChangePasswordMapper.INSTANCE;
         this.findAccountUseCase = findAccountUseCase;
         this.updatePasswordRepository = updatePasswordRepository;
         this.createNewAccountByCpfFactory = new CreateAccountByAccountDTOFactory();
-        this.accountMapper = new MapToAccountMapperImpl();
+        this.accountMapper = MapToAccountMapper.INSTANCE;
     }
 
     @Override

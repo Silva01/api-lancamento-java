@@ -2,7 +2,6 @@ package br.net.silva.business.usecase;
 
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.mapper.MapToFindAccountMapper;
-import br.net.silva.business.mapper.MapToFindAccountMapperImpl;
 import br.net.silva.business.utils.ConverterUtils;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -19,7 +18,7 @@ public class ActivateAccountUseCase implements UseCase {
     public ActivateAccountUseCase(Repository<Account> activateAccountRepository, Repository<Account> findAccountRepository) {
         this.activateAccountRepository = activateAccountRepository;
         this.findAccountRepository = findAccountRepository;
-        this.mapper = new MapToFindAccountMapperImpl();
+        this.mapper = MapToFindAccountMapper.INSTANCE;
     }
 
     @Override

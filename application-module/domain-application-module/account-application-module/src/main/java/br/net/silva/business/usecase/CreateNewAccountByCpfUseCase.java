@@ -3,7 +3,6 @@ package br.net.silva.business.usecase;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.mapper.MapToCreateNewAccountByCpfMapper;
-import br.net.silva.business.mapper.MapToCreateNewAccountByCpfMapperImpl;
 import br.net.silva.business.utils.ConverterUtils;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -25,7 +24,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase {
         this.findIsExistsPeerCPFRepository = findIsExistsPeerCPFRepository;
         this.saveRepository = saveRepository;
         this.createNewAccountByCpfFactory = new CreateNewAccountByCpfFactory();
-        this.mapper = new MapToCreateNewAccountByCpfMapperImpl();
+        this.mapper = MapToCreateNewAccountByCpfMapper.INSTANCE;
     }
 
     @Override
