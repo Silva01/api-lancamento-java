@@ -1,30 +1,29 @@
 package br.net.silva.business.validations;
 
-import br.net.silva.business.dto.FindAccountDTO;
 import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.mapper.MapToFindAccountMapper;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
-import br.net.silva.daniel.shared.business.mapper.GenericMapper;
+import br.net.silva.daniel.value_object.Source;
 
 import java.util.Optional;
 
 public class AccountExistsValidate implements IValidations {
 
     private final Repository<Optional<Account>> findAccountRepository;
-    private final GenericMapper<FindAccountDTO> mapper;
+    private final MapToFindAccountMapper mapper;
 
     public AccountExistsValidate(Repository<Optional<Account>> findAccountRepository) {
         this.findAccountRepository = findAccountRepository;
-        this.mapper = new GenericMapper<>(FindAccountDTO.class);
+        this.mapper = MapToFindAccountMapper.INSTANCE;
     }
 
     @Override
-    public void validate(IGenericPort param) throws GenericException {
-        var dto = this.mapper.map(param);
+    public void validate(Source input) throws GenericException {
+        var dto = this.mapper.mapToFindAccountDto(input.input());
         var optionalAccount = findAccountRepository.exec(dto.account(), dto.agency(), dto.cpf());
 
         if (optionalAccount.isEmpty()) {
