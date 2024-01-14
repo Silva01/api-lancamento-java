@@ -5,6 +5,7 @@ import br.net.silva.business.mapper.MapToAccountMapper;
 import br.net.silva.business.mapper.MapToAccountMapperImpl;
 import br.net.silva.business.mapper.MapToChangePasswordMapper;
 import br.net.silva.business.mapper.MapToChangePasswordMapperImpl;
+import br.net.silva.business.utils.ConverterUtils;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -40,6 +41,6 @@ public class ChangePasswordAccountUseCase implements UseCase {
         var account = createNewAccountByCpfFactory.create(accountMapper.mapToAccountDTO(param));
         account.changePassword(CryptoUtils.convertToSHA256(changePasswordDTO.newPassword()));
         var accountUpdated = updatePasswordRepository.exec(account);
-        param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), accountUpdated.build());
+        param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(accountUpdated.build())));
     }
 }
