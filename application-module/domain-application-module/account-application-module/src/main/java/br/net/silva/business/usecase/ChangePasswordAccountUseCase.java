@@ -3,7 +3,7 @@ package br.net.silva.business.usecase;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.mapper.MapToAccountMapper;
 import br.net.silva.business.mapper.MapToChangePasswordMapper;
-import br.net.silva.business.utils.ConverterUtils;
+import br.net.silva.daniel.utils.ConverterUtils;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
