@@ -1,32 +1,30 @@
 package br.net.silva.daniel.facade;
 
 import br.net.silva.daniel.dto.AddressRequestDTO;
-import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.mapper.ToClientMapper;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
+import br.net.silva.daniel.utils.ConverterUtils;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.Address;
+import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -36,11 +34,13 @@ class ClientFacadeTest {
     private IValidations clientExistsValidate;
     private IValidations clientNotExistsValidate;
 
-    private UseCase<IProcessResponse<ClientDTO>> createNewClientUseCase;
+    private UseCase createNewClientUseCase;
 
-    private UseCase<IProcessResponse<ClientDTO>> findClientUseCase;
+    private UseCase findClientUseCase;
 
-    private UseCase<IProcessResponse<ClientDTO>> activateClientUseCase;
+    private UseCase activateClientUseCase;
+
+    private ToClientMapper mapper;
 
     private DeactivateClientUseCase deactivateClientUseCase;
 
@@ -60,6 +60,7 @@ class ClientFacadeTest {
         this.clientNotExistsValidate = new ClientNotExistsValidate(findClientUseCase);
         this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository);
         this.activateClientUseCase = new ActivateClientUseCase(saveRepository);
+        this.mapper = ToClientMapper.INSTANCE;
     }
 
     @Test
@@ -70,15 +71,17 @@ class ClientFacadeTest {
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
 
         List<IValidations> validationsList = List.of(clientNotExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
         var request = new ClientRequestDTO(null, "99988877766", "Daniel", "6122223333", true, 1234 , new AddressRequestDTO("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555"));
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
 
-        var resultProcess = (ClientDTO) clientFacade.exec(request).build();
+        clientFacade.exec(source);
+        var resultProcess = mapper.toClientDTO(source);
         var clientDTO = client.build();
 
         assertNotNull(resultProcess);
@@ -103,14 +106,16 @@ class ClientFacadeTest {
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
 
         List<IValidations> validationsList = List.of(clientNotExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
         var request = new ClientRequestDTO(null, "99988877766", "Daniel", "6122223333", true, 1234 , new AddressRequestDTO("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555"));
-        var exception = assertThrows(GenericException.class, () -> clientFacade.exec(request).build());
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+
+        var exception = assertThrows(GenericException.class, () -> clientFacade.exec(source));
         assertEquals("Client exists in database", exception.getMessage());
     }
 
@@ -121,14 +126,16 @@ class ClientFacadeTest {
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(deactivateClientUseCase);
 
         List<IValidations> validationsList = List.of(clientExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
         var request = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
-        var resultProcess = (ClientDTO) clientFacade.exec(request).build();
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+        clientFacade.exec(source);
+        var resultProcess = mapper.toClientDTO(source);
         var clientDTO = client.build();
 
         assertNotNull(resultProcess);
@@ -151,14 +158,16 @@ class ClientFacadeTest {
         var client = buildClient();
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(deactivateClientUseCase);
 
         List<IValidations> validationsList = List.of(clientExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
         var request = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
-        var exceptionResponse = assertThrows(GenericException.class, () -> clientFacade.exec(request).build());
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+
+        var exceptionResponse = assertThrows(GenericException.class, () -> clientFacade.exec(source));
         assertEquals("Client not exists in database", exceptionResponse.getMessage());
     }
 
@@ -168,14 +177,16 @@ class ClientFacadeTest {
         when(saveRepository.exec(Mockito.any(String.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateClientUseCase);
 
         List<IValidations> validationsList = List.of(clientExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
         var request = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
-        var resultProcess = (ClientDTO) clientFacade.exec(request).build();
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+        clientFacade.exec(source);
+        var resultProcess = mapper.toClientDTO(source);
         var clientDTO = client.build();
 
         assertNotNull(resultProcess);
