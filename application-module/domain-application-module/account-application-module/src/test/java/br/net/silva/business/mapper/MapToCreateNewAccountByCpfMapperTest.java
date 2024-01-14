@@ -16,7 +16,7 @@ class MapToCreateNewAccountByCpfMapperTest {
 
     @BeforeEach
     void setUp() {
-        mapper = new MapToCreateNewAccountByCpfMapperImpl();
+        mapper = MapToCreateNewAccountByCpfMapper.INSTANCE;
     }
 
     @Test

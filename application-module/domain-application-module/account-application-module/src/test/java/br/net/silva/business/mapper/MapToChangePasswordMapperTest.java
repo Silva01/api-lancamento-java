@@ -15,7 +15,7 @@ class MapToChangePasswordMapperTest {
 
     @BeforeEach
     void setUp() {
-        mapper = new MapToChangePasswordMapperImpl();
+        mapper = MapToChangePasswordMapper.INSTANCE;
     }
 
     @Test

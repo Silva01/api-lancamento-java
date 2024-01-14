@@ -14,7 +14,7 @@ class MapToFindAccountMapperTest {
 
     @BeforeEach
     void setUp() {
-        mapper = new MapToFindAccountMapperImpl();
+        mapper = MapToFindAccountMapper.INSTANCE;
     }
 
     @Test

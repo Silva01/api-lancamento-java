@@ -4,6 +4,7 @@ import br.net.silva.business.dto.ChangePasswordDTO;
 import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.mapper.MapToAccountMapper;
 import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
@@ -16,9 +17,9 @@ import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
-import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
+import br.net.silva.daniel.utils.ConverterUtils;
+import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -33,13 +34,15 @@ import static org.mockito.Mockito.when;
 
 class AccountFacadeTest {
 
-    private UseCase<IProcessResponse<AccountDTO>> createNewAccountByCpfUseCase;
+    private UseCase createNewAccountByCpfUseCase;
 
-    private UseCase<IProcessResponse<AccountDTO>> changePasswordAccountUseCase;
+    private UseCase changePasswordAccountUseCase;
 
-    private UseCase<IProcessResponse<AccountDTO>> deactivateAccountUseCase;
+    private UseCase deactivateAccountUseCase;
 
     private IValidations passwordAndExistsAccountValidate;
+
+    private MapToAccountMapper mapper;
 
     @Mock
     private Repository<Boolean> findIsExistsPeerCPFRepository;
@@ -57,10 +60,11 @@ class AccountFacadeTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository);
-        UseCase<IProcessResponse<? extends IGenericPort>> findAccountUseCase = new FindAccountUseCase(findAccountRepository);
+        UseCase findAccountUseCase = new FindAccountUseCase(findAccountRepository);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountUseCase);
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(findAccountRepository), saveRepository);
         this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
+        this.mapper = MapToAccountMapper.INSTANCE;
     }
 
     @Test
@@ -68,17 +72,18 @@ class AccountFacadeTest {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
         when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(createNewAccountByCpfDTO)));
 
-        IProcessResponse<AccountDTO> response = accountFacade.exec(createNewAccountByCpfDTO);
-        AccountDTO accountDTO = (AccountDTO) response.build();
+        accountFacade.exec(source);
 
+        AccountDTO accountDTO = mapper.mapToAccountDTO(source);
         assertNotNull(accountDTO);
     }
 
@@ -87,15 +92,16 @@ class AccountFacadeTest {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
         when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(createNewAccountByCpfDTO)));
 
-        var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(createNewAccountByCpfDTO));
+        var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Exists account active for CPF informated", exceptionResponse.getMessage());
     }
@@ -105,15 +111,16 @@ class AccountFacadeTest {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
         when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.empty());
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(createNewAccountByCpfDTO)));
 
-        var exceptionResponse = assertThrows(AccountNotExistsException.class, () -> accountFacade.exec(createNewAccountByCpfDTO));
+        var exceptionResponse = assertThrows(AccountNotExistsException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account not found", exceptionResponse.getMessage());
     }
@@ -123,15 +130,16 @@ class AccountFacadeTest {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
         when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "123456");
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(createNewAccountByCpfDTO)));
 
-        var exceptionResponse = assertThrows(IllegalArgumentException.class, () -> accountFacade.exec(createNewAccountByCpfDTO));
+        var exceptionResponse = assertThrows(IllegalArgumentException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Password is different", exceptionResponse.getMessage());
     }
@@ -142,15 +150,17 @@ class AccountFacadeTest {
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
         when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(changePasswordAccountUseCase);
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(changePasswordDTO)));
+        accountFacade.exec(source);
 
-        AccountDTO accountDTO = (AccountDTO) accountFacade.exec(changePasswordDTO).build().get();
+        AccountDTO accountDTO = mapper.mapToAccountDTO(source);
         assertNotNull(accountDTO);
     }
 
@@ -158,15 +168,18 @@ class AccountFacadeTest {
     void mustDeactivateAccountWithSuccess() throws GenericException {
         when(deactivateAccountRepository.exec(Mockito.any(String.class))).thenReturn(buildMockAccount());
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(deactivateAccountUseCase);
 
         List<IValidations> validationsList = Collections.emptyList();
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(changePasswordDTO)));
 
-        AccountDTO accountDTO = (AccountDTO) accountFacade.exec(changePasswordDTO).build().get();
+        accountFacade.exec(source);
+
+        AccountDTO accountDTO = mapper.mapToAccountDTO(source);
         assertNotNull(accountDTO);
     }
 
