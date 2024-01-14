@@ -5,9 +5,12 @@ import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.value_object.Source;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface ToAddessMapper {
+
+    ToAddessMapper INSTANCE = Mappers.getMapper(ToAddessMapper.class);
 
     @Mapping(target = "street", source = "map", qualifiedBy = AddressStreet.class)
     @Mapping(target = "city", source = "map", qualifiedBy = AddressCity.class)
