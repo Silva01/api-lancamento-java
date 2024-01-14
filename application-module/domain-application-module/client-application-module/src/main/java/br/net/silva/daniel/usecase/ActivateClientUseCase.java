@@ -1,28 +1,28 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.mapper.ToClientMapper;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
-import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
-import br.net.silva.daniel.shared.business.mapper.GenericMapper;
+import br.net.silva.daniel.utils.ConverterUtils;
+import br.net.silva.daniel.value_object.Source;
 
-public class ActivateClientUseCase implements UseCase<IProcessResponse<ClientDTO>> {
+public class ActivateClientUseCase implements UseCase {
 
     private final Repository<Client> activateClientRepository;
-    private final GenericMapper<ClientRequestDTO> mapper;
+    private final ToClientMapper mapper;
 
     public ActivateClientUseCase(Repository<Client> activateClientRepository) {
         this.activateClientRepository = activateClientRepository;
-        this.mapper = new GenericMapper<>(ClientRequestDTO.class);
+        this.mapper = ToClientMapper.INSTANCE;
     }
 
     @Override
-    public IProcessResponse<ClientDTO> exec(IGenericPort param) throws GenericException {
-        var dto = mapper.map(param);
-        return activateClientRepository.exec(dto.cpf());
+    public void exec(Source param) throws GenericException {
+        var dto = mapper.toClientRequestDTO(param);
+        var client = activateClientRepository.exec(dto.cpf());
+        param.map().put(TypeClientMapperEnum.CLIENT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(client.build())));
     }
 }

@@ -1,4 +1,4 @@
-package br.net.silva.business.utils;
+package br.net.silva.daniel.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
