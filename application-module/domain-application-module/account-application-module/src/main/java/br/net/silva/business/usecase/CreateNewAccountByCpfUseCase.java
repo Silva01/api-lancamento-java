@@ -34,7 +34,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
         var accountAggregate = saveRepository.exec(createNewAccountByCpfFactory.create(createNewAccountByCpfDTO));
-        param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(accountAggregate.build())));
+        param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), accountAggregate.build());
     }
 
     private boolean isExistsAccountActiveForCPF(String cpf) {

@@ -36,9 +36,9 @@ public class ChangePasswordAccountUseCase implements UseCase {
         var changePasswordDTO = mapper.mapToChangePasswordDto(param.input());
         AccountUtils.validatePassword(changePasswordDTO.newPassword());
         findAccountUseCase.exec(param);
-        var account = createNewAccountByCpfFactory.create(accountMapper.mapToAccountDTO(param));
+        var account = createNewAccountByCpfFactory.create((AccountDTO) param.map().get(TypeAccountMapperEnum.ACCOUNT.name()));
         account.changePassword(CryptoUtils.convertToSHA256(changePasswordDTO.newPassword()));
         var accountUpdated = updatePasswordRepository.exec(account);
-        param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(accountUpdated.build())));
+        param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), accountUpdated.build());
     }
 }

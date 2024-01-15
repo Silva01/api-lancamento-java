@@ -23,7 +23,7 @@ public class DeactivateAccountUseCase implements UseCase {
         try {
             var dto = mapper.mapToFindAccountDto(param.input());
             var accountAggregate =  deactivateAccountRepository.exec(dto.cpf());
-            param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(accountAggregate.build())));
+            param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), accountAggregate.build());
         } catch (Exception e) {
             throw new GenericException(e.getMessage());
         }

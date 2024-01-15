@@ -27,6 +27,6 @@ public class FindAccountByCpfUseCase implements UseCase {
         var findAccountDto = mapper.mapToFindAccountDto(param.input());
         var accountOptional = findActiveAccountRepository.exec(findAccountDto.cpf());
         var accountAggregate =  accountOptional.orElseThrow(() -> new AccountNotExistsException("Account not found"));
-        param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(accountAggregate.build())));
+        param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), accountAggregate.build());
     }
 }

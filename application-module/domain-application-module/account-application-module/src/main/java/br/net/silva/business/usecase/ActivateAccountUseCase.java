@@ -28,7 +28,7 @@ public class ActivateAccountUseCase implements UseCase {
             var account = findAccountRepository.exec(dto.account(), dto.agency(), dto.cpf());
             account.activate();
             var accountActive = activateAccountRepository.exec(account);
-            param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(accountActive.build())));
+            param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), accountActive.build());
         } catch (Exception e) {
             throw new GenericException(e.getMessage());
         }
