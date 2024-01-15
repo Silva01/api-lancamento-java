@@ -1,6 +1,7 @@
 package br.net.silva.daniel.dto;
 
 import br.net.silva.daniel.enuns.FlagEnum;
+import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Setter
-public class CreditCardDTO implements IGenericPort {
+public class CreditCardDTO implements IGenericPort, IGenericOutput {
 
     private String number;
     private Integer cvv;

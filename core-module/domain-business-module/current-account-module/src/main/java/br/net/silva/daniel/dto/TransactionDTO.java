@@ -1,6 +1,7 @@
 package br.net.silva.daniel.dto;
 
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
+import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
@@ -17,7 +18,7 @@ public record TransactionDTO(
         Long idempotencyId,
         String creditCardNumber,
         Integer creditCardCvv
-) implements IGenericPort {
+) implements IGenericPort, IGenericOutput {
     @Override
     public void accept(Class<?> clazz) {
         ValidateUtils.isTypeOf(clazz, TransactionDTO.class, "Class must be assignable from TransactionDTO");

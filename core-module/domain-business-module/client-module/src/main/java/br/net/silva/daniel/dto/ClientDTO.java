@@ -1,5 +1,6 @@
 package br.net.silva.daniel.dto;
 
+import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 
 public record ClientDTO(
@@ -9,7 +10,7 @@ public record ClientDTO(
         String telephone,
         boolean active,
         AddressDTO address
-) implements IGenericPort {
+) implements IGenericPort, IGenericOutput {
 
     @Override
     public void accept(Class<?> clazz) {
