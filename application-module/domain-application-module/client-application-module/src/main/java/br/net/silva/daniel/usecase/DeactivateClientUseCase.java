@@ -9,8 +9,7 @@ import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.mapper.ToClientMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
-import br.net.silva.daniel.utils.ConverterUtils;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 
 import java.util.Optional;
 

@@ -17,7 +17,7 @@ import br.net.silva.daniel.utils.ConverterUtils;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.Address;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

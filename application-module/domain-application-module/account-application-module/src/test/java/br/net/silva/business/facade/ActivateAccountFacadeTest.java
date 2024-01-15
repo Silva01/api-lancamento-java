@@ -1,9 +1,10 @@
 package br.net.silva.business.facade;
 
 import br.net.silva.business.dto.FindAccountDTO;
-import br.net.silva.business.mapper.MapToAccountMapper;
+import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
+import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
@@ -12,7 +13,7 @@ import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.utils.ConverterUtils;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -31,8 +32,6 @@ class ActivateAccountFacadeTest {
 
     private IValidations accountExistsValidate;
 
-    private MapToAccountMapper mapper;
-
     @Mock
     private Repository<Account> activateAccountRepository;
 
@@ -47,7 +46,6 @@ class ActivateAccountFacadeTest {
         MockitoAnnotations.openMocks(this);
         this.activateAccountUseCase = new ActivateAccountUseCase(activateAccountRepository, findAccountRepository);
         this.accountExistsValidate = new AccountExistsValidate(optionalFindAccountRepository);
-        this.mapper = MapToAccountMapper.INSTANCE;
     }
 
     @Test
@@ -69,7 +67,7 @@ class ActivateAccountFacadeTest {
 
         assertNotNull(source);
 
-        var dtoResponse = mapper.mapToAccountDTO(source);
+        var dtoResponse = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
 
         assertNotNull(dtoResponse);
         assertTrue(dtoResponse.active());

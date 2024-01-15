@@ -46,13 +46,13 @@ public class AddressMapperUtils {
     private static Map<String, Object> extractAddressMap(Map<String, Object> map) {
         if (map.containsKey(TypeClientMapperEnum.CLIENT.name())) {
             var mapClient = (Map<String, Object>) map.get(TypeClientMapperEnum.CLIENT.name());
-            if (mapClient.containsKey(TypeClientMapperEnum.ADDRESS.name())) {
-                return (Map<String, Object>) mapClient.get(TypeClientMapperEnum.ADDRESS.name());
+            if (mapClient.containsKey(TypeClientMapperEnum.ADDRESS.name().toLowerCase())) {
+                return (Map<String, Object>) mapClient.get(TypeClientMapperEnum.ADDRESS.name().toLowerCase());
             }
         }
 
-        if (map.containsKey(TypeClientMapperEnum.ADDRESS.name())) {
-            return (Map<String, Object>) map.get(TypeClientMapperEnum.ADDRESS.name());
+        if (map.containsKey(TypeClientMapperEnum.ADDRESS.name().toLowerCase())) {
+            return (Map<String, Object>) map.get(TypeClientMapperEnum.ADDRESS.name().toLowerCase());
         }
 
         throw new IllegalArgumentException("Address not found");

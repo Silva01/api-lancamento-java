@@ -3,19 +3,18 @@ package br.net.silva.business.usecase;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.mapper.MapToCreateNewAccountByCpfMapper;
-import br.net.silva.daniel.utils.ConverterUtils;
+import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
-import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 
 public class CreateNewAccountByCpfUseCase implements UseCase {
 
-    private final IFactoryAggregate<Account, IGenericPort> createNewAccountByCpfFactory;
+    private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
     private final Repository<Account> saveRepository;
     private final MapToCreateNewAccountByCpfMapper mapper;
@@ -33,7 +32,17 @@ public class CreateNewAccountByCpfUseCase implements UseCase {
         if (isExistsAccountActiveForCPF(createNewAccountByCpfDTO.cpf())) {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
-        var accountAggregate = saveRepository.exec(createNewAccountByCpfFactory.create(createNewAccountByCpfDTO));
+        var accountAggregate = saveRepository.exec(createNewAccountByCpfFactory.create(
+                new AccountDTO(
+                        null,
+                        createNewAccountByCpfDTO.agency(),
+                        null,
+                        createNewAccountByCpfDTO.password(),
+                        true,
+                        createNewAccountByCpfDTO.cpf(),
+                        null,
+                        null)));
+
         param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), accountAggregate.build());
     }
 

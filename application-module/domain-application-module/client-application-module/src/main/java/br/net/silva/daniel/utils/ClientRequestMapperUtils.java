@@ -5,7 +5,7 @@ import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.dto.AddressRequestDTO;
 import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.mapper.ToAddessMapper;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 
 import java.util.Map;
 
@@ -55,7 +55,7 @@ public class ClientRequestMapperUtils {
     private static <T> T convertAddress(Map<String, Object> map, Class<T> clazz) {
         if (map.containsKey(TypeClientMapperEnum.CLIENT.name())) {
             var mapClient = (Map<String, Object>) map.get(TypeClientMapperEnum.CLIENT.name());
-            if (mapClient.containsKey(TypeClientMapperEnum.ADDRESS.name())) {
+            if (mapClient.containsKey(TypeClientMapperEnum.ADDRESS.name().toLowerCase())) {
                 if (clazz.equals(AddressRequestDTO.class)) {
                     return clazz.cast(ToAddessMapper.INSTANCE.toAddressRequestDTO(new Source(map, null))) ;
                 } else if (clazz.equals(AddressDTO.class)) {

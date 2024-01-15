@@ -41,7 +41,7 @@ public class CreateAccountByAccountDTOFactory implements IFactoryAggregate<Accou
 
         return new Account(
                 accountDTO.number(),
-                accountDTO.bankAgencyNumber(),
+                accountDTO.agency(),
                 accountDTO.balance(),
                 accountDTO.password(),
                 accountDTO.active(),

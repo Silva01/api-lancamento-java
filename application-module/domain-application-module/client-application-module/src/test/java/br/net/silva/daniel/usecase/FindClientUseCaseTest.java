@@ -7,7 +7,7 @@ import br.net.silva.daniel.mapper.ToClientMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.utils.ConverterUtils;
 import br.net.silva.daniel.value_object.Address;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

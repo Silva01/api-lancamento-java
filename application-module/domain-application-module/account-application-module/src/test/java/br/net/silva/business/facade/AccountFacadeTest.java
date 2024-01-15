@@ -2,9 +2,9 @@ package br.net.silva.business.facade;
 
 import br.net.silva.business.dto.ChangePasswordDTO;
 import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
+import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
-import br.net.silva.business.mapper.MapToAccountMapper;
 import br.net.silva.business.usecase.*;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.daniel.dto.AccountDTO;
@@ -16,7 +16,7 @@ import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.utils.ConverterUtils;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -41,8 +41,6 @@ class AccountFacadeTest {
 
     private IValidations passwordAndExistsAccountValidate;
 
-    private MapToAccountMapper mapper;
-
     @Mock
     private Repository<Boolean> findIsExistsPeerCPFRepository;
 
@@ -64,7 +62,6 @@ class AccountFacadeTest {
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountByCpfUseCase);
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(findAccountRepository), saveRepository);
         this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
-        this.mapper = MapToAccountMapper.INSTANCE;
     }
 
     @Test
@@ -83,7 +80,7 @@ class AccountFacadeTest {
 
         accountFacade.exec(source);
 
-        AccountDTO accountDTO = mapper.mapToAccountDTO(source);
+        AccountDTO accountDTO = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
         assertNotNull(accountDTO);
     }
 
@@ -161,7 +158,7 @@ class AccountFacadeTest {
         var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(changePasswordDTO)));
         accountFacade.exec(source);
 
-        AccountDTO accountDTO = mapper.mapToAccountDTO(source);
+        AccountDTO accountDTO = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
         assertNotNull(accountDTO);
     }
 
@@ -180,7 +177,7 @@ class AccountFacadeTest {
 
         accountFacade.exec(source);
 
-        AccountDTO accountDTO = mapper.mapToAccountDTO(source);
+        AccountDTO accountDTO = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
         assertNotNull(accountDTO);
     }
 

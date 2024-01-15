@@ -1,14 +1,15 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.dto.FindAccountDTO;
-import br.net.silva.business.mapper.MapToAccountMapper;
+import br.net.silva.business.enums.TypeAccountMapperEnum;
+import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.utils.ConverterUtils;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,8 +27,6 @@ class DeactivateAccountUseCaseTest {
 
     private DeactivateAccountUseCase deactivateAccountUseCase;
 
-    private MapToAccountMapper mapper;
-
     private CreateAccountByAccountDTOFactory factory;
 
     @Mock
@@ -37,7 +36,6 @@ class DeactivateAccountUseCaseTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
-        this.mapper = MapToAccountMapper.INSTANCE;
         this.factory = new CreateAccountByAccountDTOFactory();
     }
 
@@ -49,7 +47,7 @@ class DeactivateAccountUseCaseTest {
         var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(findAccountDTO)));
         deactivateAccountUseCase.exec(source);
 
-        var account = factory.create(mapper.mapToAccountDTO(source));
+        var account = factory.create((AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name()));
         assertNotNull(account);
         Mockito.verify(deactivateAccountRepository, Mockito.times(1)).exec(findAccountDTO.cpf());
 

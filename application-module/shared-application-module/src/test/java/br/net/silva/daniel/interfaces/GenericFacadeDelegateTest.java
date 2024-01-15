@@ -1,7 +1,8 @@
 package br.net.silva.daniel.interfaces;
 
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,15 +26,17 @@ class GenericFacadeDelegateTest {
 
     @BeforeEach
     void setup() {
+        var basicInput = new BasicTest();
+        basicInput.setName("Teste com input");
         // Next create a object that type is UseCase and return the processResponse
         useCase = (p) -> {
-            p.map().put("Test", "Teste com map");
+            p.map().put("Test", basicInput);
         };
 
         // Next create a object that type is IValidations and validate if the string is not null
         stringNotNullValidation = (p) -> {
-            var string = (String) p.map().get("Test");
-            if (string.isEmpty()) {
+            var basicTest = (BasicTest) p.map().get("Test");
+            if (basicTest.getName().isEmpty()) {
                 throw new GenericException("String must not be null");
             }
         };
@@ -52,25 +55,33 @@ class GenericFacadeDelegateTest {
     @Test
     void mustExecuteFacadeWithSucess() throws GenericException {
 
+        var basicInput = new BasicTest();
+        basicInput.setName("Teste com input");
+
         var source = new Source();
         source.input().put("Test", "Teste com input");
+        source.map().put("Test", basicInput);
 
         genericFacadeDelegate.exec(source);
 
         assertTrue(source.map().containsKey("Test"));
         assertNotNull(source.map().get("Test"));
 
-        var stringResponse = (String) source.map().get("Test");
+        var basicTest = (BasicTest) source.map().get("Test");
 
-        assertNotNull(stringResponse);
-        assertEquals("Teste com map", stringResponse);
+        assertNotNull(basicTest);
+        assertEquals("Teste com input", basicTest.getName());
     }
 
     @Test
     void mustExecuteFacadeWithException() throws GenericException {
 
+        var basicInput = new BasicTest();
+        basicInput.setName("");
+
         var source = new Source();
         source.input().put("Test", "");
+        source.map().put("Test", basicInput);
 
         var exceptionResponse = Assertions.assertThrows(GenericException.class, () -> genericFacadeDelegate.exec(source));
         assertEquals("String must not be null", exceptionResponse.getMessage());
@@ -83,6 +94,18 @@ class GenericFacadeDelegateTest {
         source.input().put("Test", null);
 
         Assertions.assertThrows(NullPointerException.class, () -> genericFacadeDelegate.exec(source));
+    }
+
+    private class BasicTest implements IGenericOutput {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
 }

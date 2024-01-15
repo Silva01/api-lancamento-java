@@ -1,9 +1,7 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.enums.TypeAccountMapperEnum;
-import br.net.silva.business.mapper.MapToAccountMapper;
 import br.net.silva.business.mapper.MapToChangePasswordMapper;
-import br.net.silva.daniel.utils.ConverterUtils;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -13,7 +11,7 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.utils.AccountUtils;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 
 public class ChangePasswordAccountUseCase implements UseCase {
     private final UseCase findAccountUseCase;
@@ -21,14 +19,11 @@ public class ChangePasswordAccountUseCase implements UseCase {
     private final MapToChangePasswordMapper mapper;
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
 
-    private final MapToAccountMapper accountMapper;
-
     public ChangePasswordAccountUseCase(UseCase findAccountUseCase, Repository<Account> updatePasswordRepository) {
         this.mapper = MapToChangePasswordMapper.INSTANCE;
         this.findAccountUseCase = findAccountUseCase;
         this.updatePasswordRepository = updatePasswordRepository;
         this.createNewAccountByCpfFactory = new CreateAccountByAccountDTOFactory();
-        this.accountMapper = MapToAccountMapper.INSTANCE;
     }
 
     @Override

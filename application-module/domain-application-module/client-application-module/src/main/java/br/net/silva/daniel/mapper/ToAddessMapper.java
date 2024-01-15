@@ -4,7 +4,7 @@ import br.net.silva.daniel.annotations.address.*;
 import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.dto.AddressRequestDTO;
 import br.net.silva.daniel.utils.AddressMapperUtils;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

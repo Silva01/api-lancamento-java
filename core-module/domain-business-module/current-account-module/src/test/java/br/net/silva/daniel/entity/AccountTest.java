@@ -25,7 +25,7 @@ public class AccountTest extends TestCase {
         dto.accept(AccountDTO.class);
 
         assertNotNull(dto);
-        assertEquals(Integer.valueOf(1), dto.bankAgencyNumber());
+        assertEquals(Integer.valueOf(1), dto.agency());
         assertEquals("123456", dto.password());
         assertEquals("12345678910", dto.cpf());
         assertNotNull(dto.number());
@@ -34,7 +34,7 @@ public class AccountTest extends TestCase {
 
         var dto2 = dto.get();
         assertNotNull(dto2);
-        assertEquals(Integer.valueOf(1), dto2.bankAgencyNumber());
+        assertEquals(Integer.valueOf(1), dto2.agency());
         assertEquals("123456", dto2.password());
         assertEquals("12345678910", dto2.cpf());
         assertNotNull(dto2.number());
