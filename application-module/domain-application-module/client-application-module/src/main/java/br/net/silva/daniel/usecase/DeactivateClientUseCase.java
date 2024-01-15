@@ -32,10 +32,10 @@ public class DeactivateClientUseCase implements UseCase {
     @Override
     public void exec(Source param) throws GenericException {
         findClientUseCase.exec(param);
-        var client = factory.create(mapper.toClientDTO(param));
+        var client = factory.create((ClientDTO) param.map().get(TypeClientMapperEnum.CLIENT.name()));
         client.deactivate();
 
         var clientUpdated = saveRepository.exec(client);
-        param.map().put(TypeClientMapperEnum.CLIENT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(clientUpdated.build())));
+        param.map().put(TypeClientMapperEnum.CLIENT.name(), clientUpdated.build());
     }
 }

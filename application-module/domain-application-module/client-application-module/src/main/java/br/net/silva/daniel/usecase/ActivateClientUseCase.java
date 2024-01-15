@@ -23,6 +23,6 @@ public class ActivateClientUseCase implements UseCase {
     public void exec(Source param) throws GenericException {
         var dto = mapper.toClientRequestDTO(param);
         var client = activateClientRepository.exec(dto.cpf());
-        param.map().put(TypeClientMapperEnum.CLIENT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(client.build())));
+        param.map().put(TypeClientMapperEnum.CLIENT.name(), client.build());
     }
 }

@@ -29,7 +29,7 @@ public class CreateNewClientUseCase implements UseCase {
         try {
             var clientDto = mapper.toClientDTO(param);
             var clientAggregate = saveRepository.exec(buildClient(clientDto));
-            param.map().put(TypeClientMapperEnum.CLIENT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(clientAggregate.build())));
+            param.map().put(TypeClientMapperEnum.CLIENT.name(), clientAggregate.build());
         } catch (Exception e) {
             throw new ExistsClientRegistredException(e.getMessage());
         }

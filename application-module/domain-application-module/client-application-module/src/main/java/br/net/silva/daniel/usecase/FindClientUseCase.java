@@ -26,6 +26,6 @@ public class FindClientUseCase implements UseCase {
         var clientRequestDTO = mapper.toClientRequestDTO(param.input());
         var optionalClient = findClientRepository.exec(clientRequestDTO.cpf());
         var client = optionalClient.orElseThrow(() -> new ClientNotExistsException("Client not exists in database"));
-        param.map().put(TypeClientMapperEnum.CLIENT.name(), ConverterUtils.convertJsonToMap(ConverterUtils.convertObjectToJson(client.build())));
+        param.map().put(TypeClientMapperEnum.CLIENT.name(), client.build());
     }
 }
