@@ -5,10 +5,7 @@ import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.mapper.MapToAccountMapper;
-import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
-import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
-import br.net.silva.business.usecase.DeactivateAccountUseCase;
-import br.net.silva.business.usecase.FindAccountUseCase;
+import br.net.silva.business.usecase.*;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
@@ -40,6 +37,8 @@ class AccountFacadeTest {
 
     private UseCase deactivateAccountUseCase;
 
+    private UseCase findAccountByCpfUseCase;
+
     private IValidations passwordAndExistsAccountValidate;
 
     private MapToAccountMapper mapper;
@@ -61,7 +60,8 @@ class AccountFacadeTest {
         MockitoAnnotations.openMocks(this);
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository);
         UseCase findAccountUseCase = new FindAccountUseCase(findAccountRepository);
-        passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountUseCase);
+        var findAccountByCpfUseCase = new FindAccountByCpfUseCase(findAccountRepository);
+        passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountByCpfUseCase);
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(findAccountRepository), saveRepository);
         this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
         this.mapper = MapToAccountMapper.INSTANCE;
@@ -71,7 +71,7 @@ class AccountFacadeTest {
     void mustCreateNewAccountByCpf() throws GenericException {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
+        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
@@ -91,7 +91,7 @@ class AccountFacadeTest {
     void mustErrorCreateNewAccountByCpfAccountNotExists() {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
+        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
@@ -110,7 +110,7 @@ class AccountFacadeTest {
     void mustErrorCreateNewAccountByCpfAccountNotExistsValidation() {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.empty());
+        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
@@ -129,7 +129,7 @@ class AccountFacadeTest {
     void mustErrorCreateNewAccountByCpfPasswordInvalid() {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(true);
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
+        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
@@ -148,6 +148,7 @@ class AccountFacadeTest {
     void mustChangePasswordWithSuccess() throws GenericException {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
         when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
         when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
 
         Queue<UseCase> useCases = new LinkedList<>();
