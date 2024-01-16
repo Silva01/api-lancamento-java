@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -33,9 +34,22 @@ class CreateNewClientUseCaseTest {
 
     @Test
     void testShouldCreateANewClientWithSuccess() throws Exception {
-        var address = new AddressRequestDTO("Street 1", "1234", "Brazil", "Brasilia", "DF", "Brasilia", "12344-556");
-        var clientDto = new ClientRequestDTO("1234", "00099988877", "Daniel", "61933334444", true, 1234, address);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(clientDto)));
+        Map<String, String> inputMap = new HashMap<>();
+        inputMap.put("id", "1234");
+        inputMap.put("cpf", "00099988877");
+        inputMap.put("name", "Daniel");
+        inputMap.put("telephone", "61933334444");
+        inputMap.put("active", "true");
+        inputMap.put("agency", "1234");
+        inputMap.put("street", "Street 1");
+        inputMap.put("number", "1234");
+        inputMap.put("complement", "Brazil");
+        inputMap.put("neighborhood", "Brasilia");
+        inputMap.put("state", "DF");
+        inputMap.put("city", "Brasilia");
+        inputMap.put("zipCode", "12344-556");
+
+        var source = new Source(new HashMap<>(), inputMap);
 
         createNewClientUseCase.exec(source);
 
@@ -45,9 +59,22 @@ class CreateNewClientUseCaseTest {
     @Test
     void testShouldCreateANewClientWithErrorExistsClient() throws ExistsClientRegistredException {
         // Arrange
-        var address = new AddressRequestDTO("Street 1", "1234", "Brazil", "Brasilia", "DF", "Brasilia", "12344-556");
-        var clientDto = new ClientRequestDTO("1234", "00099988877", "Daniel", "61933334444", true, 1234, address);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(clientDto)));
+        Map<String, String> inputMap = new HashMap<>();
+        inputMap.put("id", "1234");
+        inputMap.put("cpf", "00099988877");
+        inputMap.put("name", "Daniel");
+        inputMap.put("telephone", "61933334444");
+        inputMap.put("active", "true");
+        inputMap.put("agency", "1234");
+        inputMap.put("street", "Street 1");
+        inputMap.put("number", "1234");
+        inputMap.put("complement", "Brazil");
+        inputMap.put("neighborhood", "Brasilia");
+        inputMap.put("state", "DF");
+        inputMap.put("city", "Brasilia");
+        inputMap.put("zipCode", "12344-556");
+
+        var source = new Source(new HashMap<>(), inputMap);
 
 
         // Mock the repository

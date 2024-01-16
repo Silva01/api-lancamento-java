@@ -1,7 +1,9 @@
 package br.net.silva.daniel.usecase;
 
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.mapper.ToClientMapper;
 import br.net.silva.daniel.repository.Repository;
@@ -15,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,14 +43,15 @@ class FindClientUseCaseTest {
 
     @Test
     void must_looking_for_client_in_database_with_success() throws ClientNotExistsException {
-        var request = new ClientRequestDTO(null, "22233344455", null, null, false, null, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+        Map<String, String> map = new HashMap<>();
+        map.put("cpf", "22233344455");
+        var source = new Source(new HashMap<>(), map);
         findClientUseCase.exec(source);
 
-        var client = mapper.toClientDTO(source);
+        var client = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
 
         assertNotNull(client);
-        assertEquals(client.cpf(), request.cpf());
+        assertEquals(map.get("cpf"), client.cpf());
         assertEquals("Daniel", client.name());
         assertEquals("1", client.id());
         assertEquals("22344445555", client.telephone());
@@ -60,13 +64,14 @@ class FindClientUseCaseTest {
         assertEquals("Estado 1", client.address().state());
         assertEquals("11111111", client.address().zipCode());
 
-        verify(findClientRepository, times(1)).exec(request.cpf());
+        verify(findClientRepository, times(1)).exec(map.get("cpf"));
     }
 
     @Test
     void must_looking_for_client_in_database_what_not_exists() {
-        var request = new ClientRequestDTO(null, "22233344455", null, null, false, null, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+        Map<String, String> map = new HashMap<>();
+        map.put("cpf", "22233344455");
+        var source = new Source(new HashMap<>(), map);
         when(findClientRepository.exec(anyString())).thenReturn(Optional.empty());
         Assertions.assertThrows(ClientNotExistsException.class, () -> findClientUseCase.exec(source));
     }

@@ -26,8 +26,8 @@ public class CreateNewClientUseCase implements UseCase {
     @Override
     public void exec(Source param) throws ExistsClientRegistredException {
         try {
-            var clientDto = mapper.toClientDTO(param);
-            var clientAggregate = saveRepository.exec(buildClient(clientDto));
+            var clientRequestDto = mapper.toClientRequestDTO(param.input());
+            var clientAggregate = saveRepository.exec(buildClient(mapper.toClientDTO(clientRequestDto)));
             param.map().put(TypeClientMapperEnum.CLIENT.name(), clientAggregate.build());
         } catch (Exception e) {
             throw new ExistsClientRegistredException(e.getMessage());

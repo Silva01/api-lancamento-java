@@ -1,13 +1,12 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.dto.ClientRequestDTO;
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.mapper.ToClientMapper;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.utils.ConverterUtils;
-import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.shared.business.value_object.Source;
+import br.net.silva.daniel.value_object.Address;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -15,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,8 +23,6 @@ import static org.mockito.Mockito.when;
 class DeactivateClientUseCaseTest {
 
     private DeactivateClientUseCase deactivateClientUseCase;
-
-    private ToClientMapper mapper;
 
     @Mock
     private Repository<Optional<Client>> findClientRepository;
@@ -37,7 +35,6 @@ class DeactivateClientUseCaseTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository);
-        this.mapper = ToClientMapper.INSTANCE;
     }
 
     @Test
@@ -45,23 +42,25 @@ class DeactivateClientUseCaseTest {
         when(findClientRepository.exec(Mockito.any(String.class))).thenReturn(Optional.of(buildClient(true)));
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(buildClient(false));
 
-        var requestClient = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(requestClient)));
+        Map<String, String> inputMap = new HashMap<>();
+        inputMap.put("cpf", "99988877766");
+        var source = new Source(new HashMap<>(), inputMap);
         deactivateClientUseCase.exec(source);
 
-        var clientDto = mapper.toClientDTO(source);
+        var clientDto = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
 
         assertFalse(clientDto.active());
 
-        Mockito.verify(findClientRepository, Mockito.times(1)).exec(requestClient.cpf());
+        Mockito.verify(findClientRepository, Mockito.times(1)).exec(inputMap.get("cpf"));
         Mockito.verify(saveRepository, Mockito.times(1)).exec(Mockito.any(Client.class));
     }
 
     @Test
     void mustErrorClientNotExistsWhenTryDeactivateClient() {
         when(findClientRepository.exec(Mockito.any(String.class))).thenReturn(Optional.empty());
-        var requestClient = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(requestClient)));
+        Map<String, String> inputMap = new HashMap<>();
+        inputMap.put("cpf", "99988877766");
+        var source = new Source(new HashMap<>(), inputMap);
         var exceptionReponse = assertThrows(GenericException.class, () -> deactivateClientUseCase.exec(source));
 
         assertEquals("Client not exists in database", exceptionReponse.getMessage());

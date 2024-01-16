@@ -20,7 +20,7 @@ public class ActivateClientUseCase implements UseCase {
 
     @Override
     public void exec(Source param) throws GenericException {
-        var dto = mapper.toClientRequestDTO(param);
+        var dto = mapper.toClientRequestDTO(param.input());
         var client = activateClientRepository.exec(dto.cpf());
         param.map().put(TypeClientMapperEnum.CLIENT.name(), client.build());
     }

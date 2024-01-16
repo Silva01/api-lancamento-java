@@ -1,8 +1,10 @@
 package br.net.silva.daniel.facade;
 
 import br.net.silva.daniel.dto.AddressRequestDTO;
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
@@ -77,11 +79,13 @@ class ClientFacadeTest {
         List<IValidations> validationsList = List.of(clientNotExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
-        var request = new ClientRequestDTO(null, "99988877766", "Daniel", "6122223333", true, 1234 , new AddressRequestDTO("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555"));
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+        Map<String, String> map = generateInputMap();
+
+        var source = new Source(new HashMap<>(), map);
 
         clientFacade.exec(source);
-        var resultProcess = mapper.toClientDTO(source);
+
+        var resultProcess = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
         var clientDTO = client.build();
 
         assertNotNull(resultProcess);
@@ -112,8 +116,7 @@ class ClientFacadeTest {
         List<IValidations> validationsList = List.of(clientNotExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
-        var request = new ClientRequestDTO(null, "99988877766", "Daniel", "6122223333", true, 1234 , new AddressRequestDTO("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555"));
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+        var source = new Source(new HashMap<>(), generateInputMap());
 
         var exception = assertThrows(GenericException.class, () -> clientFacade.exec(source));
         assertEquals("Client exists in database", exception.getMessage());
@@ -122,7 +125,7 @@ class ClientFacadeTest {
     @Test
     void mustDeactivateClientWithSuccess() throws GenericException {
         var client = buildClient();
-
+        client.deactivate();
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
 
@@ -132,10 +135,11 @@ class ClientFacadeTest {
         List<IValidations> validationsList = List.of(clientExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
-        var request = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+        Map<String, String> inputMap = new HashMap<>();
+        inputMap.put("cpf", "99988877766");
+        var source = new Source(new HashMap<>(), inputMap);
         clientFacade.exec(source);
-        var resultProcess = mapper.toClientDTO(source);
+        var resultProcess = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
         var clientDTO = client.build();
 
         assertNotNull(resultProcess);
@@ -184,9 +188,11 @@ class ClientFacadeTest {
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
         var request = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+        Map<String, String> inputMap = new HashMap<>();
+        inputMap.put("cpf", "99988877766");
+        var source = new Source(new HashMap<>(), inputMap);
         clientFacade.exec(source);
-        var resultProcess = mapper.toClientDTO(source);
+        var resultProcess = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
         var clientDTO = client.build();
 
         assertNotNull(resultProcess);
@@ -207,5 +213,22 @@ class ClientFacadeTest {
     private Client buildClient() {
         var address = new Address("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
         return new Client("abcd", "99988877766", "Daniel", "6122223333", true, address);
+    }
+
+    private static Map<String, String> generateInputMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("cpf", "99988877766");
+        map.put("name", "Daniel");
+        map.put("telephone", "6122223333");
+        map.put("active", "true");
+        map.put("agency", "1234");
+        map.put("street", "Rua 1");
+        map.put("number", "Bairro 1");
+        map.put("complement", "Cidade 1");
+        map.put("neighborhood", "Flores");
+        map.put("state", "DF");
+        map.put("city", "Brasilia");
+        map.put("zipCode", "44444-555");
+        return map;
     }
 }

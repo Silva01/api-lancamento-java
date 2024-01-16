@@ -1,60 +1,21 @@
 package br.net.silva.daniel.utils;
 
-import br.net.silva.daniel.annotations.address.*;
-import br.net.silva.daniel.enums.TypeClientMapperEnum;
+import br.net.silva.daniel.annotations.address.AddressStreet;
+import br.net.silva.daniel.dto.AddressRequestDTO;
 
 import java.util.Map;
 
 public class AddressMapperUtils {
 
     @AddressStreet
-    public static String street(Map<String, Object> map) {
-        return ExtractMapUtils.extractMapValue(extractAddressMap(map), "street", String.class);
-    }
-
-    @AddressNumber
-    public static String number(Map<String, Object> map) {
-        return ExtractMapUtils.extractMapValue(extractAddressMap(map), "number", String.class);
-    }
-
-    @AddressComplement
-    public static String complement(Map<String, Object> map) {
-        return ExtractMapUtils.extractMapValue(extractAddressMap(map), "complement", String.class);
-    }
-
-    @AddressNeighborhood
-    public static String neighborhood(Map<String, Object> map) {
-        return ExtractMapUtils.extractMapValue(extractAddressMap(map), "neighborhood", String.class);
-    }
-
-    @AddressState
-    public static String state(Map<String, Object> map) {
-        return ExtractMapUtils.extractMapValue(extractAddressMap(map), "state", String.class);
-    }
-
-    @AddressCity
-    public static String city(Map<String, Object> map) {
-        return ExtractMapUtils.extractMapValue(extractAddressMap(map), "city", String.class);
-    }
-
-    @AddressZipCode
-    public static String zipCode(Map<String, Object> map) {
-        return ExtractMapUtils.extractMapValue(extractAddressMap(map), "zipCode", String.class);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Map<String, Object> extractAddressMap(Map<String, Object> map) {
-        if (map.containsKey(TypeClientMapperEnum.CLIENT.name())) {
-            var mapClient = (Map<String, Object>) map.get(TypeClientMapperEnum.CLIENT.name());
-            if (mapClient.containsKey(TypeClientMapperEnum.ADDRESS.name().toLowerCase())) {
-                return (Map<String, Object>) mapClient.get(TypeClientMapperEnum.ADDRESS.name().toLowerCase());
-            }
-        }
-
-        if (map.containsKey(TypeClientMapperEnum.ADDRESS.name().toLowerCase())) {
-            return (Map<String, Object>) map.get(TypeClientMapperEnum.ADDRESS.name().toLowerCase());
-        }
-
-        throw new IllegalArgumentException("Address not found");
+    public static AddressRequestDTO street(Map<String, String> map) {
+        var street = ExtractMapUtils.extractMapValue(map, "street", String.class);
+        var number = ExtractMapUtils.extractMapValue(map, "number", String.class);
+        var complement = ExtractMapUtils.extractMapValue(map, "complement", String.class);
+        var neighborhood = ExtractMapUtils.extractMapValue(map, "neighborhood", String.class);
+        var state = ExtractMapUtils.extractMapValue(map, "state", String.class);
+        var city = ExtractMapUtils.extractMapValue(map, "city", String.class);
+        var zipCode = ExtractMapUtils.extractMapValue(map, "zipCode", String.class);
+        return new AddressRequestDTO(street, number, complement, neighborhood, state, city, zipCode);
     }
 }
