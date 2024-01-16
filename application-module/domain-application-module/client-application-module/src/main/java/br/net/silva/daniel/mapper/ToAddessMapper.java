@@ -1,7 +1,6 @@
 package br.net.silva.daniel.mapper;
 
 import br.net.silva.daniel.dto.AddressRequestDTO;
-import br.net.silva.daniel.utils.AddressMapperUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
