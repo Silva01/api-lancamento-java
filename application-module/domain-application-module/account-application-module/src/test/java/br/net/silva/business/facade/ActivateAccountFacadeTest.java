@@ -1,8 +1,9 @@
 package br.net.silva.business.facade;
 
 import br.net.silva.business.dto.FindAccountDTO;
+import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
-import br.net.silva.business.validations.AccountExistsValidate;
+import br.net.silva.business.validations.AccountExistsAndActiveValidate;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -11,6 +12,8 @@ import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
+import br.net.silva.daniel.utils.ConverterUtils;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -42,7 +45,7 @@ class ActivateAccountFacadeTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         this.activateAccountUseCase = new ActivateAccountUseCase(activateAccountRepository, findAccountRepository);
-        this.accountExistsValidate = new AccountExistsValidate(optionalFindAccountRepository);
+        this.accountExistsValidate = new AccountExistsAndActiveValidate(optionalFindAccountRepository);
     }
 
     @Test
@@ -51,19 +54,20 @@ class ActivateAccountFacadeTest {
         when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(false)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
         List<IValidations> validationsList = List.of(accountExistsValidate);
 
         var facade = new GenericFacadeDelegate(useCases, validationsList);
         var dtoRequest = new FindAccountDTO("99988877766", 45678, 4321888, null);
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(dtoRequest)));
 
-        var response = facade.exec(dtoRequest);
+        facade.exec(source);
 
-        assertNotNull(response);
+        assertNotNull(source);
 
-        var dtoResponse = (AccountDTO) response.build().get();
+        var dtoResponse = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
 
         assertNotNull(dtoResponse);
         assertTrue(dtoResponse.active());
@@ -75,15 +79,16 @@ class ActivateAccountFacadeTest {
         when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.empty());
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
         List<IValidations> validationsList = List.of(accountExistsValidate);
 
         var facade = new GenericFacadeDelegate(useCases, validationsList);
         var dtoRequest = new FindAccountDTO("99988877766", 45678, 4321888, null);
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(dtoRequest)));
 
-        var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(dtoRequest));
+        var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account not exists", exceptionResponse.getMessage());
     }
@@ -94,15 +99,16 @@ class ActivateAccountFacadeTest {
         when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
-        Queue<UseCase<?>> useCases = new LinkedList<>();
+        Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
         List<IValidations> validationsList = List.of(accountExistsValidate);
 
         var facade = new GenericFacadeDelegate(useCases, validationsList);
         var dtoRequest = new FindAccountDTO("99988877766", 45678, 4321888, null);
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(dtoRequest)));
 
-        var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(dtoRequest));
+        var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account already active", exceptionResponse.getMessage());
     }

@@ -1,9 +1,8 @@
 package br.net.silva.daniel.interfaces;
 
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
-import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
-import br.net.silva.daniel.shared.business.utils.ValidateUtils;
+import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GenericFacadeDelegateTest {
 
@@ -28,30 +26,17 @@ class GenericFacadeDelegateTest {
 
     @BeforeEach
     void setup() {
-
-        // Create a object that type is IGenericPort
-        IGenericPort port = new IGenericPort() {
-            @Override
-            public void accept(Class<?> clazz) {
-                ValidateUtils.isTypeOf(clazz, String.class, "Port must be a String");
-            }
-
-            @Override
-            public Object get() {
-                return "Test";
-            }
-        };
-
-        // Next create a object that type is IProcessResponse and return the port
-        IProcessResponse processResponse = () -> port;
-
+        var basicInput = new BasicTest();
+        basicInput.setName("Teste com input");
         // Next create a object that type is UseCase and return the processResponse
-        useCase = (p) -> processResponse;
+        useCase = (p) -> {
+            p.map().put("Test", basicInput);
+        };
 
         // Next create a object that type is IValidations and validate if the string is not null
         stringNotNullValidation = (p) -> {
-            var string = (String) p.get();
-            if (string.isEmpty()) {
+            var basicTest = (BasicTest) p.map().get("Test");
+            if (basicTest.getName().isEmpty()) {
                 throw new GenericException("String must not be null");
             }
         };
@@ -70,67 +55,57 @@ class GenericFacadeDelegateTest {
     @Test
     void mustExecuteFacadeWithSucess() throws GenericException {
 
-        IGenericPort port = new IGenericPort() {
-            @Override
-            public void accept(Class<?> clazz) {
-                ValidateUtils.isTypeOf(clazz, String.class, "Port must be a String");
-            }
+        var basicInput = new BasicTest();
+        basicInput.setName("Teste com input");
 
-            @Override
-            public Object get() {
-                return "Test";
-            }
-        };
+        var source = new Source();
+        source.input().put("Test", "Teste com input");
+        source.map().put("Test", basicInput);
 
-        var response = genericFacadeDelegate.exec(port);
+        genericFacadeDelegate.exec(source);
 
-        assertNotNull(response);
+        assertTrue(source.map().containsKey("Test"));
+        assertNotNull(source.map().get("Test"));
 
-        var genericPortResponse = response.build();
+        var basicTest = (BasicTest) source.map().get("Test");
 
-        assertNotNull(genericPortResponse);
-
-        var stringResponse = (String) genericPortResponse.get();
-
-        assertNotNull(stringResponse);
-        assertEquals("Test", stringResponse);
+        assertNotNull(basicTest);
+        assertEquals("Teste com input", basicTest.getName());
     }
 
     @Test
     void mustExecuteFacadeWithException() throws GenericException {
 
-        IGenericPort port = new IGenericPort() {
-            @Override
-            public void accept(Class<?> clazz) {
-                ValidateUtils.isTypeOf(clazz, String.class, "Port must be a String");
-            }
+        var basicInput = new BasicTest();
+        basicInput.setName("");
 
-            @Override
-            public Object get() {
-                return "";
-            }
-        };
+        var source = new Source();
+        source.input().put("Test", "");
+        source.map().put("Test", basicInput);
 
-        var exceptionResponse = Assertions.assertThrows(GenericException.class, () -> genericFacadeDelegate.exec(port));
+        var exceptionResponse = Assertions.assertThrows(GenericException.class, () -> genericFacadeDelegate.exec(source));
         assertEquals("String must not be null", exceptionResponse.getMessage());
     }
 
     @Test
     void mustExecuteFacadeWithExceptionWhenPortIsNull() throws GenericException {
 
-        IGenericPort port = new IGenericPort() {
-            @Override
-            public void accept(Class<?> clazz) {
-                ValidateUtils.isTypeOf(clazz, String.class, "Port must be a String");
-            }
+        var source = new Source();
+        source.input().put("Test", null);
 
-            @Override
-            public Object get() {
-                return null;
-            }
-        };
+        Assertions.assertThrows(NullPointerException.class, () -> genericFacadeDelegate.exec(source));
+    }
 
-        Assertions.assertThrows(NullPointerException.class, () -> genericFacadeDelegate.exec(port));
+    private class BasicTest implements IGenericOutput {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
 }

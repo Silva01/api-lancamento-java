@@ -1,39 +1,49 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
+import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
+import br.net.silva.business.mapper.MapToCreateNewAccountByCpfMapper;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
-import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
-import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
-import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
 import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.shared.business.mapper.GenericMapper;
 import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
+import br.net.silva.daniel.shared.business.value_object.Source;
 
-public class CreateNewAccountByCpfUseCase implements UseCase<IProcessResponse<AccountDTO>> {
+public class CreateNewAccountByCpfUseCase implements UseCase {
 
-    private final IFactoryAggregate<Account, IGenericPort> createNewAccountByCpfFactory;
+    private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
     private final Repository<Account> saveRepository;
-    private final GenericMapper<CreateNewAccountByCpfDTO> mapper;
+    private final MapToCreateNewAccountByCpfMapper mapper;
 
     public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository) {
         this.findIsExistsPeerCPFRepository = findIsExistsPeerCPFRepository;
         this.saveRepository = saveRepository;
         this.createNewAccountByCpfFactory = new CreateNewAccountByCpfFactory();
-        this.mapper = new GenericMapper<>(CreateNewAccountByCpfDTO.class);
+        this.mapper = MapToCreateNewAccountByCpfMapper.INSTANCE;
     }
 
     @Override
-    public IProcessResponse<AccountDTO> exec(IGenericPort param) throws GenericException {
-        var createNewAccountByCpfDTO = mapper.map(param);
+    public void exec(Source param) throws GenericException {
+        var createNewAccountByCpfDTO = mapper.mapToCreateNewAccountByCpfDto(param.input());
         if (isExistsAccountActiveForCPF(createNewAccountByCpfDTO.cpf())) {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
-        return saveRepository.exec(createNewAccountByCpfFactory.create(createNewAccountByCpfDTO));
+        var accountAggregate = saveRepository.exec(createNewAccountByCpfFactory.create(
+                new AccountDTO(
+                        null,
+                        createNewAccountByCpfDTO.agency(),
+                        null,
+                        createNewAccountByCpfDTO.password(),
+                        true,
+                        createNewAccountByCpfDTO.cpf(),
+                        null,
+                        null)));
+
+        param.map().put(TypeAccountMapperEnum.ACCOUNT.name(), accountAggregate.build());
     }
 
     private boolean isExistsAccountActiveForCPF(String cpf) {

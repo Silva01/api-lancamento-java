@@ -1,13 +1,12 @@
 package br.net.silva.daniel.interfaces;
 
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
-import br.net.silva.daniel.shared.business.interfaces.IProcessResponse;
+import br.net.silva.daniel.shared.business.value_object.Source;
 
 import java.util.List;
 import java.util.Queue;
 
-public class GenericFacadeDelegate<P extends IGenericPort, U extends UseCase<IProcessResponse<?>>> {
+public class GenericFacadeDelegate<U extends UseCase> {
 
     private final Queue<U> useCases;
     private final List<? extends IValidations> validationsList;
@@ -17,25 +16,20 @@ public class GenericFacadeDelegate<P extends IGenericPort, U extends UseCase<IPr
         this.validationsList = validationsList;
     }
 
-    public IProcessResponse<?> exec(P param) throws GenericException {
-        validate(param);
-        return execProcess(param);
+    public void exec(Source input) throws GenericException {
+        validate(input);
+        execProcess(input);
     }
 
-    private void validate(P param) throws GenericException {
+    private void validate(Source input) throws GenericException {
         for (IValidations validations : validationsList) {
-            validations.validate(param);
+            validations.validate(input);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private IProcessResponse<?> execProcess(P param) throws GenericException {
-        IProcessResponse<?> response = null;
+    private void execProcess(Source input) throws GenericException {
         for (U useCase : useCases) {
-            response = useCase.exec(param);
-            param = (P) response.build();
+            useCase.exec(input);
         }
-
-        return response;
     }
 }

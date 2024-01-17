@@ -5,12 +5,17 @@ import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.utils.ConverterUtils;
 import br.net.silva.daniel.value_object.Address;
-import org.junit.Assert;
+import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -29,10 +34,24 @@ class CreateNewClientUseCaseTest {
 
     @Test
     void testShouldCreateANewClientWithSuccess() throws Exception {
-        var address = new AddressRequestDTO("Street 1", "1234", "Brazil", "Brasilia", "DF", "Brasilia", "12344-556");
-        var clientDto = new ClientRequestDTO("1234", "00099988877", "Daniel", "61933334444", true, 1234, address);
+        Map<String, String> inputMap = new HashMap<>();
+        inputMap.put("id", "1234");
+        inputMap.put("cpf", "00099988877");
+        inputMap.put("name", "Daniel");
+        inputMap.put("telephone", "61933334444");
+        inputMap.put("active", "true");
+        inputMap.put("agency", "1234");
+        inputMap.put("street", "Street 1");
+        inputMap.put("number", "1234");
+        inputMap.put("complement", "Brazil");
+        inputMap.put("neighborhood", "Brasilia");
+        inputMap.put("state", "DF");
+        inputMap.put("city", "Brasilia");
+        inputMap.put("zipCode", "12344-556");
 
-        createNewClientUseCase.exec(clientDto);
+        var source = new Source(new HashMap<>(), inputMap);
+
+        createNewClientUseCase.exec(source);
 
         verify(saveRepository, times(1)).exec(any(Client.class));
     }
@@ -40,15 +59,30 @@ class CreateNewClientUseCaseTest {
     @Test
     void testShouldCreateANewClientWithErrorExistsClient() throws ExistsClientRegistredException {
         // Arrange
-        var address = new AddressRequestDTO("Street 1", "1234", "Brazil", "Brasilia", "DF", "Brasilia", "12344-556");
-        var clientDto = new ClientRequestDTO("1234", "00099988877", "Daniel", "61933334444", true, 1234, address);
+        Map<String, String> inputMap = new HashMap<>();
+        inputMap.put("id", "1234");
+        inputMap.put("cpf", "00099988877");
+        inputMap.put("name", "Daniel");
+        inputMap.put("telephone", "61933334444");
+        inputMap.put("active", "true");
+        inputMap.put("agency", "1234");
+        inputMap.put("street", "Street 1");
+        inputMap.put("number", "1234");
+        inputMap.put("complement", "Brazil");
+        inputMap.put("neighborhood", "Brasilia");
+        inputMap.put("state", "DF");
+        inputMap.put("city", "Brasilia");
+        inputMap.put("zipCode", "12344-556");
+
+        var source = new Source(new HashMap<>(), inputMap);
+
 
         // Mock the repository
         when(saveRepository.exec(any())).thenThrow(new RuntimeException("Exists client"));
 
         // Act & Assert
-        Assert.assertThrows(ExistsClientRegistredException.class, () -> {
-            createNewClientUseCase.exec(clientDto);
+        assertThrows(ExistsClientRegistredException.class, () -> {
+            createNewClientUseCase.exec(source);
         });
 
         // Verify that saveRepository.exec was called exactly once

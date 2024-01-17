@@ -14,7 +14,7 @@ class FindAccountDTOTest {
 
         assertEquals("44455566677", find.cpf());
         assertEquals(1234, find.agency());
-        assertEquals(23333, find.accountNumber());
+        assertEquals(23333, find.account());
         assertEquals("123456", find.password());
     }
 
