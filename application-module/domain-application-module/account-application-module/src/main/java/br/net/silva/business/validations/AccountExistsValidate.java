@@ -1,6 +1,5 @@
 package br.net.silva.business.validations;
 
-import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.mapper.MapToFindAccountMapper;
 import br.net.silva.daniel.entity.Account;
@@ -29,11 +28,5 @@ public class AccountExistsValidate implements IValidations {
         if (optionalAccount.isEmpty()) {
             throw new AccountNotExistsException("Account not exists");
         }
-
-        var accountDto = optionalAccount.get().build();
-        if (accountDto.active()) {
-            throw new AccountAlreadyActiveException("Account already active");
-        }
-
     }
 }
