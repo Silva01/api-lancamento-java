@@ -1,6 +1,7 @@
 package br.net.silva.daniel.integrations.test.interfaces;
 
 import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
@@ -18,9 +19,15 @@ public abstract class AbstractBuilder {
         return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
     }
 
+    @Deprecated(since = "2.0.0", forRemoval = true)
     protected Client buildMockClient() {
         var address = new Address("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
         return new Client("abcd", "99988877766", "Daniel", "6122223333", true, address);
+    }
+
+    protected Client buildMockClient(boolean active) {
+        var address = new Address("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
+        return new Client("abcd", "99988877766", "Daniel", "6122223333", active, address);
     }
 
     protected void assertionAccount(AccountDTO expected, AccountDTO actual) {
@@ -33,5 +40,15 @@ public abstract class AbstractBuilder {
         assertEquals(expected.cpf(), actual.cpf());
         assertEquals(expected.creditCard(), actual.creditCard());
         assertEquals(expected.transactions(), actual.transactions());
+    }
+
+    protected void assertionClient(ClientDTO expected, ClientDTO actual) {
+        assertNotNull(actual);
+        assertEquals(expected.id(), actual.id());
+        assertEquals(expected.cpf(), actual.cpf());
+        assertEquals(expected.name(), actual.name());
+        assertEquals(expected.telephone(), actual.telephone());
+        assertEquals(expected.active(), actual.active());
+        assertEquals(expected.address(), actual.address());
     }
 }
