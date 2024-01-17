@@ -3,7 +3,7 @@ package br.net.silva.business.facade;
 import br.net.silva.business.dto.FindAccountDTO;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
-import br.net.silva.business.validations.AccountExistsValidate;
+import br.net.silva.business.validations.AccountExistsAndActiveValidate;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -45,7 +45,7 @@ class ActivateAccountFacadeTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         this.activateAccountUseCase = new ActivateAccountUseCase(activateAccountRepository, findAccountRepository);
-        this.accountExistsValidate = new AccountExistsValidate(optionalFindAccountRepository);
+        this.accountExistsValidate = new AccountExistsAndActiveValidate(optionalFindAccountRepository);
     }
 
     @Test
