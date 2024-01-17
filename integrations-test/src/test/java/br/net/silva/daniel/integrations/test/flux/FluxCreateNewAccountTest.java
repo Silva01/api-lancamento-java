@@ -82,18 +82,7 @@ class FluxCreateNewAccountTest extends AbstractBuilder {
         facade.exec(source);
 
         var responseDto = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
-        assertNotNull(responseDto);
-
-        var assertAccountDTO = buildMockAccount(true).build();
-        assertEquals(assertAccountDTO.number(), responseDto.number());
-        assertEquals(assertAccountDTO.agency(), responseDto.agency());
-        assertEquals(assertAccountDTO.balance(), responseDto.balance());
-        assertEquals(assertAccountDTO.active(), responseDto.active());
-        assertEquals(assertAccountDTO.password(), responseDto.password());
-        assertEquals(assertAccountDTO.cpf(), responseDto.cpf());
-        assertEquals(assertAccountDTO.creditCard(), responseDto.creditCard());
-        assertEquals(assertAccountDTO.transactions(), responseDto.transactions());
-
+        assertionAccount(buildMockAccount(true).build(), responseDto);
     }
 
     @Test
