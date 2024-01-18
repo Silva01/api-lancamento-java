@@ -1,5 +1,6 @@
 package br.net.silva.business.value_object.input;
 
+import br.net.silva.daniel.interfaces.Input;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
@@ -9,7 +10,7 @@ public record ChangePasswordDTO(
         Integer account,
         String password,
         String newPassword
-) implements IGenericPort {
+) implements IGenericPort, Input {
 
     @Override
     public void accept(Class<?> clazz) {
