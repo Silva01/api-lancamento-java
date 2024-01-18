@@ -9,6 +9,7 @@ import br.net.silva.daniel.value_object.Address;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,6 +29,13 @@ public abstract class AbstractBuilder {
     protected Client buildMockClient(boolean active) {
         var address = new Address("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
         return new Client("abcd", "99988877766", "Daniel", "6122223333", active, address);
+    }
+
+    protected List<Account> buildMockListAccount() {
+        var account1 = new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", null, Collections.emptyList());
+        var account2 = new Account(2, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, Collections.emptyList());
+        var account3 = new Account(3, 45680, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, Collections.emptyList());
+        return List.of(account1, account2, account3);
     }
 
     protected void assertionAccount(AccountDTO expected, AccountDTO actual) {
