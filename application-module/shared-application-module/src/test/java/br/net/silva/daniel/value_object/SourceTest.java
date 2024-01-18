@@ -1,31 +1,43 @@
 package br.net.silva.daniel.value_object;
 
-import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
+import br.net.silva.daniel.interfaces.Input;
+import br.net.silva.daniel.interfaces.Output;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SourceTest {
 
     @Test
-    void shouldCreateInputSource() {
-        Source source = new Source();
-        source.input().put("key", "value");
-        assertEquals("value", source.input().get("key"));
+    void shouldCreateAndPrintOutputValue() {
+        Source source = new Source(new GenericOutput(), new GenericInput());
+        ((GenericOutput) source.output()).setTest("Value");
+        assertEquals("value", ((GenericOutput) source.output()).getTest());
     }
 
     @Test
-    void testShouldCreateMapSource() {
-        Source source = new Source();
-        source.map().put("key", new GenericOutput());
-        assertEquals("Test", ((GenericOutput) source.map().get("key")).getTest());
+    void testShouldCreateAndPrintInputValue() {
+        Source source = new Source(new GenericOutput(), new GenericInput());
+        assertEquals("Test Input", ((GenericInput) source.input()).getTest());
     }
 
-    private class GenericOutput implements IGenericOutput {
-        private String test = "Test";
+    private class GenericInput implements Input {
+        private String test = "Test Input";
 
         public String getTest() {
             return test;
+        }
+    }
+
+    private class GenericOutput implements Output {
+        private String test = "Test Output";
+
+        public String getTest() {
+            return test;
+        }
+
+        public void setTest(String test) {
+            this.test = test;
         }
     }
 
