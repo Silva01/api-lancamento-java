@@ -11,7 +11,7 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.utils.AccountUtils;
-import br.net.silva.daniel.shared.business.value_object.Source;
+import br.net.silva.daniel.value_object.Source;
 
 public class ChangePasswordAccountUseCase implements UseCase {
     private final UseCase findAccountUseCase;

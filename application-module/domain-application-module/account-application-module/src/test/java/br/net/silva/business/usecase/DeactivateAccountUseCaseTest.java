@@ -1,6 +1,6 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.value_object.input.FindAccountDTO;
+import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
@@ -9,7 +9,7 @@ import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.utils.ConverterUtils;
-import br.net.silva.daniel.shared.business.value_object.Source;
+import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -43,13 +43,13 @@ class DeactivateAccountUseCaseTest {
     void mustDeactivateAccountWithSuccess() throws GenericException {
         when(deactivateAccountRepository.exec(Mockito.any(String.class))).thenReturn(buildMockAccount(false));
 
-        var findAccountDTO = new FindAccountDTO("99988877766", 0, 0, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(findAccountDTO)));
+        var deactivateAccount = new DeactivateAccount("99988877766");
+        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(deactivateAccount)));
         deactivateAccountUseCase.exec(source);
 
         var account = factory.create((AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name()));
         assertNotNull(account);
-        Mockito.verify(deactivateAccountRepository, Mockito.times(1)).exec(findAccountDTO.cpf());
+        Mockito.verify(deactivateAccountRepository, Mockito.times(1)).exec(deactivateAccount.cpf());
 
         var accountDTO = account.build();
         assertFalse(accountDTO.active());
@@ -58,7 +58,8 @@ class DeactivateAccountUseCaseTest {
     @Test
     void mustDeactivateAccountWithErrorAnyone() {
         when(deactivateAccountRepository.exec(Mockito.any(String.class))).thenReturn(buildMockAccount(false));
-        assertThrows(GenericException.class, () -> deactivateAccountUseCase.exec(null));
+        Source source = null;
+        assertThrows(GenericException.class, () -> deactivateAccountUseCase.exec(source));
     }
 
     private Account buildMockAccount(boolean active) {

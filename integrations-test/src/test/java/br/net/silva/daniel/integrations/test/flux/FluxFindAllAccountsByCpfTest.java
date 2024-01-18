@@ -1,6 +1,6 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.business.value_object.input.AccountResponseDto;
+import br.net.silva.business.value_object.output.AccountResponseDto;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
 import br.net.silva.daniel.entity.Account;
@@ -11,7 +11,7 @@ import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.value_object.Source;
+import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import org.junit.jupiter.api.BeforeEach;

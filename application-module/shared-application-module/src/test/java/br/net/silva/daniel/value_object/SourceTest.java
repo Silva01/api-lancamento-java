@@ -1,17 +1,21 @@
-package br.net.silva.daniel.shared.business.value_object;
+package br.net.silva.daniel.value_object;
 
 import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class SourceTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
 
-    public void testShouldCreateInputSource() {
+class SourceTest {
+
+    @Test
+    void shouldCreateInputSource() {
         Source source = new Source();
         source.input().put("key", "value");
         assertEquals("value", source.input().get("key"));
     }
 
-    public void testShouldCreateMapSource() {
+    @Test
+    void testShouldCreateMapSource() {
         Source source = new Source();
         source.map().put("key", new GenericOutput());
         assertEquals("Test", ((GenericOutput) source.map().get("key")).getTest());

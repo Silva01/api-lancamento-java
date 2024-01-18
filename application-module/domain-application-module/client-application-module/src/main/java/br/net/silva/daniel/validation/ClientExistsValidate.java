@@ -3,7 +3,7 @@ package br.net.silva.daniel.validation;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.shared.business.value_object.Source;
+import br.net.silva.daniel.value_object.Source;
 
 public class ClientExistsValidate implements IValidations {
     private final UseCase findClientUseCase;

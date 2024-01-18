@@ -1,4 +1,4 @@
-package br.net.silva.daniel.shared.business.value_object;
+package br.net.silva.daniel.value_object;
 
 import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
 
