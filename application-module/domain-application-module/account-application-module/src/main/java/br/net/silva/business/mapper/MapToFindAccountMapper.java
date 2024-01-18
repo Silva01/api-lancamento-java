@@ -1,6 +1,6 @@
 package br.net.silva.business.mapper;
 
-import br.net.silva.business.dto.FindAccountDTO;
+import br.net.silva.business.value_object.input.FindAccountDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

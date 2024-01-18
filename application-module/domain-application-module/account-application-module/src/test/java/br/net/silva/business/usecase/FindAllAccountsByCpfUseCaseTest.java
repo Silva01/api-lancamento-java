@@ -1,6 +1,6 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.dto.AccountResponseDto;
+import br.net.silva.business.value_object.input.AccountResponseDto;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;

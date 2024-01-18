@@ -1,6 +1,6 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.dto.FindAccountDTO;
+import br.net.silva.business.value_object.input.FindAccountDTO;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;

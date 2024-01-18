@@ -1,23 +1,22 @@
-package br.net.silva.business.dto;
+package br.net.silva.business.value_object.input;
 
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
-public record ChangePasswordDTO(
+public record FindAccountDTO(
         String cpf,
         Integer agency,
         Integer account,
-        String password,
-        String newPassword
+        String password
 ) implements IGenericPort {
 
     @Override
     public void accept(Class<?> clazz) {
-        ValidateUtils.isTypeOf(clazz, ChangePasswordDTO.class, "Type of class is incompatible with ChangePasswordDTO");
+        ValidateUtils.isTypeOf(clazz, FindAccountDTO.class, "Type of class is incompatible with FindAccountDTO");
     }
 
     @Override
-    public ChangePasswordDTO get() {
+    public Object get() {
         return this;
     }
 }

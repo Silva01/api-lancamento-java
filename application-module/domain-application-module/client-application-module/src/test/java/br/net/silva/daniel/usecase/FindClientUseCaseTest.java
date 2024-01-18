@@ -1,13 +1,11 @@
 package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.dto.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.mapper.ToClientMapper;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.utils.ConverterUtils;
 import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.shared.business.value_object.Source;
 import org.junit.jupiter.api.Assertions;

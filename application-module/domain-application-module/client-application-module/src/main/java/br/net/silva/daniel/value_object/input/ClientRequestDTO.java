@@ -1,4 +1,4 @@
-package br.net.silva.daniel.dto;
+package br.net.silva.daniel.value_object.input;
 
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;

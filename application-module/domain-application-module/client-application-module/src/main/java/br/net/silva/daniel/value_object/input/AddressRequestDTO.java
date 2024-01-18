@@ -1,4 +1,4 @@
-package br.net.silva.daniel.dto;
+package br.net.silva.daniel.value_object.input;
 
 public record AddressRequestDTO(
         String street,

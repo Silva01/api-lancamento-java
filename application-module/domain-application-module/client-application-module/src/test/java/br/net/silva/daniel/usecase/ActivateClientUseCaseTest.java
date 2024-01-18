@@ -1,7 +1,7 @@
 package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.dto.ClientRequestDTO;
+import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.GenericException;

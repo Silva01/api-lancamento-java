@@ -1,7 +1,7 @@
 package br.net.silva.daniel.mapper;
 
 import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.dto.ClientRequestDTO;
+import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

@@ -1,7 +1,7 @@
 package br.net.silva.business.facade;
 
-import br.net.silva.business.dto.ChangePasswordDTO;
-import br.net.silva.business.dto.CreateNewAccountByCpfDTO;
+import br.net.silva.business.value_object.input.ChangePasswordDTO;
+import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;

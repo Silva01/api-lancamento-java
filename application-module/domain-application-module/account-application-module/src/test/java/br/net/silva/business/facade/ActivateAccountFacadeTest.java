@@ -1,6 +1,6 @@
 package br.net.silva.business.facade;
 
-import br.net.silva.business.dto.FindAccountDTO;
+import br.net.silva.business.value_object.input.FindAccountDTO;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsAndActiveValidate;

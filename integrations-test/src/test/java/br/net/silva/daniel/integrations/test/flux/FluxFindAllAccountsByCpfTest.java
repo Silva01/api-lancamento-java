@@ -1,6 +1,6 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.business.dto.AccountResponseDto;
+import br.net.silva.business.value_object.input.AccountResponseDto;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
 import br.net.silva.daniel.entity.Account;
