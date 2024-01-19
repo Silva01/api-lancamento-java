@@ -1,4 +1,4 @@
-package br.net.silva.daniel.shared.business.interfaces;
+package br.net.silva.daniel.interfaces;
 
 public interface IMapperResponse<I, O> {
     boolean accept(I input, O output);
