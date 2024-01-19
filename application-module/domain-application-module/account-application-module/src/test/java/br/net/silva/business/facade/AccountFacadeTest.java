@@ -39,8 +39,6 @@ class AccountFacadeTest {
 
     private UseCase<AccountDTO> deactivateAccountUseCase;
 
-    private UseCase<AccountDTO> findAccountByCpfUseCase;
-
     private IValidations passwordAndExistsAccountValidate;
 
     private GenericResponseFactory factory;
@@ -62,9 +60,9 @@ class AccountFacadeTest {
         MockitoAnnotations.openMocks(this);
         factory = new GenericResponseFactory(List.of(new CreateResponseToNewAccountFactory()));
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository, factory);
-        var findAccountByCpfUseCase = new FindAccountByCpfUseCase(findAccountRepository);
+        var findAccountByCpfUseCase = new FindAccountByCpfUseCase(findAccountRepository, factory);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountByCpfUseCase);
-        changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(findAccountRepository), saveRepository);
+        changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(findAccountRepository, factory), saveRepository);
         this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
     }
 
