@@ -2,13 +2,16 @@ package br.net.silva.business.facade;
 
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
 import br.net.silva.business.usecase.*;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
+import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.factory.GenericResponseFactory;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
@@ -40,6 +43,8 @@ class AccountFacadeTest {
 
     private IValidations passwordAndExistsAccountValidate;
 
+    private GenericResponseFactory factory;
+
     @Mock
     private Repository<Boolean> findIsExistsPeerCPFRepository;
 
@@ -55,7 +60,8 @@ class AccountFacadeTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository);
+        factory = new GenericResponseFactory(List.of(new CreateResponseToNewAccountFactory()));
+        createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository, factory);
         var findAccountByCpfUseCase = new FindAccountByCpfUseCase(findAccountRepository);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountByCpfUseCase);
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(findAccountRepository), saveRepository);
@@ -74,10 +80,18 @@ class AccountFacadeTest {
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
-        var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO); //TODO: precisa substituir o EmptyOutput por um DTO de resposta
+        var source = new Source(new NewAccountResponse(), createNewAccountByCpfDTO);
 
         accountFacade.exec(source);
+
         assertNotNull(source.output());
+        var accountDTo = buildMockAccount().build();
+
+        var response = (NewAccountResponse) source.output();
+
+        assertEquals(accountDTo.agency(), response.getAgency());
+        assertNotNull(response.getAccountNumber());
+        assertEquals(accountDTo.number(), response.getAccountNumber());
     }
 
     @Test
@@ -92,7 +106,7 @@ class AccountFacadeTest {
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
-        var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO); //TODO: precisa substituir o EmptyOutput por um DTO de resposta
+        var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
 
         var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
@@ -111,7 +125,7 @@ class AccountFacadeTest {
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
-        var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO); //TODO: precisa substituir o EmptyOutput por um DTO de resposta
+        var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
 
         var exceptionResponse = assertThrows(AccountNotExistsException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
@@ -130,7 +144,7 @@ class AccountFacadeTest {
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "123456");
-        var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO); //TODO: precisa substituir o EmptyOutput por um DTO de resposta
+        var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
 
         var exceptionResponse = assertThrows(IllegalArgumentException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
@@ -151,7 +165,7 @@ class AccountFacadeTest {
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
-        var source = new Source(EmptyOutput.INSTANCE, changePasswordDTO); //TODO: precisa substituir o EmptyOutput por um DTO de resposta
+        var source = new Source(EmptyOutput.INSTANCE, changePasswordDTO);
         accountFacade.exec(source);
 
         assertNotNull(source.output());
@@ -168,7 +182,7 @@ class AccountFacadeTest {
 
         var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
-        var source = new Source(EmptyOutput.INSTANCE, changePasswordDTO); //TODO: precisa substituir o EmptyOutput por um DTO de resposta
+        var source = new Source(EmptyOutput.INSTANCE, changePasswordDTO);
 
         accountFacade.exec(source);
         assertNotNull(source.output());
