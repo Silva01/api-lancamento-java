@@ -1,7 +1,7 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.value_object.input.FindAccountDTO;
 import br.net.silva.business.value_object.output.AccountResponseDto;
-import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.repository.Repository;
@@ -14,9 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -38,17 +36,17 @@ class FindAllAccountsByCpfUseCaseTest {
     @Test
     void shouldListAllAccountsByCpf() throws GenericException {
         when(repository.exec(anyString())).thenReturn(buildMockListAccount());
-        Map<String, String> inputMap = Map.of("cpf", "99988877766");
-        var source = new Source(new HashMap<>(), inputMap);
+        var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
+        var source = new Source(new AccountResponseDto(), findAccountDto);
 
         useCase.exec(source);
 
-        var response = (AccountResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
+        var response = (AccountResponseDto) source.output();
         assertNotNull(response);
 
         var mockListAccount = buildMockListAccount().stream().map(Account::build).toList();
 
-        var accountsList = response.accounts();
+        var accountsList = response.getAccounts();
         assertNotNull(accountsList);
         assertEquals(3, accountsList.size());
         assertEquals(mockListAccount, accountsList);
@@ -57,15 +55,15 @@ class FindAllAccountsByCpfUseCaseTest {
     @Test
     void shouldListEmptyAccountsByCpf() throws GenericException {
         when(repository.exec(anyString())).thenReturn(Collections.emptyList());
-        Map<String, String> inputMap = Map.of("cpf", "99988877766");
-        var source = new Source(new HashMap<>(), inputMap);
+        var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
+        var source = new Source(new AccountResponseDto(), findAccountDto);
 
         useCase.exec(source);
 
-        var response = (AccountResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
+        var response = (AccountResponseDto) source.output();
         assertNotNull(response);
 
-        var accountsList = response.accounts();
+        var accountsList = response.getAccounts();
         assertNotNull(accountsList);
         assertTrue(accountsList.isEmpty());
     }

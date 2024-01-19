@@ -25,7 +25,7 @@ class UseCaseTest {
     @Test
     void testExec() throws GenericException {
         Integer expected = 1;
-        var source = new Source(new HashMap<>());
+        var source = new Source(null, null);
 
         // Act
         useCaseMock.exec(source);

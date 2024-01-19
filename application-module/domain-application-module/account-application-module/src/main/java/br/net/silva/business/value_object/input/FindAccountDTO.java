@@ -1,5 +1,6 @@
 package br.net.silva.business.value_object.input;
 
+import br.net.silva.daniel.interfaces.Input;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
@@ -8,7 +9,7 @@ public record FindAccountDTO(
         Integer agency,
         Integer account,
         String password
-) implements IGenericPort {
+) implements IGenericPort, Input {
 
     @Override
     public void accept(Class<?> clazz) {
