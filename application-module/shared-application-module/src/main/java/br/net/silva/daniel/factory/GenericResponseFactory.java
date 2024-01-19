@@ -1,9 +1,11 @@
-package br.net.silva.daniel.shared.business.factory;
+package br.net.silva.daniel.factory;
 
-import br.net.silva.daniel.shared.business.interfaces.IMapperResponse;
+import br.net.silva.daniel.interfaces.IMapperResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class GenericResponseFactory {
 
     private final List<IMapperResponse> mappers;
