@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public final class AccountResponseDto implements IGenericOutput, Output {
+public final class AccountsByCpfResponseDto implements IGenericOutput, Output {
     private final List<AccountDTO> accounts;
 
-    public AccountResponseDto(final List<AccountDTO> accounts) {
+    public AccountsByCpfResponseDto(final List<AccountDTO> accounts) {
         this.accounts = accounts;
     }
 
-    public AccountResponseDto() {
+    public AccountsByCpfResponseDto() {
         this(new ArrayList<>());
     }
 }
