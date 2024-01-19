@@ -6,6 +6,7 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
+import br.net.silva.daniel.factory.GenericResponseFactory;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
@@ -16,10 +17,12 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountDTO> {
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
     private final Repository<Account> saveRepository;
+    private final GenericResponseFactory factory;
 
-    public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository) {
+    public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository, GenericResponseFactory factory) {
         this.findIsExistsPeerCPFRepository = findIsExistsPeerCPFRepository;
         this.saveRepository = saveRepository;
+        this.factory = factory;
         this.createNewAccountByCpfFactory = new CreateNewAccountByCpfFactory();
     }
 
@@ -40,8 +43,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountDTO> {
                         null,
                         null)));
 
-        //TODO: aqui precisa implementar um mapper para preenchimento do objeto de retorno
-
+        factory.fillIn(accountAggregate.build(), param.output());
         return accountAggregate.build();
     }
 
