@@ -1,6 +1,6 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.business.value_object.output.AccountResponseDto;
+import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
 import br.net.silva.daniel.entity.Account;
@@ -46,7 +46,7 @@ class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
         when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildMockClient(true)));
 
         // Use Case
-        findAllAccountsByCpfUseCase = new FindAllAccountsByCpfUseCase(findAllAccountsByCpfRepository);
+        findAllAccountsByCpfUseCase = new FindAllAccountsByCpfUseCase(findAllAccountsByCpfRepository, null);
         findClientUseCase = new FindClientUseCase(findClientRepository);
 
         // Validation
@@ -66,7 +66,7 @@ class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
         var facade = new GenericFacadeDelegate<>(queue, validations);
         facade.exec(source);
 
-        var response = (AccountResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
+        var response = (AccountsByCpfResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
         assertNotNull(response);
 
         var mockListAccount = buildMockListAccount().stream().map(Account::build).toList();
@@ -88,7 +88,7 @@ class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
         var facade = new GenericFacadeDelegate<>(queue, validations);
         facade.exec(source);
 
-        var response = (AccountResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
+        var response = (AccountsByCpfResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
         assertNotNull(response);
         assertTrue(response.accounts().isEmpty());
     }

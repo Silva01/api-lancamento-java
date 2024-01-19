@@ -1,9 +1,11 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.mapper.CreateResponseToFindAccountsByCpfFactory;
 import br.net.silva.business.value_object.input.FindAccountDTO;
-import br.net.silva.business.value_object.output.AccountResponseDto;
+import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.factory.GenericResponseFactory;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.value_object.Source;
@@ -24,24 +26,27 @@ class FindAllAccountsByCpfUseCaseTest {
 
     private FindAllAccountsByCpfUseCase useCase;
 
+    private GenericResponseFactory factory;
+
     @Mock
     private Repository<List<Account>> repository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        useCase = new FindAllAccountsByCpfUseCase(repository);
+        factory = new GenericResponseFactory(List.of(new CreateResponseToFindAccountsByCpfFactory()));
+        useCase = new FindAllAccountsByCpfUseCase(repository, factory);
     }
 
     @Test
     void shouldListAllAccountsByCpf() throws GenericException {
         when(repository.exec(anyString())).thenReturn(buildMockListAccount());
         var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
-        var source = new Source(new AccountResponseDto(), findAccountDto);
+        var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);
 
         useCase.exec(source);
 
-        var response = (AccountResponseDto) source.output();
+        var response = (AccountsByCpfResponseDto) source.output();
         assertNotNull(response);
 
         var mockListAccount = buildMockListAccount().stream().map(Account::build).toList();
@@ -56,11 +61,11 @@ class FindAllAccountsByCpfUseCaseTest {
     void shouldListEmptyAccountsByCpf() throws GenericException {
         when(repository.exec(anyString())).thenReturn(Collections.emptyList());
         var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
-        var source = new Source(new AccountResponseDto(), findAccountDto);
+        var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);
 
         useCase.exec(source);
 
-        var response = (AccountResponseDto) source.output();
+        var response = (AccountsByCpfResponseDto) source.output();
         assertNotNull(response);
 
         var accountsList = response.getAccounts();
