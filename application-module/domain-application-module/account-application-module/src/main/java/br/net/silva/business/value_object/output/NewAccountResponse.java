@@ -7,13 +7,4 @@ import lombok.Data;
 public final class NewAccountResponse implements Output {
     private Integer agency;
     private Integer accountNumber;
-
-    public NewAccountResponse(Integer agency, Integer accountNumber) {
-        this.agency = agency;
-        this.accountNumber = accountNumber;
-    }
-
-    public NewAccountResponse() {
-        this(null, null);
-    }
 }
