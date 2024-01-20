@@ -2,11 +2,13 @@ package br.net.silva.business.facade;
 
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.mapper.CreateResponseToNewAccountByClientFactory;
 import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
 import br.net.silva.business.usecase.*;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
+import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
@@ -58,7 +60,7 @@ class AccountFacadeTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        factory = new GenericResponseFactory(List.of(new CreateResponseToNewAccountFactory()));
+        factory = new GenericResponseFactory(List.of(new CreateResponseToNewAccountFactory(), new CreateResponseToNewAccountByClientFactory()));
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository, factory);
         var findAccountByCpfUseCase = new FindAccountByCpfUseCase(findAccountRepository, factory);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountByCpfUseCase);
@@ -90,6 +92,33 @@ class AccountFacadeTest {
         assertEquals(accountDTo.agency(), response.getAgency());
         assertNotNull(response.getAccountNumber());
         assertEquals(accountDTo.number(), response.getAccountNumber());
+    }
+
+    @Test
+    void mustCreateNewAccountByCpfWithObjectResponseOfClient() throws GenericException {
+        when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
+        when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
+        Queue<UseCase<?>> useCases = new LinkedList<>();
+        useCases.add(createNewAccountByCpfUseCase);
+
+        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
+
+        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
+        var source = new Source(new NewAccountByNewClientResponseSuccess(), createNewAccountByCpfDTO);
+
+        accountFacade.exec(source);
+
+        assertNotNull(source.output());
+        var accountDTo = buildMockAccount().build();
+
+        var response = (NewAccountByNewClientResponseSuccess) source.output();
+
+        assertEquals(accountDTo.agency(), response.getAgency());
+        assertNotNull(response.getAccountNumber());
+        assertEquals(accountDTo.number(), response.getAccountNumber());
+        assertEquals(accountDTo.password(), response.getProvisionalPassword());
     }
 
     @Test
