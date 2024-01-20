@@ -1,7 +1,7 @@
 package br.net.silva.business.validations;
 
 import br.net.silva.business.exception.AccountNotExistsException;
-import br.net.silva.business.interfaces.IAccountParam;
+import br.net.silva.daniel.interfaces.IAccountParam;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IValidations;

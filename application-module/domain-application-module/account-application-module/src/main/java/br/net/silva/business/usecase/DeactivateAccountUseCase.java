@@ -1,6 +1,6 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.interfaces.IAccountParam;
+import br.net.silva.daniel.interfaces.IAccountParam;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
