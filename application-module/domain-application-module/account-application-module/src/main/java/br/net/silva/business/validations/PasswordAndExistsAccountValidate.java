@@ -1,6 +1,6 @@
 package br.net.silva.business.validations;
 
-import br.net.silva.business.interfaces.IAccountParam;
+import br.net.silva.daniel.interfaces.IAccountParam;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
