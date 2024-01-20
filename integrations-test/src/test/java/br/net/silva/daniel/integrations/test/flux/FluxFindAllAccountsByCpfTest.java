@@ -1,8 +1,9 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
-import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
+import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
+import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
@@ -11,9 +12,10 @@ import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
+import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.value_object.input.FindClientByCpf;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -27,9 +29,9 @@ import static org.mockito.Mockito.when;
 
 class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
 
-    private UseCase findAllAccountsByCpfUseCase;
+    private UseCase<List<AccountDTO>> findAllAccountsByCpfUseCase;
 
-    private UseCase findClientUseCase;
+    private UseCase<ClientDTO> findClientUseCase;
 
     private IValidations clientExistsValidate;
 
@@ -46,8 +48,8 @@ class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
         when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildMockClient(true)));
 
         // Use Case
-        findAllAccountsByCpfUseCase = new FindAllAccountsByCpfUseCase(findAllAccountsByCpfRepository, null);
-        findClientUseCase = new FindClientUseCase(findClientRepository);
+        findAllAccountsByCpfUseCase = new FindAllAccountsByCpfUseCase(findAllAccountsByCpfRepository, buildFactoryResponse());
+        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validation
         clientExistsValidate = new ClientExistsValidate(findClientUseCase);
@@ -55,10 +57,10 @@ class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
 
     @Test
     void shouldGetListAllAccountsByCpfWithSuccess() throws GenericException {
-        Map<String, String> inputMap = Map.of("cpf", "99988877766");
-        var source = new Source(new HashMap<>(), inputMap);
+        var findClientByCpf = new FindClientByCpf("99988877766");
+        var source = new Source(new AccountsByCpfResponseDto(), findClientByCpf);
 
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(findAllAccountsByCpfUseCase);
 
         List<IValidations> validations = List.of(clientExistsValidate);
@@ -66,21 +68,21 @@ class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
         var facade = new GenericFacadeDelegate<>(queue, validations);
         facade.exec(source);
 
-        var response = (AccountsByCpfResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
+        var response = (AccountsByCpfResponseDto) source.output();
         assertNotNull(response);
 
         var mockListAccount = buildMockListAccount().stream().map(Account::build).toList();
-        assertEquals(3, response.accounts().size());
-        assertEquals(mockListAccount, response.accounts());
+        assertEquals(3, response.getAccounts().size());
+        assertEquals(mockListAccount, response.getAccounts());
     }
 
     @Test
     void shouldGetListEmptyAccountsByCpf() throws GenericException {
         when(findAllAccountsByCpfRepository.exec(anyString())).thenReturn(Collections.emptyList());
-        Map<String, String> inputMap = Map.of("cpf", "99988877766");
-        var source = new Source(new HashMap<>(), inputMap);
+        var findClientByCpf = new FindClientByCpf("99988877766");
+        var source = new Source(new AccountsByCpfResponseDto(), findClientByCpf);
 
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(findAllAccountsByCpfUseCase);
 
         List<IValidations> validations = List.of(clientExistsValidate);
@@ -88,18 +90,18 @@ class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
         var facade = new GenericFacadeDelegate<>(queue, validations);
         facade.exec(source);
 
-        var response = (AccountsByCpfResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
+        var response = (AccountsByCpfResponseDto) source.output();
         assertNotNull(response);
-        assertTrue(response.accounts().isEmpty());
+        assertTrue(response.getAccounts().isEmpty());
     }
 
     @Test
     void shouldGetListAllAccountsByCpfWithErrorCLientNotExists() throws GenericException {
         when(findClientRepository.exec(anyString())).thenReturn(Optional.empty());
-        Map<String, String> inputMap = Map.of("cpf", "99988877766");
-        var source = new Source(new HashMap<>(), inputMap);
+        var findClientByCpf = new FindClientByCpf("99988877766");
+        var source = new Source(new AccountsByCpfResponseDto(), findClientByCpf);
 
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(findAllAccountsByCpfUseCase);
 
         List<IValidations> validations = List.of(clientExistsValidate);

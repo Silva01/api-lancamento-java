@@ -5,6 +5,7 @@ import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.factory.GenericResponseFactory;
 import br.net.silva.daniel.interfaces.IClientParam;
+import br.net.silva.daniel.interfaces.ICpfParam;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
@@ -23,7 +24,7 @@ public class FindClientUseCase implements UseCase<ClientDTO> {
 
     @Override
     public ClientDTO exec(Source param) throws ClientNotExistsException {
-        var clientRequestDTO = (IClientParam) param.input();
+        var clientRequestDTO = (ICpfParam) param.input();
         var optionalClient = findClientRepository.exec(clientRequestDTO.cpf());
         var client = optionalClient.orElseThrow(() -> new ClientNotExistsException("Client not exists in database"));
         factory.fillIn(client.build(), param.output());

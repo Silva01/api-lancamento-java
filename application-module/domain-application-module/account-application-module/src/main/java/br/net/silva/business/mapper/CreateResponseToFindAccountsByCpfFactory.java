@@ -17,12 +17,16 @@ public class CreateResponseToFindAccountsByCpfFactory implements IMapperResponse
         }
 
         Object obj;
-        if (input instanceof List<?> list && (!list.isEmpty())) {
+        if (input instanceof List<?> list && !list.isEmpty()) {
             obj = list.get(0);
             return obj instanceof AccountDTO && output instanceof AccountsByCpfResponseDto;
         }
 
-        return output instanceof AccountsByCpfResponseDto;
+        if (input instanceof List<?>) {
+            return output instanceof AccountsByCpfResponseDto;
+        }
+
+        return false;
     }
 
     @Override

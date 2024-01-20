@@ -6,6 +6,7 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.interfaces.ICpfParam;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
@@ -24,7 +25,7 @@ public class FindAllAccountsByCpfUseCase implements UseCase<List<AccountDTO>> {
 
     @Override
     public List<AccountDTO> exec(Source param) throws GenericException {
-        var findAccountDto = (FindAccountDTO) param.input();
+        var findAccountDto = (ICpfParam) param.input();
         var accounts = repository.exec(findAccountDto.cpf());
         var dtoList = accounts.stream().map(Account::build).toList();
 

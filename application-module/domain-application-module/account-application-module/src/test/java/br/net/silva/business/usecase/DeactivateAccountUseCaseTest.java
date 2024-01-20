@@ -36,7 +36,7 @@ class DeactivateAccountUseCaseTest {
     void mustDeactivateAccountWithSuccess() throws GenericException {
         when(deactivateAccountRepository.exec(Mockito.any(String.class))).thenReturn(buildMockAccount(false));
 
-        var deactivateAccount = new DeactivateAccount("99988877766");
+        var deactivateAccount = new DeactivateAccount("99988877766", null, null);
         var source = new Source(EmptyOutput.INSTANCE, deactivateAccount);
         var account = deactivateAccountUseCase.exec(source);
         assertNotNull(account);

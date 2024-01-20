@@ -6,17 +6,10 @@ import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 import java.math.BigDecimal;
 
 public record DeactivateAccount(
-        String cpf
+        String cpf,
+        Integer agency,
+        Integer accountNumber
 ) implements IAccountParam {
-    @Override
-    public Integer accountNumber() {
-        throw GenericErrorUtils.executeException("Not Permission for this operation");
-    }
-
-    @Override
-    public Integer agency() {
-        throw GenericErrorUtils.executeException("Not Permission for this operation");
-    }
 
     @Override
     public BigDecimal balance() {
