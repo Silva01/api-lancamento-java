@@ -1,4 +1,4 @@
-package br.net.silva.business.interfaces;
+package br.net.silva.daniel.interfaces;
 
 import br.net.silva.daniel.interfaces.Input;
 
