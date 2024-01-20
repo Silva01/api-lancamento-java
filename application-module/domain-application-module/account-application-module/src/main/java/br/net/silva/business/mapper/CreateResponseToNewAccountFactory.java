@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateResponseToNewAccountFactory implements IMapperResponse<AccountDTO, Output> {
     @Override
-    public boolean accept(AccountDTO input, Output output) {
+    public boolean accept(Object input, Output output) {
         if (input == null || output == null) {
             return false;
         }
