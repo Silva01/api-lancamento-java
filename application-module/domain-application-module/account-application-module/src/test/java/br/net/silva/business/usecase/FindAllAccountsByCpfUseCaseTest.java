@@ -1,6 +1,8 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.mapper.CreateResponseToFindAccountsByCpfFactory;
+import br.net.silva.business.mapper.CreateResponseToNewAccountByClientFactory;
+import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
 import br.net.silva.business.value_object.input.FindAccountDTO;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.daniel.entity.Account;
@@ -34,7 +36,7 @@ class FindAllAccountsByCpfUseCaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        factory = new GenericResponseFactory(List.of(new CreateResponseToFindAccountsByCpfFactory()));
+        factory = new GenericResponseFactory(List.of(new CreateResponseToNewAccountByClientFactory(), new CreateResponseToNewAccountFactory(), new CreateResponseToFindAccountsByCpfFactory()));
         useCase = new FindAllAccountsByCpfUseCase(repository, factory);
     }
 

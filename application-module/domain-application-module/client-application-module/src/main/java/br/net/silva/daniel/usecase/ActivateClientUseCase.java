@@ -18,7 +18,7 @@ public class ActivateClientUseCase implements UseCase<ClientDTO> {
 
     @Override
     public ClientDTO exec(Source param) throws GenericException {
-        var dto = (IClientParam) param.output();
+        var dto = (IClientParam) param.input();
         return activateClientRepository.exec(dto.cpf()).build();
     }
 }

@@ -1,5 +1,7 @@
 package br.net.silva.daniel.value_object.input;
 
+import br.net.silva.daniel.interfaces.IClientParam;
+import br.net.silva.daniel.interfaces.Input;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
@@ -11,7 +13,7 @@ public record ClientRequestDTO(
     boolean active,
     Integer agency,
     AddressRequestDTO addressRequestDTO
-) implements IGenericPort {
+) implements IGenericPort, IClientParam {
 
     @Override
     public void accept(Class<?> clazz) {
@@ -21,5 +23,10 @@ public record ClientRequestDTO(
     @Override
     public Object get() {
         return this;
+    }
+
+    @Override
+    public AddressRequestDTO address() {
+        return addressRequestDTO;
     }
 }

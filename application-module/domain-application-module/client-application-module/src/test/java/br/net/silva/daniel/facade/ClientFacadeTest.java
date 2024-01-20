@@ -1,24 +1,23 @@
 package br.net.silva.daniel.facade;
 
 import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.mapper.ToClientMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
-import br.net.silva.daniel.utils.ConverterUtils;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.value_object.input.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -28,6 +27,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ClientFacadeTest {
@@ -35,13 +35,11 @@ class ClientFacadeTest {
     private IValidations clientExistsValidate;
     private IValidations clientNotExistsValidate;
 
-    private UseCase createNewClientUseCase;
+    private UseCase<ClientDTO> createNewClientUseCase;
 
-    private UseCase findClientUseCase;
+    private UseCase<ClientDTO> findClientUseCase;
 
-    private UseCase activateClientUseCase;
-
-    private ToClientMapper mapper;
+    private UseCase<ClientDTO> activateClientUseCase;
 
     private DeactivateClientUseCase deactivateClientUseCase;
 
@@ -55,13 +53,13 @@ class ClientFacadeTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        this.createNewClientUseCase = new CreateNewClientUseCase(saveRepository);
-        this.findClientUseCase = new FindClientUseCase(findClientRepository);
+        var factory = new GenericResponseFactory(Collections.emptyList());
+        this.findClientUseCase = new FindClientUseCase(findClientRepository, factory);
+        this.createNewClientUseCase = new CreateNewClientUseCase(saveRepository, factory);
         this.clientExistsValidate = new ClientExistsValidate(findClientUseCase);
         this.clientNotExistsValidate = new ClientNotExistsValidate(findClientUseCase);
-        this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository);
+        this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository, factory);
         this.activateClientUseCase = new ActivateClientUseCase(saveRepository);
-        this.mapper = ToClientMapper.INSTANCE;
     }
 
     @Test
@@ -72,34 +70,20 @@ class ClientFacadeTest {
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
 
         List<IValidations> validationsList = List.of(clientNotExistsValidate);
-        var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var clientFacade = new GenericFacadeDelegate<>(useCases, validationsList);
 
-        Map<String, String> map = generateInputMap();
-
-        var source = new Source(new HashMap<>(), map);
+        var clientRequestDto = new ClientRequestDTO("123", "99988877766", "Daniel", "6122223333", true, 222, new AddressRequestDTO("Rua 1", "123", "House", "Test", "DF", "Others", "12345-123"));
+        var source = new Source(EmptyOutput.INSTANCE, clientRequestDto);
 
         clientFacade.exec(source);
 
-        var resultProcess = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
-        var clientDTO = client.build();
-
-        assertNotNull(resultProcess);
-        assertEquals(clientDTO.id(), resultProcess.id());
-        assertEquals(clientDTO.cpf(), resultProcess.cpf());
-        assertEquals(clientDTO.name(), resultProcess.name());
-        assertEquals(clientDTO.telephone(), resultProcess.telephone());
-        assertEquals(clientDTO.active(), resultProcess.active());
-        assertEquals(clientDTO.address().street(), resultProcess.address().street());
-        assertEquals(clientDTO.address().number(), resultProcess.address().number());
-        assertEquals(clientDTO.address().complement(), resultProcess.address().complement());
-        assertEquals(clientDTO.address().neighborhood(), resultProcess.address().neighborhood());
-        assertEquals(clientDTO.address().city(), resultProcess.address().city());
-        assertEquals(clientDTO.address().state(), resultProcess.address().state());
-        assertEquals(clientDTO.address().zipCode(), resultProcess.address().zipCode());
+        assertNotNull(source.output());
+        verify(saveRepository, Mockito.times(1)).exec(Mockito.any(Client.class));
+        verify(findClientRepository, Mockito.times(1)).exec(clientRequestDto.cpf());
     }
 
     @Test
@@ -109,13 +93,14 @@ class ClientFacadeTest {
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
 
         List<IValidations> validationsList = List.of(clientNotExistsValidate);
-        var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var clientFacade = new GenericFacadeDelegate<>(useCases, validationsList);
 
-        var source = new Source(new HashMap<>(), generateInputMap());
+        var findClientByCpf = new FindClientByCpf("99988877766");
+        var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
 
         var exception = assertThrows(GenericException.class, () -> clientFacade.exec(source));
         assertEquals("Client exists in database", exception.getMessage());
@@ -128,32 +113,17 @@ class ClientFacadeTest {
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(deactivateClientUseCase);
 
         List<IValidations> validationsList = List.of(clientExistsValidate);
-        var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var clientFacade = new GenericFacadeDelegate<>(useCases, validationsList);
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "99988877766");
-        var source = new Source(new HashMap<>(), inputMap);
+        var deactivateClient = new DeactivateClient("99988877766");
+        var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         clientFacade.exec(source);
-        var resultProcess = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
-        var clientDTO = client.build();
-
-        assertNotNull(resultProcess);
-        assertEquals(clientDTO.id(), resultProcess.id());
-        assertEquals(clientDTO.cpf(), resultProcess.cpf());
-        assertEquals(clientDTO.name(), resultProcess.name());
-        assertEquals(clientDTO.telephone(), resultProcess.telephone());
-        assertFalse(resultProcess.active());
-        assertEquals(clientDTO.address().street(), resultProcess.address().street());
-        assertEquals(clientDTO.address().number(), resultProcess.address().number());
-        assertEquals(clientDTO.address().complement(), resultProcess.address().complement());
-        assertEquals(clientDTO.address().neighborhood(), resultProcess.address().neighborhood());
-        assertEquals(clientDTO.address().city(), resultProcess.address().city());
-        assertEquals(clientDTO.address().state(), resultProcess.address().state());
-        assertEquals(clientDTO.address().zipCode(), resultProcess.address().zipCode());
+        verify(saveRepository, Mockito.times(1)).exec(Mockito.any(Client.class));
+        verify(findClientRepository, Mockito.times(2)).exec(deactivateClient.cpf());
     }
 
     @Test
@@ -167,8 +137,8 @@ class ClientFacadeTest {
         List<IValidations> validationsList = List.of(clientExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
-        var request = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(request)));
+        var deactivateClient = new DeactivateClient("99988877766");
+        var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> clientFacade.exec(source));
         assertEquals("Client not exists in database", exceptionResponse.getMessage());
@@ -186,48 +156,16 @@ class ClientFacadeTest {
         List<IValidations> validationsList = List.of(clientExistsValidate);
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
-        var request = new ClientRequestDTO(null, "99988877766", null, null, false, null, null);
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "99988877766");
-        var source = new Source(new HashMap<>(), inputMap);
+        var activateClient = new ActivateClient("99988877766");
+        var source = new Source(EmptyOutput.INSTANCE, activateClient);
         clientFacade.exec(source);
-        var resultProcess = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
-        var clientDTO = client.build();
 
-        assertNotNull(resultProcess);
-        assertEquals(clientDTO.id(), resultProcess.id());
-        assertEquals(clientDTO.cpf(), resultProcess.cpf());
-        assertEquals(clientDTO.name(), resultProcess.name());
-        assertEquals(clientDTO.telephone(), resultProcess.telephone());
-        assertTrue(resultProcess.active());
-        assertEquals(clientDTO.address().street(), resultProcess.address().street());
-        assertEquals(clientDTO.address().number(), resultProcess.address().number());
-        assertEquals(clientDTO.address().complement(), resultProcess.address().complement());
-        assertEquals(clientDTO.address().neighborhood(), resultProcess.address().neighborhood());
-        assertEquals(clientDTO.address().city(), resultProcess.address().city());
-        assertEquals(clientDTO.address().state(), resultProcess.address().state());
-        assertEquals(clientDTO.address().zipCode(), resultProcess.address().zipCode());
+        verify(saveRepository, Mockito.times(1)).exec(activateClient.cpf());
+        verify(findClientRepository, Mockito.times(1)).exec(activateClient.cpf());
     }
 
     private Client buildClient() {
         var address = new Address("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
         return new Client("abcd", "99988877766", "Daniel", "6122223333", true, address);
-    }
-
-    private static Map<String, String> generateInputMap() {
-        Map<String, String> map = new HashMap<>();
-        map.put("cpf", "99988877766");
-        map.put("name", "Daniel");
-        map.put("telephone", "6122223333");
-        map.put("active", "true");
-        map.put("agency", "1234");
-        map.put("street", "Rua 1");
-        map.put("number", "Bairro 1");
-        map.put("complement", "Cidade 1");
-        map.put("neighborhood", "Flores");
-        map.put("state", "DF");
-        map.put("city", "Brasilia");
-        map.put("zipCode", "44444-555");
-        return map;
     }
 }

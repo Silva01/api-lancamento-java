@@ -3,7 +3,6 @@ package br.net.silva.business.usecase;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
@@ -24,8 +23,6 @@ class DeactivateAccountUseCaseTest {
 
     private DeactivateAccountUseCase deactivateAccountUseCase;
 
-    private CreateAccountByAccountDTOFactory factory;
-
     @Mock
     private Repository<Account> deactivateAccountRepository;
 
@@ -33,7 +30,6 @@ class DeactivateAccountUseCaseTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
-        this.factory = new CreateAccountByAccountDTOFactory();
     }
 
     @Test

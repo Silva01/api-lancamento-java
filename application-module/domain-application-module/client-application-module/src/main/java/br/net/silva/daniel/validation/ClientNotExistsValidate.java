@@ -1,5 +1,6 @@
 package br.net.silva.daniel.validation;
 
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
@@ -9,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientNotExistsValidate implements IValidations {
-    private final UseCase findClientUseCase;
+    private final UseCase<ClientDTO> findClientUseCase;
 
-    public ClientNotExistsValidate(UseCase findClientUseCase) {
+    public ClientNotExistsValidate(UseCase<ClientDTO> findClientUseCase) {
         this.findClientUseCase = findClientUseCase;
     }
 

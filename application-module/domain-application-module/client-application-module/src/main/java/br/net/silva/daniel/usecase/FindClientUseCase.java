@@ -1,30 +1,32 @@
 package br.net.silva.daniel.usecase;
 
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.interfaces.IClientParam;
 import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.mapper.ToClientMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
 
 import java.util.Optional;
 
-public class FindClientUseCase implements UseCase {
+public class FindClientUseCase implements UseCase<ClientDTO> {
 
     private final Repository<Optional<Client>> findClientRepository;
-    private final ToClientMapper mapper;
+    private final GenericResponseFactory factory;
 
-    public FindClientUseCase(Repository<Optional<Client>> findClientRepository) {
+    public FindClientUseCase(Repository<Optional<Client>> findClientRepository, GenericResponseFactory factory) {
         this.findClientRepository = findClientRepository;
-        this.mapper = ToClientMapper.INSTANCE;
+        this.factory = factory;
     }
 
     @Override
-    public void exec(Source param) throws ClientNotExistsException {
-        var clientRequestDTO = mapper.toClientRequestDTO(param.input());
+    public ClientDTO exec(Source param) throws ClientNotExistsException {
+        var clientRequestDTO = (IClientParam) param.input();
         var optionalClient = findClientRepository.exec(clientRequestDTO.cpf());
         var client = optionalClient.orElseThrow(() -> new ClientNotExistsException("Client not exists in database"));
-        param.map().put(TypeClientMapperEnum.CLIENT.name(), client.build());
+        factory.fillIn(client.build(), param.output());
+        return client.build();
     }
 }

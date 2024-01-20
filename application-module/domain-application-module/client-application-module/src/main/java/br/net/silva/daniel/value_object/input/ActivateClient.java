@@ -8,26 +8,26 @@ public record ActivateClient(
 ) implements IClientParam {
     @Override
     public String id() {
-        throw GenericErrorUtils.executeException("Not Permission for this operation");
+        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
     }
 
     @Override
     public String name() {
-        throw GenericErrorUtils.executeException("Not Permission for this operation");
+        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
     }
 
     @Override
     public String telephone() {
-        throw GenericErrorUtils.executeException("Not Permission for this operation");
+        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
     }
 
     @Override
     public boolean active() {
-        throw GenericErrorUtils.executeException("Not Permission for this operation");
+        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
     }
 
     @Override
     public AddressRequestDTO address() {
-        throw GenericErrorUtils.executeException("Not Permission for this operation");
+        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
     }
 }
