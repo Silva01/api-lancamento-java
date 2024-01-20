@@ -12,7 +12,7 @@ class SourceTest {
     void shouldCreateAndPrintOutputValue() {
         Source source = new Source(new GenericOutput(), new GenericInput());
         ((GenericOutput) source.output()).setTest("Value");
-        assertEquals("value", ((GenericOutput) source.output()).getTest());
+        assertEquals("Value", ((GenericOutput) source.output()).getTest());
     }
 
     @Test
