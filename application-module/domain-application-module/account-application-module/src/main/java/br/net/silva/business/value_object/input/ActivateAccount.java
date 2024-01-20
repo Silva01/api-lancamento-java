@@ -1,6 +1,6 @@
 package br.net.silva.business.value_object.input;
 
-import br.net.silva.business.interfaces.IAccountParam;
+import br.net.silva.daniel.interfaces.IAccountParam;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
 import java.math.BigDecimal;

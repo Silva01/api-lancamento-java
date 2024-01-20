@@ -1,8 +1,10 @@
 package br.net.silva.daniel.value_object.input;
 
+import br.net.silva.daniel.interfaces.IAddressParam;
 import br.net.silva.daniel.interfaces.IClientParam;
 import br.net.silva.daniel.interfaces.Input;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
+import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
 public record ClientRequestDTO(
@@ -26,7 +28,7 @@ public record ClientRequestDTO(
     }
 
     @Override
-    public AddressRequestDTO address() {
+    public IAddressParam address() {
         return addressRequestDTO;
     }
 }
