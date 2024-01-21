@@ -9,4 +9,8 @@ public abstract class GenericErrorUtils {
     public static IllegalArgumentException executeException(String messageError) {
         return new IllegalArgumentException(messageError);
     }
+
+    public static IllegalArgumentException executeExceptionNotPermissionOperation() {
+        return executeException("Not Permission for this operation");
+    }
 }

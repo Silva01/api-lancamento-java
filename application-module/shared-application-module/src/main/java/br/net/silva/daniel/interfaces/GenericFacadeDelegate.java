@@ -1,7 +1,7 @@
 package br.net.silva.daniel.interfaces;
 
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.shared.business.value_object.Source;
+import br.net.silva.daniel.value_object.Source;
 
 import java.util.List;
 import java.util.Queue;

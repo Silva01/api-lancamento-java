@@ -1,20 +1,22 @@
 package br.net.silva.daniel.integrations.test.flux;
 
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
+import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
+import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.value_object.Source;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
+import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.value_object.input.DeactivateClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,19 +24,23 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class FluxDeactivateClientTest extends AbstractBuilder {
 
-    private UseCase deactivateClientUseCase;
+    private UseCase<ClientDTO> deactivateClientUseCase;
 
-    private UseCase deactivateAccountUseCase;
+    private UseCase<AccountDTO> deactivateAccountUseCase;
 
-    private UseCase findClientUseCase;
+    private UseCase<ClientDTO> findClientUseCase;
 
     private IValidations clientExistsValidation;
 
@@ -56,8 +62,8 @@ class FluxDeactivateClientTest extends AbstractBuilder {
 
         // Use Cases
         this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
-        this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository);
-        this.findClientUseCase = new FindClientUseCase(findClientRepository);
+        this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository, buildFactoryResponse());
+        this.findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validations
         this.clientExistsValidation = new ClientExistsValidate(findClientUseCase);
@@ -65,12 +71,10 @@ class FluxDeactivateClientTest extends AbstractBuilder {
 
     @Test
     void shouldDeactivateClientWithSuccess() throws GenericException {
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678900");
+        var deactivateClientInput = new DeactivateClient("12345678900");
+        var source = new Source(EmptyOutput.INSTANCE, deactivateClientInput);
 
-        var source = new Source(new HashMap<>(), inputMap);
-
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(deactivateClientUseCase);
         queue.add(deactivateAccountUseCase);
 
@@ -79,17 +83,16 @@ class FluxDeactivateClientTest extends AbstractBuilder {
 
         facade.exec(source);
 
-        var processedDto = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
-        assertionClient(buildMockClient(false).build(), processedDto);
+        verify(saveRepository, Mockito.times(1)).exec(Mockito.any(Client.class));
+        verify(deactivateAccountRepository, Mockito.times(1)).exec(Mockito.anyString());
+        verify(findClientRepository, Mockito.times(2)).exec(Mockito.anyString());
     }
 
     @Test
     void shouldErrorDeactivateClientClientNotExists() {
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678900");
-
-        var source = new Source(new HashMap<>(), inputMap);
+        var deactivateClientInput = new DeactivateClient("12345678900");
+        var source = new Source(EmptyOutput.INSTANCE, deactivateClientInput);
 
         Queue<UseCase> queue = new LinkedList<>();
         queue.add(deactivateClientUseCase);

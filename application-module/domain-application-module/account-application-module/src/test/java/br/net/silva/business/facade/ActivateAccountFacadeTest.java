@@ -1,19 +1,17 @@
 package br.net.silva.business.facade;
 
-import br.net.silva.business.dto.FindAccountDTO;
-import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsAndActiveValidate;
-import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
-import br.net.silva.daniel.utils.ConverterUtils;
-import br.net.silva.daniel.shared.business.value_object.Source;
+import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -24,6 +22,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ActivateAccountFacadeTest {
@@ -60,17 +59,14 @@ class ActivateAccountFacadeTest {
         List<IValidations> validationsList = List.of(accountExistsValidate);
 
         var facade = new GenericFacadeDelegate(useCases, validationsList);
-        var dtoRequest = new FindAccountDTO("99988877766", 45678, 4321888, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(dtoRequest)));
+        var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
+        var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 
         facade.exec(source);
 
-        assertNotNull(source);
+        assertNotNull(source.output());
 
-        var dtoResponse = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
-
-        assertNotNull(dtoResponse);
-        assertTrue(dtoResponse.active());
+        verify(activateAccountRepository).exec(any(Account.class));
     }
 
     @Test
@@ -85,8 +81,8 @@ class ActivateAccountFacadeTest {
         List<IValidations> validationsList = List.of(accountExistsValidate);
 
         var facade = new GenericFacadeDelegate(useCases, validationsList);
-        var dtoRequest = new FindAccountDTO("99988877766", 45678, 4321888, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(dtoRequest)));
+        var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
+        var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(source));
         assertNotNull(exceptionResponse);
@@ -105,8 +101,8 @@ class ActivateAccountFacadeTest {
         List<IValidations> validationsList = List.of(accountExistsValidate);
 
         var facade = new GenericFacadeDelegate(useCases, validationsList);
-        var dtoRequest = new FindAccountDTO("99988877766", 45678, 4321888, null);
-        var source = new Source(new HashMap<>(), ConverterUtils.convertJsonToInputMap(ConverterUtils.convertObjectToJson(dtoRequest)));
+        var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
+        var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(source));
         assertNotNull(exceptionResponse);

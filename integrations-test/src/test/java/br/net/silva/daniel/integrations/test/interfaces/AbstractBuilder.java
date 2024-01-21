@@ -1,9 +1,13 @@
 package br.net.silva.daniel.integrations.test.interfaces;
 
+import br.net.silva.business.mapper.CreateResponseToFindAccountsByCpfFactory;
+import br.net.silva.business.mapper.CreateResponseToNewAccountByClientFactory;
+import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.factory.GenericResponseFactory;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.value_object.Address;
 
@@ -58,5 +62,13 @@ public abstract class AbstractBuilder {
         assertEquals(expected.telephone(), actual.telephone());
         assertEquals(expected.active(), actual.active());
         assertEquals(expected.address(), actual.address());
+    }
+
+    protected GenericResponseFactory buildFactoryResponse() {
+        return new GenericResponseFactory(List.of(
+                new CreateResponseToNewAccountByClientFactory(),
+                new CreateResponseToFindAccountsByCpfFactory(),
+                new CreateResponseToNewAccountFactory()
+        ));
     }
 }

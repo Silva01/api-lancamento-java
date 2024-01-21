@@ -1,20 +1,22 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
+import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
+import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.value_object.Source;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
+import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -24,13 +26,13 @@ import java.util.*;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class FluxDeactivateAccountTest extends AbstractBuilder {
 
-    private UseCase deactivateAccountUseCase;
+    private UseCase<AccountDTO> deactivateAccountUseCase;
 
-    private UseCase findClientUseCase;
+    private UseCase<ClientDTO> findClientUseCase;
 
     private IValidations accountExistsValidation;
 
@@ -50,11 +52,11 @@ class FluxDeactivateAccountTest extends AbstractBuilder {
         MockitoAnnotations.openMocks(this);
         when(deactivateAccountRepository.exec(anyString())).thenReturn(buildMockAccount(false));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true)));
-        when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildMockClient()));
+        when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildMockClient(true)));
 
         // Use Case
         deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
-        findClientUseCase = new FindClientUseCase(findClientRepository);
+        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validations
         accountExistsValidation = new AccountExistsValidate(findAccountRepository);
@@ -64,14 +66,10 @@ class FluxDeactivateAccountTest extends AbstractBuilder {
     @Test
     void shouldDeactivateAccountWithSuccess() throws GenericException {
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678900");
-        inputMap.put("account", "123456");
-        inputMap.put("agency", "1234");
+        var deactivateAccountInput = new DeactivateAccount("12345678900", 1, 1234);
+        var source = new Source(EmptyOutput.INSTANCE, deactivateAccountInput);
 
-        var source = new Source(new HashMap<>(), inputMap);
-
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(deactivateAccountUseCase);
 
         List<IValidations> validations = new ArrayList<>();
@@ -81,7 +79,8 @@ class FluxDeactivateAccountTest extends AbstractBuilder {
         var facade = new GenericFacadeDelegate<>(queue, validations);
         facade.exec(source);
 
-        var processedDto = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
-        assertionAccount(buildMockAccount(false).build(), processedDto);
+        verify(deactivateAccountRepository, times(1)).exec(anyString());
+        verify(findAccountRepository, times(1)).exec(anyInt(), anyInt(), anyString());
+        verify(findClientRepository, times(1)).exec(anyString());
     }
 }

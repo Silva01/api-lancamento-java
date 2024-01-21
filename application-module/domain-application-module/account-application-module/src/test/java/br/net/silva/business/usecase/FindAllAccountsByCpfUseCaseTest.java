@@ -1,12 +1,16 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.dto.AccountResponseDto;
-import br.net.silva.business.enums.TypeAccountMapperEnum;
+import br.net.silva.business.mapper.CreateResponseToFindAccountsByCpfFactory;
+import br.net.silva.business.mapper.CreateResponseToNewAccountByClientFactory;
+import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
+import br.net.silva.business.value_object.input.FindAccountDTO;
+import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.factory.GenericResponseFactory;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
-import br.net.silva.daniel.shared.business.value_object.Source;
+import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,9 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,29 +28,32 @@ class FindAllAccountsByCpfUseCaseTest {
 
     private FindAllAccountsByCpfUseCase useCase;
 
+    private GenericResponseFactory factory;
+
     @Mock
     private Repository<List<Account>> repository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        useCase = new FindAllAccountsByCpfUseCase(repository);
+        factory = new GenericResponseFactory(List.of(new CreateResponseToNewAccountByClientFactory(), new CreateResponseToNewAccountFactory(), new CreateResponseToFindAccountsByCpfFactory()));
+        useCase = new FindAllAccountsByCpfUseCase(repository, factory);
     }
 
     @Test
     void shouldListAllAccountsByCpf() throws GenericException {
         when(repository.exec(anyString())).thenReturn(buildMockListAccount());
-        Map<String, String> inputMap = Map.of("cpf", "99988877766");
-        var source = new Source(new HashMap<>(), inputMap);
+        var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
+        var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);
 
         useCase.exec(source);
 
-        var response = (AccountResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
+        var response = (AccountsByCpfResponseDto) source.output();
         assertNotNull(response);
 
         var mockListAccount = buildMockListAccount().stream().map(Account::build).toList();
 
-        var accountsList = response.accounts();
+        var accountsList = response.getAccounts();
         assertNotNull(accountsList);
         assertEquals(3, accountsList.size());
         assertEquals(mockListAccount, accountsList);
@@ -57,15 +62,15 @@ class FindAllAccountsByCpfUseCaseTest {
     @Test
     void shouldListEmptyAccountsByCpf() throws GenericException {
         when(repository.exec(anyString())).thenReturn(Collections.emptyList());
-        Map<String, String> inputMap = Map.of("cpf", "99988877766");
-        var source = new Source(new HashMap<>(), inputMap);
+        var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
+        var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);
 
         useCase.exec(source);
 
-        var response = (AccountResponseDto) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
+        var response = (AccountsByCpfResponseDto) source.output();
         assertNotNull(response);
 
-        var accountsList = response.accounts();
+        var accountsList = response.getAccounts();
         assertNotNull(accountsList);
         assertTrue(accountsList.isEmpty());
     }

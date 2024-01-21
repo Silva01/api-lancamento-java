@@ -2,17 +2,19 @@ package br.net.silva.daniel.integrations.test.flux;
 
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.enums.TypeClientMapperEnum;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.factory.GenericResponseFactory;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
+import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.value_object.Source;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
+import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.value_object.input.ActivateClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,13 +26,14 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class FluxActivateClientTest extends AbstractBuilder {
 
-    private UseCase activeClientUseCase;
+    private UseCase<ClientDTO> activeClientUseCase;
 
-    private UseCase findClientUseCase;
+    private UseCase<ClientDTO> findClientUseCase;
 
     private IValidations clientExistsValidation;
 
@@ -46,9 +49,12 @@ class FluxActivateClientTest extends AbstractBuilder {
         when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildMockClient(false)));
         when(activateClientRepository.exec(anyString())).thenReturn(buildMockClient(true));
 
+        // Factory
+        var factory = new GenericResponseFactory(Collections.emptyList());
+
         // Use Cases
         this.activeClientUseCase = new ActivateClientUseCase(activateClientRepository);
-        this.findClientUseCase = new FindClientUseCase(findClientRepository);
+        this.findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validations
         this.clientExistsValidation = new ClientExistsValidate(findClientUseCase);
@@ -56,12 +62,10 @@ class FluxActivateClientTest extends AbstractBuilder {
 
     @Test
     void shouldActivateClientWithSuccess() throws GenericException {
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678900");
+        var activateClient = new ActivateClient("12345678900");
+        var source = new Source(EmptyOutput.INSTANCE, activateClient);
 
-        var source = new Source(new HashMap<>(), inputMap);
-
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(activeClientUseCase);
 
         List<IValidations> validationsList = List.of(clientExistsValidation);
@@ -69,19 +73,16 @@ class FluxActivateClientTest extends AbstractBuilder {
 
         facade.exec(source);
 
-        var processedDto = (ClientDTO) source.map().get(TypeClientMapperEnum.CLIENT.name());
-        assertionClient(buildMockClient(true).build(), processedDto);
+        verify(activateClientRepository, Mockito.times(1)).exec(Mockito.anyString());
     }
 
     @Test
-    void shouldErrorDeactivateClientClientNotExists() {
+    void shouldErrorActivateClientClientNotExists() {
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678900");
+        var activateClient = new ActivateClient("12345678900");
+        var source = new Source(EmptyOutput.INSTANCE, activateClient);
 
-        var source = new Source(new HashMap<>(), inputMap);
-
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(activeClientUseCase);
 
         List<IValidations> validationsList = List.of(clientExistsValidation);

@@ -1,21 +1,23 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
+import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.factory.GenericResponseFactory;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
+import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.value_object.Source;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
-import org.junit.jupiter.api.Assertions;
+import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,13 +28,13 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class FluxActivateAccountTest extends AbstractBuilder {
 
-    private UseCase activateAccountUseCase;
+    private UseCase<AccountDTO> activateAccountUseCase;
 
-    private UseCase findClientUseCase;
+    private UseCase<ClientDTO> findClientUseCase;
 
     private IValidations accountExistsValidation;
 
@@ -60,7 +62,7 @@ class FluxActivateAccountTest extends AbstractBuilder {
 
         // Use Case
         activateAccountUseCase = new ActivateAccountUseCase(activateAccountRepository, findAccountRepository);
-        findClientUseCase = new FindClientUseCase(findClientRepository);
+        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validations
         accountExistsValidation = new AccountExistsValidate(findOptionalAccountRepository);
@@ -69,15 +71,10 @@ class FluxActivateAccountTest extends AbstractBuilder {
 
     @Test
     void shouldActivateAccountWithSuccess() throws GenericException {
+        var activateAccount = new ActivateAccount(1234, 123456, "12345678900");
+        var source = new Source(EmptyOutput.INSTANCE, activateAccount);
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678900");
-        inputMap.put("account", "123456");
-        inputMap.put("agency", "1234");
-
-        var source = new Source(new HashMap<>(), inputMap);
-
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(activateAccountUseCase);
 
         List<IValidations> validations = new ArrayList<>();
@@ -86,23 +83,17 @@ class FluxActivateAccountTest extends AbstractBuilder {
 
         var facade = new GenericFacadeDelegate<>(queue, validations);
         facade.exec(source);
-
-        var processedDto = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
-        assertionAccount(buildMockAccount(true).build(), processedDto);
+        verify(activateAccountRepository, times(1)).exec(any(Account.class));
     }
 
     @Test
     void shouldActivateAccountWithErrorClientNotExists() throws GenericException {
         when(findClientRepository.exec(anyString())).thenReturn(Optional.empty());
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678900");
-        inputMap.put("account", "123456");
-        inputMap.put("agency", "1234");
+        var activateAccount = new ActivateAccount(1234, 123456, "12345678900");
+        var source = new Source(EmptyOutput.INSTANCE, activateAccount);
 
-        var source = new Source(new HashMap<>(), inputMap);
-
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(activateAccountUseCase);
 
         List<IValidations> validations = new ArrayList<>();
@@ -118,14 +109,10 @@ class FluxActivateAccountTest extends AbstractBuilder {
     void shouldActivateAccountWithErrorAccountNotExists() throws GenericException {
         when(findOptionalAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.empty());
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678900");
-        inputMap.put("account", "123456");
-        inputMap.put("agency", "1234");
+        var activateAccount = new ActivateAccount(1234, 123456, "12345678900");
+        var source = new Source(EmptyOutput.INSTANCE, activateAccount);
 
-        var source = new Source(new HashMap<>(), inputMap);
-
-        Queue<UseCase> queue = new LinkedList<>();
+        Queue<UseCase<?>> queue = new LinkedList<>();
         queue.add(activateAccountUseCase);
 
         List<IValidations> validations = new ArrayList<>();

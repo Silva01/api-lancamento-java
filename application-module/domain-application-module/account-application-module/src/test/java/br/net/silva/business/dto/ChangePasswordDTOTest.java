@@ -1,5 +1,6 @@
 package br.net.silva.business.dto;
 
+import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

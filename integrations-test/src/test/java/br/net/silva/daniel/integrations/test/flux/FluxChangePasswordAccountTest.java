@@ -1,21 +1,23 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.business.enums.TypeAccountMapperEnum;
 import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
 import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
+import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
+import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.value_object.Source;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
+import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,15 +28,15 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class FluxChangePasswordAccountTest extends AbstractBuilder {
 
-    private UseCase changePasswordAccountUseCase;
+    private UseCase<AccountDTO> changePasswordAccountUseCase;
 
-    private UseCase findAccountUseCase;
+    private UseCase<AccountDTO> findAccountUseCase;
 
-    private UseCase findClientUseCase;
+    private UseCase<ClientDTO> findClientUseCase;
 
     private IValidations clientExistsValidate;
 
@@ -53,12 +55,12 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(findAccountRepository.exec(anyInt(), anyInt())).thenReturn(Optional.ofNullable(buildMockAccount(true)));
-        when(findCLientRepository.exec(anyString())).thenReturn(Optional.ofNullable(buildMockClient()));
+        when(findCLientRepository.exec(anyString())).thenReturn(Optional.ofNullable(buildMockClient(true)));
 
         //Use Cases
-        findAccountUseCase = new FindAccountUseCase(findAccountRepository);
+        findAccountUseCase = new FindAccountUseCase(findAccountRepository, buildFactoryResponse());
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(findAccountUseCase, updatePasswordRepository);
-        findClientUseCase = new FindClientUseCase(findCLientRepository);
+        findClientUseCase = new FindClientUseCase(findCLientRepository, buildFactoryResponse());
 
         //Validations
         clientExistsValidate = new ClientExistsValidate(findClientUseCase);
@@ -69,16 +71,10 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
     void shouldChangePasswordAccountWithSuccess() throws GenericException {
         when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678901");
-        inputMap.put("agency", "1234");
-        inputMap.put("account", "1");
-        inputMap.put("password", "978534");
-        inputMap.put("newPassword", "1234567");
+        var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978534", "1234567");
+        var source = new Source(EmptyOutput.INSTANCE, changePassord);
 
-        var source = new Source(new HashMap<>(), inputMap);
-
-        Queue<UseCase> queueUseCase = new LinkedList<>();
+        Queue<UseCase<?>> queueUseCase = new LinkedList<>();
         queueUseCase.add(changePasswordAccountUseCase);
 
         List<IValidations> validations = new ArrayList<>();
@@ -88,24 +84,19 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
         var facade = new GenericFacadeDelegate<>(queueUseCase, validations);
         facade.exec(source);
 
-        var responseDto = (AccountDTO) source.map().get(TypeAccountMapperEnum.ACCOUNT.name());
-        assertionAccount(buildMockAccount(true).build(), responseDto);
+        verify(updatePasswordRepository, times(1)).exec(any(Account.class));
+        verify(findAccountRepository, times(2)).exec(anyInt(), anyInt());
+        verify(findCLientRepository, times(1)).exec(anyString());
     }
 
     @Test
     void shouldChangePasswordAccountWithErrorPasswordIsDifferent() {
         when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678901");
-        inputMap.put("agency", "1234");
-        inputMap.put("account", "1");
-        inputMap.put("password", "123490");
-        inputMap.put("newPassword", "1234567");
+        var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978501", "1234567");
+        var source = new Source(EmptyOutput.INSTANCE, changePassord);
 
-        var source = new Source(new HashMap<>(), inputMap);
-
-        Queue<UseCase> queueUseCase = new LinkedList<>();
+        Queue<UseCase<?>> queueUseCase = new LinkedList<>();
         queueUseCase.add(changePasswordAccountUseCase);
 
         List<IValidations> validations = new ArrayList<>();
@@ -121,14 +112,8 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
     void shouldChangePasswordAccountWithErrorPasswordHasRepeatNumbers() {
         when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678901");
-        inputMap.put("agency", "1234");
-        inputMap.put("account", "1");
-        inputMap.put("password", "123499");
-        inputMap.put("newPassword", "1234567");
-
-        var source = new Source(new HashMap<>(), inputMap);
+        var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978599", "1234567");
+        var source = new Source(EmptyOutput.INSTANCE, changePassord);
 
         Queue<UseCase> queueUseCase = new LinkedList<>();
         queueUseCase.add(changePasswordAccountUseCase);
@@ -146,14 +131,8 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
     void shouldChangePasswordAccountWithErrorPasswordHasThanSixNumbers() {
         when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678901");
-        inputMap.put("agency", "1234");
-        inputMap.put("account", "1");
-        inputMap.put("password", "1234");
-        inputMap.put("newPassword", "1234567");
-
-        var source = new Source(new HashMap<>(), inputMap);
+        var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "1234", "1234567");
+        var source = new Source(EmptyOutput.INSTANCE, changePassord);
 
         Queue<UseCase> queueUseCase = new LinkedList<>();
         queueUseCase.add(changePasswordAccountUseCase);
@@ -172,14 +151,8 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
         when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
         when(findCLientRepository.exec(anyString())).thenReturn(Optional.empty());
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678901");
-        inputMap.put("agency", "1234");
-        inputMap.put("account", "1");
-        inputMap.put("password", "978534");
-        inputMap.put("newPassword", "1234567");
-
-        var source = new Source(new HashMap<>(), inputMap);
+        var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978534", "1234567");
+        var source = new Source(EmptyOutput.INSTANCE, changePassord);
 
         Queue<UseCase> queueUseCase = new LinkedList<>();
         queueUseCase.add(changePasswordAccountUseCase);
@@ -200,14 +173,8 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
         // Repository representa uma busca de conta ativada, como não tem nenhuma conta ativada, retorna vazio
         when(findAccountRepository.exec(anyInt(), anyInt())).thenReturn(Optional.empty());
 
-        Map<String, String> inputMap = new HashMap<>();
-        inputMap.put("cpf", "12345678901");
-        inputMap.put("agency", "1234");
-        inputMap.put("account", "1");
-        inputMap.put("password", "978534");
-        inputMap.put("newPassword", "1234567");
-
-        var source = new Source(new HashMap<>(), inputMap);
+        var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978534", "1234567");
+        var source = new Source(EmptyOutput.INSTANCE, changePassord);
 
         Queue<UseCase> queueUseCase = new LinkedList<>();
         queueUseCase.add(changePasswordAccountUseCase);

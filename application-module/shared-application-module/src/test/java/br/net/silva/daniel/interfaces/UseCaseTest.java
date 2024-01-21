@@ -1,7 +1,7 @@
 package br.net.silva.daniel.interfaces;
 
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.shared.business.value_object.Source;
+import br.net.silva.daniel.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,7 +25,7 @@ class UseCaseTest {
     @Test
     void testExec() throws GenericException {
         Integer expected = 1;
-        var source = new Source(new HashMap<>());
+        var source = new Source(null, null);
 
         // Act
         useCaseMock.exec(source);
@@ -37,8 +37,9 @@ class UseCaseTest {
     @Test
     void testExecWithGenericError() throws GenericException {
         // Act
+        Source source = null;
         try {
-            useCaseMock.exec(null);
+            useCaseMock.exec(source);
         } catch (GenericException e) {
             // Assert
             assertEquals("Generic error", e.getMessage());
