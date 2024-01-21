@@ -29,8 +29,8 @@ public class AccountExistsAndActiveByCpfValidate implements IValidations {
         }
 
         var accountDto = optionalAccount.get().build();
-        if (accountDto.active()) {
-            throw new AccountAlreadyActiveException("Account already active");
+        if (!accountDto.active()) {
+            throw new AccountAlreadyActiveException("Account is not active");
         }
 
     }
