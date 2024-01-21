@@ -2,7 +2,7 @@ package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ClientNotExistsException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Address;
@@ -26,14 +26,14 @@ class FindClientUseCaseTest {
     @Mock
     private Repository<Optional<Client>> findClientRepository;
 
-    private GenericResponseFactory factory;
+    private GenericResponseMapper factory;
 
     private FindClientUseCase findClientUseCase;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        factory = new GenericResponseFactory(Collections.emptyList());
+        factory = new GenericResponseMapper(Collections.emptyList());
         when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildClient()));
         this.findClientUseCase = new FindClientUseCase(findClientRepository, factory);
     }

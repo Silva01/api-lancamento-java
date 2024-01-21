@@ -2,7 +2,7 @@ package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Address;
@@ -29,7 +29,7 @@ class CreateNewClientUseCaseTest {
     @BeforeEach
     protected void setUp() {
         when(saveRepository.exec(any(Client.class))).thenReturn(createClient());
-        createNewClientUseCase = new CreateNewClientUseCase(saveRepository, new GenericResponseFactory(Collections.emptyList()));
+        createNewClientUseCase = new CreateNewClientUseCase(saveRepository, new GenericResponseMapper(Collections.emptyList()));
     }
 
     @Test

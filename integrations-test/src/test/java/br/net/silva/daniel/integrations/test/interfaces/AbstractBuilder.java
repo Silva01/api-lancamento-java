@@ -7,7 +7,7 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.value_object.Address;
 
@@ -64,8 +64,8 @@ public abstract class AbstractBuilder {
         assertEquals(expected.address(), actual.address());
     }
 
-    protected GenericResponseFactory buildFactoryResponse() {
-        return new GenericResponseFactory(List.of(
+    protected GenericResponseMapper buildFactoryResponse() {
+        return new GenericResponseMapper(List.of(
                 new CreateResponseToNewAccountByClientFactory(),
                 new CreateResponseToFindAccountsByCpfFactory(),
                 new CreateResponseToNewAccountFactory()

@@ -3,7 +3,7 @@ package br.net.silva.daniel.integrations.test.flux;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
@@ -50,7 +50,7 @@ class FluxActivateClientTest extends AbstractBuilder {
         when(activateClientRepository.exec(anyString())).thenReturn(buildMockClient(true));
 
         // Factory
-        var factory = new GenericResponseFactory(Collections.emptyList());
+        var factory = new GenericResponseMapper(Collections.emptyList());
 
         // Use Cases
         this.activeClientUseCase = new ActivateClientUseCase(activateClientRepository);

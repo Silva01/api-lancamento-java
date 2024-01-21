@@ -3,7 +3,7 @@ package br.net.silva.daniel.facade;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
@@ -53,7 +53,7 @@ class ClientFacadeTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        var factory = new GenericResponseFactory(Collections.emptyList());
+        var factory = new GenericResponseMapper(Collections.emptyList());
         this.findClientUseCase = new FindClientUseCase(findClientRepository, factory);
         this.createNewClientUseCase = new CreateNewClientUseCase(saveRepository, factory);
         this.clientExistsValidate = new ClientExistsValidate(findClientUseCase);

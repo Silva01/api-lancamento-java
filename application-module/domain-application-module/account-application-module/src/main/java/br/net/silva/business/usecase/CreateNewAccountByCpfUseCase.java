@@ -1,13 +1,11 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
-import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
-import br.net.silva.daniel.factory.GenericResponseFactory;
-import br.net.silva.daniel.interfaces.IAccountParam;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.IAgencyParam;
 import br.net.silva.daniel.interfaces.ICpfParam;
 import br.net.silva.daniel.interfaces.UseCase;
@@ -20,9 +18,9 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountDTO> {
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
     private final Repository<Account> saveRepository;
-    private final GenericResponseFactory factory;
+    private final GenericResponseMapper factory;
 
-    public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository, GenericResponseFactory factory) {
+    public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository, GenericResponseMapper factory) {
         this.findIsExistsPeerCPFRepository = findIsExistsPeerCPFRepository;
         this.saveRepository = saveRepository;
         this.factory = factory;

@@ -5,7 +5,7 @@ import br.net.silva.daniel.interfaces.IAccountParam;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
@@ -15,9 +15,9 @@ import java.util.Optional;
 public class FindAccountUseCase implements UseCase<AccountDTO> {
 
     private final Repository<Optional<Account>> findAccountRepository;
-    private final GenericResponseFactory factory;
+    private final GenericResponseMapper factory;
 
-    public FindAccountUseCase(Repository<Optional<Account>> findAccountRepository, GenericResponseFactory factory) {
+    public FindAccountUseCase(Repository<Optional<Account>> findAccountRepository, GenericResponseMapper factory) {
         this.findAccountRepository = findAccountRepository;
         this.factory = factory;
     }

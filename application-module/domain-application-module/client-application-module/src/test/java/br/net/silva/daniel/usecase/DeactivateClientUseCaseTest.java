@@ -2,7 +2,7 @@ package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Address;
@@ -25,7 +25,7 @@ class DeactivateClientUseCaseTest {
 
     private DeactivateClientUseCase deactivateClientUseCase;
 
-    private GenericResponseFactory facotry;
+    private GenericResponseMapper facotry;
 
     @Mock
     private Repository<Optional<Client>> findClientRepository;
@@ -37,7 +37,7 @@ class DeactivateClientUseCaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        facotry = new GenericResponseFactory(Collections.emptyList());
+        facotry = new GenericResponseMapper(Collections.emptyList());
         deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository, facotry);
     }
 

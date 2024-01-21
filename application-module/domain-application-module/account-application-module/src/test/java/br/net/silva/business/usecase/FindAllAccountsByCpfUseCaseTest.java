@@ -7,7 +7,7 @@ import br.net.silva.business.value_object.input.FindAccountDTO;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.value_object.Source;
@@ -28,7 +28,7 @@ class FindAllAccountsByCpfUseCaseTest {
 
     private FindAllAccountsByCpfUseCase useCase;
 
-    private GenericResponseFactory factory;
+    private GenericResponseMapper factory;
 
     @Mock
     private Repository<List<Account>> repository;
@@ -36,7 +36,7 @@ class FindAllAccountsByCpfUseCaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        factory = new GenericResponseFactory(List.of(new CreateResponseToNewAccountByClientFactory(), new CreateResponseToNewAccountFactory(), new CreateResponseToFindAccountsByCpfFactory()));
+        factory = new GenericResponseMapper(List.of(new CreateResponseToNewAccountByClientFactory(), new CreateResponseToNewAccountFactory(), new CreateResponseToFindAccountsByCpfFactory()));
         useCase = new FindAllAccountsByCpfUseCase(repository, factory);
     }
 
