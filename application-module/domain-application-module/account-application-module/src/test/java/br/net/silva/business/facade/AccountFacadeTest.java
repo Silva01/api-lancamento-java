@@ -13,7 +13,7 @@ import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
@@ -43,7 +43,7 @@ class AccountFacadeTest {
 
     private IValidations passwordAndExistsAccountValidate;
 
-    private GenericResponseFactory factory;
+    private GenericResponseMapper factory;
 
     @Mock
     private Repository<Boolean> findIsExistsPeerCPFRepository;
@@ -60,7 +60,7 @@ class AccountFacadeTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        factory = new GenericResponseFactory(List.of(new CreateResponseToNewAccountFactory(), new CreateResponseToNewAccountByClientFactory()));
+        factory = new GenericResponseMapper(List.of(new CreateResponseToNewAccountFactory(), new CreateResponseToNewAccountByClientFactory()));
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository, factory);
         var findAccountByCpfUseCase = new FindAccountByCpfUseCase(findAccountRepository, factory);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountByCpfUseCase);

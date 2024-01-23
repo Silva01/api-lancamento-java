@@ -1,11 +1,9 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.value_object.input.FindAccountDTO;
-import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.ICpfParam;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
@@ -16,9 +14,9 @@ import java.util.List;
 public class FindAllAccountsByCpfUseCase implements UseCase<List<AccountDTO>> {
 
     private final Repository<List<Account>> repository;
-    private final GenericResponseFactory factory;
+    private final GenericResponseMapper factory;
 
-    public FindAllAccountsByCpfUseCase(Repository<List<Account>> repository, GenericResponseFactory factory) {
+    public FindAllAccountsByCpfUseCase(Repository<List<Account>> repository, GenericResponseMapper factory) {
         this.repository = repository;
         this.factory = factory;
     }

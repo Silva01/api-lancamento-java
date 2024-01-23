@@ -1,0 +1,28 @@
+package br.net.silva.business.mapper;
+
+import br.net.silva.business.enums.AccountStatusEnum;
+import br.net.silva.business.value_object.output.GetInformationAccountOutput;
+import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.interfaces.IMapperResponse;
+import br.net.silva.daniel.interfaces.Output;
+import org.springframework.stereotype.Component;
+
+import java.util.Objects;
+
+@Component
+public class GetInformationMapper implements IMapperResponse<AccountDTO, Output> {
+    @Override
+    public boolean accept(Object input, Output output) {
+        return input instanceof AccountDTO && output instanceof GetInformationAccountOutput;
+    }
+
+    @Override
+    public void toFillIn(AccountDTO input, Output output) {
+        ((GetInformationAccountOutput) output).setAgency(input.agency());
+        ((GetInformationAccountOutput) output).setAccountNumber(input.number());
+        ((GetInformationAccountOutput) output).setBalance(input.balance());
+        ((GetInformationAccountOutput) output).setStatus(input.active() ? AccountStatusEnum.ACTIVE : AccountStatusEnum.INACTIVE);
+        ((GetInformationAccountOutput) output).setHaveCreditCard(Objects.nonNull(input.creditCard()));
+        ((GetInformationAccountOutput) output).setTransactions(input.transactions());
+    }
+}

@@ -6,7 +6,7 @@ import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.factory.CreateNewAddressFactory;
 import br.net.silva.daniel.factory.CreateNewClientFactory;
-import br.net.silva.daniel.factory.GenericResponseFactory;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.IClientParam;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
@@ -16,9 +16,9 @@ import br.net.silva.daniel.value_object.Source;
 public class CreateNewClientUseCase implements UseCase<ClientDTO> {
     private final Repository<Client> saveRepository;
     private final IFactoryAggregate<Client, ClientDTO> createNewClientFactory;
-    private final GenericResponseFactory factory;
+    private final GenericResponseMapper factory;
 
-    public CreateNewClientUseCase(Repository<Client> saveRepository, GenericResponseFactory factory) {
+    public CreateNewClientUseCase(Repository<Client> saveRepository, GenericResponseMapper factory) {
         this.saveRepository = saveRepository;
         this.factory = factory;
         this.createNewClientFactory = new CreateNewClientFactory(new CreateNewAddressFactory());

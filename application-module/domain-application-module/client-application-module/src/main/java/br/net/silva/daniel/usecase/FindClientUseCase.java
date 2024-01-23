@@ -3,8 +3,7 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ClientNotExistsException;
-import br.net.silva.daniel.factory.GenericResponseFactory;
-import br.net.silva.daniel.interfaces.IClientParam;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.ICpfParam;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
@@ -15,9 +14,9 @@ import java.util.Optional;
 public class FindClientUseCase implements UseCase<ClientDTO> {
 
     private final Repository<Optional<Client>> findClientRepository;
-    private final GenericResponseFactory factory;
+    private final GenericResponseMapper factory;
 
-    public FindClientUseCase(Repository<Optional<Client>> findClientRepository, GenericResponseFactory factory) {
+    public FindClientUseCase(Repository<Optional<Client>> findClientRepository, GenericResponseMapper factory) {
         this.findClientRepository = findClientRepository;
         this.factory = factory;
     }
