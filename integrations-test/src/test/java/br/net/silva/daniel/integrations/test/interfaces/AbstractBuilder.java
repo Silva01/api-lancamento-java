@@ -3,10 +3,13 @@ package br.net.silva.daniel.integrations.test.interfaces;
 import br.net.silva.business.mapper.CreateResponseToFindAccountsByCpfFactory;
 import br.net.silva.business.mapper.CreateResponseToNewAccountByClientFactory;
 import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
+import br.net.silva.business.mapper.GetInformationMapper;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.entity.Transaction;
+import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.value_object.Address;
@@ -42,6 +45,21 @@ public abstract class AbstractBuilder {
         return List.of(account1, account2, account3);
     }
 
+    protected List<Transaction> buildListTransaction() {
+        return List.of(
+                new Transaction(1L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new Transaction(2L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new Transaction(3L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new Transaction(4L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new Transaction(5L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new Transaction(6L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new Transaction(7L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new Transaction(8L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new Transaction(9L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new Transaction(10L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321)
+        );
+    }
+
     protected void assertionAccount(AccountDTO expected, AccountDTO actual) {
         assertNotNull(actual);
         assertEquals(expected.number(), actual.number());
@@ -68,7 +86,8 @@ public abstract class AbstractBuilder {
         return new GenericResponseMapper(List.of(
                 new CreateResponseToNewAccountByClientFactory(),
                 new CreateResponseToFindAccountsByCpfFactory(),
-                new CreateResponseToNewAccountFactory()
+                new CreateResponseToNewAccountFactory(),
+                new GetInformationMapper()
         ));
     }
 }
