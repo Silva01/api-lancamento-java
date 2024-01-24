@@ -10,6 +10,7 @@
 
     <artifactId>shared-business-module</artifactId>
     <packaging>jar</packaging>
+    <version>0.0.1-SNAPSHOT</version>
 
     <name>shared-business-module</name>
     <url>http://maven.apache.org</url>

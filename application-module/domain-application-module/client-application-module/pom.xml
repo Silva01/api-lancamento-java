@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>client-application-module</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>client-application-module</name>

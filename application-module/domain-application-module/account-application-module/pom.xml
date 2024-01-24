@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>account-application-module</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>account-application-module</name>

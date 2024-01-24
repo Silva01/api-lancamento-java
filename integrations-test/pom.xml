@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>integrations-test</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>integrations-test</name>
