@@ -35,6 +35,8 @@ public class EditClientUseCase implements UseCase<ClientDTO> {
 
             mapper.fillIn(response, param.output());
             return response;
+        } catch (GenericException ge) {
+            throw ge;
         } catch (Exception e) {
             throw new GenericException("Generic error");
         }
