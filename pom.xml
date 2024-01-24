@@ -10,7 +10,6 @@
     </parent>
     <groupId>br.net.silva.daniel</groupId>
     <artifactId>api_de_lancamentos</artifactId>
-<!--    <version>0.0.1-SNAPSHOT</version>-->
     <version>${project.version}</version>
     <packaging>pom</packaging>
     <name>api de lancamentos</name>
@@ -21,6 +20,7 @@
         <module>application-module</module>
         <module>integrations-test</module>
     </modules>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
