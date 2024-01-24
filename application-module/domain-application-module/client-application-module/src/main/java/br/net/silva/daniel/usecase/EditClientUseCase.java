@@ -13,9 +13,7 @@ import br.net.silva.daniel.value_object.input.EditClientInput;
 import java.util.Optional;
 
 public class EditClientUseCase implements UseCase<ClientDTO> {
-
     private final Repository<Optional<Client>> findRepository;
-
     private final Repository<Client> saveRepository;
     private final GenericResponseMapper mapper;
 
@@ -27,15 +25,18 @@ public class EditClientUseCase implements UseCase<ClientDTO> {
 
     @Override
     public ClientDTO exec(Source param) throws GenericException {
-        var input = (EditClientInput) param.input();
-        var client = findRepository.exec(input.cpf()).orElseThrow(() -> new ClientNotExistsException("Client not exists"));
-        client.editName(input.name());
-        client.editTelephone(input.telephone());
+        try {
+            var input = (EditClientInput) param.input();
+            var client = findRepository.exec(input.cpf()).orElseThrow(() -> new ClientNotExistsException("Client not exists"));
+            client.editName(input.name());
+            client.editTelephone(input.telephone());
 
-        var response = saveRepository.exec(client).build();
+            var response = saveRepository.exec(client).build();
 
-        mapper.fillIn(response, param.output());
-
-        return response;
+            mapper.fillIn(response, param.output());
+            return response;
+        } catch (Exception e) {
+            throw new GenericException("Generic error");
+        }
     }
 }
