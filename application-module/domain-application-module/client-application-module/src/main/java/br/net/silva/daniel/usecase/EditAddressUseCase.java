@@ -21,18 +21,22 @@ public class EditAddressUseCase implements UseCase<ClientDTO> {
 
     @Override
     public ClientDTO exec(Source param) throws GenericException {
-        var editAddressInput = (EditAddressInput) param.input();
-        var address = new Address(
-                editAddressInput.street(),
-                editAddressInput.number(),
-                editAddressInput.complement(),
-                editAddressInput.neighborhood(),
-                editAddressInput.state(),
-                editAddressInput.city(),
-                editAddressInput.zipCode()
-        );
-        var client = findClientRepository.exec(editAddressInput.cpf());
-        client.registerAddress(address);
-        return saveClientRepository.exec(client).build();
+        try {
+            var editAddressInput = (EditAddressInput) param.input();
+            var address = new Address(
+                    editAddressInput.street(),
+                    editAddressInput.number(),
+                    editAddressInput.complement(),
+                    editAddressInput.neighborhood(),
+                    editAddressInput.state(),
+                    editAddressInput.city(),
+                    editAddressInput.zipCode()
+            );
+            var client = findClientRepository.exec(editAddressInput.cpf());
+            client.registerAddress(address);
+            return saveClientRepository.exec(client).build();
+        } catch (Exception e) {
+            throw new GenericException("Generic Error", e);
+        }
     }
 }
