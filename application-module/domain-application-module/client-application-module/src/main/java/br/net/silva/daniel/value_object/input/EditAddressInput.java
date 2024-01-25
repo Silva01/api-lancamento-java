@@ -1,5 +1,6 @@
 package br.net.silva.daniel.value_object.input;
 
+import br.net.silva.daniel.interfaces.ICpfParam;
 import br.net.silva.daniel.interfaces.Input;
 
 public record EditAddressInput(
@@ -11,5 +12,5 @@ public record EditAddressInput(
         String city,
         String state,
         String zipCode
-) implements Input {
+) implements Input, ICpfParam {
 }
