@@ -11,16 +11,16 @@ import java.util.Optional;
 
 public class AccountWithNewAgencyAlreadyExistsValidate implements IValidations {
 
-    private final Repository<Optional<Account>> findAccountByNewAgencyNumberAndAccountNumberAndActiveRepository;
+    private final Repository<Optional<Account>> findAccountByNewAgencyNumberAndAccountNumberRepository;
 
-    public AccountWithNewAgencyAlreadyExistsValidate(Repository<Optional<Account>> findAccountByNewAgencyNumberAndAccountNumberAndActiveRepository) {
-        this.findAccountByNewAgencyNumberAndAccountNumberAndActiveRepository = findAccountByNewAgencyNumberAndAccountNumberAndActiveRepository;
+    public AccountWithNewAgencyAlreadyExistsValidate(Repository<Optional<Account>> findAccountByNewAgencyNumberAndAccountNumberRepository) {
+        this.findAccountByNewAgencyNumberAndAccountNumberRepository = findAccountByNewAgencyNumberAndAccountNumberRepository;
     }
 
     @Override
     public void validate(Source input) throws GenericException {
         var changeAgencyInput = (ChangeAgencyInput) input.input();
-        var optionalAccount = findAccountByNewAgencyNumberAndAccountNumberAndActiveRepository.exec(changeAgencyInput.accountNumber(), changeAgencyInput.newAgencyNumber());
+        var optionalAccount = findAccountByNewAgencyNumberAndAccountNumberRepository.exec(changeAgencyInput.accountNumber(), changeAgencyInput.newAgencyNumber());
 
         if (optionalAccount.isPresent())
             throw new GenericException("Account with new agency already exists");
