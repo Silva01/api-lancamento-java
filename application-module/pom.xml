@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>application-module</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>application-module</name>
