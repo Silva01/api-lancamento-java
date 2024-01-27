@@ -4,7 +4,7 @@
     <parent>
         <groupId>br.net.silva.daniel</groupId>
         <artifactId>api_de_lancamentos</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${project.main.version}</version>
     </parent>
 
     <artifactId>core-module</artifactId>
