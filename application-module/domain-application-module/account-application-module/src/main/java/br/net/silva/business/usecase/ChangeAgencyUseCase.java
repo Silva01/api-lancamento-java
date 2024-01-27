@@ -25,28 +25,32 @@ public class ChangeAgencyUseCase implements UseCase<AccountDTO> {
 
     @Override
     public AccountDTO exec(Source param) throws GenericException {
-        var changeAgencyInput = (ChangeAgencyInput) param.input();
-        var account = findAccountByCpfAndAccountNumberRepository.exec(changeAgencyInput.cpf(), changeAgencyInput.accountNumber(), changeAgencyInput.oldAgencyNumber());
+        try {
+            var changeAgencyInput = (ChangeAgencyInput) param.input();
+            var account = findAccountByCpfAndAccountNumberRepository.exec(changeAgencyInput.cpf(), changeAgencyInput.accountNumber(), changeAgencyInput.oldAgencyNumber());
 
-        var accountDto = account.build();
+            var accountDto = account.build();
 
-        var newAccountDto = new AccountDTO(
-                accountDto.number(),
-                changeAgencyInput.newAgencyNumber(),
-                accountDto.balance(),
-                accountDto.password(),
-                accountDto.active(),
-                accountDto.cpf(),
-                accountDto.transactions(),
-                accountDto.creditCard()
-        );
+            var newAccountDto = new AccountDTO(
+                    accountDto.number(),
+                    changeAgencyInput.newAgencyNumber(),
+                    accountDto.balance(),
+                    accountDto.password(),
+                    accountDto.active(),
+                    accountDto.cpf(),
+                    accountDto.transactions(),
+                    accountDto.creditCard()
+            );
 
-        account.deactivate();
-        saveAccountRepository.exec(account);
+            account.deactivate();
+            saveAccountRepository.exec(account);
 
-        var newAccount = factoryAggregate.create(newAccountDto);
-        saveAccountRepository.exec(newAccount);
+            var newAccount = factoryAggregate.create(newAccountDto);
+            saveAccountRepository.exec(newAccount);
 
-        return newAccountDto;
+            return newAccountDto;
+        } catch (Exception e) {
+            throw new GenericException("Generic error", e);
+        }
     }
 }
