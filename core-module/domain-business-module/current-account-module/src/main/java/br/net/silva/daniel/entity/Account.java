@@ -114,6 +114,14 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
         this.password = newPassword;
     }
 
+    public boolean isHaveCreditCard() {
+        return Objects.nonNull(creditCard);
+    }
+
+    public boolean isCreditCardActive() {
+        return creditCard.isActive();
+    }
+
     private void validatePassword() {
         validateAttributeNotNullAndNotEmpty(password, "Password is required");
     }
