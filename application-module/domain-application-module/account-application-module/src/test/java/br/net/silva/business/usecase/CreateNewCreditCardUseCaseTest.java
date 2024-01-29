@@ -36,7 +36,7 @@ class CreateNewCreditCardUseCaseTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        when(findAccountByCpfAndAgencyAndAccountNumberRepository.exec(anyString(), anyInt(), anyInt())).thenReturn(buildMockAccount(true, null));
+        when(findAccountByCpfAndAgencyAndAccountNumberRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(true, null));
         when(saveAccountRepository.exec(any())).thenReturn(buildMockAccount(true, buildMockCreditCard()));
 
         useCase = new CreateNewCreditCardUseCase(findAccountByCpfAndAgencyAndAccountNumberRepository, saveAccountRepository);
@@ -53,20 +53,20 @@ class CreateNewCreditCardUseCaseTest {
         var mockAccountWithCreditCard = buildMockAccount(true, buildMockCreditCard()).build();
         assertEquals(mockAccountWithCreditCard, accountDTO);
 
-        verify(findAccountByCpfAndAgencyAndAccountNumberRepository, times(1)).exec(input.cpf(), input.agency(), input.accountNumber());
+        verify(findAccountByCpfAndAgencyAndAccountNumberRepository, times(1)).exec(input.agency(), input.accountNumber(), input.cpf());
         verify(saveAccountRepository, times(1)).exec(any(Account.class));
     }
 
     @Test
     void shouldGenericErrorWhenTryCreateNewCreditCard() {
-        when(findAccountByCpfAndAgencyAndAccountNumberRepository.exec(anyString(), anyInt(), anyInt())).thenReturn(null);
+        when(findAccountByCpfAndAgencyAndAccountNumberRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(null);
         var input = new CreateCreditCardInput("99988877766", 45678, 1234);
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         var response = assertThrows(GenericException.class, () -> useCase.exec(source));
         assertEquals("Generic error", response.getMessage());
 
-        verify(findAccountByCpfAndAgencyAndAccountNumberRepository, times(1)).exec(input.cpf(), input.agency(), input.accountNumber());
+        verify(findAccountByCpfAndAgencyAndAccountNumberRepository, times(1)).exec(input.agency(), input.accountNumber(), input.cpf());
         verify(saveAccountRepository, never()).exec(any(Account.class));
     }
 
