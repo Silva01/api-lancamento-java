@@ -26,7 +26,7 @@ public class CreateNewCreditCardUseCase implements UseCase<AccountDTO> {
             var creditCard = new CreditCard();
 
             var account = findAccountByCpfAndAgencyAndAccountNumberRepository.exec(
-                    newCreditCardInput.cpf(), newCreditCardInput.agency(), newCreditCardInput.accountNumber());
+                    newCreditCardInput.agency(), newCreditCardInput.accountNumber(), newCreditCardInput.cpf());
 
             account.vinculateCreditCard(creditCard);
             return saveAccountRepository.exec(account).build();
