@@ -22,10 +22,6 @@ public class AccountAlreadyExistsCreditCardValidation implements IValidations {
         var createCreditCardInput = (CreateCreditCardInput) input.input();
         var optionalAccount = findAccountRepository.exec(createCreditCardInput.accountNumber(), createCreditCardInput.agency(), createCreditCardInput.cpf());
 
-        if (optionalAccount.isEmpty()) {
-            throw new GenericException("Account not found");
-        }
-
         var account = optionalAccount.get();
 
         if (account.isHaveCreditCard()) {
