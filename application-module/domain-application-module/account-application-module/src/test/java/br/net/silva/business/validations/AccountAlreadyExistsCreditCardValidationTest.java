@@ -39,39 +39,39 @@ class AccountAlreadyExistsCreditCardValidationTest {
 
     @Test
     void shouldValidateWithSuccess() {
-        when(findAccountRepository.exec(anyString(), anyInt(), anyInt())).thenReturn(Optional.of(buildMockAccount(true, null)));
+        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, null)));
         var createCreditCardInput = new CreateCreditCardInput("99988877766", 45678, 1234);
         var source = new Source(EmptyOutput.INSTANCE, createCreditCardInput);
 
         assertDoesNotThrow(() -> validation.validate(source));
 
-        verify(findAccountRepository, times(1)).exec(createCreditCardInput.cpf(), createCreditCardInput.accountNumber(), createCreditCardInput.agency());
+        verify(findAccountRepository, times(1)).exec(createCreditCardInput.accountNumber(), createCreditCardInput.agency(), createCreditCardInput.cpf());
     }
 
     @Test
     void shouldValidateErrorCreditCardAlreadyExists() {
-        when(findAccountRepository.exec(anyString(), anyInt(), anyInt())).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard())));
+        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard())));
         var createCreditCardInput = new CreateCreditCardInput("99988877766", 45678, 1234);
         var source = new Source(EmptyOutput.INSTANCE, createCreditCardInput);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> validation.validate(source));
         assertEquals("This account already have a credit card", exceptionResponse.getMessage());
 
-        verify(findAccountRepository, times(1)).exec(createCreditCardInput.cpf(), createCreditCardInput.accountNumber(), createCreditCardInput.agency());
+        verify(findAccountRepository, times(1)).exec(createCreditCardInput.accountNumber(), createCreditCardInput.agency(), createCreditCardInput.cpf());
     }
 
     @Test
     void shouldValidateErrorCreditCardAlreadyExistsWithDeactivated() {
         var creditCard = buildMockCreditCard();
         creditCard.deactivate();
-        when(findAccountRepository.exec(anyString(), anyInt(), anyInt())).thenReturn(Optional.of(buildMockAccount(true, creditCard)));
+        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, creditCard)));
         var createCreditCardInput = new CreateCreditCardInput("99988877766", 45678, 1234);
         var source = new Source(EmptyOutput.INSTANCE, createCreditCardInput);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> validation.validate(source));
         assertEquals("This account already have a credit card", exceptionResponse.getMessage());
 
-        verify(findAccountRepository, times(1)).exec(createCreditCardInput.cpf(), createCreditCardInput.accountNumber(), createCreditCardInput.agency());
+        verify(findAccountRepository, times(1)).exec(createCreditCardInput.accountNumber(), createCreditCardInput.agency(), createCreditCardInput.cpf());
     }
 
     private Account buildMockAccount(boolean active, CreditCard creditCard) {
