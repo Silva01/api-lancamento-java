@@ -20,7 +20,7 @@ public class AccountAlreadyExistsCreditCardValidation implements IValidations {
     @Override
     public void validate(Source input) throws GenericException {
         var createCreditCardInput = (CreateCreditCardInput) input.input();
-        var optionalAccount = findAccountRepository.exec(createCreditCardInput.cpf(), createCreditCardInput.accountNumber(), createCreditCardInput.agency());
+        var optionalAccount = findAccountRepository.exec(createCreditCardInput.accountNumber(), createCreditCardInput.agency(), createCreditCardInput.cpf());
 
         if (optionalAccount.isEmpty()) {
             throw new GenericException("Account not found");
