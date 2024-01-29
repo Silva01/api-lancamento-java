@@ -8,13 +8,16 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.entity.CreditCard;
 import br.net.silva.daniel.entity.Transaction;
+import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.value_object.Address;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +28,11 @@ public abstract class AbstractBuilder {
 
     protected Account buildMockAccount(boolean active) {
         return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
+    }
+
+    protected Account buildMockAccountWithCreditCard(boolean active, boolean activeCreditCard) {
+        var creditCard = new CreditCard("5400639532571841", 121, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2025, 12, 31), activeCreditCard);
+        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, Collections.emptyList());
     }
 
     @Deprecated(since = "2.0.0", forRemoval = true)
