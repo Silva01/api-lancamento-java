@@ -7,8 +7,4 @@ public class CreditCardNumberDifferentException extends GenericException {
     public CreditCardNumberDifferentException(String message) {
         super(message);
     }
-
-    public CreditCardNumberDifferentException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }
