@@ -5,11 +5,12 @@ import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
 
-public class DeactivateCreditCardUseCase implements UseCase<AccountDTO> {
+public class DeactivateCreditCardUseCase implements UseCase<EmptyOutput> {
 
     private final Repository<Account> findAccountRepository;
     private final Repository<Account> saveAccountRepository;
@@ -20,7 +21,7 @@ public class DeactivateCreditCardUseCase implements UseCase<AccountDTO> {
     }
 
     @Override
-    public AccountDTO exec(Source param) throws GenericException {
+    public EmptyOutput exec(Source param) throws GenericException {
         var input = (DeactivateCreditCardInput) param.input();
         var account = findAccountRepository.exec(input.accountNumber(), input.agency(), input.cpf());
 
@@ -29,6 +30,8 @@ public class DeactivateCreditCardUseCase implements UseCase<AccountDTO> {
         }
 
         account.deactivateCreditCard();
-        return saveAccountRepository.exec(account).build();
+        saveAccountRepository.exec(account).build();
+
+        return EmptyOutput.INSTANCE;
     }
 }
