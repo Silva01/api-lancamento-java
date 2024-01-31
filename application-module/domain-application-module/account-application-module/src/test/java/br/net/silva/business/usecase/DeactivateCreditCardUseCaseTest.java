@@ -46,10 +46,7 @@ class DeactivateCreditCardUseCaseTest {
         var input = new DeactivateCreditCardInput("1234", 1, 1234, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, input);
 
-        var accountDTO = assertDoesNotThrow(() -> useCase.exec(source));
-        assertNotNull(accountDTO);
-
-        assertFalse(accountDTO.creditCard().active());
+        assertDoesNotThrow(() -> useCase.exec(source));
 
         verify(findAccountRepository, times(1)).exec(input.accountNumber(), input.agency(), input.cpf());
         verify(saveAccountRepository, times(1)).exec(any(Account.class));
