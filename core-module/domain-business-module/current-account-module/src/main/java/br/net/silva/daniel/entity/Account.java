@@ -118,6 +118,10 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
         return Objects.nonNull(creditCard);
     }
 
+    public void deactivateCreditCard() {
+        creditCard.deactivate();
+    }
+
     private void validatePassword() {
         validateAttributeNotNullAndNotEmpty(password, "Password is required");
     }
