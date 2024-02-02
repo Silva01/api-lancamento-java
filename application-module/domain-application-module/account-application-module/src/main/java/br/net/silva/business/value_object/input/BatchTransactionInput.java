@@ -4,7 +4,7 @@ import br.net.silva.daniel.interfaces.Input;
 
 import java.util.List;
 
-public record LoteTransactionInput(
+public record BatchTransactionInput(
         List<RegisterTransactionInput> batchTransaction
 ) implements Input {
 }
