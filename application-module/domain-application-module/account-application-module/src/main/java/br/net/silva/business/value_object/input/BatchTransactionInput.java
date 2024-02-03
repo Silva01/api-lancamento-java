@@ -5,6 +5,8 @@ import br.net.silva.daniel.interfaces.Input;
 import java.util.List;
 
 public record BatchTransactionInput(
-        List<RegisterTransactionInput> batchTransaction
+        AccountInput sourceAccount,
+        AccountInput destinyAccount,
+        List<TransactionInput> batchTransaction
 ) implements Input {
 }
