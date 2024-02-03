@@ -2,6 +2,7 @@ package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
+import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.shared.business.factory.IFactoryDto;
 import br.net.silva.daniel.shared.business.interfaces.AggregateRoot;
 import br.net.silva.daniel.shared.business.utils.GeneratorRandomNumber;
@@ -59,8 +60,15 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
     }
 
     public void registerTransaction(List<TransactionDTO> transactions, ICalculation transactionCal) {
-        var total = transactionCal.calculate(transactions);
-        validateBalance(balance, total);
+        var debitTotal = transactionCal.calculate(transactions, TransactionTypeEnum.DEBIT);
+        var creditTotal = transactionCal.calculate(transactions, TransactionTypeEnum.CREDIT);
+
+        if (isHaveCreditCard()) {
+            creditCard.validateBalance(creditTotal);
+            creditCard.registerTransactionBalance(creditTotal);
+        }
+
+        validateBalance(balance, debitTotal);
         transactions.forEach(transaction -> this.transactions.add(new Transaction(
                 transaction.id(),
                 transaction.description(),
@@ -73,7 +81,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
                 transaction.creditCardNumber(),
                 transaction.creditCardCvv())));
 
-        this.balance = this.balance.subtract(total);
+        this.balance = this.balance.subtract(debitTotal);
     }
 
     public void activate() {
