@@ -159,6 +159,41 @@ public class AccountTest extends TestCase {
         assertEquals(BigDecimal.valueOf(1900), accountDTO.balance());
     }
 
+    public void testShouldRegisterTransactionDebitAndCreditWithSuccess() {
+        var transactionDebit = new TransactionDTO(
+                1L,
+                "Test",
+                BigDecimal.valueOf(100),
+                1,
+                TransactionTypeEnum.DEBIT,
+                1,
+                2,
+                123456L,
+                "12345678910",
+                123);
+
+        var transactionCredit = new TransactionDTO(
+                2L,
+                "Test",
+                BigDecimal.valueOf(200),
+                1,
+                TransactionTypeEnum.CREDIT,
+                1,
+                2,
+                123456L,
+                "12345678910",
+                123);
+
+        transactionDebit.accept(TransactionDTO.class);
+
+        var account = new Account(1, 1, "123456", "12345678910", new CreditCard());
+        account.registerTransaction(List.of(transactionDebit, transactionCredit), CalculateStrategy.calculationBuy());
+
+        var accountDTO = account.build();
+        assertEquals(BigDecimal.valueOf(1900), accountDTO.balance());
+        assertEquals(BigDecimal.valueOf(1800), accountDTO.creditCard().balance());
+    }
+
     public void testShouldRegisterTransactionAndAddMoreBalanceWithSuccess() {
         var transactionDTO = new TransactionDTO(
                 1L,
