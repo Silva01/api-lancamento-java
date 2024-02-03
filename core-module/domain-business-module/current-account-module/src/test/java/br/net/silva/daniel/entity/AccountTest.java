@@ -4,6 +4,7 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
+import br.net.silva.daniel.strategy.CalculateStrategy;
 import junit.framework.TestCase;
 
 import java.math.BigDecimal;
@@ -152,10 +153,32 @@ public class AccountTest extends TestCase {
         transactionDTO.accept(TransactionDTO.class);
 
         var account = new Account(1, 1, "123456", "12345678910", null);
-        account.registerTransaction(List.of(transactionDTO.get()));
+        account.registerTransaction(List.of(transactionDTO.get()), CalculateStrategy.calculationBuy());
 
         var accountDTO = account.build();
         assertEquals(BigDecimal.valueOf(1900), accountDTO.balance());
+    }
+
+    public void testShouldRegisterTransactionAndAddMoreBalanceWithSuccess() {
+        var transactionDTO = new TransactionDTO(
+                1L,
+                "Test",
+                BigDecimal.valueOf(100),
+                1,
+                TransactionTypeEnum.DEBIT,
+                1,
+                2,
+                123456L,
+                "12345678910",
+                123);
+
+        transactionDTO.accept(TransactionDTO.class);
+
+        var account = new Account(1, 1, "123456", "12345678910", null);
+        account.registerTransaction(List.of(transactionDTO.get()), CalculateStrategy.calculationSale());
+
+        var accountDTO = account.build();
+        assertEquals(BigDecimal.valueOf(2100), accountDTO.balance());
     }
 
     public void testShouldErrorWhenRegisterTransactionWithBalanceLessThanZero() {
@@ -175,7 +198,7 @@ public class AccountTest extends TestCase {
 
         var account = new Account(1, 1, "123456", "12345678910", null);
         try {
-            account.registerTransaction(List.of(transactionDTO.get()));
+            account.registerTransaction(List.of(transactionDTO.get()), CalculateStrategy.calculationBuy());
             fail();
         } catch (Exception e) {
             assertEquals("Balance is insufficient", e.getMessage());

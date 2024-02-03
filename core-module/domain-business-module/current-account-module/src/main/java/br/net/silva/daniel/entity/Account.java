@@ -7,6 +7,7 @@ import br.net.silva.daniel.shared.business.interfaces.AggregateRoot;
 import br.net.silva.daniel.shared.business.utils.GeneratorRandomNumber;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 import br.net.silva.daniel.shared.business.validation.Validation;
+import br.net.silva.daniel.strategy.ICalculation;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -57,8 +58,8 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
         validateAttributeLessThanZero(balance, "Balance must be greater than zero");
     }
 
-    public void registerTransaction(List<TransactionDTO> transactions) {
-        var total = transactions.stream().map(TransactionDTO::price).reduce(BigDecimal.ZERO, BigDecimal::add);
+    public void registerTransaction(List<TransactionDTO> transactions, ICalculation transactionCal) {
+        var total = transactionCal.calculate(transactions);
         validateBalance(balance, total);
         transactions.forEach(transaction -> this.transactions.add(new Transaction(
                 transaction.id(),
