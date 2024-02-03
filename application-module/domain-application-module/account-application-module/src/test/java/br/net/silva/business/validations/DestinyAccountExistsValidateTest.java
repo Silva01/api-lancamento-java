@@ -2,7 +2,8 @@ package br.net.silva.business.validations;
 
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
-import br.net.silva.business.value_object.input.RegisterTransactionInput;
+import br.net.silva.business.value_object.input.AccountInput;
+import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
@@ -11,9 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
@@ -32,13 +35,14 @@ class DestinyAccountExistsValidateTest extends AbstractAccountBuilder {
 
     @Test
     void shouldThrowAccountNotExistsExceptionWhenDestinyAccountNotExists() {
-        var input = new RegisterTransactionInput("id", "description", null, null, null, "cpf", 1, 1, 2, 2, 1L);
+        var destinyAccount = new AccountInput(123, 123, "12345678901");
+        var input = new BatchTransactionInput(null, destinyAccount, Collections.emptyList());
         var source = new Source(input);
-        when(findDetinyAccountRepository.exec(anyInt(), anyInt())).thenReturn(Optional.empty());
+        when(findDetinyAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.empty());
 
         var exceptionResponse = assertThrows(AccountNotExistsException.class, () -> validate.validate(source));
         assertEquals("Destiny account not found", exceptionResponse.getMessage());
 
-        verify(findDetinyAccountRepository, times(1)).exec(input.destinyAccountNumber(), input.destinyAgency());
+        verify(findDetinyAccountRepository, times(1)).exec(input.destinyAccount().accountNumber(), input.destinyAccount().agency(), input.destinyAccount().cpf());
     }
 }
