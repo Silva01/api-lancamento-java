@@ -1,5 +1,6 @@
 package br.net.silva.business.interfaces;
 
+import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.CreditCard;
 import br.net.silva.daniel.entity.Transaction;
@@ -26,8 +27,12 @@ public abstract class AbstractAccountBuilder extends GeneratorRandomValues {
         return new CreditCard("99988877766", 45678, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2027, 1, 1), activate);
     }
 
-    protected Transaction buildMockTransaction() {
-        return new Transaction(generateRandomIdTransaction(), "Compra de teste", BigDecimal.valueOf(1000), 1, TransactionTypeEnum.DEBIT, generateRandomAccountNumber(), generateRandomAccountNumber(), generateIdempotencyId(), null, null);
+    protected Transaction buildMockTransaction(TransactionTypeEnum type) {
+        return new Transaction(generateRandomIdTransaction(), "Compra de teste", BigDecimal.valueOf(1000), 1, type, generateRandomAccountNumber(), generateRandomAccountNumber(), generateIdempotencyId(), null, null);
+    }
+
+    protected TransactionInput buildMockInputTransaction(TransactionTypeEnum type, String creditCardNumber, Integer cvv) {
+        return new TransactionInput(generateRandomNumberLong(4), "Compra de teste", BigDecimal.valueOf(1000), 1, type, generateIdempotencyId(), creditCardNumber, cvv);
     }
 
 }
