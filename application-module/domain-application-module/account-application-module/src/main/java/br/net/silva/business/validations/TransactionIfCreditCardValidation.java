@@ -1,6 +1,7 @@
 package br.net.silva.business.validations;
 
 import br.net.silva.business.value_object.input.BatchTransactionInput;
+import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.exception.GenericException;
@@ -19,10 +20,19 @@ public class TransactionIfCreditCardValidation implements IValidations {
     @Override
     public void validate(Source param) throws GenericException {
         var input = (BatchTransactionInput) param.input();
-        final boolean hasTransactionCredit = input.batchTransaction().stream().anyMatch(transaction -> TransactionTypeEnum.CREDIT.equals(transaction.type()));
+        final var transactionCreditList = input.batchTransaction().stream().filter(transaction -> TransactionTypeEnum.CREDIT.equals(transaction.type())).toList();
 
-        if (hasTransactionCredit) {
-            creditCardNumberExistsValidate.validate(param);
+        if (!transactionCreditList.isEmpty()) {
+            for (var transaction : transactionCreditList) {
+                var inputValidation = new DeactivateCreditCardInput(
+                        input.sourceAccount().cpf(),
+                        input.sourceAccount().accountNumber(),
+                        input.sourceAccount().agency(),
+                        transaction.creditCardNumber());
+
+                var source = new Source(inputValidation);
+                creditCardNumberExistsValidate.validate(source);
+            }
         }
     }
 }
