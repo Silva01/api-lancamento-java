@@ -14,11 +14,11 @@ import br.net.silva.daniel.value_object.Source;
 
 import java.util.Optional;
 
-public class TransactionIfCreditCardValidation implements IValidations {
+public class TransactionIfCreditCardIsValidValidation implements IValidations {
 
     private final Repository<Optional<Account>> findAccountRepository;
 
-    public TransactionIfCreditCardValidation(Repository<Optional<Account>> findAccountRepository) {
+    public TransactionIfCreditCardIsValidValidation(Repository<Optional<Account>> findAccountRepository) {
         this.findAccountRepository = findAccountRepository;
     }
 
