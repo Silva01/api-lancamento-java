@@ -1,6 +1,8 @@
 package br.net.silva.business.validations;
 
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.CreditCardDeactivatedException;
+import br.net.silva.business.exception.CreditCardExpiredException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
@@ -12,6 +14,7 @@ import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public class TransactionIfCreditCardIsValidValidation implements IValidations {
@@ -28,7 +31,11 @@ public class TransactionIfCreditCardIsValidValidation implements IValidations {
         var input = (BatchTransactionInput) param.input();
         var optionalAccount = findAccountRepository.exec(input.sourceAccount().accountNumber(), input.sourceAccount().agency(), input.sourceAccount().cpf());
 
-        var creditCardDto = validate(optionalAccount);
+        if (optionalAccount.isEmpty()) {
+            throw new AccountNotExistsException("Account not exists");
+        }
+
+        var creditCardDto = validate(optionalAccount.get());
 
         var transactionsWithError = input.batchTransaction()
                 .stream()
@@ -41,12 +48,7 @@ public class TransactionIfCreditCardIsValidValidation implements IValidations {
         }
     }
 
-    private static CreditCardDTO validate(Optional<Account> optionalAccount) throws AccountNotExistsException, CreditCardNotExistsException {
-        if (optionalAccount.isEmpty()) {
-            throw new AccountNotExistsException("Account not exists");
-        }
-
-        var account = optionalAccount.get();
+    private static CreditCardDTO validate(Account account) throws GenericException {
 
         if (!account.isHaveCreditCard()) {
             throw new CreditCardNotExistsException("Credit card not exists in the account");
@@ -55,8 +57,13 @@ public class TransactionIfCreditCardIsValidValidation implements IValidations {
         var creditCardDto = account.build().creditCard();
 
         if (!creditCardDto.active()) {
-            throw new CreditCardNotExistsException("Credit card deactivated in the account");
+            throw new CreditCardDeactivatedException("Credit card deactivated in the account");
         }
+
+        if (LocalDate.now().isAfter(creditCardDto.expirationDate())) {
+            throw new CreditCardExpiredException("Credit card expired");
+        }
+
         return creditCardDto;
     }
 
