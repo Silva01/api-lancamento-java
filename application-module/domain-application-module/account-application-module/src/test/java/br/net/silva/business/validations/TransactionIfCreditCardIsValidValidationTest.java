@@ -127,4 +127,24 @@ class TransactionIfCreditCardIsValidValidationTest extends AbstractAccountBuilde
         verify(findAccountByCpfAndAccountNumberAndAgencyRepository, times(1)).exec(anyInt(), anyInt(), anyString());
     }
 
+    @Test
+    void shouldErrorAtValidateTransactionCreditCardExpired() {
+        when(findAccountByCpfAndAccountNumberAndAgencyRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCardExpired(true))));
+        var sourceAccount = new AccountInput(1, 45678, "978534");
+        var destinyAccount = new AccountInput(2, 99999, "978534");
+
+        var transaction1 = buildMockInputTransaction(TransactionTypeEnum.CREDIT, "99988877766", 45699);
+        var transaction2 = buildMockInputTransaction(TransactionTypeEnum.CREDIT, "99988877766", 45678);
+        var transaction3 = buildMockInputTransaction(TransactionTypeEnum.DEBIT, null, null);
+
+        var input = new BatchTransactionInput(sourceAccount, destinyAccount, List.of(transaction1, transaction2, transaction3));
+
+        var source = new Source(input);
+
+        var responseException = assertThrows(GenericException.class, () -> transactionIfCreditCardIsValidValidation.validate(source));
+        assertEquals("Credit card expired", responseException.getMessage());
+
+        verify(findAccountByCpfAndAccountNumberAndAgencyRepository, times(1)).exec(anyInt(), anyInt(), anyString());
+    }
+
 }
