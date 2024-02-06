@@ -29,6 +29,11 @@ public class TransactionIfCreditCardIsValidValidation implements IValidations {
     @Override
     public void validate(Source param) throws GenericException {
         var input = (BatchTransactionInput) param.input();
+        final var hasTransactionTypeCredit = input.batchTransaction().stream().anyMatch(transaction -> TransactionTypeEnum.CREDIT.equals(transaction.type()));
+        if (!hasTransactionTypeCredit) {
+            return;
+        }
+
         var optionalAccount = findAccountRepository.exec(input.sourceAccount().accountNumber(), input.sourceAccount().agency(), input.sourceAccount().cpf());
 
         if (optionalAccount.isEmpty()) {
