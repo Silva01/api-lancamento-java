@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -25,12 +26,12 @@ class TransactionIfCreditCardValidationTest extends AbstractAccountBuilder {
     private TransactionIfCreditCardValidation transactionIfCreditCardValidation;
 
     @Mock
-    private Repository<Account> findAccountByCpfAndAccountNumberAndAgencyRepository;
+    private Repository<Optional<Account>> findAccountByCpfAndAccountNumberAndAgencyRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findAccountByCpfAndAccountNumberAndAgencyRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(true, buildMockCreditCard(true)));
+        when(findAccountByCpfAndAccountNumberAndAgencyRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(true))));
         transactionIfCreditCardValidation = new TransactionIfCreditCardValidation(findAccountByCpfAndAccountNumberAndAgencyRepository);
     }
 
@@ -49,7 +50,7 @@ class TransactionIfCreditCardValidationTest extends AbstractAccountBuilder {
 
         assertDoesNotThrow(() -> transactionIfCreditCardValidation.validate(source));
 
-        verify(findAccountByCpfAndAccountNumberAndAgencyRepository, times(2)).exec(anyInt(), anyInt(), anyString());
+        verify(findAccountByCpfAndAccountNumberAndAgencyRepository, times(1)).exec(anyInt(), anyInt(), anyString());
     }
 
     @Test
@@ -65,7 +66,7 @@ class TransactionIfCreditCardValidationTest extends AbstractAccountBuilder {
 
         assertDoesNotThrow(() -> transactionIfCreditCardValidation.validate(source));
 
-        verify(findAccountByCpfAndAccountNumberAndAgencyRepository, never()).exec(anyInt(), anyInt(), anyString());
+        verify(findAccountByCpfAndAccountNumberAndAgencyRepository, times(1)).exec(anyInt(), anyInt(), anyString());
     }
 
     @Test
@@ -82,14 +83,14 @@ class TransactionIfCreditCardValidationTest extends AbstractAccountBuilder {
         var source = new Source(input);
 
         var responseException = assertThrows(GenericException.class, () -> transactionIfCreditCardValidation.validate(source));
-        assertEquals("Credit Card number is different at register in account", responseException.getMessage());
+        assertEquals("Credit card number or cvv is different at register in account", responseException.getMessage());
 
         verify(findAccountByCpfAndAccountNumberAndAgencyRepository, times(1)).exec(anyInt(), anyInt(), anyString());
     }
 
     @Test
     void shouldErrorAtValidateTransactionCreditCardDeactivated() {
-        when(findAccountByCpfAndAccountNumberAndAgencyRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(true, buildMockCreditCard(false)));
+        when(findAccountByCpfAndAccountNumberAndAgencyRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(false))));
         var sourceAccount = new AccountInput(1, 45678, "978534");
         var destinyAccount = new AccountInput(2, 99999, "978534");
 
@@ -121,7 +122,7 @@ class TransactionIfCreditCardValidationTest extends AbstractAccountBuilder {
         var source = new Source(input);
 
         var responseException = assertThrows(GenericException.class, () -> transactionIfCreditCardValidation.validate(source));
-        assertEquals("Credit Card CVV is different at register in account", responseException.getMessage());
+        assertEquals("Credit card number or cvv is different at register in account", responseException.getMessage());
 
         verify(findAccountByCpfAndAccountNumberAndAgencyRepository, times(1)).exec(anyInt(), anyInt(), anyString());
     }
