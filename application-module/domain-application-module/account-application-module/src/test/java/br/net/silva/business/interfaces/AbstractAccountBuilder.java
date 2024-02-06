@@ -24,7 +24,11 @@ public abstract class AbstractAccountBuilder extends GeneratorRandomValues {
     }
 
     protected CreditCard buildMockCreditCard(boolean activate) {
-        return new CreditCard("99988877766", 45678, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2027, 1, 1), activate);
+        return new CreditCard("99988877766", 45678, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.now().plusYears(3), activate);
+    }
+
+    protected CreditCard buildMockCreditCardExpired(boolean activate) {
+        return new CreditCard("99988877766", 45678, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.now().minusYears(1), activate);
     }
 
     protected Transaction buildMockTransaction(TransactionTypeEnum type) {
