@@ -66,7 +66,7 @@ class TransactionIfCreditCardIsValidValidationTest extends AbstractAccountBuilde
 
         assertDoesNotThrow(() -> transactionIfCreditCardIsValidValidation.validate(source));
 
-        verify(findAccountByCpfAndAccountNumberAndAgencyRepository, times(1)).exec(anyInt(), anyInt(), anyString());
+        verify(findAccountByCpfAndAccountNumberAndAgencyRepository, never()).exec(anyInt(), anyInt(), anyString());
     }
 
     @Test
