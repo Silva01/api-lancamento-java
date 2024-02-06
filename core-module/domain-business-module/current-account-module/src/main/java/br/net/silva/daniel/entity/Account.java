@@ -69,7 +69,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
         }
 
         validateBalance(balance, debitTotal);
-        transactions.forEach(transaction -> this.transactions.add(new Transaction(
+        this.transactions.addAll(transactions.stream().map(transaction -> new Transaction(
                 transaction.id(),
                 transaction.description(),
                 transaction.price(),
@@ -79,7 +79,8 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
                 transaction.destinationAccountNumber(),
                 transaction.idempotencyId(),
                 transaction.creditCardNumber(),
-                transaction.creditCardCvv())));
+                transaction.creditCardCvv()))
+                .toList());
 
         this.balance = this.balance.subtract(debitTotal);
     }
