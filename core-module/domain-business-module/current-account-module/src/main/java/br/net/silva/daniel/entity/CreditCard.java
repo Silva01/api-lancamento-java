@@ -15,7 +15,7 @@ public class CreditCard extends Validation implements Aggregate, IFactoryDto<Cre
     private final String number;
     private final Integer cvv;
     private final FlagEnum flag;
-    private final BigDecimal balance;
+    private BigDecimal balance;
     private final LocalDate expirationDate;
     private boolean active;
 
@@ -75,5 +75,9 @@ public class CreditCard extends Validation implements Aggregate, IFactoryDto<Cre
 
     public void validateBalance(BigDecimal value) {
         validateBalance(balance, value);
+    }
+
+    public void registerTransactionBalance(BigDecimal value) {
+        this.balance = this.balance.subtract(value);
     }
 }

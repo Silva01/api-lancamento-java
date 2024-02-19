@@ -53,7 +53,6 @@ public class Transaction extends Validation implements Aggregate, IFactoryDto<Tr
             validateAttributeNotNullAndNotEmpty(creditCardNumber, "Credit card number is null or empty");
             validateAttributeNonNull(creditCardCvv, "Credit card cvv is null");
             validateAttributeEqualsZero(creditCardCvv, "Credit card cvv is equals zero");
-
         }
     }
 

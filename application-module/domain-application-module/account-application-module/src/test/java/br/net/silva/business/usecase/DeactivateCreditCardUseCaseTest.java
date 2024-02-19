@@ -36,7 +36,7 @@ class DeactivateCreditCardUseCaseTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(findAccountRepository.exec(any(), any(), any())).thenReturn(buildMockAccount(true, buildMockCreditCard(true)));
-        when(saveAccountRepository.exec(any())).thenReturn(buildMockAccount(true, buildMockCreditCard(false)));
+        doAnswer(invocation -> invocation.getArguments()[0]).when(saveAccountRepository).exec(any(Account.class));
 
         useCase = new DeactivateCreditCardUseCase(findAccountRepository, saveAccountRepository);
     }

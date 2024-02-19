@@ -17,6 +17,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 class ChangeAgencyUseCaseTest {
@@ -33,7 +34,7 @@ class ChangeAgencyUseCaseTest {
     void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
         when(findAccountByCpfAndAccountNumberRepository.exec(anyString(), anyInt(), anyInt())).thenReturn(buildMockAccount(true));
-        when(saveAccountRepository.exec(any())).thenReturn(buildMockAccount(true));
+        doAnswer(invocation -> invocation.getArguments()[0]).when(saveAccountRepository).exec(any(Account.class));
 
         useCase = new ChangeAgencyUseCase(findAccountByCpfAndAccountNumberRepository, saveAccountRepository);
     }

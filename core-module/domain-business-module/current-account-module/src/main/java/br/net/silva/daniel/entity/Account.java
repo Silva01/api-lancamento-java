@@ -2,11 +2,13 @@ package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
+import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.shared.business.factory.IFactoryDto;
 import br.net.silva.daniel.shared.business.interfaces.AggregateRoot;
 import br.net.silva.daniel.shared.business.utils.GeneratorRandomNumber;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 import br.net.silva.daniel.shared.business.validation.Validation;
+import br.net.silva.daniel.strategy.ICalculation;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -57,10 +59,17 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
         validateAttributeLessThanZero(balance, "Balance must be greater than zero");
     }
 
-    public void registerTransaction(List<TransactionDTO> transactions) {
-        var total = transactions.stream().map(TransactionDTO::price).reduce(BigDecimal.ZERO, BigDecimal::add);
-        validateBalance(balance, total);
-        transactions.forEach(transaction -> this.transactions.add(new Transaction(
+    public void registerTransaction(List<TransactionDTO> transactions, ICalculation transactionCal) {
+        var debitTotal = transactionCal.calculate(transactions, TransactionTypeEnum.DEBIT);
+        var creditTotal = transactionCal.calculate(transactions, TransactionTypeEnum.CREDIT);
+
+        if (isHaveCreditCard()) {
+            creditCard.validateBalance(creditTotal);
+            creditCard.registerTransactionBalance(creditTotal);
+        }
+
+        validateBalance(balance, debitTotal);
+        this.transactions.addAll(transactions.stream().map(transaction -> new Transaction(
                 transaction.id(),
                 transaction.description(),
                 transaction.price(),
@@ -70,9 +79,10 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
                 transaction.destinationAccountNumber(),
                 transaction.idempotencyId(),
                 transaction.creditCardNumber(),
-                transaction.creditCardCvv())));
+                transaction.creditCardCvv()))
+                .toList());
 
-        this.balance = this.balance.subtract(total);
+        this.balance = this.balance.subtract(debitTotal);
     }
 
     public void activate() {

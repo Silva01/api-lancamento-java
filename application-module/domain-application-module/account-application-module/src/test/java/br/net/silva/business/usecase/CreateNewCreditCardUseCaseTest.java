@@ -37,7 +37,7 @@ class CreateNewCreditCardUseCaseTest {
         MockitoAnnotations.openMocks(this);
 
         when(findAccountByCpfAndAgencyAndAccountNumberRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(true, null));
-        when(saveAccountRepository.exec(any())).thenReturn(buildMockAccount(true, buildMockCreditCard()));
+        doAnswer(invocation -> invocation.getArgument(0)).when(saveAccountRepository).exec(any(Account.class));
 
         useCase = new CreateNewCreditCardUseCase(findAccountByCpfAndAgencyAndAccountNumberRepository, saveAccountRepository);
     }
@@ -49,9 +49,9 @@ class CreateNewCreditCardUseCaseTest {
 
         var accountDTO = assertDoesNotThrow(() -> useCase.exec(source));
         assertNotNull(accountDTO);
-
-        var mockAccountWithCreditCard = buildMockAccount(true, buildMockCreditCard()).build();
-        assertEquals(mockAccountWithCreditCard, accountDTO);
+        assertNotNull(accountDTO.creditCard());
+        assertTrue(accountDTO.creditCard().active());
+        assertEquals(BigDecimal.valueOf(2000), accountDTO.creditCard().balance());
 
         verify(findAccountByCpfAndAgencyAndAccountNumberRepository, times(1)).exec(input.agency(), input.accountNumber(), input.cpf());
         verify(saveAccountRepository, times(1)).exec(any(Account.class));
