@@ -97,6 +97,7 @@ class FluxRegisterTransactionTest extends AbstractBuilder {
         var facade = new GenericFacadeDelegate<>(useCaseQueue, validations);
         assertDoesNotThrow(() -> facade.exec(source));
 
+        //TODO: é preciso restringir mais os parametros de teste
         verify(findAccountRepository, times(2)).exec(any(), any(), any());
         verify(saveAccountRepository, times(2)).exec(any());
         verify(findOptionalAccountRepository, times(1)).exec(any(), any(), any());
@@ -127,6 +128,7 @@ class FluxRegisterTransactionTest extends AbstractBuilder {
         var response = assertThrows(GenericException.class, () -> facade.exec(source));
         assertEquals("Client not exists in database", response.getMessage());
 
+        //TODO: é preciso restringir mais os parametros de teste
         verify(findAccountRepository, never()).exec(any(), any(), any());
         verify(saveAccountRepository, never()).exec(any());
         verify(findOptionalAccountRepository, never()).exec(any(), any(), any());
