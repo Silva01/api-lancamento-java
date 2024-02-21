@@ -18,8 +18,8 @@ public class Transaction extends Validation implements Aggregate, IFactoryDto<Tr
     private final Integer originAccountNumber;
     private final Integer destinationAccountNumber;
     private final Long idempotencyId;
-    private String creditCardNumber;
-    private Integer creditCardCvv;
+    private final String creditCardNumber;
+    private final Integer creditCardCvv;
 
     public Transaction(Long id, String description, BigDecimal price, Integer quantity, TransactionTypeEnum type, Integer originAccountNumber, Integer destinationAccountNumber, Long idempotencyId, String creditCardNumber, Integer creditCardCvv) {
         this.id = id;
@@ -37,9 +37,13 @@ public class Transaction extends Validation implements Aggregate, IFactoryDto<Tr
 
     @Override
     public void validate() {
+
+        if (!TransactionTypeEnum.REVERSAL.equals(type)) {
+            validateAttributeLessThanZero(price, "Price is less than zero");
+        }
+
         validateAttributeNotNullAndNotEmpty(description, "Description is null or empty");
         validateAttributeNonNull(price, "Price is null");
-        validateAttributeLessThanZero(price, "Price is less than zero");
         validateAttributeNonNull(quantity, "Quantity is null");
         validateAttributeLessThanZero(quantity, "Quantity is less than zero");
         validateAttributeNonNull(type, "Type is required");
