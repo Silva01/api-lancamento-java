@@ -18,9 +18,12 @@ public class ReversalTransactionUseCase implements UseCase<EmptyOutput> {
     private final Repository<Transaction> findTransactionByIdAndIdempotencyIdRepository;
     private final Repository<Account> findAccountByAccountNumberRepository;
 
-    public ReversalTransactionUseCase(Repository<Transaction> findTransactionByIdAndIdempotencyIdRepository, Repository<Account> findAccountByAccountNumberRepository) {
+    private final Repository<Account> saveAccountRepository;
+
+    public ReversalTransactionUseCase(Repository<Transaction> findTransactionByIdAndIdempotencyIdRepository, Repository<Account> findAccountByAccountNumberRepository, Repository<Account> saveAccountRepository) {
         this.findTransactionByIdAndIdempotencyIdRepository = findTransactionByIdAndIdempotencyIdRepository;
         this.findAccountByAccountNumberRepository = findAccountByAccountNumberRepository;
+        this.saveAccountRepository = saveAccountRepository;
     }
 
     @Override
@@ -44,6 +47,8 @@ public class ReversalTransactionUseCase implements UseCase<EmptyOutput> {
         );
 
         account.registerTransaction(List.of(reversalTransaction.build()), CalculateStrategy.calculationBuy());
+
+        saveAccountRepository.exec(account);
 
         return EmptyOutput.INSTANCE;
     }

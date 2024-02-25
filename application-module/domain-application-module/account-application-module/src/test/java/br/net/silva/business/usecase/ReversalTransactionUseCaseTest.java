@@ -27,13 +27,17 @@ class ReversalTransactionUseCaseTest extends AbstractAccountBuilder {
     @Mock
     private Repository<Account> findAccountByAccountNumberRepository;
 
+    @Mock
+    private Repository<Account> saveAccountRepository;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(findTransactionByIdAndIdempotencyIdRepository.exec(anyLong(), anyLong())).thenReturn(buildMockTransaction(TransactionTypeEnum.DEBIT));
         when(findAccountByAccountNumberRepository.exec(anyInt())).thenReturn(buildMockAccount(true, null));
+        when(saveAccountRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true, null));
 
-        useCase = new ReversalTransactionUseCase(findTransactionByIdAndIdempotencyIdRepository, findAccountByAccountNumberRepository);
+        useCase = new ReversalTransactionUseCase(findTransactionByIdAndIdempotencyIdRepository, findAccountByAccountNumberRepository, saveAccountRepository);
     }
 
     @Test
