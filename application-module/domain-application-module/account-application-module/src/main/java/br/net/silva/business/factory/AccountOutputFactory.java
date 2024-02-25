@@ -1,13 +1,9 @@
 package br.net.silva.business.factory;
 
 import br.net.silva.business.interfaces.AccountFactorySpec;
-import br.net.silva.business.interfaces.CreditCardFactorySpec;
-import br.net.silva.business.interfaces.TransactionFactorySpec;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.business.value_object.output.TransactionOutput;
-import br.net.silva.daniel.dto.CreditCardDTO;
-import br.net.silva.daniel.dto.TransactionDTO;
 
 import java.math.BigDecimal;
 import java.util.List;
