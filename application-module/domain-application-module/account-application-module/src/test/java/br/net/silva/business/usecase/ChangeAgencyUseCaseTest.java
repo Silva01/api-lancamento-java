@@ -17,8 +17,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ChangeAgencyUseCaseTest {
 
@@ -45,16 +44,9 @@ class ChangeAgencyUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         var mockAccount = buildMockAccount(true).build();
-        var response = assertDoesNotThrow(() -> useCase.exec(source));
+        assertDoesNotThrow(() -> useCase.exec(source));
 
-        assertEquals(4321, response.agency());
-        assertEquals(mockAccount.number(), response.number());
-        assertEquals(mockAccount.balance(), response.balance());
-        assertEquals(mockAccount.password(), response.password());
-        assertTrue(response.active());
-        assertEquals(mockAccount.cpf(), response.cpf());
-        assertTrue(response.transactions().isEmpty());
-        assertEquals(mockAccount.creditCard(), response.creditCard());
+        verify(saveAccountRepository, times(2)).exec(any(Account.class));
     }
 
     @Test

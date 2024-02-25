@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 
 class FluxChangeAgencyAccountTest extends AbstractBuilder {
 
-    private UseCase<AccountDTO> changeAgencyAccountUseCase;
+    private UseCase<EmptyOutput> changeAgencyAccountUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 
