@@ -37,7 +37,7 @@ class AccountFacadeTest {
 
     private UseCase<AccountDTO> createNewAccountByCpfUseCase;
 
-    private UseCase<AccountDTO> changePasswordAccountUseCase;
+    private UseCase<EmptyOutput> changePasswordAccountUseCase;
 
     private UseCase<AccountDTO> deactivateAccountUseCase;
 

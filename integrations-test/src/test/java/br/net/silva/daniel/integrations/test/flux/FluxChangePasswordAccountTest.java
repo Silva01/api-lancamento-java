@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 
 class FluxChangePasswordAccountTest extends AbstractBuilder {
 
-    private UseCase<AccountDTO> changePasswordAccountUseCase;
+    private UseCase<EmptyOutput> changePasswordAccountUseCase;
 
     private UseCase<AccountDTO> findAccountUseCase;
 
