@@ -3,8 +3,8 @@ package br.net.silva.daniel.integrations.test.flux;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.validations.AccountNotExistsByAgencyAndCPFValidate;
 import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountResponse;
-import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 
 class FluxCreateNewAccountTest extends AbstractBuilder {
 
-    private UseCase<AccountDTO> createNewAccountByCpfUseCase;
+    private UseCase<AccountOutput> createNewAccountByCpfUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 

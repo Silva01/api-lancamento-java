@@ -1,6 +1,8 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
+import br.net.silva.business.factory.AccountOutputFactory;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -13,7 +15,7 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.value_object.Source;
 
-public class CreateNewAccountByCpfUseCase implements UseCase<AccountDTO> {
+public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
 
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
@@ -28,7 +30,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountDTO> {
     }
 
     @Override
-    public AccountDTO exec(Source param) throws GenericException {
+    public AccountOutput exec(Source param) throws GenericException {
         var clientCpf = (ICpfParam) param.input();
         var agencyInterface = (IAgencyParam) param.input();
         if (isExistsAccountActiveForCPF(clientCpf.cpf())) {
@@ -46,7 +48,17 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountDTO> {
                         null)));
 
         factory.fillIn(accountAggregate.build(), param.output());
-        return accountAggregate.build();
+        var accountDto = accountAggregate.build();
+        return AccountOutputFactory
+                .createOutput()
+                .withNumber(accountDto.number())
+                .withAgency(accountDto.agency())
+                .withBalance(accountDto.balance())
+                .withPassword(accountDto.password())
+                .withFlagActive(accountDto.active())
+                .andWithCpf(accountDto.cpf())
+                .build();
+
     }
 
     private boolean isExistsAccountActiveForCPF(String cpf) {

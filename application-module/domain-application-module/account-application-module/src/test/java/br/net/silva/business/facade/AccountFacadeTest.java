@@ -8,6 +8,7 @@ import br.net.silva.business.usecase.*;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.dto.AccountDTO;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.when;
 
 class AccountFacadeTest {
 
-    private UseCase<AccountDTO> createNewAccountByCpfUseCase;
+    private UseCase<AccountOutput> createNewAccountByCpfUseCase;
 
     private UseCase<EmptyOutput> changePasswordAccountUseCase;
 
