@@ -1,10 +1,16 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.build.CreditCardOutputBuilder;
+import br.net.silva.business.build.IGenericBuilder;
 import br.net.silva.business.build.TransactionOutputBuilder;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.factory.AccountOutputFactory;
 import br.net.silva.business.value_object.output.AccountOutput;
+import br.net.silva.business.value_object.output.CreditCardOutput;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.dto.CreditCardDTO;
+import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
@@ -16,18 +22,24 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.value_object.Source;
 
+import java.util.List;
+
 public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
 
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
     private final Repository<Account> saveRepository;
     private final GenericResponseMapper factory;
+    private final IGenericBuilder<List<TransactionOutput>, List<TransactionDTO>> transactionOutputBuilder;
+    private final IGenericBuilder<CreditCardOutput, CreditCardDTO> creditCardOutputBuilder;
 
     public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository, GenericResponseMapper factory) {
         this.findIsExistsPeerCPFRepository = findIsExistsPeerCPFRepository;
         this.saveRepository = saveRepository;
         this.factory = factory;
         this.createNewAccountByCpfFactory = new CreateNewAccountByCpfFactory();
+        this.transactionOutputBuilder = TransactionOutputBuilder.buildFullTransactionsOutput();
+        this.creditCardOutputBuilder = CreditCardOutputBuilder.buildFullCreditCardOutput();
     }
 
     @Override
@@ -58,7 +70,8 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
                 .withPassword(accountDto.password())
                 .withFlagActive(accountDto.active())
                 .withCpf(accountDto.cpf())
-                .andWithTransactions(TransactionOutputBuilder.buildFullTransactionsOutput().createFrom(accountDto.transactions()))
+                .withTransactions(transactionOutputBuilder.createFrom(accountDto.transactions()))
+                .andWithCreditCard(creditCardOutputBuilder.createFrom(accountDto.creditCard()))
                 .build();
 
     }
