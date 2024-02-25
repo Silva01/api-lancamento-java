@@ -58,7 +58,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
                 .withPassword(accountDto.password())
                 .withFlagActive(accountDto.active())
                 .withCpf(accountDto.cpf())
-                .andWithTransactions(TransactionOutputBuilder.buildFullTransactionsOutput(accountDto.transactions()))
+                .andWithTransactions(TransactionOutputBuilder.buildFullTransactionsOutput().createFrom(accountDto.transactions()))
                 .build();
 
     }

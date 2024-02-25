@@ -11,8 +11,8 @@ public final class TransactionOutputBuilder {
     private TransactionOutputBuilder() {
     }
 
-    public static List<TransactionOutput> buildFullTransactionsOutput(List<TransactionDTO> transactions) {
-        return transactions
+    public static IGenericBuilder<List<TransactionOutput>, List<TransactionDTO>> buildFullTransactionsOutput() {
+        return transactions -> transactions
                 .stream()
                 .map(transaction -> TransactionOutputFactory
                         .createOutput()
