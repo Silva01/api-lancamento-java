@@ -62,6 +62,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
     public void registerTransaction(List<TransactionDTO> transactions, ICalculation transactionCal) {
         var debitTotal = transactionCal.calculate(transactions, TransactionTypeEnum.DEBIT);
         var creditTotal = transactionCal.calculate(transactions, TransactionTypeEnum.CREDIT);
+        var reversalTotal = transactionCal.calculate(transactions, TransactionTypeEnum.REVERSAL);
 
         if (isHaveCreditCard()) {
             creditCard.validateBalance(creditTotal);
@@ -82,6 +83,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
                 transaction.creditCardCvv()))
                 .toList());
 
+        debitTotal = debitTotal.add(reversalTotal);
         this.balance = this.balance.subtract(debitTotal);
     }
 

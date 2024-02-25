@@ -132,4 +132,8 @@ public abstract class AbstractBuilder extends GeneratorRandomValues {
 
         return transactions;
     }
+
+    protected Transaction generateTransaction() {
+        return new Transaction(generateRandomIdTransaction(), "test", BigDecimal.valueOf(100), generateRandomNumber(100), TransactionTypeEnum.CREDIT, generateRandomAccountNumber(), generateRandomAccountNumber(), generateIdempotencyId(), "22222", 321);
+    }
 }
