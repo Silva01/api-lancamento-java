@@ -1,5 +1,6 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.build.TransactionOutputBuilder;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.factory.AccountOutputFactory;
 import br.net.silva.business.value_object.output.AccountOutput;
@@ -56,7 +57,8 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
                 .withBalance(accountDto.balance())
                 .withPassword(accountDto.password())
                 .withFlagActive(accountDto.active())
-                .andWithCpf(accountDto.cpf())
+                .withCpf(accountDto.cpf())
+                .andWithTransactions(TransactionOutputBuilder.buildFullTransactionsOutput(accountDto.transactions()))
                 .build();
 
     }

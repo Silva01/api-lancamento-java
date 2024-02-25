@@ -1,6 +1,10 @@
 package br.net.silva.business.interfaces;
 
+import br.net.silva.business.value_object.output.CreditCardOutput;
+import br.net.silva.business.value_object.output.TransactionOutput;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface AccountFactorySpec {
 
@@ -30,12 +34,12 @@ public interface AccountFactorySpec {
     }
 
     interface TransactionsSpec<R> {
-        CreditCardSpec<R> withTransactions(TransactionFactorySpec transactions);
-        BuildSpec<R> andWithTransactions(TransactionFactorySpec transactions);
+        CreditCardSpec<R> withTransactions(List<TransactionOutput> transactions);
+        BuildSpec<R> andWithTransactions(List<TransactionOutput> transactions);
     }
 
     interface CreditCardSpec<R> {
-        BuildSpec<R> andWithCreditCard(CreditCardFactorySpec creditCard);
+        BuildSpec<R> andWithCreditCard(CreditCardOutput creditCard);
     }
 
     interface BuildSpec<R> extends NumberSpec<R>, AgencySpec<R>, BalanceSpec<R>, PasswordSpec<R>, ActiveSpec<R>, CpfSpec<R>, TransactionsSpec<R>, CreditCardSpec<R> {

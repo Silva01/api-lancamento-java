@@ -4,6 +4,8 @@ import br.net.silva.business.interfaces.AccountFactorySpec;
 import br.net.silva.business.interfaces.CreditCardFactorySpec;
 import br.net.silva.business.interfaces.TransactionFactorySpec;
 import br.net.silva.business.value_object.output.AccountOutput;
+import br.net.silva.business.value_object.output.CreditCardOutput;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 
@@ -18,8 +20,8 @@ public class AccountOutputFactory implements AccountFactorySpec.BuildSpec<Accoun
     private String password;
     private boolean active;
     private String cpf;
-    private List<TransactionDTO> transactions;
-    private CreditCardDTO creditCard;
+    private List<TransactionOutput> transactions;
+    private CreditCardOutput creditCard;
 
     public static AccountFactorySpec.NumberSpec<AccountOutput> createOutput() {
         return new AccountOutputFactory();
@@ -69,17 +71,20 @@ public class AccountOutputFactory implements AccountFactorySpec.BuildSpec<Accoun
     }
 
     @Override
-    public AccountFactorySpec.CreditCardSpec<AccountOutput> withTransactions(TransactionFactorySpec transactions) {
+    public AccountFactorySpec.CreditCardSpec<AccountOutput> withTransactions(List<TransactionOutput> transactions) {
+        this.transactions = transactions;
         return this;
     }
 
     @Override
-    public AccountFactorySpec.BuildSpec<AccountOutput> andWithTransactions(TransactionFactorySpec transactions) {
+    public AccountFactorySpec.BuildSpec<AccountOutput> andWithTransactions(List<TransactionOutput> transactions) {
+        withTransactions(transactions);
         return null;
     }
 
     @Override
-    public AccountFactorySpec.BuildSpec<AccountOutput> andWithCreditCard(CreditCardFactorySpec creditCard) {
+    public AccountFactorySpec.BuildSpec<AccountOutput> andWithCreditCard(CreditCardOutput creditCard) {
+        this.creditCard = creditCard;
         return this;
     }
 
