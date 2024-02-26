@@ -1,6 +1,6 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.build.AccountOutputBuilder;
+import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -21,7 +21,7 @@ public class DeactivateAccountUseCase implements UseCase<AccountOutput> {
         try {
             var dto = (ICpfParam) param.input();
             var accountAggregate =  deactivateAccountRepository.exec(dto.cpf());
-            return AccountOutputBuilder.buildFullAccountOutput().createFrom(accountAggregate.build());
+            return AccountBuilder.buildFullAccountOutput().createFrom(accountAggregate.build());
         } catch (Exception e) {
             throw new GenericException(e.getMessage());
         }

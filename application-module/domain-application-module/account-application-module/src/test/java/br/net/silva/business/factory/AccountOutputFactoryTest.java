@@ -1,7 +1,7 @@
 package br.net.silva.business.factory;
 
-import br.net.silva.business.build.CreditCardOutputBuilder;
-import br.net.silva.business.build.TransactionOutputBuilder;
+import br.net.silva.business.build.CreditCardBuilder;
+import br.net.silva.business.build.TransactionBuilder;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import org.junit.jupiter.api.Test;
@@ -22,8 +22,8 @@ class AccountOutputFactoryTest extends AbstractAccountBuilder {
                 .withPassword(accountDtoMock.password())
                 .withFlagActive(accountDtoMock.active())
                 .withCpf(accountDtoMock.cpf())
-                .withTransactions(TransactionOutputBuilder.buildFullTransactionsOutput().createFrom(accountDtoMock.transactions()))
-                .andWithCreditCard(CreditCardOutputBuilder.buildFullCreditCardOutput().createFrom(accountDtoMock.creditCard()))
+                .withTransactions(TransactionBuilder.buildFullTransactionsOutput().createFrom(accountDtoMock.transactions()))
+                .andWithCreditCard(CreditCardBuilder.buildFullCreditCardOutput().createFrom(accountDtoMock.creditCard()))
                 .build();
 
         assertNotNull(accountOutput);
@@ -53,8 +53,8 @@ class AccountOutputFactoryTest extends AbstractAccountBuilder {
                 .withPassword(accountDtoMock.password())
                 .withFlagActive(accountDtoMock.active())
                 .withCpf(accountDtoMock.cpf())
-                .withTransactions(TransactionOutputBuilder.buildFullTransactionsOutput().createFrom(accountDtoMock.transactions()))
-                .andWithCreditCard(CreditCardOutputBuilder.buildFullCreditCardOutput().createFrom(accountDtoMock.creditCard()))
+                .withTransactions(TransactionBuilder.buildFullTransactionsOutput().createFrom(accountDtoMock.transactions()))
+                .andWithCreditCard(CreditCardBuilder.buildFullCreditCardOutput().createFrom(accountDtoMock.creditCard()))
                 .build();
 
         assertNotNull(accountOutput);

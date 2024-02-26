@@ -1,6 +1,6 @@
 package br.net.silva.business.factory;
 
-import br.net.silva.business.build.CreditCardOutputBuilder;
+import br.net.silva.business.build.CreditCardBuilder;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ class CreditCardOutputFactoryTest extends AbstractAccountBuilder {
     @Test
     void shouldCreateOutputForCreditCardWithSuccess() {
         var creditCardMock = buildMockCreditCard(true).build();
-        var creditCardOutput = CreditCardOutputBuilder.buildFullCreditCardOutput().createFrom(creditCardMock);
+        var creditCardOutput = CreditCardBuilder.buildFullCreditCardOutput().createFrom(creditCardMock);
 
         assertNotNull(creditCardOutput);
         assertEquals(creditCardMock.number(), creditCardOutput.number());
@@ -24,7 +24,7 @@ class CreditCardOutputFactoryTest extends AbstractAccountBuilder {
 
     @Test
     void shouldCreateNullObjectWhenCreditCardDTOWasNull() {
-        var creditCardOutput = CreditCardOutputBuilder.buildFullCreditCardOutput().createFrom(null);
+        var creditCardOutput = CreditCardBuilder.buildFullCreditCardOutput().createFrom(null);
         assertNull(creditCardOutput);
     }
 }

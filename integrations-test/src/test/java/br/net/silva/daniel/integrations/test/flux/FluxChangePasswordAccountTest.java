@@ -4,6 +4,7 @@ import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
 import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
@@ -34,7 +35,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
 
     private UseCase<EmptyOutput> changePasswordAccountUseCase;
 
-    private UseCase<AccountDTO> findAccountUseCase;
+    private UseCase<AccountOutput> findAccountUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 

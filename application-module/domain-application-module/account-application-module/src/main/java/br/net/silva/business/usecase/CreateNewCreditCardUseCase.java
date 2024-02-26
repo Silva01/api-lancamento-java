@@ -1,7 +1,7 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.build.CreditCardOutputBuilder;
-import br.net.silva.business.build.TransactionOutputBuilder;
+import br.net.silva.business.build.CreditCardBuilder;
+import br.net.silva.business.build.TransactionBuilder;
 import br.net.silva.business.factory.AccountOutputFactory;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
@@ -41,8 +41,8 @@ public class CreateNewCreditCardUseCase implements UseCase<AccountOutput> {
                     .withPassword(newAccountDto.password())
                     .withFlagActive(newAccountDto.active())
                     .withCpf(newAccountDto.cpf())
-                    .withTransactions(TransactionOutputBuilder.buildFullTransactionsOutput().createFrom(newAccountDto.transactions()))
-                    .andWithCreditCard(CreditCardOutputBuilder.buildFullCreditCardOutput().createFrom(newAccountDto.creditCard()))
+                    .withTransactions(TransactionBuilder.buildFullTransactionsOutput().createFrom(newAccountDto.transactions()))
+                    .andWithCreditCard(CreditCardBuilder.buildFullCreditCardOutput().createFrom(newAccountDto.creditCard()))
                     .build();
         } catch (Exception e) {
             throw new GenericException("Generic error", e);

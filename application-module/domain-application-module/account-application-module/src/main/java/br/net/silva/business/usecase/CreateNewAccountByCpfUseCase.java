@@ -1,8 +1,8 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.build.CreditCardOutputBuilder;
+import br.net.silva.business.build.CreditCardBuilder;
 import br.net.silva.business.build.IGenericBuilder;
-import br.net.silva.business.build.TransactionOutputBuilder;
+import br.net.silva.business.build.TransactionBuilder;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.factory.AccountOutputFactory;
 import br.net.silva.business.value_object.output.AccountOutput;
@@ -14,10 +14,10 @@ import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.IAgencyParam;
 import br.net.silva.daniel.interfaces.ICpfParam;
 import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.value_object.Source;
@@ -38,8 +38,8 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
         this.saveRepository = saveRepository;
         this.factory = factory;
         this.createNewAccountByCpfFactory = new CreateNewAccountByCpfFactory();
-        this.transactionOutputBuilder = TransactionOutputBuilder.buildFullTransactionsOutput();
-        this.creditCardOutputBuilder = CreditCardOutputBuilder.buildFullCreditCardOutput();
+        this.transactionOutputBuilder = TransactionBuilder.buildFullTransactionsOutput();
+        this.creditCardOutputBuilder = CreditCardBuilder.buildFullCreditCardOutput();
     }
 
     @Override

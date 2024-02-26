@@ -1,6 +1,6 @@
 package br.net.silva.business.factory;
 
-import br.net.silva.business.build.TransactionOutputBuilder;
+import br.net.silva.business.build.TransactionBuilder;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ class TransactionOutputFactoryTest extends AbstractAccountBuilder {
     @Test
     void shouldCreateTransactionOutputWithSuccess() {
         var transactionMock = buildMockTransaction(TransactionTypeEnum.DEBIT).build();
-        var transactionOutput = TransactionOutputBuilder.buildFullTransactionsOutput().createFrom(List.of(transactionMock));
+        var transactionOutput = TransactionBuilder.buildFullTransactionsOutput().createFrom(List.of(transactionMock));
 
         assertNotNull(transactionOutput);
         assertEquals(1, transactionOutput.size());

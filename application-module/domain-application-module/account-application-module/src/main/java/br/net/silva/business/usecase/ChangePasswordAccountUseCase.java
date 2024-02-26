@@ -1,6 +1,8 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -14,11 +16,11 @@ import br.net.silva.daniel.utils.AccountUtils;
 import br.net.silva.daniel.value_object.Source;
 
 public class ChangePasswordAccountUseCase implements UseCase<EmptyOutput> {
-    private final UseCase<AccountDTO> findAccountUseCase;
+    private final UseCase<AccountOutput> findAccountUseCase;
     private final Repository<Account> updatePasswordRepository;
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
 
-    public ChangePasswordAccountUseCase(UseCase<AccountDTO> findAccountUseCase, Repository<Account> updatePasswordRepository) {
+    public ChangePasswordAccountUseCase(UseCase<AccountOutput> findAccountUseCase, Repository<Account> updatePasswordRepository) {
         this.findAccountUseCase = findAccountUseCase;
         this.updatePasswordRepository = updatePasswordRepository;
         this.createNewAccountByCpfFactory = new CreateAccountByAccountDTOFactory();
@@ -28,8 +30,8 @@ public class ChangePasswordAccountUseCase implements UseCase<EmptyOutput> {
     public EmptyOutput exec(Source param) throws GenericException {
         var changePasswordDTO = (ChangePasswordDTO) param.input();
         AccountUtils.validatePassword(changePasswordDTO.newPassword());
-        var accountDTO = findAccountUseCase.exec(param);
-        var account = createNewAccountByCpfFactory.create(accountDTO);
+        var accountOutput = findAccountUseCase.exec(param);
+        var account = createNewAccountByCpfFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
         account.changePassword(CryptoUtils.convertToSHA256(changePasswordDTO.newPassword()));
        updatePasswordRepository.exec(account);
 
