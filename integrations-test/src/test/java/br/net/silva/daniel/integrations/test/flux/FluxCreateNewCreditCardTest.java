@@ -4,8 +4,7 @@ import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
 import br.net.silva.business.validations.AccountAlreadyExistsCreditCardValidation;
 import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
-import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.dto.ClientDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
@@ -18,7 +17,6 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -35,7 +33,7 @@ import static org.mockito.Mockito.*;
 
 public class FluxCreateNewCreditCardTest extends AbstractBuilder {
 
-    private UseCase<AccountDTO> createNewCreditCardUseCase;
+    private UseCase<AccountOutput> createNewCreditCardUseCase;
 
     private IValidations clientExistsValidate;
     private IValidations accountExistsValidate;
