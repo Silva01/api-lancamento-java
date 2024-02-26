@@ -3,7 +3,7 @@ package br.net.silva.daniel.factory;
 import br.net.silva.daniel.interfaces.AddressFactorySpec;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 
-public class AddessOutputFactory implements AddressFactorySpec.BuildSpec<AddressOutput> {
+public final class AddressOutputFactory implements AddressFactorySpec.BuildSpec<AddressOutput> {
 
     private String street;
     private String number;

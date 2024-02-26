@@ -4,7 +4,7 @@ import br.net.silva.daniel.interfaces.ClientFactorySpec;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
-public class ClientOutputFactory implements ClientFactorySpec.BuildSpec<ClientOutput> {
+public final class ClientOutputFactory implements ClientFactorySpec.BuildSpec<ClientOutput> {
 
     private String id;
     private String cpf;
