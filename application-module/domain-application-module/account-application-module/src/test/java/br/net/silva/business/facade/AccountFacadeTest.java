@@ -11,14 +11,13 @@ import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.business.value_object.output.NewAccountResponse;
-import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.value_object.Source;
@@ -40,7 +39,7 @@ class AccountFacadeTest {
 
     private UseCase<EmptyOutput> changePasswordAccountUseCase;
 
-    private UseCase<AccountDTO> deactivateAccountUseCase;
+    private UseCase<AccountOutput> deactivateAccountUseCase;
 
     private IValidations passwordAndExistsAccountValidate;
 

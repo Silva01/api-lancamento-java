@@ -1,7 +1,7 @@
 package br.net.silva.daniel.integrations.test.flux;
 
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
-import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
@@ -38,7 +38,7 @@ class FluxDeactivateClientTest extends AbstractBuilder {
 
     private UseCase<ClientDTO> deactivateClientUseCase;
 
-    private UseCase<AccountDTO> deactivateAccountUseCase;
+    private UseCase<AccountOutput> deactivateAccountUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 
