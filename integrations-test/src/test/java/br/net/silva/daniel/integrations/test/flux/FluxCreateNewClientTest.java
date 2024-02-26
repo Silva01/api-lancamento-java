@@ -18,6 +18,7 @@ import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -37,7 +38,7 @@ class FluxCreateNewClientTest extends AbstractBuilder {
 
     private UseCase<AccountOutput> createNewAccountByCpfUseCase;
 
-    private UseCase<ClientDTO> createNewClientUseCase;
+    private UseCase<ClientOutput> createNewClientUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 

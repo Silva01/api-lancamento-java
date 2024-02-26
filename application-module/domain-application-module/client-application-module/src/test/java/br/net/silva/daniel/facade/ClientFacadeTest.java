@@ -36,7 +36,7 @@ class ClientFacadeTest {
     private IValidations clientExistsValidate;
     private IValidations clientNotExistsValidate;
 
-    private UseCase<ClientDTO> createNewClientUseCase;
+    private UseCase<ClientOutput> createNewClientUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 
