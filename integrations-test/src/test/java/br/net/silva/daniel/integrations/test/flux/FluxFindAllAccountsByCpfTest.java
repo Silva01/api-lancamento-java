@@ -1,8 +1,8 @@
 package br.net.silva.daniel.integrations.test.flux;
 
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
-import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
 
-    private UseCase<List<AccountDTO>> findAllAccountsByCpfUseCase;
+    private UseCase<List<AccountOutput>> findAllAccountsByCpfUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 
