@@ -1,4 +1,4 @@
-package br.net.silva.business.build;
+package br.net.silva.daniel.interfaces;
 
 @FunctionalInterface
 public interface IGenericBuilder<R, P> {
