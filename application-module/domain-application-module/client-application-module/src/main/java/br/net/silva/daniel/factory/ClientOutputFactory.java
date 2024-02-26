@@ -13,6 +13,10 @@ public final class ClientOutputFactory implements ClientFactorySpec.BuildSpec<Cl
     private boolean active;
     private AddressOutput address;
 
+    public static ClientFactorySpec.CpfSpec<ClientOutput> createOutput() {
+        return new ClientOutputFactory();
+    }
+
     @Override
     public ClientFactorySpec.NameSpec<ClientOutput> withCpf(String cpf) {
         this.cpf = cpf;

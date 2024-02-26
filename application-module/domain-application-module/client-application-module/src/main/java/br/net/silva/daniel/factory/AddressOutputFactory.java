@@ -13,6 +13,10 @@ public final class AddressOutputFactory implements AddressFactorySpec.BuildSpec<
     private String city;
     private String zipCode;
 
+    public static AddressFactorySpec.StreetSpec<AddressOutput> createOutput() {
+        return new AddressOutputFactory();
+    }
+
     @Override
     public AddressFactorySpec.NumberSpec<AddressOutput> withStreet(String street) {
         this.street = street;
