@@ -4,6 +4,7 @@ import br.net.silva.business.factory.AccountDtoFactory;
 import br.net.silva.business.factory.AccountOutputFactory;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.daniel.interfaces.IGenericBuilder;
 
 public final class AccountBuilder {
 

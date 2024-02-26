@@ -1,7 +1,7 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.build.CreditCardBuilder;
-import br.net.silva.business.build.IGenericBuilder;
+import br.net.silva.daniel.interfaces.IGenericBuilder;
 import br.net.silva.business.build.TransactionBuilder;
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.factory.AccountOutputFactory;

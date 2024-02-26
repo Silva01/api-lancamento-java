@@ -1,7 +1,7 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.build.AccountBuilder;
-import br.net.silva.business.build.IGenericBuilder;
+import br.net.silva.daniel.interfaces.IGenericBuilder;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;

@@ -4,6 +4,7 @@ import br.net.silva.business.factory.CreditCardDtoFactory;
 import br.net.silva.business.factory.CreditCardOutputFactory;
 import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.daniel.dto.CreditCardDTO;
+import br.net.silva.daniel.interfaces.IGenericBuilder;
 
 import java.util.Objects;
 
