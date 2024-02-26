@@ -30,7 +30,7 @@ public interface AddressFactorySpec {
         BuildSpec<R> andWithComplement(String complement);
     }
 
-    interface BuildSpec<R> {
+    interface BuildSpec<R> extends StreetSpec<R>, NumberSpec<R>, NeighborhoodSpec<R>, StateSpec<R>, CitySpec<R>, ZipCodeSpec<R>, ComplementSpec<R> {
         R build();
     }
 }

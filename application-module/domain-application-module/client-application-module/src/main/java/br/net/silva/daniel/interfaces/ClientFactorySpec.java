@@ -24,7 +24,7 @@ public interface ClientFactorySpec {
         BuildSpec<R> andWithId(String id);
     }
 
-    interface BuildSpec<R> {
+    interface BuildSpec<R> extends CpfSpec<R>, NameSpec<R>, ActiveSpec<R>, TelephoneSpec<R>, IdSpec<R> {
         R build();
     }
 }
