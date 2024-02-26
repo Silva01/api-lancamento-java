@@ -1,14 +1,15 @@
 package br.net.silva.business.build;
 
+import br.net.silva.business.factory.CreditCardDtoFactory;
 import br.net.silva.business.factory.CreditCardOutputFactory;
 import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.daniel.dto.CreditCardDTO;
 
 import java.util.Objects;
 
-public final class CreditCardOutputBuilder {
+public final class CreditCardBuilder {
 
-    private CreditCardOutputBuilder() {
+    private CreditCardBuilder() {
     }
 
     public static IGenericBuilder<CreditCardOutput, CreditCardDTO> buildFullCreditCardOutput() {
@@ -19,6 +20,24 @@ public final class CreditCardOutputBuilder {
 
             return CreditCardOutputFactory
                     .createOutput()
+                    .withNumber(creditCard.number())
+                    .withCvv(creditCard.cvv())
+                    .withCreditCardBrand(creditCard.flag())
+                    .withBalance(creditCard.balance())
+                    .withExpirationDate(creditCard.expirationDate())
+                    .andWithFlagActive(creditCard.active())
+                    .build();
+        };
+    }
+
+    public static IGenericBuilder<CreditCardDTO, CreditCardOutput> buildFullCreditCardDto() {
+        return creditCard -> {
+            if (Objects.isNull(creditCard)) {
+                return null;
+            }
+
+            return CreditCardDtoFactory
+                    .createDto()
                     .withNumber(creditCard.number())
                     .withCvv(creditCard.cvv())
                     .withCreditCardBrand(creditCard.flag())
