@@ -15,8 +15,7 @@ import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
-import br.net.silva.daniel.value_object.input.EditClientInput;
-import org.junit.jupiter.api.Assertions;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.*;
 
 class FluxEditAddressOfClientTest extends AbstractBuilder {
 
-    private UseCase<ClientDTO> editAddressUseCase;
+    private UseCase<ClientOutput> editAddressUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 

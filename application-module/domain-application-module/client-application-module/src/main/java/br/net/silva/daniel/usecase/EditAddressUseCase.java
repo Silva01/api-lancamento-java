@@ -1,6 +1,6 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.dto.ClientDTO;
+import br.net.silva.daniel.build.ClientBuilder;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.UseCase;
@@ -8,8 +8,9 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 
-public class EditAddressUseCase implements UseCase<ClientDTO> {
+public class EditAddressUseCase implements UseCase<ClientOutput> {
 
     private final Repository<Client> findClientRepository;
     private final Repository<Client> saveClientRepository;
@@ -20,7 +21,7 @@ public class EditAddressUseCase implements UseCase<ClientDTO> {
     }
 
     @Override
-    public ClientDTO exec(Source param) throws GenericException {
+    public ClientOutput exec(Source param) throws GenericException {
         try {
             var editAddressInput = (EditAddressInput) param.input();
             var address = new Address(
@@ -34,7 +35,7 @@ public class EditAddressUseCase implements UseCase<ClientDTO> {
             );
             var client = findClientRepository.exec(editAddressInput.cpf());
             client.registerAddress(address);
-            return saveClientRepository.exec(client).build();
+            return ClientBuilder.buildFullClientOutput().createFrom(saveClientRepository.exec(client).build());
         } catch (Exception e) {
             throw new GenericException("Generic Error", e);
         }
