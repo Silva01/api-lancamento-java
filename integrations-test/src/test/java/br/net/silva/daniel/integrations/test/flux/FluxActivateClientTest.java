@@ -15,6 +15,7 @@ import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.ActivateClient;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.when;
 
 class FluxActivateClientTest extends AbstractBuilder {
 
-    private UseCase<ClientDTO> activeClientUseCase;
+    private UseCase<ClientOutput> activeClientUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 

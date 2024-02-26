@@ -18,6 +18,7 @@ import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.*;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -39,7 +40,7 @@ class ClientFacadeTest {
 
     private UseCase<ClientDTO> findClientUseCase;
 
-    private UseCase<ClientDTO> activateClientUseCase;
+    private UseCase<ClientOutput> activateClientUseCase;
 
     private DeactivateClientUseCase deactivateClientUseCase;
 
