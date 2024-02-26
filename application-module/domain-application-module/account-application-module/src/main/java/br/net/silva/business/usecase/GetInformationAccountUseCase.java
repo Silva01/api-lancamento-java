@@ -1,20 +1,21 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.daniel.dto.AccountDTO;
+import br.net.silva.business.build.AccountBuilder;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.CreditCard;
 import br.net.silva.daniel.entity.Transaction;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.ICpfParam;
 import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
 
 import java.util.List;
 import java.util.Objects;
 
-public class GetInformationAccountUseCase implements UseCase<AccountDTO> {
+public class GetInformationAccountUseCase implements UseCase<AccountOutput> {
 
     private final Repository<Account> repository;
     private final Repository<List<Transaction>> transactionRepository;
@@ -29,7 +30,7 @@ public class GetInformationAccountUseCase implements UseCase<AccountDTO> {
     }
 
     @Override
-    public AccountDTO exec(Source param) throws GenericException {
+    public AccountOutput exec(Source param) throws GenericException {
         var cpf = (ICpfParam) param.input();
         var accountDto = repository.exec(cpf.cpf()).build();
         var transactions = transactionRepository.exec(cpf.cpf(), NUMBER_OF_TRANSACTIONS);
@@ -41,6 +42,6 @@ public class GetInformationAccountUseCase implements UseCase<AccountDTO> {
 
         var account = new Account(accountDto.number(), accountDto.agency(), accountDto.balance(), accountDto.password(), accountDto.active(), accountDto.cpf(), creditCard, transactions);
         factory.fillIn(account.build(), param.output());
-        return account.build();
+        return AccountBuilder.buildFullAccountOutput().createFrom(account.build());
     }
 }

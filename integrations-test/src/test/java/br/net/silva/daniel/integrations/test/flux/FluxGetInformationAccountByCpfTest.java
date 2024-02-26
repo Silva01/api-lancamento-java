@@ -4,8 +4,8 @@ import br.net.silva.business.enums.AccountStatusEnum;
 import br.net.silva.business.usecase.GetInformationAccountUseCase;
 import br.net.silva.business.validations.AccountExistsAndActiveByCpfValidate;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
-import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 
 class FluxGetInformationAccountByCpfTest extends AbstractBuilder {
 
-    private UseCase<AccountDTO> getInformationAccountByCpfUseCase;
+    private UseCase<AccountOutput> getInformationAccountByCpfUseCase;
 
     private UseCase<ClientDTO> findClientUseCase;
 
