@@ -32,7 +32,7 @@ public class DeactivateClientUseCase implements UseCase<ClientOutput> {
     @Override
     public ClientOutput exec(Source param) throws GenericException {
         var clientDto = findClientUseCase.exec(param);
-        var client = factory.create(clientDto);
+        var client = factory.create(ClientBuilder.buildFullClientDto().createFrom(clientDto));
         client.deactivate();
 
         var clientUpdated = saveRepository.exec(client);

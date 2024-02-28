@@ -1,13 +1,12 @@
 package br.net.silva.daniel.facade;
 
-import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
@@ -38,7 +37,7 @@ class ClientFacadeTest {
 
     private UseCase<ClientOutput> createNewClientUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private UseCase<ClientOutput> activateClientUseCase;
 

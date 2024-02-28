@@ -3,7 +3,6 @@ package br.net.silva.daniel.integrations.test.flux;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
-import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
@@ -40,7 +39,7 @@ class FluxCreateNewClientTest extends AbstractBuilder {
 
     private UseCase<ClientOutput> createNewClientUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations clientNotExistsValidate;
 
