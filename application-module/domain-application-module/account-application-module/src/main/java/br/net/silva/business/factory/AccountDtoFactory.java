@@ -72,7 +72,7 @@ public class AccountDtoFactory implements AccountFactorySpec.BuildSpec<AccountDT
 
     @Override
     public AccountFactorySpec.CreditCardSpec<AccountDTO> withTransactions(List<TransactionOutput> transactions) {
-        this.transactions = TransactionBuilder.buildFullTransactionsDto().createFrom(transactions);
+        this.transactions = TransactionBuilder.buildFullTransactionListDto().createFrom(transactions);
         return this;
     }
 

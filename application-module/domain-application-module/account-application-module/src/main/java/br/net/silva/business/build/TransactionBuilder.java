@@ -13,7 +13,7 @@ public final class TransactionBuilder {
     private TransactionBuilder() {
     }
 
-    public static IGenericBuilder<List<TransactionOutput>, List<TransactionDTO>> buildFullTransactionsOutput() {
+    public static IGenericBuilder<List<TransactionOutput>, List<TransactionDTO>> buildFullTransactionListOutput() {
         return transactions -> transactions
                 .stream()
                 .map(transaction -> TransactionOutputFactory
@@ -32,7 +32,7 @@ public final class TransactionBuilder {
                 .toList();
     }
 
-    public static IGenericBuilder<List<TransactionDTO>, List<TransactionOutput>> buildFullTransactionsDto() {
+    public static IGenericBuilder<List<TransactionDTO>, List<TransactionOutput>> buildFullTransactionListDto() {
         return transactions -> transactions
                 .stream()
                 .map(transaction -> TransactionDtoFactory
@@ -49,5 +49,21 @@ public final class TransactionBuilder {
                         .andWithCreditCardCvv(transaction.creditCardCvv())
                         .build())
                 .toList();
+    }
+
+    public static IGenericBuilder<TransactionOutput, TransactionDTO> buildFullTransactionOutput() {
+        return transaction -> TransactionOutputFactory
+                .createOutput()
+                .withId(transaction.id())
+                .withDescription(transaction.description())
+                .withPrice(transaction.price())
+                .withQuantity(transaction.quantity())
+                .withType(transaction.type())
+                .withOriginAccountNumber(transaction.originAccountNumber())
+                .withDestinationAccountNumber(transaction.destinationAccountNumber())
+                .withIdempotencyId(transaction.idempotencyId())
+                .withCreditCardNumber(transaction.creditCardNumber())
+                .andWithCreditCardCvv(transaction.creditCardCvv())
+                .build();
     }
 }
