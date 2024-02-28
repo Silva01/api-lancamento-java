@@ -1,6 +1,5 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
@@ -13,6 +12,7 @@ import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.FindClientByCpf;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 class FluxFindClientInfoTest extends AbstractBuilder {
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations clientNotExistsValidate;
 

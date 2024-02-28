@@ -1,6 +1,5 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
@@ -31,7 +30,7 @@ class FluxEditClientTest extends AbstractBuilder {
 
     private UseCase<ClientOutput> editClientUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations clientExistsValidation;
 

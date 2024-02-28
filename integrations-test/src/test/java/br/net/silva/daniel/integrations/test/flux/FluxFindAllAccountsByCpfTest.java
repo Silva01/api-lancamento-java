@@ -3,7 +3,6 @@ package br.net.silva.daniel.integrations.test.flux;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
-import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
@@ -16,6 +15,7 @@ import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.FindClientByCpf;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -31,7 +31,7 @@ class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
 
     private UseCase<List<AccountOutput>> findAllAccountsByCpfUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations clientExistsValidate;
 
