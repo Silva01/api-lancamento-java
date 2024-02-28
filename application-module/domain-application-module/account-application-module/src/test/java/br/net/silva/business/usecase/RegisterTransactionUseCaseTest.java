@@ -1,6 +1,5 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
@@ -35,7 +34,7 @@ class RegisterTransactionUseCaseTest extends AbstractAccountBuilder {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(AccountBuilder.buildFullAccountOutput().createFrom(buildMockAccount(true, null).build()));
+        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(true, null));
         doAnswer(invocation -> invocation.getArguments()[0]).when(saveAccountRepository).exec(any(Account.class));
 
         useCase = new RegisterTransactionUseCase(findAccountRepository, saveAccountRepository);
