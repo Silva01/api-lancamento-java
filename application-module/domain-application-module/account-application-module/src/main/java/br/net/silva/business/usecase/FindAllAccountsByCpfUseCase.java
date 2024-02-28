@@ -16,11 +16,11 @@ import java.util.List;
 
 public class FindAllAccountsByCpfUseCase implements UseCase<List<AccountOutput>> {
 
-    private final Repository<List<Account>> repository;
+    private final Repository<List<AccountOutput>> repository;
     private final GenericResponseMapper factory;
     private final IGenericBuilder<AccountOutput, AccountDTO> accountBuilder;
 
-    public FindAllAccountsByCpfUseCase(Repository<List<Account>> repository, GenericResponseMapper factory) {
+    public FindAllAccountsByCpfUseCase(Repository<List<AccountOutput>> repository, GenericResponseMapper factory) {
         this.repository = repository;
         this.factory = factory;
         this.accountBuilder = AccountBuilder.buildFullAccountOutput();
@@ -29,8 +29,8 @@ public class FindAllAccountsByCpfUseCase implements UseCase<List<AccountOutput>>
     @Override
     public List<AccountOutput> exec(Source param) throws GenericException {
         var findAccountDto = (ICpfParam) param.input();
-        var accounts = repository.exec(findAccountDto.cpf());
-        var dtoList = accounts.stream().map(Account::build).toList();
+        var outputAccounts = repository.exec(findAccountDto.cpf());
+        var dtoList = outputAccounts.stream().map(AccountBuilder.buildFullAccountDto()::createFrom).toList();
 
         factory.fillIn(dtoList, param.output());
         return dtoList.stream().map(accountBuilder::createFrom).toList();

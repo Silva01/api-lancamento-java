@@ -1,5 +1,6 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.build.CreditCardBuilder;
 import br.net.silva.daniel.interfaces.IGenericBuilder;
 import br.net.silva.business.build.TransactionBuilder;
@@ -28,17 +29,17 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
 
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
     private final Repository<Boolean> findIsExistsPeerCPFRepository;
-    private final Repository<Account> saveRepository;
+    private final Repository<AccountOutput> saveRepository;
     private final GenericResponseMapper factory;
     private final IGenericBuilder<List<TransactionOutput>, List<TransactionDTO>> transactionOutputBuilder;
     private final IGenericBuilder<CreditCardOutput, CreditCardDTO> creditCardOutputBuilder;
 
-    public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<Account> saveRepository, GenericResponseMapper factory) {
+    public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<AccountOutput> saveRepository, GenericResponseMapper factory) {
         this.findIsExistsPeerCPFRepository = findIsExistsPeerCPFRepository;
         this.saveRepository = saveRepository;
         this.factory = factory;
         this.createNewAccountByCpfFactory = new CreateNewAccountByCpfFactory();
-        this.transactionOutputBuilder = TransactionBuilder.buildFullTransactionsOutput();
+        this.transactionOutputBuilder = TransactionBuilder.buildFullTransactionListOutput();
         this.creditCardOutputBuilder = CreditCardBuilder.buildFullCreditCardOutput();
     }
 
@@ -49,7 +50,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
         if (isExistsAccountActiveForCPF(clientCpf.cpf())) {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
-        var accountAggregate = saveRepository.exec(createNewAccountByCpfFactory.create(
+        var accountOutput = saveRepository.exec(createNewAccountByCpfFactory.create(
                 new AccountDTO(
                         null,
                         agencyInterface.agency(),
@@ -59,6 +60,8 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
                         clientCpf.cpf(),
                         null,
                         null)));
+
+        var accountAggregate = createNewAccountByCpfFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
 
         factory.fillIn(accountAggregate.build(), param.output());
         var accountDto = accountAggregate.build();

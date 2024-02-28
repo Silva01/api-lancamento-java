@@ -1,7 +1,9 @@
 package br.net.silva.business.validations;
 
+import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.interfaces.IAccountParam;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -13,9 +15,9 @@ import java.util.Optional;
 
 public class AccountExistsAndActiveValidate implements IValidations {
 
-    private final Repository<Optional<Account>> findAccountRepository;
+    private final Repository<Optional<AccountOutput>> findAccountRepository;
 
-    public AccountExistsAndActiveValidate(Repository<Optional<Account>> findAccountRepository) {
+    public AccountExistsAndActiveValidate(Repository<Optional<AccountOutput>> findAccountRepository) {
         this.findAccountRepository = findAccountRepository;
     }
 
@@ -28,7 +30,7 @@ public class AccountExistsAndActiveValidate implements IValidations {
             throw new AccountNotExistsException("Account not exists");
         }
 
-        var accountDto = optionalAccount.get().build();
+        var accountDto = AccountBuilder.buildFullAccountDto().createFrom(optionalAccount.get());
         if (accountDto.active()) {
             throw new AccountAlreadyActiveException("Account already active");
         }

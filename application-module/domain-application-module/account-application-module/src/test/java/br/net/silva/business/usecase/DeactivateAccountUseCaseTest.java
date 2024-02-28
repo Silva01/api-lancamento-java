@@ -1,7 +1,7 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.value_object.input.DeactivateAccount;
-import br.net.silva.daniel.entity.Account;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
@@ -24,7 +24,7 @@ class DeactivateAccountUseCaseTest {
     private DeactivateAccountUseCase deactivateAccountUseCase;
 
     @Mock
-    private Repository<Account> deactivateAccountRepository;
+    private Repository<AccountOutput> deactivateAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -54,8 +54,8 @@ class DeactivateAccountUseCaseTest {
         assertThrows(GenericException.class, () -> deactivateAccountUseCase.exec(source));
     }
 
-    private Account buildMockAccount(boolean active) {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
+    private AccountOutput buildMockAccount(boolean active) {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", Collections.emptyList(), null);
     }
 
 }

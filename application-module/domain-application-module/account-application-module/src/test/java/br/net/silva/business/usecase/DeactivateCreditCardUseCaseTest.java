@@ -2,8 +2,9 @@ package br.net.silva.business.usecase;
 
 import br.net.silva.business.exception.CreditCardNumberDifferentException;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
+import br.net.silva.business.value_object.output.AccountOutput;
+import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.CreditCard;
 import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
@@ -27,16 +28,16 @@ class DeactivateCreditCardUseCaseTest {
     private DeactivateCreditCardUseCase useCase;
 
     @Mock
-    private Repository<Account> findAccountRepository;
+    private Repository<AccountOutput> findAccountRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(findAccountRepository.exec(any(), any(), any())).thenReturn(buildMockAccount(true, buildMockCreditCard(true)));
-        doAnswer(invocation -> invocation.getArguments()[0]).when(saveAccountRepository).exec(any(Account.class));
+        doAnswer(invocation -> invocation.getArguments()[0]).when(saveAccountRepository).exec(any(AccountOutput.class));
 
         useCase = new DeactivateCreditCardUseCase(findAccountRepository, saveAccountRepository);
     }
@@ -49,7 +50,7 @@ class DeactivateCreditCardUseCaseTest {
         assertDoesNotThrow(() -> useCase.exec(source));
 
         verify(findAccountRepository, times(1)).exec(input.accountNumber(), input.agency(), input.cpf());
-        verify(saveAccountRepository, times(1)).exec(any(Account.class));
+        verify(saveAccountRepository, times(1)).exec(any(AccountOutput.class));
     }
 
     @Test
@@ -61,15 +62,15 @@ class DeactivateCreditCardUseCaseTest {
         assertEquals("Credit card number is different the credit card informed for the user", responseException.getMessage());
 
         verify(findAccountRepository, times(1)).exec(input.accountNumber(), input.agency(), input.cpf());
-        verify(saveAccountRepository, never()).exec(any(Account.class));
+        verify(saveAccountRepository, never()).exec(any(AccountOutput.class));
     }
 
-    private Account buildMockAccount(boolean active, CreditCard creditCard) {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, Collections.emptyList());
+    private AccountOutput buildMockAccount(boolean active, CreditCardOutput creditCard) {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", Collections.emptyList(), creditCard);
     }
 
-    private CreditCard buildMockCreditCard(boolean activate) {
-        return new CreditCard("99988877766", 45678, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2027, 1, 1), activate);
+    private CreditCardOutput buildMockCreditCard(boolean activate) {
+        return new CreditCardOutput("99988877766", 45678, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2027, 1, 1), activate);
     }
 
 }

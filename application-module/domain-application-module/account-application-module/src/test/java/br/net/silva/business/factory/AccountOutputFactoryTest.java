@@ -22,7 +22,7 @@ class AccountOutputFactoryTest extends AbstractAccountBuilder {
                 .withPassword(accountDtoMock.password())
                 .withFlagActive(accountDtoMock.active())
                 .withCpf(accountDtoMock.cpf())
-                .withTransactions(TransactionBuilder.buildFullTransactionsOutput().createFrom(accountDtoMock.transactions()))
+                .withTransactions(TransactionBuilder.buildFullTransactionListOutput().createFrom(accountDtoMock.transactions()))
                 .andWithCreditCard(CreditCardBuilder.buildFullCreditCardOutput().createFrom(accountDtoMock.creditCard()))
                 .build();
 
@@ -53,7 +53,7 @@ class AccountOutputFactoryTest extends AbstractAccountBuilder {
                 .withPassword(accountDtoMock.password())
                 .withFlagActive(accountDtoMock.active())
                 .withCpf(accountDtoMock.cpf())
-                .withTransactions(TransactionBuilder.buildFullTransactionsOutput().createFrom(accountDtoMock.transactions()))
+                .withTransactions(TransactionBuilder.buildFullTransactionListOutput().createFrom(accountDtoMock.transactions()))
                 .andWithCreditCard(CreditCardBuilder.buildFullCreditCardOutput().createFrom(accountDtoMock.creditCard()))
                 .build();
 

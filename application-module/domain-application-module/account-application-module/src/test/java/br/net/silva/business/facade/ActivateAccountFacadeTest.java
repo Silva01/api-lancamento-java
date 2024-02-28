@@ -3,6 +3,7 @@ package br.net.silva.business.facade;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsAndActiveValidate;
 import br.net.silva.business.value_object.input.ActivateAccount;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -32,13 +33,13 @@ class ActivateAccountFacadeTest {
     private IValidations accountExistsValidate;
 
     @Mock
-    private Repository<Account> activateAccountRepository;
+    private Repository<AccountOutput> activateAccountRepository;
 
     @Mock
-    private Repository<Account> findAccountRepository;
+    private Repository<AccountOutput> findAccountRepository;
 
     @Mock
-    private Repository<Optional<Account>> optionalFindAccountRepository;
+    private Repository<Optional<AccountOutput>> optionalFindAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -109,7 +110,7 @@ class ActivateAccountFacadeTest {
         assertEquals("Account already active", exceptionResponse.getMessage());
     }
 
-    private Account buildMockAccount(boolean active) {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
+    private AccountOutput buildMockAccount(boolean active) {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", Collections.emptyList(), null);
     }
 }

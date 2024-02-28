@@ -1,11 +1,12 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.mapper.CreateResponseToFindAccountsByCpfFactory;
 import br.net.silva.business.mapper.CreateResponseToNewAccountByClientFactory;
 import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
 import br.net.silva.business.value_object.input.FindAccountDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
-import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
@@ -31,7 +32,7 @@ class FindAllAccountsByCpfUseCaseTest {
     private GenericResponseMapper factory;
 
     @Mock
-    private Repository<List<Account>> repository;
+    private Repository<List<AccountOutput>> repository;
 
     @BeforeEach
     void setUp() {
@@ -51,7 +52,7 @@ class FindAllAccountsByCpfUseCaseTest {
         var response = (AccountsByCpfResponseDto) source.output();
         assertNotNull(response);
 
-        var mockListAccount = buildMockListAccount().stream().map(Account::build).toList();
+        var mockListAccount = buildMockListAccount().stream().map(AccountBuilder.buildFullAccountDto()::createFrom).toList();
 
         var accountsList = response.getAccounts();
         assertNotNull(accountsList);
@@ -75,10 +76,10 @@ class FindAllAccountsByCpfUseCaseTest {
         assertTrue(accountsList.isEmpty());
     }
 
-    private List<Account> buildMockListAccount() {
-        var account1 = new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", null, Collections.emptyList());
-        var account2 = new Account(2, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, Collections.emptyList());
-        var account3 = new Account(3, 45680, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, Collections.emptyList());
+    private List<AccountOutput> buildMockListAccount() {
+        var account1 = new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", Collections.emptyList(), null);
+        var account2 = new AccountOutput(2, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", Collections.emptyList(), null);
+        var account3 = new AccountOutput(3, 45680, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", Collections.emptyList(), null);
         return List.of(account1, account2, account3);
     }
 

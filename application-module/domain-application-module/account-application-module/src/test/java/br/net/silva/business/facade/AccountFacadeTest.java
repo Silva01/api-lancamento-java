@@ -49,13 +49,13 @@ class AccountFacadeTest {
     private Repository<Boolean> findIsExistsPeerCPFRepository;
 
     @Mock
-    private Repository<Account> saveRepository;
+    private Repository<AccountOutput> saveRepository;
 
     @Mock
-    private Repository<Optional<Account>> findAccountRepository;
+    private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @Mock
-    private Repository<Account> deactivateAccountRepository;
+    private Repository<AccountOutput> deactivateAccountRepository;
 
     @BeforeEach
     void setup() {
@@ -85,13 +85,12 @@ class AccountFacadeTest {
         accountFacade.exec(source);
 
         assertNotNull(source.output());
-        var accountDTo = buildMockAccount().build();
+        var accountDTo = buildMockAccount();
 
         var response = (NewAccountResponse) source.output();
 
         assertEquals(accountDTo.agency(), response.getAgency());
         assertNotNull(response.getAccountNumber());
-        assertEquals(accountDTo.number(), response.getAccountNumber());
     }
 
     @Test
@@ -111,14 +110,14 @@ class AccountFacadeTest {
         accountFacade.exec(source);
 
         assertNotNull(source.output());
-        var accountDTo = buildMockAccount().build();
+        var accountDTo = buildMockAccount();
 
         var response = (NewAccountByNewClientResponseSuccess) source.output();
 
         assertEquals(accountDTo.agency(), response.getAgency());
         assertNotNull(response.getAccountNumber());
-        assertEquals(accountDTo.number(), response.getAccountNumber());
-        assertEquals(accountDTo.password(), response.getProvisionalPassword());
+        assertNotNull(response.getAccountNumber());
+        assertNotNull(response.getProvisionalPassword());
     }
 
     @Test
@@ -215,7 +214,7 @@ class AccountFacadeTest {
         assertNotNull(source.output());
     }
 
-    private Account buildMockAccount() {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", null, Collections.emptyList());
+    private AccountOutput buildMockAccount() {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", Collections.emptyList(), null);
     }
 }

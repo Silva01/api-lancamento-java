@@ -17,10 +17,10 @@ import br.net.silva.daniel.value_object.Source;
 
 public class ChangePasswordAccountUseCase implements UseCase<EmptyOutput> {
     private final UseCase<AccountOutput> findAccountUseCase;
-    private final Repository<Account> updatePasswordRepository;
+    private final Repository<AccountOutput> updatePasswordRepository;
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
 
-    public ChangePasswordAccountUseCase(UseCase<AccountOutput> findAccountUseCase, Repository<Account> updatePasswordRepository) {
+    public ChangePasswordAccountUseCase(UseCase<AccountOutput> findAccountUseCase, Repository<AccountOutput> updatePasswordRepository) {
         this.findAccountUseCase = findAccountUseCase;
         this.updatePasswordRepository = updatePasswordRepository;
         this.createNewAccountByCpfFactory = new CreateAccountByAccountDTOFactory();
@@ -33,7 +33,7 @@ public class ChangePasswordAccountUseCase implements UseCase<EmptyOutput> {
         var accountOutput = findAccountUseCase.exec(param);
         var account = createNewAccountByCpfFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
         account.changePassword(CryptoUtils.convertToSHA256(changePasswordDTO.newPassword()));
-       updatePasswordRepository.exec(account);
+       updatePasswordRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
 
        return EmptyOutput.INSTANCE;
     }

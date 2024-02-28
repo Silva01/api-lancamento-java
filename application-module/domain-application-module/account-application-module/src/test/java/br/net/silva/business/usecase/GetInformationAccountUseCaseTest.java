@@ -1,10 +1,11 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.build.TransactionBuilder;
 import br.net.silva.business.mapper.GetInformationMapper;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
-import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Transaction;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
@@ -30,10 +31,10 @@ class GetInformationAccountUseCaseTest {
     private GetInformationAccountUseCase useCase;
 
     @Mock
-    private Repository<Account> findInformationRepository;
+    private Repository<AccountOutput> findInformationRepository;
 
     @Mock
-    private Repository<List<Transaction>> transactionsRepository;
+    private Repository<List<TransactionOutput>> transactionsRepository;
 
     @BeforeEach
     void setUp() {
@@ -60,25 +61,25 @@ class GetInformationAccountUseCaseTest {
         assertEquals(BigDecimal.valueOf(1000), output.getBalance());
         assertFalse(output.isHaveCreditCard());
         assertEquals(10, output.getTransactions().size());
-        assertEquals(buildListTransaction().stream().map(Transaction::build).toList(), output.getTransactions());
+        assertEquals(TransactionBuilder.buildFullTransactionListDto().createFrom(buildListTransaction()), output.getTransactions());
     }
 
-    private Account buildMockAccount(boolean active) {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
+    private AccountOutput buildMockAccount(boolean active) {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", Collections.emptyList(), null);
     }
 
-    private List<Transaction> buildListTransaction() {
+    private List<TransactionOutput> buildListTransaction() {
         return List.of(
-                new Transaction(1L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(2L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(3L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(4L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(5L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(6L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(7L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(8L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(9L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(10L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321)
+                new TransactionOutput(1L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(2L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(3L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(4L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(5L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(6L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(7L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(8L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(9L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(10L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321)
         );
     }
 

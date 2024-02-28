@@ -4,6 +4,7 @@ import br.net.silva.business.usecase.ChangeAgencyUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.validations.AccountWithNewAgencyAlreadyExistsValidate;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
@@ -45,10 +46,10 @@ class FluxChangeAgencyAccountTest extends AbstractBuilder {
     private IValidations accountWithNewAgencyAlreadyExistsValidation;
 
     @Mock
-    private Repository<Account> findAccountByCpfAndAccountNumberRepository;
+    private Repository<AccountOutput> findAccountByCpfAndAccountNumberRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @Mock
     private Repository<Optional<Client>> findClientRepository;

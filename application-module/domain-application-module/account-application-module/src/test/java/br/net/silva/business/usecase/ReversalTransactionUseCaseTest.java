@@ -1,9 +1,12 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.build.AccountBuilder;
+import br.net.silva.business.build.TransactionBuilder;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
+import br.net.silva.business.value_object.output.AccountOutput;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Transaction;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
@@ -12,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -22,20 +25,20 @@ class ReversalTransactionUseCaseTest extends AbstractAccountBuilder {
     private ReversalTransactionUseCase useCase;
 
     @Mock
-    private Repository<Transaction> findTransactionByIdAndIdempotencyIdRepository;
+    private Repository<TransactionOutput> findTransactionByIdAndIdempotencyIdRepository;
 
     @Mock
-    private Repository<Account> findAccountByAccountNumberRepository;
+    private Repository<AccountOutput> findAccountByAccountNumberRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findTransactionByIdAndIdempotencyIdRepository.exec(anyLong(), anyLong())).thenReturn(buildMockTransaction(TransactionTypeEnum.DEBIT));
-        when(findAccountByAccountNumberRepository.exec(anyInt())).thenReturn(buildMockAccount(true, null));
-        when(saveAccountRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true, null));
+        when(findTransactionByIdAndIdempotencyIdRepository.exec(anyLong(), anyLong())).thenReturn(TransactionBuilder.buildFullTransactionOutput().createFrom(buildMockTransaction(TransactionTypeEnum.DEBIT).build()));
+        when(findAccountByAccountNumberRepository.exec(anyInt())).thenReturn(AccountBuilder.buildFullAccountOutput().createFrom(buildMockAccount(true, null).build()));
+        when(saveAccountRepository.exec(any(Account.class))).thenReturn(AccountBuilder.buildFullAccountOutput().createFrom(buildMockAccount(true, null).build()));
 
         useCase = new ReversalTransactionUseCase(findTransactionByIdAndIdempotencyIdRepository, findAccountByAccountNumberRepository, saveAccountRepository);
     }
