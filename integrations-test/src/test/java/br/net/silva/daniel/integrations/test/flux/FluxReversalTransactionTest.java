@@ -4,8 +4,9 @@ import br.net.silva.business.exception.TransactionNotExistsException;
 import br.net.silva.business.usecase.ReversalTransactionUseCase;
 import br.net.silva.business.validations.TransactionExistsValidate;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
+import br.net.silva.business.value_object.output.AccountOutput;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Transaction;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
@@ -35,16 +36,16 @@ class FluxReversalTransactionTest extends AbstractBuilder {
     private IValidations transactionExistsValidation;
 
     @Mock
-    private Repository<Transaction> findTransactionByIdAndIdempotencyIdRepository;
+    private Repository<TransactionOutput> findTransactionByIdAndIdempotencyIdRepository;
 
     @Mock
-    private Repository<Account> findAccountByAccountNumberRepository;
+    private Repository<AccountOutput> findAccountByAccountNumberRepository;
 
     @Mock
-    private Repository<Optional<Transaction>> transactionRepository;
+    private Repository<Optional<TransactionOutput>> transactionRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -79,7 +80,7 @@ class FluxReversalTransactionTest extends AbstractBuilder {
         verify(transactionRepository, times(1)).exec(input.id(), input.idempotencyId());
         verify(findTransactionByIdAndIdempotencyIdRepository, times(1)).exec(input.id(), input.idempotencyId());
         verify(findAccountByAccountNumberRepository, times(1)).exec(anyInt());
-        verify(saveAccountRepository, times(1)).exec(any(Account.class));
+        verify(saveAccountRepository, times(1)).exec(any(AccountOutput.class));
     }
 
     @Test

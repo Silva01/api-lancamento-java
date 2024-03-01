@@ -3,8 +3,8 @@ package br.net.silva.daniel.integrations.test.flux;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.value_object.input.ActivateAccount;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -39,16 +39,16 @@ class FluxActivateAccountTest extends AbstractBuilder {
     private IValidations clientExistsValidation;
 
     @Mock
-    private Repository<Account> activateAccountRepository;
+    private Repository<AccountOutput> activateAccountRepository;
 
     @Mock
-    private Repository<Optional<Account>> findOptionalAccountRepository;
+    private Repository<Optional<AccountOutput>> findOptionalAccountRepository;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    private Repository<Account> findAccountRepository;
+    private Repository<AccountOutput> findAccountRepository;
 
     @BeforeEach
     void setUp() {

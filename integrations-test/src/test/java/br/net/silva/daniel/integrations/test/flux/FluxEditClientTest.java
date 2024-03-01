@@ -1,6 +1,5 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -35,10 +34,10 @@ class FluxEditClientTest extends AbstractBuilder {
     private IValidations clientExistsValidation;
 
     @Mock
-    private Repository<Client> saveRepository;
+    private Repository<ClientOutput> saveRepository;
 
     @Mock
-    private Repository<Optional<Client>> findRepository;
+    private Repository<Optional<ClientOutput>> findRepository;
 
     @BeforeEach
     void setUp() {

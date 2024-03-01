@@ -6,7 +6,6 @@ import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -43,13 +42,13 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
     private IValidations passwordAndExistsAccountValidate;
 
     @Mock
-    private Repository<Account> updatePasswordRepository;
+    private Repository<AccountOutput> updatePasswordRepository;
 
     @Mock
-    private Repository<Optional<Account>> findAccountRepository;
+    private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @Mock
-    private Repository<Optional<Client>> findCLientRepository;
+    private Repository<Optional<ClientOutput>> findCLientRepository;
 
     @BeforeEach
     void setUp() {
@@ -69,7 +68,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
 
     @Test
     void shouldChangePasswordAccountWithSuccess() throws GenericException {
-        when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(updatePasswordRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
 
         var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978534", "1234567");
         var source = new Source(EmptyOutput.INSTANCE, changePassord);
@@ -84,14 +83,14 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
         var facade = new GenericFacadeDelegate<>(queueUseCase, validations);
         facade.exec(source);
 
-        verify(updatePasswordRepository, times(1)).exec(any(Account.class));
+        verify(updatePasswordRepository, times(1)).exec(any(AccountOutput.class));
         verify(findAccountRepository, times(2)).exec(anyInt(), anyInt());
         verify(findCLientRepository, times(1)).exec(anyString());
     }
 
     @Test
     void shouldChangePasswordAccountWithErrorPasswordIsDifferent() {
-        when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(updatePasswordRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
 
         var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978501", "1234567");
         var source = new Source(EmptyOutput.INSTANCE, changePassord);
@@ -110,7 +109,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
 
     @Test
     void shouldChangePasswordAccountWithErrorPasswordHasRepeatNumbers() {
-        when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(updatePasswordRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
 
         var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978599", "1234567");
         var source = new Source(EmptyOutput.INSTANCE, changePassord);
@@ -129,7 +128,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
 
     @Test
     void shouldChangePasswordAccountWithErrorPasswordHasThanSixNumbers() {
-        when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(updatePasswordRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
 
         var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "1234", "1234567");
         var source = new Source(EmptyOutput.INSTANCE, changePassord);
@@ -148,7 +147,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
 
     @Test
     void shouldChangePasswordAccountWithErrorCpfNotExists() {
-        when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(updatePasswordRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(findCLientRepository.exec(anyString())).thenReturn(Optional.empty());
 
         var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978534", "1234567");
@@ -168,7 +167,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
 
     @Test
     void shouldChangePasswordAccountWithErrorAccountDeactivatedOrNotExists() {
-        when(updatePasswordRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(updatePasswordRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
 
         // Repository representa uma busca de conta ativada, como não tem nenhuma conta ativada, retorna vazio
         when(findAccountRepository.exec(anyInt(), anyInt())).thenReturn(Optional.empty());

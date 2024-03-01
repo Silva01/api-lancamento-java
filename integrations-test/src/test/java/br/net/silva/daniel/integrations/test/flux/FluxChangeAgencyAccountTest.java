@@ -6,7 +6,6 @@ import br.net.silva.business.validations.AccountWithNewAgencyAlreadyExistsValida
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -52,10 +51,10 @@ class FluxChangeAgencyAccountTest extends AbstractBuilder {
     private Repository<AccountOutput> saveAccountRepository;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    private Repository<Optional<Account>> findAccountRepository;
+    private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -90,7 +89,7 @@ class FluxChangeAgencyAccountTest extends AbstractBuilder {
         assertDoesNotThrow(() -> facade.exec(source));
 
         verify(findAccountByCpfAndAccountNumberRepository, times(1)).exec(changeAgencyInput.cpf(), changeAgencyInput.accountNumber(), changeAgencyInput.agency());
-        verify(saveAccountRepository, times(2)).exec(any(Account.class));
+        verify(saveAccountRepository, times(2)).exec(any(AccountOutput.class));
         verify(findClientRepository, times(1)).exec(changeAgencyInput.cpf());
         verify(findAccountRepository, times(1)).exec(anyInt(), anyInt());
         verify(findAccountRepository, times(1)).exec(anyInt(), anyInt(), anyString());

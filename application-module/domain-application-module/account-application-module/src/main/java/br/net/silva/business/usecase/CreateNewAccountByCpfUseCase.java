@@ -23,6 +23,7 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.value_object.Source;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
@@ -50,16 +51,18 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
         if (isExistsAccountActiveForCPF(clientCpf.cpf())) {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
-        var accountOutput = saveRepository.exec(createNewAccountByCpfFactory.create(
-                new AccountDTO(
-                        null,
-                        agencyInterface.agency(),
-                        null,
-                        "default",
-                        true,
-                        clientCpf.cpf(),
-                        null,
-                        null)));
+
+        var accountDtoParam = new AccountDTO(
+                null,
+                agencyInterface.agency(),
+                null,
+                "default",
+                true,
+                clientCpf.cpf(),
+                Collections.emptyList(),
+                null);
+
+        var accountOutput = saveRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(accountDtoParam));
 
         var accountAggregate = createNewAccountByCpfFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
 

@@ -36,7 +36,7 @@ public class EditAddressUseCase implements UseCase<ClientOutput> {
 
             var client = ClientBuilder.buildAggregate().createFrom(clientOutput);
             client.registerAddress(address);
-            return saveClientRepository.exec(client);
+            return saveClientRepository.exec(ClientBuilder.buildFullClientOutput().createFrom(client.build()));
         } catch (Exception e) {
             throw new GenericException("Generic Error", e);
         }

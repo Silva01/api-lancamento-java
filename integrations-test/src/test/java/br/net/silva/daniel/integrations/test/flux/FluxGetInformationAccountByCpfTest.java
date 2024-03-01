@@ -1,14 +1,14 @@
 package br.net.silva.daniel.integrations.test.flux;
 
+import br.net.silva.business.build.AccountBuilder;
+import br.net.silva.business.build.TransactionBuilder;
 import br.net.silva.business.enums.AccountStatusEnum;
 import br.net.silva.business.usecase.GetInformationAccountUseCase;
 import br.net.silva.business.validations.AccountExistsAndActiveByCpfValidate;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
-import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.entity.Transaction;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
@@ -42,16 +42,16 @@ class FluxGetInformationAccountByCpfTest extends AbstractBuilder {
     private IValidations clientExistsValidation;
 
     @Mock
-    private Repository<Account> getInformationAccountByCpfRepository;
+    private Repository<AccountOutput> getInformationAccountByCpfRepository;
 
     @Mock
-    private Repository<List<Transaction>> transactionsRepository;
+    private Repository<List<TransactionOutput>> transactionsRepository;
 
     @Mock
-    private Repository<Optional<Account>> findAccountByCpfRepository;
+    private Repository<Optional<AccountOutput>> findAccountByCpfRepository;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @BeforeEach
     void setUp() {
@@ -87,8 +87,8 @@ class FluxGetInformationAccountByCpfTest extends AbstractBuilder {
 
         var output = (GetInformationAccountOutput) source.output();
 
-        var mockAccount = buildMockAccount(true).build();
-        var mockTransaction = buildListTransaction().stream().map(Transaction::build).toList();
+        var mockAccount = AccountBuilder.buildFullAccountDto().createFrom(buildMockAccount(true));
+        var mockTransaction = TransactionBuilder.buildFullTransactionListDto().createFrom(buildListTransaction());
 
         assertEquals(mockAccount.number(), output.getAccountNumber());
         assertEquals(mockAccount.agency(), output.getAgency());
@@ -116,8 +116,8 @@ class FluxGetInformationAccountByCpfTest extends AbstractBuilder {
 
         var output = (GetInformationAccountOutput) source.output();
 
-        var mockAccount = buildMockAccount(true).build();
-        var mockTransaction = buildListTransaction().stream().map(Transaction::build).toList();
+        var mockAccount = AccountBuilder.buildFullAccountDto().createFrom(buildMockAccount(true));
+        var mockTransaction = TransactionBuilder.buildFullTransactionListDto().createFrom(buildListTransaction());
 
         assertEquals(mockAccount.number(), output.getAccountNumber());
         assertEquals(mockAccount.agency(), output.getAgency());

@@ -2,7 +2,6 @@ package br.net.silva.daniel.integrations.test.flux;
 
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
@@ -45,13 +44,13 @@ class FluxDeactivateClientTest extends AbstractBuilder {
     private IValidations clientExistsValidation;
 
     @Mock
-    private Repository<Account> deactivateAccountRepository;
+    private Repository<AccountOutput> deactivateAccountRepository;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    private Repository<Client> saveRepository;
+    private Repository<ClientOutput> saveRepository;
 
     @BeforeEach
     void setUp() {

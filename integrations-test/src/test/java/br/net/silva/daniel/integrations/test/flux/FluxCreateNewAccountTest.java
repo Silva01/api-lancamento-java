@@ -6,7 +6,6 @@ import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
@@ -42,20 +41,20 @@ class FluxCreateNewAccountTest extends AbstractBuilder {
     private Repository<Boolean> findAccountIsExistsPeerCPFRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    private Repository<Optional<Account>> findAccountRepository;
+    private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(findClientRepository.exec(anyString())).thenReturn(Optional.ofNullable(buildMockClient(true)));
         when(findAccountIsExistsPeerCPFRepository.exec(anyString())).thenReturn(false);
-        when(saveAccountRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(saveAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(findAccountRepository.exec(anyInt(), anyString())).thenReturn(Optional.empty());
 
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findAccountIsExistsPeerCPFRepository, saveAccountRepository, buildFactoryResponse());
@@ -86,7 +85,7 @@ class FluxCreateNewAccountTest extends AbstractBuilder {
 
         verify(findClientRepository, times(1)).exec(anyString());
         verify(findAccountIsExistsPeerCPFRepository, times(1)).exec(anyString());
-        verify(saveAccountRepository, times(1)).exec(any(Account.class));
+        verify(saveAccountRepository, times(1)).exec(any(AccountOutput.class));
     }
 
     @Test
