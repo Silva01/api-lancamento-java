@@ -1,6 +1,7 @@
 package br.net.silva.business.validations;
 
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.interfaces.IAccountParam;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
@@ -12,9 +13,9 @@ import java.util.Optional;
 
 public class AccountExistsValidate implements IValidations {
 
-    private final Repository<Optional<Account>> findAccountRepository;
+    private final Repository<Optional<AccountOutput>> findAccountRepository;
 
-    public AccountExistsValidate(Repository<Optional<Account>> findAccountRepository) {
+    public AccountExistsValidate(Repository<Optional<AccountOutput>> findAccountRepository) {
         this.findAccountRepository = findAccountRepository;
     }
 

@@ -3,7 +3,7 @@ package br.net.silva.business.facade;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsAndActiveValidate;
 import br.net.silva.business.value_object.input.ActivateAccount;
-import br.net.silva.daniel.entity.Account;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
@@ -32,13 +32,13 @@ class ActivateAccountFacadeTest {
     private IValidations accountExistsValidate;
 
     @Mock
-    private Repository<Account> activateAccountRepository;
+    private Repository<AccountOutput> activateAccountRepository;
 
     @Mock
-    private Repository<Account> findAccountRepository;
+    private Repository<AccountOutput> findAccountRepository;
 
     @Mock
-    private Repository<Optional<Account>> optionalFindAccountRepository;
+    private Repository<Optional<AccountOutput>> optionalFindAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -49,7 +49,7 @@ class ActivateAccountFacadeTest {
 
     @Test
     void shouldActivateAccountWithSuccess() throws GenericException {
-        when(activateAccountRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(activateAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(false)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
@@ -66,12 +66,12 @@ class ActivateAccountFacadeTest {
 
         assertNotNull(source.output());
 
-        verify(activateAccountRepository).exec(any(Account.class));
+        verify(activateAccountRepository).exec(any(AccountOutput.class));
     }
 
     @Test
     void shouldActivateAccountErrorWhenAccountNotExists() {
-        when(activateAccountRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(activateAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.empty());
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
@@ -91,7 +91,7 @@ class ActivateAccountFacadeTest {
 
     @Test
     void shouldActivateAccountErrorWhenAccountIsActive() {
-        when(activateAccountRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(activateAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
@@ -109,7 +109,7 @@ class ActivateAccountFacadeTest {
         assertEquals("Account already active", exceptionResponse.getMessage());
     }
 
-    private Account buildMockAccount(boolean active) {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
+    private AccountOutput buildMockAccount(boolean active) {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
     }
 }

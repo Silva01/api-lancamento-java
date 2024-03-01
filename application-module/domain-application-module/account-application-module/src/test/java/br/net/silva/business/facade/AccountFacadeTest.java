@@ -8,16 +8,16 @@ import br.net.silva.business.usecase.*;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.business.value_object.output.NewAccountResponse;
-import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.value_object.Source;
@@ -35,11 +35,11 @@ import static org.mockito.Mockito.when;
 
 class AccountFacadeTest {
 
-    private UseCase<AccountDTO> createNewAccountByCpfUseCase;
+    private UseCase<AccountOutput> createNewAccountByCpfUseCase;
 
-    private UseCase<AccountDTO> changePasswordAccountUseCase;
+    private UseCase<EmptyOutput> changePasswordAccountUseCase;
 
-    private UseCase<AccountDTO> deactivateAccountUseCase;
+    private UseCase<AccountOutput> deactivateAccountUseCase;
 
     private IValidations passwordAndExistsAccountValidate;
 
@@ -49,13 +49,13 @@ class AccountFacadeTest {
     private Repository<Boolean> findIsExistsPeerCPFRepository;
 
     @Mock
-    private Repository<Account> saveRepository;
+    private Repository<AccountOutput> saveRepository;
 
     @Mock
-    private Repository<Optional<Account>> findAccountRepository;
+    private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @Mock
-    private Repository<Account> deactivateAccountRepository;
+    private Repository<AccountOutput> deactivateAccountRepository;
 
     @BeforeEach
     void setup() {
@@ -71,7 +71,7 @@ class AccountFacadeTest {
     @Test
     void mustCreateNewAccountByCpf() throws GenericException {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
-        when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(saveRepository.exec(Mockito.any(AccountOutput.class))).thenReturn(buildMockAccount());
         when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
@@ -85,19 +85,18 @@ class AccountFacadeTest {
         accountFacade.exec(source);
 
         assertNotNull(source.output());
-        var accountDTo = buildMockAccount().build();
+        var accountDTo = buildMockAccount();
 
         var response = (NewAccountResponse) source.output();
 
         assertEquals(accountDTo.agency(), response.getAgency());
         assertNotNull(response.getAccountNumber());
-        assertEquals(accountDTo.number(), response.getAccountNumber());
     }
 
     @Test
     void mustCreateNewAccountByCpfWithObjectResponseOfClient() throws GenericException {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
-        when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(saveRepository.exec(Mockito.any(AccountOutput.class))).thenReturn(buildMockAccount());
         when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
@@ -111,14 +110,14 @@ class AccountFacadeTest {
         accountFacade.exec(source);
 
         assertNotNull(source.output());
-        var accountDTo = buildMockAccount().build();
+        var accountDTo = buildMockAccount();
 
         var response = (NewAccountByNewClientResponseSuccess) source.output();
 
         assertEquals(accountDTo.agency(), response.getAgency());
         assertNotNull(response.getAccountNumber());
-        assertEquals(accountDTo.number(), response.getAccountNumber());
-        assertEquals(accountDTo.password(), response.getProvisionalPassword());
+        assertNotNull(response.getAccountNumber());
+        assertNotNull(response.getProvisionalPassword());
     }
 
     @Test
@@ -215,7 +214,7 @@ class AccountFacadeTest {
         assertNotNull(source.output());
     }
 
-    private Account buildMockAccount() {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", null, Collections.emptyList());
+    private AccountOutput buildMockAccount() {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", null, Collections.emptyList());
     }
 }

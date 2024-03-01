@@ -5,23 +5,22 @@ import br.net.silva.business.mapper.CreateResponseToNewAccountByClientFactory;
 import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
 import br.net.silva.business.mapper.GetInformationMapper;
 import br.net.silva.business.value_object.input.TransactionInput;
+import br.net.silva.business.value_object.output.AccountOutput;
+import br.net.silva.business.value_object.output.CreditCardOutput;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.entity.CreditCard;
-import br.net.silva.daniel.entity.Transaction;
 import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.utils.CreditCardUtils;
-import br.net.silva.daniel.value_object.Address;
+import br.net.silva.daniel.value_object.output.AddressOutput;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,45 +29,45 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public abstract class AbstractBuilder extends GeneratorRandomValues {
 
-    protected Account buildMockAccount(boolean active) {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, new ArrayList<>());
+    protected AccountOutput buildMockAccount(boolean active) {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, new ArrayList<>());
     }
 
-    protected Account buildMockAccountWithCreditCard(boolean active, boolean activeCreditCard) {
-        var creditCard = new CreditCard("5400639532571841", 121, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2025, 12, 31), activeCreditCard);
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, new ArrayList<>());
+    protected AccountOutput buildMockAccountWithCreditCard(boolean active, boolean activeCreditCard) {
+        var creditCard = new CreditCardOutput("5400639532571841", 121, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2025, 12, 31), activeCreditCard);
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, new ArrayList<>());
     }
 
     @Deprecated(since = "2.0.0", forRemoval = true)
-    protected Client buildMockClient() {
-        var address = new Address("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
-        return new Client("abcd", "99988877766", "Daniel", "6122223333", true, address);
+    protected ClientOutput buildMockClient() {
+        var address = new AddressOutput("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
+        return new ClientOutput("abcd", "99988877766", "Daniel", "6122223333", true, address);
     }
 
-    protected Client buildMockClient(boolean active) {
-        var address = new Address("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
-        return new Client("abcd", "99988877766", "Daniel", "6122223333", active, address);
+    protected ClientOutput buildMockClient(boolean active) {
+        var address = new AddressOutput("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
+        return new ClientOutput("abcd", "99988877766", "Daniel", "6122223333", active, address);
     }
 
-    protected List<Account> buildMockListAccount() {
-        var account1 = new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", null, new ArrayList<>());
-        var account2 = new Account(2, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, new ArrayList<>());
-        var account3 = new Account(3, 45680, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, new ArrayList<>());
+    protected List<AccountOutput> buildMockListAccount() {
+        var account1 = new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", null, new ArrayList<>());
+        var account2 = new AccountOutput(2, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, new ArrayList<>());
+        var account3 = new AccountOutput(3, 45680, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, new ArrayList<>());
         return List.of(account1, account2, account3);
     }
 
-    protected List<Transaction> buildListTransaction() {
+    protected List<TransactionOutput> buildListTransaction() {
         return List.of(
-                new Transaction(1L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(2L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(3L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(4L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(5L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(6L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(7L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(8L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(9L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
-                new Transaction(10L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321)
+                new TransactionOutput(1L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(2L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(3L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(4L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(5L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(6L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(7L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(8L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(9L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321),
+                new TransactionOutput(10L, "test", BigDecimal.valueOf(100), 1, TransactionTypeEnum.CREDIT, 333, 222, 4444L, "00000", 321)
         );
     }
 
@@ -133,7 +132,7 @@ public abstract class AbstractBuilder extends GeneratorRandomValues {
         return transactions;
     }
 
-    protected Transaction generateTransaction() {
-        return new Transaction(generateRandomIdTransaction(), "test", BigDecimal.valueOf(100), generateRandomNumber(100), TransactionTypeEnum.CREDIT, generateRandomAccountNumber(), generateRandomAccountNumber(), generateIdempotencyId(), "22222", 321);
+    protected TransactionOutput generateTransaction() {
+        return new TransactionOutput(generateRandomIdTransaction(), "test", BigDecimal.valueOf(100), generateRandomNumber(100), TransactionTypeEnum.CREDIT, generateRandomAccountNumber(), generateRandomAccountNumber(), generateIdempotencyId(), "22222", 321);
     }
 }

@@ -1,6 +1,5 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
@@ -12,11 +11,10 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.EditAddressUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
-import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
-import br.net.silva.daniel.value_object.input.EditClientInput;
-import org.junit.jupiter.api.Assertions;
+import br.net.silva.daniel.value_object.output.AddressOutput;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -30,27 +28,27 @@ import static org.mockito.Mockito.*;
 
 class FluxEditAddressOfClientTest extends AbstractBuilder {
 
-    private UseCase<ClientDTO> editAddressUseCase;
+    private UseCase<ClientOutput> editAddressUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations clientExistValidation;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    private Repository<Client> findClientByCpfRepository;
+    private Repository<ClientOutput> findClientByCpfRepository;
 
     @Mock
-    private Repository<Client> saveClientRepository;
+    private Repository<ClientOutput> saveClientRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
         when(findClientRepository.exec(any())).thenReturn(Optional.of(buildMockClient(true)));
         when(findClientByCpfRepository.exec(any())).thenReturn(buildMockClient(true));
-        when(saveClientRepository.exec(any(Client.class))).thenReturn(buildMockClientEdited());
+        when(saveClientRepository.exec(any(ClientOutput.class))).thenReturn(buildMockClientEdited());
 
 
         // UseCase
@@ -75,7 +73,7 @@ class FluxEditAddressOfClientTest extends AbstractBuilder {
         var facade = new GenericFacadeDelegate<>(useCaseQueue, validations);
         assertDoesNotThrow(() -> facade.exec(source));
 
-        verify(saveClientRepository, times(1)).exec(any(Client.class));
+        verify(saveClientRepository, times(1)).exec(any(ClientOutput.class));
         verify(findClientByCpfRepository, times(1)).exec(anyString());
         verify(findClientRepository, times(1)).exec(anyString());
     }
@@ -126,7 +124,7 @@ class FluxEditAddressOfClientTest extends AbstractBuilder {
 
     @Test
     void shouldErrorWhenEditAddressNullPointer() {
-        when(saveClientRepository.exec(any(Client.class))).thenReturn(null);
+        when(saveClientRepository.exec(any(ClientOutput.class))).thenThrow(new NullPointerException("Generic Error"));
         var editAddressInput = new EditAddressInput("99988877766", "Rua 2", "Bairro 2", "Cidade 2", "Teste", "DF", "Brasilia", "44444-999");
         var source = new Source(EmptyOutput.INSTANCE, editAddressInput);
 
@@ -141,14 +139,14 @@ class FluxEditAddressOfClientTest extends AbstractBuilder {
 
         assertEquals("Generic Error", exceptionResponse.getMessage());
 
-        verify(saveClientRepository, times(1)).exec(any(Client.class));
+        verify(saveClientRepository, times(1)).exec(any(ClientOutput.class));
         verify(findClientByCpfRepository, times(1)).exec(anyString());
         verify(findClientRepository, times(1)).exec(anyString());
     }
 
-    protected Client buildMockClientEdited() {
-        var address = new Address("Rua 2", "Bairro 2", "Cidade 2", "Teste", "DF", "Brasilia", "44444-999");
-        return new Client("abcd", "99988877766", "Daniel", "6122223333", true, address);
+    protected ClientOutput buildMockClientEdited() {
+        var address = new AddressOutput("Rua 2", "Bairro 2", "Cidade 2", "Teste", "DF", "Brasilia", "44444-999");
+        return new ClientOutput("abcd", "99988877766", "Daniel", "6122223333", true, address);
     }
 
 }

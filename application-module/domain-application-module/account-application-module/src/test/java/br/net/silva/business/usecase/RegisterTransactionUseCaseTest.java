@@ -4,6 +4,7 @@ import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.repository.Repository;
@@ -25,10 +26,10 @@ class RegisterTransactionUseCaseTest extends AbstractAccountBuilder {
     private RegisterTransactionUseCase useCase;
 
     @Mock
-    private Repository<Account> findAccountRepository;
+    private Repository<AccountOutput> findAccountRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -51,7 +52,7 @@ class RegisterTransactionUseCaseTest extends AbstractAccountBuilder {
         assertDoesNotThrow(() -> useCase.exec(source));
 
         verify(findAccountRepository, times(2)).exec(anyInt(), anyInt(), anyString());
-        verify(saveAccountRepository, times(2)).exec(any(Account.class));
+        verify(saveAccountRepository, times(2)).exec(any(AccountOutput.class));
     }
 
     @Test
@@ -67,7 +68,7 @@ class RegisterTransactionUseCaseTest extends AbstractAccountBuilder {
         assertDoesNotThrow(() -> useCase.exec(source));
 
         verify(findAccountRepository, times(2)).exec(anyInt(), anyInt(), anyString());
-        verify(saveAccountRepository, times(2)).exec(any(Account.class));
+        verify(saveAccountRepository, times(2)).exec(any(AccountOutput.class));
     }
 
     @Test

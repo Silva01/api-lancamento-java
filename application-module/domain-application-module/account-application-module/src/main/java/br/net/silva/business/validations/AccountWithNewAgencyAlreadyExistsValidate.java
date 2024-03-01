@@ -1,6 +1,7 @@
 package br.net.silva.business.validations;
 
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IValidations;
@@ -11,9 +12,9 @@ import java.util.Optional;
 
 public class AccountWithNewAgencyAlreadyExistsValidate implements IValidations {
 
-    private final Repository<Optional<Account>> findAccountByNewAgencyNumberAndAccountNumberRepository;
+    private final Repository<Optional<AccountOutput>> findAccountByNewAgencyNumberAndAccountNumberRepository;
 
-    public AccountWithNewAgencyAlreadyExistsValidate(Repository<Optional<Account>> findAccountByNewAgencyNumberAndAccountNumberRepository) {
+    public AccountWithNewAgencyAlreadyExistsValidate(Repository<Optional<AccountOutput>> findAccountByNewAgencyNumberAndAccountNumberRepository) {
         this.findAccountByNewAgencyNumberAndAccountNumberRepository = findAccountByNewAgencyNumberAndAccountNumberRepository;
     }
 

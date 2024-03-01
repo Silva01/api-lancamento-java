@@ -4,6 +4,7 @@ import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.exception.CreditCardNumberDifferentException;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
@@ -20,7 +21,7 @@ class CreditCardNumberExistsValidateTest extends AbstractAccountBuilder {
     private CreditCardNumberExistsValidate validate;
 
     @Mock
-    private Repository<Account> findAccountByCpfAndAccountNumberAndAgencyRepository;
+    private Repository<AccountOutput> findAccountByCpfAndAccountNumberAndAgencyRepository;
 
     @BeforeEach
     void setUp() {

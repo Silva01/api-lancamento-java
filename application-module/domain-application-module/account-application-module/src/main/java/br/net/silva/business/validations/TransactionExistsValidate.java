@@ -1,20 +1,20 @@
 package br.net.silva.business.validations;
 
-import java.util.Optional;
-
 import br.net.silva.business.exception.TransactionNotExistsException;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
-import br.net.silva.daniel.entity.Transaction;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
 
+import java.util.Optional;
+
 public class TransactionExistsValidate implements IValidations {
 
-    private final Repository<Optional<Transaction>> transactionRepository;
+    private final Repository<Optional<TransactionOutput>> transactionRepository;
 
-    public TransactionExistsValidate(Repository<Optional<Transaction>> transactionRepository) {
+    public TransactionExistsValidate(Repository<Optional<TransactionOutput>> transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
 

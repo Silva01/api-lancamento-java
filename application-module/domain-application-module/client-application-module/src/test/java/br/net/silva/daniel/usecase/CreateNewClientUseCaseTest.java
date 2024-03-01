@@ -2,13 +2,14 @@ package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import br.net.silva.daniel.value_object.output.AddressOutput;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 class CreateNewClientUseCaseTest {
 
     @InjectMocks
-    private Repository<Client> saveRepository = mock(Repository.class);
+    private Repository<ClientOutput> saveRepository = mock(Repository.class);
 
     private CreateNewClientUseCase createNewClientUseCase;
 
@@ -48,7 +49,7 @@ class CreateNewClientUseCaseTest {
 
         createNewClientUseCase.exec(source);
 
-        verify(saveRepository, times(1)).exec(any(Client.class));
+        verify(saveRepository, times(1)).exec(any(ClientOutput.class));
     }
 
     @Test
@@ -79,9 +80,9 @@ class CreateNewClientUseCaseTest {
         verify(saveRepository, times(1)).exec(any());
     }
 
-    private Client createClient() {
-        var address = new Address("Street 1", "1234", "Brazil", "Brasilia", "DF", "Brasilia", "12344-556");
-        return new Client("1234", "00099988877", "Daniel", "61933334444", true, address);
+    private ClientOutput createClient() {
+        var address = new AddressOutput("Street 1", "1234", "Brazil", "Brasilia", "DF", "Brasilia", "12344-556");
+        return new ClientOutput("1234", "00099988877", "Daniel", "61933334444", true, address);
     }
 
 }

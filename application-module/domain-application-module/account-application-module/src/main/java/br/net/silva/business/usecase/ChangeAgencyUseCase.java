@@ -1,35 +1,39 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
+import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.value_object.Source;
 
-public class ChangeAgencyUseCase implements UseCase<AccountDTO> {
+public class ChangeAgencyUseCase implements UseCase<EmptyOutput> {
 
-    private final Repository<Account> findAccountByCpfAndAccountNumberRepository;
-    private final Repository<Account> saveAccountRepository;
+    private final Repository<AccountOutput> findAccountByCpfAndAccountNumberRepository;
+    private final Repository<AccountOutput> saveAccountRepository;
 
     private final IFactoryAggregate<Account, AccountDTO> factoryAggregate;
 
-    public ChangeAgencyUseCase(Repository<Account> findAccountByCpfAndAccountNumberRepository, Repository<Account> saveAccountRepository) {
+    public ChangeAgencyUseCase(Repository<AccountOutput> findAccountByCpfAndAccountNumberRepository, Repository<AccountOutput> saveAccountRepository) {
         this.findAccountByCpfAndAccountNumberRepository = findAccountByCpfAndAccountNumberRepository;
         this.saveAccountRepository = saveAccountRepository;
         this.factoryAggregate = new CreateAccountByAccountDTOFactory();
     }
 
     @Override
-    public AccountDTO exec(Source param) throws GenericException {
+    public EmptyOutput exec(Source param) throws GenericException {
         try {
             var changeAgencyInput = (ChangeAgencyInput) param.input();
-            var account = findAccountByCpfAndAccountNumberRepository.exec(changeAgencyInput.cpf(), changeAgencyInput.accountNumber(), changeAgencyInput.oldAgencyNumber());
+            var accountOutput = findAccountByCpfAndAccountNumberRepository.exec(changeAgencyInput.cpf(), changeAgencyInput.accountNumber(), changeAgencyInput.oldAgencyNumber());
 
-            var accountDto = account.build();
+            var accountDto = AccountBuilder.buildFullAccountDto().createFrom(accountOutput);
+            var account = factoryAggregate.create(accountDto);
 
             var newAccountDto = new AccountDTO(
                     accountDto.number(),
@@ -43,12 +47,12 @@ public class ChangeAgencyUseCase implements UseCase<AccountDTO> {
             );
 
             account.deactivate();
-            saveAccountRepository.exec(account);
+            saveAccountRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
 
             var newAccount = factoryAggregate.create(newAccountDto);
-            saveAccountRepository.exec(newAccount);
+            saveAccountRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(newAccount.build()));
 
-            return newAccountDto;
+            return EmptyOutput.INSTANCE;
         } catch (Exception e) {
             throw new GenericException("Generic error", e);
         }

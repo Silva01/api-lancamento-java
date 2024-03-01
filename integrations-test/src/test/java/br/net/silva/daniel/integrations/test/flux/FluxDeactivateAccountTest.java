@@ -3,10 +3,7 @@ package br.net.silva.daniel.integrations.test.flux;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.value_object.input.DeactivateAccount;
-import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -17,6 +14,7 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -30,22 +28,22 @@ import static org.mockito.Mockito.*;
 
 class FluxDeactivateAccountTest extends AbstractBuilder {
 
-    private UseCase<AccountDTO> deactivateAccountUseCase;
+    private UseCase<AccountOutput> deactivateAccountUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations accountExistsValidation;
 
     private IValidations clientExistsValidation;
 
     @Mock
-    private Repository<Account> deactivateAccountRepository;
+    private Repository<AccountOutput> deactivateAccountRepository;
 
     @Mock
-    private Repository<Optional<Account>> findAccountRepository;
+    private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @BeforeEach
     void setUp() {

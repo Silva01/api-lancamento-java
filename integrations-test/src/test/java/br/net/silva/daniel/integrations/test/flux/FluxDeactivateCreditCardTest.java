@@ -6,8 +6,8 @@ import br.net.silva.business.usecase.DeactivateCreditCardUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.validations.CreditCardNumberExistsValidate;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -18,6 +18,7 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,16 +44,16 @@ class FluxDeactivateCreditCardTest extends AbstractBuilder {
     private IValidations creditCardExistsValidate;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    private Repository<Optional<Account>> findAccountRepository;
+    private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @Mock
-    private Repository<Account> findAccountByCpfAndAccountNumberAndAgencyRepository;
+    private Repository<AccountOutput> findAccountByCpfAndAccountNumberAndAgencyRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -84,7 +85,7 @@ class FluxDeactivateCreditCardTest extends AbstractBuilder {
 
         assertDoesNotThrow(() -> facade.exec(source));
 
-        verify(saveAccountRepository, times(1)).exec(any(Account.class));
+        verify(saveAccountRepository, times(1)).exec(any(AccountOutput.class));
         verify(findAccountByCpfAndAccountNumberAndAgencyRepository, times(2)).exec(anyInt(), anyInt(), anyString());
         verify(findClientRepository, times(1)).exec(anyString());
         verify(findAccountRepository, times(1)).exec(anyInt(), anyInt(), anyString());

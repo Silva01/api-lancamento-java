@@ -4,10 +4,8 @@ import br.net.silva.business.usecase.ChangeAgencyUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.validations.AccountWithNewAgencyAlreadyExistsValidate;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
-import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.dto.ClientDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -18,6 +16,7 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -35,9 +34,9 @@ import static org.mockito.Mockito.*;
 
 class FluxChangeAgencyAccountTest extends AbstractBuilder {
 
-    private UseCase<AccountDTO> changeAgencyAccountUseCase;
+    private UseCase<EmptyOutput> changeAgencyAccountUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations clientExistsValidation;
 
@@ -46,16 +45,16 @@ class FluxChangeAgencyAccountTest extends AbstractBuilder {
     private IValidations accountWithNewAgencyAlreadyExistsValidation;
 
     @Mock
-    private Repository<Account> findAccountByCpfAndAccountNumberRepository;
+    private Repository<AccountOutput> findAccountByCpfAndAccountNumberRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    private Repository<Optional<Account>> findAccountRepository;
+    private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -90,7 +89,7 @@ class FluxChangeAgencyAccountTest extends AbstractBuilder {
         assertDoesNotThrow(() -> facade.exec(source));
 
         verify(findAccountByCpfAndAccountNumberRepository, times(1)).exec(changeAgencyInput.cpf(), changeAgencyInput.accountNumber(), changeAgencyInput.agency());
-        verify(saveAccountRepository, times(2)).exec(any(Account.class));
+        verify(saveAccountRepository, times(2)).exec(any(AccountOutput.class));
         verify(findClientRepository, times(1)).exec(changeAgencyInput.cpf());
         verify(findAccountRepository, times(1)).exec(anyInt(), anyInt());
         verify(findAccountRepository, times(1)).exec(anyInt(), anyInt(), anyString());

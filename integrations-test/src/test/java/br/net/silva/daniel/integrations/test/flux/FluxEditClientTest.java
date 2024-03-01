@@ -1,7 +1,5 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -14,7 +12,7 @@ import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditClientInput;
-import org.junit.jupiter.api.Assertions;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -29,17 +27,17 @@ import static org.mockito.Mockito.*;
 
 class FluxEditClientTest extends AbstractBuilder {
 
-    private UseCase<ClientDTO> editClientUseCase;
+    private UseCase<ClientOutput> editClientUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations clientExistsValidation;
 
     @Mock
-    private Repository<Client> saveRepository;
+    private Repository<ClientOutput> saveRepository;
 
     @Mock
-    private Repository<Optional<Client>> findRepository;
+    private Repository<Optional<ClientOutput>> findRepository;
 
     @BeforeEach
     void setUp() {

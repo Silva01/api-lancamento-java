@@ -4,10 +4,8 @@ import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
 import br.net.silva.business.validations.AccountAlreadyExistsCreditCardValidation;
 import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
-import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.dto.ClientDTO;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -18,7 +16,7 @@ import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
-import org.junit.jupiter.api.Assertions;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -35,23 +33,23 @@ import static org.mockito.Mockito.*;
 
 public class FluxCreateNewCreditCardTest extends AbstractBuilder {
 
-    private UseCase<AccountDTO> createNewCreditCardUseCase;
+    private UseCase<AccountOutput> createNewCreditCardUseCase;
 
     private IValidations clientExistsValidate;
     private IValidations accountExistsValidate;
     private IValidations creditCardExistsInAccountValidate;
 
     @Mock
-    private Repository<Account> findAccountByCpfAndAgencyAndAccountNumberRepository;
+    private Repository<AccountOutput> findAccountByCpfAndAgencyAndAccountNumberRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    Repository<Optional<Account>> findAccountRepository;
+    Repository<Optional<AccountOutput>> findAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -84,7 +82,7 @@ public class FluxCreateNewCreditCardTest extends AbstractBuilder {
         assertDoesNotThrow(() -> facade.exec(source));
 
         verify(findAccountByCpfAndAgencyAndAccountNumberRepository, times(1)).exec(anyInt(), anyInt(), anyString());
-        verify(saveAccountRepository, times(1)).exec(any(Account.class));
+        verify(saveAccountRepository, times(1)).exec(any(AccountOutput.class));
         verify(findClientRepository, times(1)).exec(anyString());
         verify(findAccountRepository, times(2)).exec(anyInt(), anyInt(), anyString());
     }

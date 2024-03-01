@@ -1,6 +1,8 @@
 package br.net.silva.business.validations;
 
+import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.CreditCard;
 import br.net.silva.daniel.enuns.FlagEnum;
@@ -24,12 +26,12 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-class AccountAlreadyExistsCreditCardValidationTest {
+class AccountAlreadyExistsCreditCardValidationTest extends AbstractAccountBuilder {
 
     private AccountAlreadyExistsCreditCardValidation validation;
 
     @Mock
-    private Repository<Optional<Account>> findAccountRepository;
+    private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @BeforeEach
     void setUp() {
@@ -50,7 +52,7 @@ class AccountAlreadyExistsCreditCardValidationTest {
 
     @Test
     void shouldValidateErrorCreditCardAlreadyExists() {
-        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard())));
+        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(true))));
         var createCreditCardInput = new CreateCreditCardInput("99988877766", 45678, 1234);
         var source = new Source(EmptyOutput.INSTANCE, createCreditCardInput);
 
@@ -62,9 +64,7 @@ class AccountAlreadyExistsCreditCardValidationTest {
 
     @Test
     void shouldValidateErrorCreditCardAlreadyExistsWithDeactivated() {
-        var creditCard = buildMockCreditCard();
-        creditCard.deactivate();
-        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, creditCard)));
+        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(false))));
         var createCreditCardInput = new CreateCreditCardInput("99988877766", 45678, 1234);
         var source = new Source(EmptyOutput.INSTANCE, createCreditCardInput);
 
@@ -72,14 +72,6 @@ class AccountAlreadyExistsCreditCardValidationTest {
         assertEquals("This account already have a credit card", exceptionResponse.getMessage());
 
         verify(findAccountRepository, times(1)).exec(createCreditCardInput.accountNumber(), createCreditCardInput.agency(), createCreditCardInput.cpf());
-    }
-
-    private Account buildMockAccount(boolean active, CreditCard creditCard) {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, Collections.emptyList());
-    }
-
-    private CreditCard buildMockCreditCard() {
-        return new CreditCard("99988877766", 45678, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2027, 1, 1), true);
     }
 
 }

@@ -3,6 +3,7 @@ package br.net.silva.business.validations;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.exception.GenericException;
@@ -26,7 +27,7 @@ class TransactionIfCreditCardIsValidValidationTest extends AbstractAccountBuilde
     private TransactionIfCreditCardIsValidValidation transactionIfCreditCardIsValidValidation;
 
     @Mock
-    private Repository<Optional<Account>> findAccountByCpfAndAccountNumberAndAgencyRepository;
+    private Repository<Optional<AccountOutput>> findAccountByCpfAndAccountNumberAndAgencyRepository;
 
     @BeforeEach
     void setUp() {

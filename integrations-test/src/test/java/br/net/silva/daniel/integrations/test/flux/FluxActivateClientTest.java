@@ -1,20 +1,19 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.ActivateClient;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,17 +30,17 @@ import static org.mockito.Mockito.when;
 
 class FluxActivateClientTest extends AbstractBuilder {
 
-    private UseCase<ClientDTO> activeClientUseCase;
+    private UseCase<ClientOutput> activeClientUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations clientExistsValidation;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    private Repository<Client> activateClientRepository;
+    private Repository<ClientOutput> activateClientRepository;
 
     @BeforeEach
     void setUp() {

@@ -1,11 +1,8 @@
 package br.net.silva.daniel.integrations.test.flux;
 
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
-import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
@@ -18,6 +15,7 @@ import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -35,25 +33,25 @@ import static org.mockito.Mockito.*;
 
 class FluxCreateNewClientTest extends AbstractBuilder {
 
-    private UseCase<AccountDTO> createNewAccountByCpfUseCase;
+    private UseCase<AccountOutput> createNewAccountByCpfUseCase;
 
-    private UseCase<ClientDTO> createNewClientUseCase;
+    private UseCase<ClientOutput> createNewClientUseCase;
 
-    private UseCase<ClientDTO> findClientUseCase;
+    private UseCase<ClientOutput> findClientUseCase;
 
     private IValidations clientNotExistsValidate;
 
     @Mock
-    private Repository<Client> saveClientRepository;
+    private Repository<ClientOutput> saveClientRepository;
 
     @Mock
     private Repository<Boolean> findIsExistsPeerCPFRepository;
 
     @Mock
-    private Repository<Account> saveAccountRepository;
+    private Repository<AccountOutput> saveAccountRepository;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @BeforeEach
     void setUp() {
@@ -66,9 +64,9 @@ class FluxCreateNewClientTest extends AbstractBuilder {
 
     @Test
     void shouldCreateNewClientWithSuccess() throws GenericException {
-        when(saveClientRepository.exec(Mockito.any(Client.class))).thenReturn(buildMockClient(true));
+        when(saveClientRepository.exec(Mockito.any(ClientOutput.class))).thenReturn(buildMockClient(true));
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
-        when(saveAccountRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount(true));
+        when(saveAccountRepository.exec(Mockito.any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
 
         var createNewClientInput = new ClientRequestDTO(
@@ -107,9 +105,9 @@ class FluxCreateNewClientTest extends AbstractBuilder {
         assertNotNull(response.getAccountNumber());
         assertNotNull(response.getProvisionalPassword());
 
-        verify(saveClientRepository, times(1)).exec(any(Client.class));
+        verify(saveClientRepository, times(1)).exec(any(ClientOutput.class));
         verify(findClientRepository, times(1)).exec(anyString());
-        verify(saveAccountRepository, times(1)).exec(any(Account.class));
+        verify(saveAccountRepository, times(1)).exec(any(AccountOutput.class));
         verify(findIsExistsPeerCPFRepository, times(1)).exec(anyString());
     }
 }
