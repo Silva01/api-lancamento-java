@@ -14,9 +14,9 @@ import br.net.silva.daniel.usecase.DeactivateClientUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.validation.ClientNotExistsValidate;
-import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.*;
+import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,10 +44,10 @@ class ClientFacadeTest {
     private DeactivateClientUseCase deactivateClientUseCase;
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     @Mock
-    private Repository<Client> saveRepository;
+    private Repository<ClientOutput> saveRepository;
 
     @BeforeEach
     public void setup() {
@@ -65,7 +65,7 @@ class ClientFacadeTest {
     @Test
     void mustCreateNewClientAndAccountWithSuccess() throws GenericException {
 
-        var client = buildClient();
+        var client = buildClient(true);
 
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
@@ -82,13 +82,13 @@ class ClientFacadeTest {
         clientFacade.exec(source);
 
         assertNotNull(source.output());
-        verify(saveRepository, Mockito.times(1)).exec(Mockito.any(Client.class));
+        verify(saveRepository, Mockito.times(1)).exec(Mockito.any(ClientOutput.class));
         verify(findClientRepository, Mockito.times(1)).exec(clientRequestDto.cpf());
     }
 
     @Test
     void mustErrorWhenClientExistsInDatabaseWhereCreateClient() {
-        var client = buildClient();
+        var client = buildClient(true);
 
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
@@ -108,8 +108,7 @@ class ClientFacadeTest {
 
     @Test
     void mustDeactivateClientWithSuccess() throws GenericException {
-        var client = buildClient();
-        client.deactivate();
+        var client = buildClient(false);
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
 
@@ -128,7 +127,7 @@ class ClientFacadeTest {
 
     @Test
     void mustDeactivateClientErrorClientNotExists() throws GenericException {
-        var client = buildClient();
+        var client = buildClient(true);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
 
         Queue<UseCase> useCases = new LinkedList<>();
@@ -146,7 +145,7 @@ class ClientFacadeTest {
 
     @Test
     void mustActivateClientWithSuccess() throws GenericException {
-        var client = buildClient();
+        var client = buildClient(true);
         when(saveRepository.exec(Mockito.any(String.class))).thenReturn(client);
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
 
@@ -164,8 +163,8 @@ class ClientFacadeTest {
         verify(findClientRepository, Mockito.times(1)).exec(activateClient.cpf());
     }
 
-    private Client buildClient() {
-        var address = new Address("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
-        return new Client("abcd", "99988877766", "Daniel", "6122223333", true, address);
+    private ClientOutput buildClient(boolean active) {
+        var address = new AddressOutput("Rua 1", "Bairro 1", "Cidade 1", "Flores", "DF", "Brasilia", "44444-555");
+        return new ClientOutput("abcd", "99988877766", "Daniel", "6122223333", active, address);
     }
 }

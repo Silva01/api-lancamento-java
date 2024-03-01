@@ -16,11 +16,11 @@ import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 public class CreateNewClientUseCase implements UseCase<ClientOutput> {
-    private final Repository<Client> saveRepository;
+    private final Repository<ClientOutput> saveRepository;
     private final IFactoryAggregate<Client, ClientDTO> createNewClientFactory;
     private final GenericResponseMapper factory;
 
-    public CreateNewClientUseCase(Repository<Client> saveRepository, GenericResponseMapper factory) {
+    public CreateNewClientUseCase(Repository<ClientOutput> saveRepository, GenericResponseMapper factory) {
         this.saveRepository = saveRepository;
         this.factory = factory;
         this.createNewClientFactory = new CreateNewClientFactory(new CreateNewAddressFactory());
@@ -36,9 +36,9 @@ public class CreateNewClientUseCase implements UseCase<ClientOutput> {
             var address = new AddressDTO(addressRequestDto.street(), addressRequestDto.number(), addressRequestDto.complement(), addressRequestDto.neighborhood(), addressRequestDto.state(), addressRequestDto.city(), addressRequestDto.zipCode());
             var clientDto = new ClientDTO(clientRequest.id(), clientRequest.cpf(), clientRequest.name(), clientRequest.telephone(), clientRequest.active(), address);
 
-            var clientAggregate = saveRepository.exec(buildClient(clientDto));
-            factory.fillIn(clientAggregate.build(), param.output());
-            return ClientBuilder.buildFullClientOutput().createFrom(clientAggregate.build());
+            var clientOutput = saveRepository.exec(ClientBuilder.buildFullClientOutput().createFrom(clientDto));
+            factory.fillIn(clientOutput, param.output());
+            return clientOutput;
         } catch (Exception e) {
             throw new ExistsClientRegistredException(e.getMessage());
         }

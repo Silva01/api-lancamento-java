@@ -17,12 +17,12 @@ import java.util.Optional;
 public class DeactivateClientUseCase implements UseCase<ClientOutput> {
 
     private final FindClientUseCase findClientUseCase;
-    private final Repository<Client> saveRepository;
+    private final Repository<ClientOutput> saveRepository;
     private final GenericResponseMapper genericFactory;
 
     private final IFactoryAggregate<Client, ClientDTO> factory;
 
-    public DeactivateClientUseCase(Repository<Optional<Client>> findClientRepository, Repository<Client> saveRepository, GenericResponseMapper genericFactory) {
+    public DeactivateClientUseCase(Repository<Optional<ClientOutput>> findClientRepository, Repository<ClientOutput> saveRepository, GenericResponseMapper genericFactory) {
         this.genericFactory = genericFactory;
         this.findClientUseCase = new FindClientUseCase(findClientRepository, genericFactory);
         this.saveRepository = saveRepository;
@@ -36,8 +36,8 @@ public class DeactivateClientUseCase implements UseCase<ClientOutput> {
         client.deactivate();
 
         var clientUpdated = saveRepository.exec(client);
-        genericFactory.fillIn(clientUpdated.build(), param.output());
+        genericFactory.fillIn(ClientBuilder.buildFullClientDto().createFrom(clientUpdated), param.output());
 
-        return ClientBuilder.buildFullClientOutput().createFrom(clientUpdated.build());
+        return clientUpdated;
     }
 }

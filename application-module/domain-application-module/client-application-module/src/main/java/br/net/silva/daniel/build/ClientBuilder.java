@@ -1,6 +1,7 @@
 package br.net.silva.daniel.build;
 
 import br.net.silva.daniel.dto.ClientDTO;
+import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.factory.ClientDtoFactory;
 import br.net.silva.daniel.factory.ClientOutputFactory;
 import br.net.silva.daniel.interfaces.IGenericBuilder;
@@ -31,5 +32,16 @@ public final class ClientBuilder {
                 .withTelephone(client.telephone())
                 .andWithId(client.id())
                 .build();
+    }
+
+    public static IGenericBuilder<Client, ClientOutput> buildAggregate() {
+        return clientOutput -> new Client(
+                clientOutput.id(),
+                clientOutput.cpf(),
+                clientOutput.name(),
+                clientOutput.telephone(),
+                clientOutput.active(),
+                AddressBuilder.buildAggregate().createFrom(clientOutput.address())
+        );
     }
 }

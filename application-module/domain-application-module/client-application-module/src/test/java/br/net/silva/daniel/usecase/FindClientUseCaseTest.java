@@ -1,13 +1,13 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ClientNotExistsException;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.interfaces.EmptyOutput;
+import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.FindClientByCpf;
+import br.net.silva.daniel.value_object.output.AddressOutput;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 class FindClientUseCaseTest {
 
     @Mock
-    private Repository<Optional<Client>> findClientRepository;
+    private Repository<Optional<ClientOutput>> findClientRepository;
 
     private GenericResponseMapper factory;
 
@@ -57,9 +57,9 @@ class FindClientUseCaseTest {
         Assertions.assertThrows(ClientNotExistsException.class, () -> findClientUseCase.exec(source));
     }
 
-    private Client buildClient() {
-        var address = new Address("Rua 1", "1234", "nao tem", "Bairro 1",  "Estado 1", "Cidade 1", "11111111");
-        return new Client("1", "22233344455", "Daniel", "22344445555", true, address);
+    private ClientOutput buildClient() {
+        var address = new AddressOutput("Rua 1", "1234", "nao tem", "Bairro 1",  "Estado 1", "Cidade 1", "11111111");
+        return new ClientOutput("1", "22233344455", "Daniel", "22344445555", true, address);
     }
 
 }

@@ -1,13 +1,13 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.factory.CreateClientByDtoFactory;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import br.net.silva.daniel.value_object.output.AddressOutput;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,7 +25,7 @@ class ActivateClientUseCaseTest {
     private CreateClientByDtoFactory factory;
 
     @Mock
-    private Repository<Client> activateClientRepository;
+    private Repository<ClientOutput> activateClientRepository;
 
 
     @BeforeEach
@@ -48,9 +48,9 @@ class ActivateClientUseCaseTest {
         verify(activateClientRepository, Mockito.times(1)).exec(Mockito.anyString());
     }
 
-    private Client createClient() {
-        var address = new Address("Street 1", "1234", "Brazil", "Brasilia", "DF", "Brasilia", "12344-556");
-        return new Client("1234", "00099988877", "Daniel", "61933334444", true, address);
+    private ClientOutput createClient() {
+        var address = new AddressOutput("Street 1", "1234", "Brazil", "Brasilia", "DF", "Brasilia", "12344-556");
+        return new ClientOutput("1234", "00099988877", "Daniel", "61933334444", true, address);
     }
 
 }
