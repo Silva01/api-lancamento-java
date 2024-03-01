@@ -1,6 +1,5 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
@@ -33,7 +32,7 @@ class EditAddressUseCaseTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(findClientRepository.exec(anyString())).thenReturn(buildClient());
-        when(saveClientRepository.exec(any(Client.class))).thenReturn(buildClient());
+        when(saveClientRepository.exec(any(ClientOutput.class))).thenReturn(buildClient());
 
         this.editAddressUseCase = new EditAddressUseCase(findClientRepository, saveClientRepository);
     }
@@ -56,7 +55,7 @@ class EditAddressUseCaseTest {
         assertNotNull(response);
 
         verify(findClientRepository, times(1)).exec(editAddressInput.cpf());
-        verify(saveClientRepository, times(1)).exec(any(Client.class));
+        verify(saveClientRepository, times(1)).exec(any(ClientOutput.class));
     }
 
     private ClientOutput buildClient() {

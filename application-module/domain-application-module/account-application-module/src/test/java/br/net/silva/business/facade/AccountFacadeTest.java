@@ -71,7 +71,7 @@ class AccountFacadeTest {
     @Test
     void mustCreateNewAccountByCpf() throws GenericException {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
-        when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(saveRepository.exec(Mockito.any(AccountOutput.class))).thenReturn(buildMockAccount());
         when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
@@ -96,7 +96,7 @@ class AccountFacadeTest {
     @Test
     void mustCreateNewAccountByCpfWithObjectResponseOfClient() throws GenericException {
         when(findIsExistsPeerCPFRepository.exec(Mockito.anyString())).thenReturn(false);
-        when(saveRepository.exec(Mockito.any(Account.class))).thenReturn(buildMockAccount());
+        when(saveRepository.exec(Mockito.any(AccountOutput.class))).thenReturn(buildMockAccount());
         when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
