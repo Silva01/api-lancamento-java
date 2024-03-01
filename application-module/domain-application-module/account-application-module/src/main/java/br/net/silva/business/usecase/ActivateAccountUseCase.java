@@ -32,7 +32,7 @@ public class ActivateAccountUseCase implements UseCase<EmptyOutput> {
             var accountOutput = findAccountRepository.exec(dto.accountNumber(), dto.agency(), dto.cpf());
             var account = accountFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
             account.activate();
-            activateAccountRepository.exec(account);
+            activateAccountRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
             return EmptyOutput.INSTANCE;
         } catch (Exception e) {
             throw new GenericException(e.getMessage());

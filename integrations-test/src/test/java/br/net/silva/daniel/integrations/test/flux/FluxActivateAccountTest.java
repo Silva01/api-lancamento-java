@@ -4,7 +4,6 @@ import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.interfaces.EmptyOutput;
@@ -29,7 +28,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class FluxActivateAccountTest extends AbstractBuilder {
-
     private UseCase<EmptyOutput> activateAccountUseCase;
 
     private UseCase<ClientOutput> findClientUseCase;
@@ -53,7 +51,7 @@ class FluxActivateAccountTest extends AbstractBuilder {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(activateAccountRepository.exec(any(Account.class))).thenReturn(buildMockAccount(true));
+        when(activateAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(findOptionalAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true)));
         when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildMockClient(true)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
@@ -81,7 +79,7 @@ class FluxActivateAccountTest extends AbstractBuilder {
 
         var facade = new GenericFacadeDelegate<>(queue, validations);
         facade.exec(source);
-        verify(activateAccountRepository, times(1)).exec(any(Account.class));
+        verify(activateAccountRepository, times(1)).exec(any(AccountOutput.class));
     }
 
     @Test
