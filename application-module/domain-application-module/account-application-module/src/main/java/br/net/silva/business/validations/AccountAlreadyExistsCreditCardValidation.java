@@ -1,6 +1,7 @@
 package br.net.silva.business.validations;
 
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IValidations;
@@ -11,9 +12,9 @@ import java.util.Optional;
 
 public class AccountAlreadyExistsCreditCardValidation implements IValidations {
 
-    private final Repository<Optional<Account>> findAccountRepository;
+    private final Repository<Optional<AccountOutput>> findAccountRepository;
 
-    public AccountAlreadyExistsCreditCardValidation(Repository<Optional<Account>> findAccountRepository) {
+    public AccountAlreadyExistsCreditCardValidation(Repository<Optional<AccountOutput>> findAccountRepository) {
         this.findAccountRepository = findAccountRepository;
     }
 
@@ -24,7 +25,7 @@ public class AccountAlreadyExistsCreditCardValidation implements IValidations {
 
         var account = optionalAccount.get();
 
-        if (account.isHaveCreditCard()) {
+        if (account.creditCard() != null){
             throw new GenericException("This account already have a credit card");
         }
     }

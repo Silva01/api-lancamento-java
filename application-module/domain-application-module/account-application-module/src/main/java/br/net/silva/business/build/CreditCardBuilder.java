@@ -4,6 +4,7 @@ import br.net.silva.business.factory.CreditCardDtoFactory;
 import br.net.silva.business.factory.CreditCardOutputFactory;
 import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.daniel.dto.CreditCardDTO;
+import br.net.silva.daniel.entity.CreditCard;
 import br.net.silva.daniel.interfaces.IGenericBuilder;
 
 import java.util.Objects;
@@ -46,6 +47,23 @@ public final class CreditCardBuilder {
                     .withExpirationDate(creditCard.expirationDate())
                     .andWithFlagActive(creditCard.active())
                     .build();
+        };
+    }
+
+    public static IGenericBuilder<CreditCard, CreditCardOutput> buildAggregate() {
+        return output -> {
+            if (Objects.isNull(output)) {
+                return null;
+            }
+
+            return new CreditCard(
+                    output.number(),
+                    output.cvv(),
+                    output.flag(),
+                    output.balance(),
+                    output.expirationDate(),
+                    output.active()
+            );
         };
     }
 }

@@ -2,7 +2,7 @@ package br.net.silva.business.validations;
 
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
-import br.net.silva.daniel.entity.Account;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.IValidations;
 import br.net.silva.daniel.repository.Repository;
@@ -12,9 +12,9 @@ import java.util.Optional;
 
 public class DestinyAccountExistsValidate implements IValidations {
 
-    private final Repository<Optional<Account>> findDetinyAccountRepository;
+    private final Repository<Optional<AccountOutput>> findDetinyAccountRepository;
 
-    public DestinyAccountExistsValidate(Repository<Optional<Account>> findDetinyAccountRepository) {
+    public DestinyAccountExistsValidate(Repository<Optional<AccountOutput>> findDetinyAccountRepository) {
         this.findDetinyAccountRepository = findDetinyAccountRepository;
     }
 

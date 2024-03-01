@@ -16,11 +16,11 @@ import java.util.List;
 public abstract class AbstractAccountBuilder extends GeneratorRandomValues {
 
     protected AccountOutput buildMockAccount(boolean active, CreditCardOutput creditCard) {
-        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", new ArrayList<>(), creditCard);
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, new ArrayList<>());
     }
 
     protected AccountOutput buildMockAccount(boolean active, CreditCardOutput creditCard, List<TransactionOutput> transactions) {
-        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", transactions, creditCard);
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, transactions);
     }
 
     protected CreditCardOutput buildMockCreditCard(boolean activate) {

@@ -10,7 +10,7 @@ class CreditCardOutputFactoryTest extends AbstractAccountBuilder {
 
     @Test
     void shouldCreateOutputForCreditCardWithSuccess() {
-        var creditCardMock = buildMockCreditCard(true).build();
+        var creditCardMock = CreditCardBuilder.buildFullCreditCardDto().createFrom(buildMockCreditCard(true));
         var creditCardOutput = CreditCardBuilder.buildFullCreditCardOutput().createFrom(creditCardMock);
 
         assertNotNull(creditCardOutput);

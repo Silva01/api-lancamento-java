@@ -77,9 +77,9 @@ class FindAllAccountsByCpfUseCaseTest {
     }
 
     private List<AccountOutput> buildMockListAccount() {
-        var account1 = new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", Collections.emptyList(), null);
-        var account2 = new AccountOutput(2, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", Collections.emptyList(), null);
-        var account3 = new AccountOutput(3, 45680, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", Collections.emptyList(), null);
+        var account1 = new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", null, Collections.emptyList());
+        var account2 = new AccountOutput(2, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, Collections.emptyList());
+        var account3 = new AccountOutput(3, 45680, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), false, "99988877766", null, Collections.emptyList());
         return List.of(account1, account2, account3);
     }
 

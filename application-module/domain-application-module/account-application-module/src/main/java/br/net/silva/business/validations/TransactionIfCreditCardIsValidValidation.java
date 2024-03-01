@@ -1,11 +1,13 @@
 package br.net.silva.business.validations;
 
+import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardExpiredException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
@@ -19,9 +21,9 @@ import java.util.Optional;
 
 public class TransactionIfCreditCardIsValidValidation implements IValidations {
 
-    private final Repository<Optional<Account>> findAccountRepository;
+    private final Repository<Optional<AccountOutput>> findAccountRepository;
 
-    public TransactionIfCreditCardIsValidValidation(Repository<Optional<Account>> findAccountRepository) {
+    public TransactionIfCreditCardIsValidValidation(Repository<Optional<AccountOutput>> findAccountRepository) {
         this.findAccountRepository = findAccountRepository;
     }
 
@@ -40,7 +42,7 @@ public class TransactionIfCreditCardIsValidValidation implements IValidations {
             throw new AccountNotExistsException("Account not exists");
         }
 
-        var creditCardDto = validate(optionalAccount.get());
+        var creditCardDto = validate(AccountBuilder.buildAggregate().createFrom(optionalAccount.get()));
 
         var transactionsWithError = input.batchTransaction()
                 .stream()

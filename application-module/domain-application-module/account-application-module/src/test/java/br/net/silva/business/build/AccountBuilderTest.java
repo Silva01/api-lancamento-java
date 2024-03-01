@@ -13,7 +13,7 @@ class AccountBuilderTest extends AbstractAccountBuilder {
 
     @Test
     void shouldCreateOutputWithSuccess() {
-        var accountDto = buildMockAccount(true, buildMockCreditCard(true), List.of(buildMockTransaction(TransactionTypeEnum.DEBIT))).build();
+        var accountDto = AccountBuilder.buildFullAccountDto().createFrom(buildMockAccount(true, buildMockCreditCard(true), List.of(buildMockTransaction(TransactionTypeEnum.DEBIT))));
         var accountOutput = AccountBuilder.buildFullAccountOutput().createFrom(accountDto);
 
         assertNotNull(accountOutput);
@@ -34,7 +34,7 @@ class AccountBuilderTest extends AbstractAccountBuilder {
 
     @Test
     void shouldCreateDtoWithSuccess() {
-        var accountDto = buildMockAccount(true, buildMockCreditCard(true), List.of(buildMockTransaction(TransactionTypeEnum.DEBIT))).build();
+        var accountDto = AccountBuilder.buildFullAccountDto().createFrom(buildMockAccount(true, buildMockCreditCard(true), List.of(buildMockTransaction(TransactionTypeEnum.DEBIT))));
         var accountOutput = AccountBuilder.buildFullAccountOutput().createFrom(accountDto);
 
         var newAccountDto = AccountBuilder.buildFullAccountDto().createFrom(accountOutput);

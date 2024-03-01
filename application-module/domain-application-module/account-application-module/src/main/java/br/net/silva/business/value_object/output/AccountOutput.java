@@ -12,7 +12,6 @@ public record AccountOutput(
         String password,
         boolean active,
         String cpf,
-        List<TransactionOutput> transactions,
-        CreditCardOutput creditCard
+        CreditCardOutput creditCard, List<TransactionOutput> transactions
 ) implements Output {
 }

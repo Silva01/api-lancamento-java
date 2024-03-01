@@ -86,6 +86,6 @@ public class AccountOutputFactory implements AccountFactorySpec.BuildSpec<Accoun
 
     @Override
     public AccountOutput build() {
-        return new AccountOutput(number, agency, balance, password, active, cpf, transactions, creditCard);
+        return new AccountOutput(number, agency, balance, password, active, cpf, creditCard, transactions);
     }
 }

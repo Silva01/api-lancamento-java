@@ -215,6 +215,6 @@ class AccountFacadeTest {
     }
 
     private AccountOutput buildMockAccount() {
-        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", Collections.emptyList(), null);
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), true, "99988877766", null, Collections.emptyList());
     }
 }

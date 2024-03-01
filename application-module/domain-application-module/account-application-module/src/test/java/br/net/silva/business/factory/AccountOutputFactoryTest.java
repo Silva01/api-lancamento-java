@@ -1,5 +1,6 @@
 package br.net.silva.business.factory;
 
+import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.build.CreditCardBuilder;
 import br.net.silva.business.build.TransactionBuilder;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
@@ -14,7 +15,7 @@ class AccountOutputFactoryTest extends AbstractAccountBuilder {
 
     @Test
     void createOutputWithSuccess() {
-        var accountDtoMock = buildMockAccount(true, buildMockCreditCard(true), List.of(buildMockTransaction(TransactionTypeEnum.DEBIT))).build();
+        var accountDtoMock = AccountBuilder.buildFullAccountDto().createFrom(buildMockAccount(true, buildMockCreditCard(true), List.of(buildMockTransaction(TransactionTypeEnum.DEBIT))));
         var accountOutput = AccountOutputFactory.createOutput()
                 .withNumber(accountDtoMock.number())
                 .withAgency(accountDtoMock.agency())
@@ -45,7 +46,7 @@ class AccountOutputFactoryTest extends AbstractAccountBuilder {
 
     @Test
     void createOutputWithSuccessAndCreditCardNull() {
-        var accountDtoMock = buildMockAccount(true, null, List.of(buildMockTransaction(TransactionTypeEnum.DEBIT))).build();
+        var accountDtoMock = AccountBuilder.buildFullAccountDto().createFrom(buildMockAccount(true, null, List.of(buildMockTransaction(TransactionTypeEnum.DEBIT))));
         var accountOutput = AccountOutputFactory.createOutput()
                 .withNumber(accountDtoMock.number())
                 .withAgency(accountDtoMock.agency())

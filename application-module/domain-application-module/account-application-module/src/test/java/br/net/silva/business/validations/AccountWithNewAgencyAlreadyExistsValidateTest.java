@@ -1,7 +1,7 @@
 package br.net.silva.business.validations;
 
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
-import br.net.silva.daniel.entity.Account;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
@@ -25,7 +25,7 @@ class AccountWithNewAgencyAlreadyExistsValidateTest {
     private AccountWithNewAgencyAlreadyExistsValidate accountWithNewAgencyAlreadyExistsValidate;
 
     @Mock
-    private Repository<Optional<Account>> findAccountByNewAgencyNumberAndAccountNumberRepository;
+    private Repository<Optional<AccountOutput>> findAccountByNewAgencyNumberAndAccountNumberRepository;
 
     @BeforeEach
     void setUp() {
@@ -56,8 +56,8 @@ class AccountWithNewAgencyAlreadyExistsValidateTest {
         verify(findAccountByNewAgencyNumberAndAccountNumberRepository, times(1)).exec(45678, 4321);
     }
 
-    private Account buildMockAccount(boolean active) {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
+    private AccountOutput buildMockAccount(boolean active) {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
     }
 
 }

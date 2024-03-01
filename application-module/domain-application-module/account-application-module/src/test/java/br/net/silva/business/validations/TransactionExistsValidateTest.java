@@ -3,7 +3,7 @@ package br.net.silva.business.validations;
 import br.net.silva.business.exception.TransactionNotExistsException;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
-import br.net.silva.daniel.entity.Transaction;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
@@ -23,7 +23,7 @@ class TransactionExistsValidateTest extends AbstractAccountBuilder {
     private TransactionExistsValidate transactionExistsValidate;
 
     @Mock
-    private Repository<Optional<Transaction>> transactionRepository;
+    private Repository<Optional<TransactionOutput>> transactionRepository;
 
     @BeforeEach
     void setUp() {

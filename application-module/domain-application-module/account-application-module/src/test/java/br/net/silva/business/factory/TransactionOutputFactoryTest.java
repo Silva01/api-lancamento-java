@@ -13,7 +13,7 @@ class TransactionOutputFactoryTest extends AbstractAccountBuilder {
 
     @Test
     void shouldCreateTransactionOutputWithSuccess() {
-        var transactionMock = buildMockTransaction(TransactionTypeEnum.DEBIT).build();
+        var transactionMock = TransactionBuilder.buildFullTransactionListDto().createFrom(List.of(buildMockTransaction(TransactionTypeEnum.DEBIT))).get(0);
         var transactionOutput = TransactionBuilder.buildFullTransactionListOutput().createFrom(List.of(transactionMock));
 
         assertNotNull(transactionOutput);

@@ -4,7 +4,6 @@ import br.net.silva.business.exception.CreditCardNumberDifferentException;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.CreditCardOutput;
-import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
@@ -66,7 +65,7 @@ class DeactivateCreditCardUseCaseTest {
     }
 
     private AccountOutput buildMockAccount(boolean active, CreditCardOutput creditCard) {
-        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", Collections.emptyList(), creditCard);
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, Collections.emptyList());
     }
 
     private CreditCardOutput buildMockCreditCard(boolean activate) {

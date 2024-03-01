@@ -1,7 +1,7 @@
 package br.net.silva.business.validations;
 
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
-import br.net.silva.daniel.entity.Account;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.repository.Repository;
@@ -25,7 +25,7 @@ class AccountExistsAndActiveByCpfValidateTest {
     private AccountExistsAndActiveByCpfValidate validate;
 
     @Mock
-    private Repository<Optional<Account>> repository;
+    private Repository<Optional<AccountOutput>> repository;
 
     @BeforeEach
     void setUp() {
@@ -65,8 +65,8 @@ class AccountExistsAndActiveByCpfValidateTest {
         verify(repository, times(1)).exec(anyString());
     }
 
-    private Account buildMockAccount(boolean active) {
-        return new Account(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
+    private AccountOutput buildMockAccount(boolean active) {
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
     }
 
 }
