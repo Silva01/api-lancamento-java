@@ -19,6 +19,8 @@
         <module>core-module/shared-business-module</module>
         <module>application-module</module>
         <module>integrations-test</module>
+        <module>driver-module</module>
+        <module>driver-module/api-module</module>
     </modules>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
