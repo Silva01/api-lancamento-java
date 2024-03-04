@@ -40,6 +40,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Client Module Application-->
+        <dependency>
+            <groupId>br.net.silva.daniel</groupId>
+            <artifactId>client-application-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
