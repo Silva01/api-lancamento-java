@@ -1,11 +1,9 @@
 package br.net.silva.daniel.mapper;
 
 import br.net.silva.daniel.interfaces.IMapperResponse;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class GenericResponseMapper {
 
     private final List<IMapperResponse> mappers;
