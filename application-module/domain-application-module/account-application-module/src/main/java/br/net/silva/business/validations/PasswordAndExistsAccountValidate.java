@@ -11,6 +11,7 @@ import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.utils.AccountUtils;
 import br.net.silva.daniel.value_object.Source;
 
+//TODO: Precisa refatorar para receber um repository
 public class PasswordAndExistsAccountValidate implements IValidations {
 
     private final UseCase<AccountOutput> findAccountUseCase;
