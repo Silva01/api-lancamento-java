@@ -4,6 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FindApplicationBaseRepository<R> {
-    Optional<R> findById();
+    Optional<R> findById(ParamRepository param);
     List<R> findAll();
 }
