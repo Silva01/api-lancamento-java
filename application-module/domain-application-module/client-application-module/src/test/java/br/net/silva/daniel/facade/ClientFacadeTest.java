@@ -1,6 +1,5 @@
 package br.net.silva.daniel.facade;
 
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
@@ -9,7 +8,6 @@ import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
 import br.net.silva.daniel.repository.ApplicationBaseRepository;
 import br.net.silva.daniel.repository.ParamRepository;
-import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
@@ -49,9 +47,6 @@ class ClientFacadeTest {
     @Mock
     private ApplicationBaseRepository<ClientOutput> baseRepository;
 
-    @Mock
-    private Repository<ClientOutput> saveRepository;
-
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
@@ -62,7 +57,7 @@ class ClientFacadeTest {
         this.clientExistsValidate = new ClientExistsValidate(findClientUseCase);
         this.clientNotExistsValidate = new ClientNotExistsValidate(findClientUseCase);
         this.deactivateClientUseCase = new DeactivateClientUseCase(baseRepository, factory);
-        this.activateClientUseCase = new ActivateClientUseCase(saveRepository);
+        this.activateClientUseCase = new ActivateClientUseCase(baseRepository);
     }
 
     @Test
@@ -70,7 +65,6 @@ class ClientFacadeTest {
 
         var client = buildClient(true);
 
-        when(saveRepository.exec(any(Client.class))).thenReturn(client);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
         when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.empty());
 
@@ -94,7 +88,6 @@ class ClientFacadeTest {
     void mustErrorWhenClientExistsInDatabaseWhereCreateClient() {
         var client = buildClient(true);
 
-        when(saveRepository.exec(any(Client.class))).thenReturn(client);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
         when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(client));
 
@@ -114,7 +107,6 @@ class ClientFacadeTest {
     @Test
     void mustDeactivateClientWithSuccess() throws GenericException {
         var client = buildClient(false);
-        when(saveRepository.exec(any(Client.class))).thenReturn(client);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
         when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(client));
 
@@ -152,7 +144,6 @@ class ClientFacadeTest {
     @Test
     void mustActivateClientWithSuccess() throws GenericException {
         var client = buildClient(true);
-        when(saveRepository.exec(any(String.class))).thenReturn(client);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
         when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(client));
 
@@ -166,9 +157,8 @@ class ClientFacadeTest {
         var source = new Source(EmptyOutput.INSTANCE, activateClient);
         clientFacade.exec(source);
 
-        verify(saveRepository, Mockito.times(1)).exec(activateClient.cpf());
-//        verify(baseRepository, Mockito.times(1)).save(Mockito.any(ClientOutput.class));
-        verify(baseRepository, Mockito.times(1)).findById(activateClient);
+        verify(baseRepository, Mockito.times(1)).save(Mockito.any(ClientOutput.class));
+        verify(baseRepository, Mockito.times(2)).findById(activateClient);
     }
 
     private ClientOutput buildClient(boolean active) {
