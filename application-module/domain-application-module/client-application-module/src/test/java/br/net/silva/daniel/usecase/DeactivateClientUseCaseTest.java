@@ -4,6 +4,8 @@ import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.GenericException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
+import br.net.silva.daniel.repository.FindApplicationBaseRepository;
+import br.net.silva.daniel.repository.ParamRepository;
 import br.net.silva.daniel.repository.Repository;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
@@ -20,6 +22,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class DeactivateClientUseCaseTest {
@@ -29,7 +32,7 @@ class DeactivateClientUseCaseTest {
     private GenericResponseMapper facotry;
 
     @Mock
-    private Repository<Optional<ClientOutput>> findClientRepository;
+    private FindApplicationBaseRepository<ClientOutput> findClientRepository;
 
     @Mock
     private Repository<ClientOutput> saveRepository;
@@ -44,19 +47,19 @@ class DeactivateClientUseCaseTest {
 
     @Test
     void mustDeactivateClientWithSuccess() throws GenericException {
-        when(findClientRepository.exec(Mockito.any(String.class))).thenReturn(Optional.of(buildClient(true)));
-        when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(buildClient(false));
+        when(findClientRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(buildClient(true)));
+        when(saveRepository.exec(any(Client.class))).thenReturn(buildClient(false));
 
         var deactivateClient = new DeactivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         deactivateClientUseCase.exec(source);
-        Mockito.verify(findClientRepository, Mockito.times(1)).exec(deactivateClient.cpf());
-        Mockito.verify(saveRepository, Mockito.times(1)).exec(Mockito.any(Client.class));
+        Mockito.verify(findClientRepository, Mockito.times(1)).findById(deactivateClient);
+        Mockito.verify(saveRepository, Mockito.times(1)).exec(any(Client.class));
     }
 
     @Test
     void mustErrorClientNotExistsWhenTryDeactivateClient() {
-        when(findClientRepository.exec(Mockito.any(String.class))).thenReturn(Optional.empty());
+        when(findClientRepository.findById(any(ParamRepository.class))).thenReturn(Optional.empty());
         var deactivateClient = new DeactivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         var exceptionReponse = assertThrows(GenericException.class, () -> deactivateClientUseCase.exec(source));

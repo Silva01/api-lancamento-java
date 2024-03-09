@@ -3,7 +3,8 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
-import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.repository.FindApplicationBaseRepository;
+import br.net.silva.daniel.repository.ParamRepository;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.FindClientByCpf;
 import br.net.silva.daniel.value_object.output.AddressOutput;
@@ -18,13 +19,12 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class FindClientUseCaseTest {
 
     @Mock
-    private Repository<Optional<ClientOutput>> findClientRepository;
+    private FindApplicationBaseRepository<ClientOutput> findClientRepository;
 
     private GenericResponseMapper factory;
 
@@ -34,7 +34,7 @@ class FindClientUseCaseTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         factory = new GenericResponseMapper(Collections.emptyList());
-        when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildClient()));
+        when(findClientRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(buildClient()));
         this.findClientUseCase = new FindClientUseCase(findClientRepository, factory);
     }
 
@@ -46,14 +46,14 @@ class FindClientUseCaseTest {
 
         assertNotNull(source.output());
         assertNotNull(clientDto);
-        verify(findClientRepository, times(1)).exec(findClientByCpf.cpf());
+        verify(findClientRepository, times(1)).findById(findClientByCpf);
     }
 
     @Test
     void must_looking_for_client_in_database_what_not_exists() {
         var findClientByCpf = new FindClientByCpf("22233344455");
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
-        when(findClientRepository.exec(anyString())).thenReturn(Optional.empty());
+        when(findClientRepository.findById(any(ParamRepository.class))).thenReturn(Optional.empty());
         Assertions.assertThrows(ClientNotExistsException.class, () -> findClientUseCase.exec(source));
     }
 
