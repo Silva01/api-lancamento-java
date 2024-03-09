@@ -1,10 +1,9 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.interfaces.EmptyOutput;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
-import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.repository.SaveApplicationBaseRepository;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
@@ -12,7 +11,8 @@ import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
 
@@ -22,14 +22,15 @@ import static org.mockito.Mockito.*;
 
 class CreateNewClientUseCaseTest {
 
-    @InjectMocks
-    private Repository<ClientOutput> saveRepository = mock(Repository.class);
+    @Mock
+    private SaveApplicationBaseRepository<ClientOutput> saveRepository;
 
     private CreateNewClientUseCase createNewClientUseCase;
 
     @BeforeEach
-    protected void setUp() {
-        when(saveRepository.exec(any(Client.class))).thenReturn(createClient());
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        when(saveRepository.save(any(ClientOutput.class))).thenReturn(createClient());
         createNewClientUseCase = new CreateNewClientUseCase(saveRepository, new GenericResponseMapper(Collections.emptyList()));
     }
 
@@ -49,11 +50,11 @@ class CreateNewClientUseCaseTest {
 
         createNewClientUseCase.exec(source);
 
-        verify(saveRepository, times(1)).exec(any(ClientOutput.class));
+        verify(saveRepository, times(1)).save(any(ClientOutput.class));
     }
 
     @Test
-    void testShouldCreateANewClientWithErrorExistsClient() throws ExistsClientRegistredException {
+    void testShouldCreateANewClientWithErrorExistsClient() {
         // Arrange
         var newRequestClient = new ClientRequestDTO(
                 "1234",
@@ -69,7 +70,7 @@ class CreateNewClientUseCaseTest {
 
 
         // Mock the repository
-        when(saveRepository.exec(any())).thenThrow(new RuntimeException("Exists client"));
+        when(saveRepository.save(any())).thenThrow(new RuntimeException("Exists client"));
 
         // Act & Assert
         assertThrows(ExistsClientRegistredException.class, () -> {
@@ -77,7 +78,7 @@ class CreateNewClientUseCaseTest {
         });
 
         // Verify that saveRepository.exec was called exactly once
-        verify(saveRepository, times(1)).exec(any());
+        verify(saveRepository, times(1)).save(any(ClientOutput.class));
     }
 
     private ClientOutput createClient() {

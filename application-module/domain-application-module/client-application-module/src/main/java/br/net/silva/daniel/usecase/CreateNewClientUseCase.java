@@ -10,17 +10,17 @@ import br.net.silva.daniel.factory.CreateNewClientFactory;
 import br.net.silva.daniel.interfaces.IClientParam;
 import br.net.silva.daniel.interfaces.UseCase;
 import br.net.silva.daniel.mapper.GenericResponseMapper;
-import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.repository.SaveApplicationBaseRepository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 public class CreateNewClientUseCase implements UseCase<ClientOutput> {
-    private final Repository<ClientOutput> saveRepository;
+    private final SaveApplicationBaseRepository<ClientOutput> saveRepository;
     private final IFactoryAggregate<Client, ClientDTO> createNewClientFactory;
     private final GenericResponseMapper factory;
 
-    public CreateNewClientUseCase(Repository<ClientOutput> saveRepository, GenericResponseMapper factory) {
+    public CreateNewClientUseCase(SaveApplicationBaseRepository<ClientOutput> saveRepository, GenericResponseMapper factory) {
         this.saveRepository = saveRepository;
         this.factory = factory;
         this.createNewClientFactory = new CreateNewClientFactory(new CreateNewAddressFactory());
@@ -36,14 +36,11 @@ public class CreateNewClientUseCase implements UseCase<ClientOutput> {
             var address = new AddressDTO(addressRequestDto.street(), addressRequestDto.number(), addressRequestDto.complement(), addressRequestDto.neighborhood(), addressRequestDto.state(), addressRequestDto.city(), addressRequestDto.zipCode());
             var clientDto = new ClientDTO(clientRequest.id(), clientRequest.cpf(), clientRequest.name(), clientRequest.telephone(), clientRequest.active(), address);
 
-            var clientOutput = saveRepository.exec(ClientBuilder.buildFullClientOutput().createFrom(clientDto));
+            var clientOutput = saveRepository.save(ClientBuilder.buildFullClientOutput().createFrom(clientDto));
             factory.fillIn(clientOutput, param.output());
             return clientOutput;
         } catch (Exception e) {
             throw new ExistsClientRegistredException(e.getMessage());
         }
-    }
-    private Client buildClient(ClientDTO request) {
-        return createNewClientFactory.create(request);
     }
 }

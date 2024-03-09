@@ -58,7 +58,7 @@ class ClientFacadeTest {
 
         var factory = new GenericResponseMapper(Collections.emptyList());
         this.findClientUseCase = new FindClientUseCase(baseRepository, factory);
-        this.createNewClientUseCase = new CreateNewClientUseCase(saveRepository, factory);
+        this.createNewClientUseCase = new CreateNewClientUseCase(baseRepository, factory);
         this.clientExistsValidate = new ClientExistsValidate(findClientUseCase);
         this.clientNotExistsValidate = new ClientNotExistsValidate(findClientUseCase);
         this.deactivateClientUseCase = new DeactivateClientUseCase(baseRepository, factory);
@@ -86,8 +86,7 @@ class ClientFacadeTest {
         clientFacade.exec(source);
 
         assertNotNull(source.output());
-        verify(saveRepository, Mockito.times(1)).exec(Mockito.any(ClientOutput.class));
-//        verify(baseRepository, Mockito.times(1)).save(Mockito.any(ClientOutput.class));
+        verify(baseRepository, Mockito.times(1)).save(Mockito.any(ClientOutput.class));
         verify(baseRepository, Mockito.times(1)).findById(clientRequestDto);
     }
 
