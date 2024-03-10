@@ -36,8 +36,8 @@ public class CreateClientRepositoryImpl implements ApplicationBaseRepository<Cli
     public Optional<ClientOutput> findById(ParamRepository param) {
         var cpf = (ICpfParam) param;
         return repository
-                .findByCpf(cpf.cpf()).map(client -> new ClientOutput(client.id().toString(), client.cpf(), client.name(), client.telephone(), client.active(), new AddressOutput(
-                        client.address().street(), client.address().number(), client.address().complement(), client.address().neighborhood(), client.address().state(), client.address().city(), client.address().zipCode())
+                .findByCpf(cpf.cpf()).map(client -> new ClientOutput(client.getAggregateId(), client.getCpf(), client.getName(), client.getTelephone(), client.isActive(), new AddressOutput(
+                        client.getAddress().getStreet(), client.getAddress().getNumber(), client.getAddress().getComplement(), client.getAddress().getNeighborhood(), client.getAddress().getState(), client.getAddress().getCity(), client.getAddress().getZipCode())
                 ));
     }
 

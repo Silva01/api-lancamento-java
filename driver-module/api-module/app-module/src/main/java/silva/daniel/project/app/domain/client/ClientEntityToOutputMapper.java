@@ -15,20 +15,20 @@ public class ClientEntityToOutputMapper implements Mapper<ClientOutput, Client>{
     @Override
     public ClientOutput mapTo(Client entity) {
         var addressOutput = new AddressOutput(
-                entity.address().street(),
-                entity.address().number(),
-                entity.address().complement(),
-                entity.address().neighborhood(),
-                entity.address().city(),
-                entity.address().state(),
-                entity.address().zipCode());
+                entity.getAddress().getStreet(),
+                entity.getAddress().getNumber(),
+                entity.getAddress().getComplement(),
+                entity.getAddress().getNeighborhood(),
+                entity.getAddress().getCity(),
+                entity.getAddress().getState(),
+                entity.getAddress().getZipCode());
 
         return new ClientOutput(
-                entity.aggregateId(),
-                entity.cpf(),
-                entity.name(),
-                entity.telephone(),
-                entity.active(),
+                entity.getAggregateId(),
+                entity.getCpf(),
+                entity.getName(),
+                entity.getTelephone(),
+                entity.isActive(),
                 addressOutput);
     }
 
