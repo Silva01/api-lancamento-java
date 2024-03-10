@@ -5,22 +5,16 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.build.ObjectBuilder;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
 public class CreateNewAccountByCpfUseCaseBuilder implements ObjectBuilder<UseCase<AccountOutput>> {
 
-    private Repository<Boolean> findIsExistsPeerCPFRepository;
-    private Repository<AccountOutput> saveRepository;
+    private ApplicationBaseRepository<AccountOutput> baseRepository;
     private GenericResponseMapper factory;
 
-    public CreateNewAccountByCpfUseCaseBuilder withRepositoryForFind(Repository<Boolean> findIsExistsPeerCPFRepository) {
-        this.findIsExistsPeerCPFRepository = findIsExistsPeerCPFRepository;
-        return this;
-    }
-
-    public CreateNewAccountByCpfUseCaseBuilder withRepositoryForSave(Repository<AccountOutput> saveRepository) {
-        this.saveRepository = saveRepository;
+    public CreateNewAccountByCpfUseCaseBuilder withRepositoryBase(ApplicationBaseRepository<AccountOutput> findIsExistsPeerCPFRepository) {
+        this.baseRepository = findIsExistsPeerCPFRepository;
         return this;
     }
 
@@ -30,9 +24,8 @@ public class CreateNewAccountByCpfUseCaseBuilder implements ObjectBuilder<UseCas
     }
     @Override
     public UseCase<AccountOutput> build() {
-        ValidateUtils.requireNotNull(findIsExistsPeerCPFRepository, "Repository for find is required");
-        ValidateUtils.requireNotNull(saveRepository, "Repository for save is required");
+        ValidateUtils.requireNotNull(baseRepository, "Repository for save is required");
         ValidateUtils.requireNotNull(factory, "Factory is required");
-        return new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveRepository, factory);
+        return new CreateNewAccountByCpfUseCase(baseRepository, factory);
     }
 }

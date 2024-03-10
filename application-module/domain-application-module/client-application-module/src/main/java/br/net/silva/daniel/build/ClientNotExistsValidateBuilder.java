@@ -2,7 +2,7 @@ package br.net.silva.daniel.build;
 
 import br.net.silva.daniel.shared.application.build.ObjectBuilder;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
-import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.repository.FindApplicationBaseRepository;
 import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
@@ -10,16 +10,16 @@ import java.util.Objects;
 
 public class ClientNotExistsValidateBuilder implements ObjectBuilder<IValidations> {
 
-    private UseCase<ClientOutput> findClientUseCase;
+    private FindApplicationBaseRepository<ClientOutput> findClientRepository;
 
-    public ClientNotExistsValidateBuilder withUseCase(UseCase<ClientOutput> findClientUseCase) {
-        this.findClientUseCase = findClientUseCase;
+    public ClientNotExistsValidateBuilder withUseCase(FindApplicationBaseRepository<ClientOutput> findClientRepository) {
+        this.findClientRepository = findClientRepository;
         return this;
     }
 
     @Override
     public IValidations build() {
-        Objects.requireNonNull(findClientUseCase, "UseCase is required");
-        return new ClientNotExistsValidate(findClientUseCase);
+        Objects.requireNonNull(findClientRepository, "UseCase is required");
+        return new ClientNotExistsValidate(findClientRepository);
     }
 }

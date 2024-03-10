@@ -3,6 +3,8 @@ package br.net.silva.daniel.dto;
 import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 
+import java.util.UUID;
+
 public record ClientDTO(
         String id,
         String cpf,
@@ -11,6 +13,10 @@ public record ClientDTO(
         boolean active,
         AddressDTO address
 ) implements IGenericPort, IGenericOutput {
+
+    public ClientDTO(String cpf, String name, String telephone, boolean active, AddressDTO address) {
+        this(UUID.randomUUID().toString(), cpf, name, telephone, active, address);
+    }
 
     @Override
     public void accept(Class<?> clazz) {

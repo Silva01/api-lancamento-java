@@ -55,7 +55,7 @@ class ClientFacadeTest {
         this.findClientUseCase = new FindClientUseCase(baseRepository, factory);
         this.createNewClientUseCase = new CreateNewClientUseCase(baseRepository, factory);
         this.clientExistsValidate = new ClientExistsValidate(findClientUseCase);
-        this.clientNotExistsValidate = new ClientNotExistsValidate(findClientUseCase);
+        this.clientNotExistsValidate = new ClientNotExistsValidate(baseRepository);
         this.deactivateClientUseCase = new DeactivateClientUseCase(baseRepository, factory);
         this.activateClientUseCase = new ActivateClientUseCase(baseRepository);
     }

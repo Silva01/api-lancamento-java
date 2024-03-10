@@ -4,6 +4,7 @@ import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSu
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import silva.daniel.project.app.config.FluxComponent;
 
 @Service
@@ -15,6 +16,7 @@ public class ClientService {
         this.fluxComponent = fluxComponent;
     }
 
+    @Transactional
     public NewAccountByNewClientResponseSuccess createNewClient(ClientRequestDTO request) {
         var source = new Source(new NewAccountByNewClientResponseSuccess(), request);
         try {

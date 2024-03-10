@@ -19,7 +19,10 @@ import br.net.silva.daniel.shared.application.interfaces.IAgencyParam;
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
+import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.repository.FindApplicationBaseRepository;
 import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.repository.SaveApplicationBaseRepository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.shared.application.value_object.Source;
 
@@ -29,15 +32,15 @@ import java.util.List;
 public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
 
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
-    private final Repository<Boolean> findIsExistsPeerCPFRepository;
-    private final Repository<AccountOutput> saveRepository;
+    private final FindApplicationBaseRepository<AccountOutput> findIsExistsPeerCPFRepository;
+    private final SaveApplicationBaseRepository<AccountOutput> saveRepository;
     private final GenericResponseMapper factory;
     private final IGenericBuilder<List<TransactionOutput>, List<TransactionDTO>> transactionOutputBuilder;
     private final IGenericBuilder<CreditCardOutput, CreditCardDTO> creditCardOutputBuilder;
 
-    public CreateNewAccountByCpfUseCase(Repository<Boolean> findIsExistsPeerCPFRepository, Repository<AccountOutput> saveRepository, GenericResponseMapper factory) {
-        this.findIsExistsPeerCPFRepository = findIsExistsPeerCPFRepository;
-        this.saveRepository = saveRepository;
+    public CreateNewAccountByCpfUseCase(ApplicationBaseRepository<AccountOutput> baseRepository, GenericResponseMapper factory) {
+        this.findIsExistsPeerCPFRepository = baseRepository;
+        this.saveRepository = baseRepository;
         this.factory = factory;
         this.createNewAccountByCpfFactory = new CreateNewAccountByCpfFactory();
         this.transactionOutputBuilder = TransactionBuilder.buildFullTransactionListOutput();
@@ -48,7 +51,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
     public AccountOutput exec(Source param) throws GenericException {
         var clientCpf = (ICpfParam) param.input();
         var agencyInterface = (IAgencyParam) param.input();
-        if (isExistsAccountActiveForCPF(clientCpf.cpf())) {
+        if (isExistsAccountActiveForCPF(clientCpf)) {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
 
@@ -62,7 +65,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
                 Collections.emptyList(),
                 null);
 
-        var accountOutput = saveRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(accountDtoParam));
+        var accountOutput = saveRepository.save(AccountBuilder.buildFullAccountOutput().createFrom(accountDtoParam));
 
         var accountAggregate = createNewAccountByCpfFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
 
@@ -82,7 +85,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
 
     }
 
-    private boolean isExistsAccountActiveForCPF(String cpf) {
-        return findIsExistsPeerCPFRepository.exec(cpf);
+    private boolean isExistsAccountActiveForCPF(ICpfParam cpf) {
+        return findIsExistsPeerCPFRepository.findById(cpf).isPresent();
     }
 }

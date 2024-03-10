@@ -1,7 +1,9 @@
 package silva.daniel.project.app.domain.client;
 
+import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
 import br.net.silva.daniel.shared.application.repository.ParamRepository;
+import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Component;
 import silva.daniel.project.app.mapper.Mapper;
@@ -32,7 +34,11 @@ public class CreateClientRepositoryImpl implements ApplicationBaseRepository<Cli
 
     @Override
     public Optional<ClientOutput> findById(ParamRepository param) {
-        return Optional.empty();
+        var cpf = (ICpfParam) param;
+        return repository
+                .findByCpf(cpf.cpf()).map(client -> new ClientOutput(client.id().toString(), client.cpf(), client.name(), client.telephone(), client.active(), new AddressOutput(
+                        client.address().street(), client.address().number(), client.address().complement(), client.address().neighborhood(), client.address().state(), client.address().city(), client.address().zipCode())
+                ));
     }
 
     @Override
