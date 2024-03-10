@@ -1,7 +1,7 @@
 package br.net.silva.daniel.factory;
 
-import br.net.silva.daniel.interfaces.IMapperResponse;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
+import br.net.silva.daniel.shared.application.interfaces.IMapperResponse;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

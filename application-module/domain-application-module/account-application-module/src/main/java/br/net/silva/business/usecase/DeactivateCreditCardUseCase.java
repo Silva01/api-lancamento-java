@@ -6,13 +6,13 @@ import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.repository.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.value_object.Source;
 
 public class DeactivateCreditCardUseCase implements UseCase<EmptyOutput> {
 

@@ -2,10 +2,10 @@ package br.net.silva.business.build;
 
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.build.ObjectBuilder;
-import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
-import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.shared.application.build.ObjectBuilder;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
+import br.net.silva.daniel.shared.application.repository.Repository;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
 public class CreateNewAccountByCpfUseCaseBuilder implements ObjectBuilder<UseCase<AccountOutput>> {

@@ -1,6 +1,6 @@
 package br.net.silva.daniel.value_object.output;
 
-import br.net.silva.daniel.interfaces.Output;
+import br.net.silva.daniel.shared.application.interfaces.Output;
 
 public record AddressOutput(
         String street,

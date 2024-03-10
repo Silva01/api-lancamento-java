@@ -5,7 +5,7 @@ import br.net.silva.business.factory.TransactionOutputFactory;
 import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.entity.Transaction;
-import br.net.silva.daniel.interfaces.IGenericBuilder;
+import br.net.silva.daniel.shared.application.interfaces.IGenericBuilder;
 
 import java.util.List;
 

@@ -1,10 +1,10 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.repository.ApplicationBaseRepository;
-import br.net.silva.daniel.repository.ParamRepository;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.repository.ParamRepository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;

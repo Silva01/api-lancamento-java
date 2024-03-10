@@ -1,11 +1,11 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.ICpfParam;
-import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 
 public class DeactivateAccountUseCase implements UseCase<AccountOutput> {
 

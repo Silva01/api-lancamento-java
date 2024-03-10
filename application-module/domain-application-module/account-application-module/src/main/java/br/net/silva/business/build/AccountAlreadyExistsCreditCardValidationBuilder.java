@@ -1,10 +1,10 @@
 package br.net.silva.business.build;
 
-import br.net.silva.daniel.build.ObjectBuilder;
+import br.net.silva.daniel.shared.application.build.ObjectBuilder;
 import br.net.silva.business.validations.AccountAlreadyExistsCreditCardValidation;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.interfaces.IValidations;
-import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.repository.Repository;
 
 import java.util.Optional;
 

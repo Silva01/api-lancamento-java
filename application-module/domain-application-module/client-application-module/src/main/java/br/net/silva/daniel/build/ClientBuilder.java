@@ -4,7 +4,7 @@ import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.factory.ClientDtoFactory;
 import br.net.silva.daniel.factory.ClientOutputFactory;
-import br.net.silva.daniel.interfaces.IGenericBuilder;
+import br.net.silva.daniel.shared.application.interfaces.IGenericBuilder;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 public final class ClientBuilder {

@@ -3,7 +3,7 @@ package br.net.silva.daniel.build;
 import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.factory.AddressDtoFactory;
 import br.net.silva.daniel.factory.AddressOutputFactory;
-import br.net.silva.daniel.interfaces.IGenericBuilder;
+import br.net.silva.daniel.shared.application.interfaces.IGenericBuilder;
 import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 

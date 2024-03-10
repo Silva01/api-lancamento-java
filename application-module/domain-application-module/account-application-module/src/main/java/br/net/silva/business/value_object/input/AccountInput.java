@@ -1,7 +1,7 @@
 package br.net.silva.business.value_object.input;
 
-import br.net.silva.daniel.interfaces.IBasicAccountParam;
-import br.net.silva.daniel.interfaces.Input;
+import br.net.silva.daniel.shared.application.interfaces.IBasicAccountParam;
+import br.net.silva.daniel.shared.application.interfaces.Input;
 
 public record AccountInput(
         Integer accountNumber,

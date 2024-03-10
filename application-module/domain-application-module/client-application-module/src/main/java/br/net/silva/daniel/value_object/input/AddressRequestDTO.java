@@ -1,6 +1,6 @@
 package br.net.silva.daniel.value_object.input;
 
-import br.net.silva.daniel.interfaces.IAddressParam;
+import br.net.silva.daniel.shared.application.interfaces.IAddressParam;
 
 public record AddressRequestDTO(
         String street,

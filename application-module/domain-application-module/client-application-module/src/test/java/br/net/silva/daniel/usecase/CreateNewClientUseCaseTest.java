@@ -1,10 +1,10 @@
 package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
-import br.net.silva.daniel.repository.SaveApplicationBaseRepository;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
+import br.net.silva.daniel.shared.application.repository.SaveApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.output.AddressOutput;

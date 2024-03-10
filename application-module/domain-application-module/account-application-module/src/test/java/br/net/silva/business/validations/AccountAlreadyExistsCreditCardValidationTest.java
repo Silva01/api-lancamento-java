@@ -3,22 +3,15 @@ package br.net.silva.business.validations;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.entity.CreditCard;
-import br.net.silva.daniel.enuns.FlagEnum;
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.shared.business.utils.CryptoUtils;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

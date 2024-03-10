@@ -12,7 +12,7 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.enuns.FlagEnum;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.utils.CreditCardUtils;
 import br.net.silva.daniel.value_object.output.AddressOutput;

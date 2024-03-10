@@ -2,11 +2,11 @@ package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.build.ClientBuilder;
 import br.net.silva.daniel.exception.ClientNotExistsException;
-import br.net.silva.daniel.interfaces.ICpfParam;
-import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
-import br.net.silva.daniel.repository.FindApplicationBaseRepository;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
+import br.net.silva.daniel.shared.application.repository.FindApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 public class FindClientUseCase implements UseCase<ClientOutput> {

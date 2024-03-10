@@ -1,7 +1,8 @@
 package br.net.silva.daniel.value_object;
 
-import br.net.silva.daniel.interfaces.Input;
-import br.net.silva.daniel.interfaces.Output;
+import br.net.silva.daniel.shared.application.interfaces.Input;
+import br.net.silva.daniel.shared.application.interfaces.Output;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

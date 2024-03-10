@@ -1,7 +1,7 @@
 package br.net.silva.daniel.value_object.input;
 
-import br.net.silva.daniel.interfaces.ICpfParam;
-import br.net.silva.daniel.interfaces.Input;
+import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
+import br.net.silva.daniel.shared.application.interfaces.Input;
 
 public record EditAddressInput(
         String cpf,

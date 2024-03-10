@@ -1,7 +1,8 @@
 package br.net.silva.daniel.build;
 
-import br.net.silva.daniel.interfaces.IValidations;
-import br.net.silva.daniel.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.build.ObjectBuilder;
+import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 

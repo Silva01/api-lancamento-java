@@ -2,11 +2,10 @@ package br.net.silva.business.validations;
 
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.IValidations;
-import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 
 import java.util.Optional;
 

@@ -1,9 +1,9 @@
 package br.net.silva.daniel.validation;
 
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.IValidations;
-import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 import java.util.ArrayList;

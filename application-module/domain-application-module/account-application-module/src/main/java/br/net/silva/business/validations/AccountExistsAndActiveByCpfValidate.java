@@ -4,12 +4,11 @@ import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.ICpfParam;
-import br.net.silva.daniel.interfaces.IValidations;
-import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
+import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 
 import java.util.Optional;
 
