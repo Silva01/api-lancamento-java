@@ -17,5 +17,6 @@ public class Client {
     private String name;
     private String telephone;
     private boolean active;
-    private @OneToOne(cascade = CascadeType.ALL) @JoinColumn(name = "address_id", referencedColumnName = "id") Address address;
+    @OneToOne(cascade = CascadeType.ALL) @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
 }
