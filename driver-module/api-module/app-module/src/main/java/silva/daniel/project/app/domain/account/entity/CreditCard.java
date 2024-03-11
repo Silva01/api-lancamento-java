@@ -1,0 +1,28 @@
+package silva.daniel.project.app.domain.account.entity;
+
+import br.net.silva.daniel.enuns.FlagEnum;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "credit_card", schema = "account")
+public class CreditCard {
+
+    @Id
+    private String number;
+    private Integer cvv;
+    private FlagEnum flag;
+    private BigDecimal balance;
+    private LocalDate expirationDate;
+    private boolean active;
+}
