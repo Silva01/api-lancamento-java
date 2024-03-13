@@ -1,6 +1,7 @@
 package silva.daniel.project.app.config;
 
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
+import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.build.ClientNotExistsValidateBuilder;
 import br.net.silva.daniel.shared.application.build.FacadeBuilder;
 import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
@@ -16,11 +17,13 @@ import org.springframework.stereotype.Component;
 public class FluxComponent {
 
     private final GenericResponseMapper responseMapper;
-    private final ApplicationBaseRepository<ClientOutput> baseRepository;
+    private final ApplicationBaseRepository<ClientOutput> clientBaseRepository;
+    private final ApplicationBaseRepository<AccountOutput> accountBaseRepository;
 
-    public FluxComponent(GenericResponseMapper responseMapper, ApplicationBaseRepository<ClientOutput> baseRepository) {
+    public FluxComponent(GenericResponseMapper responseMapper, ApplicationBaseRepository<ClientOutput> clientBaseRepository, ApplicationBaseRepository<AccountOutput> accountBaseRepository) {
         this.responseMapper = responseMapper;
-        this.baseRepository = baseRepository;
+        this.clientBaseRepository = clientBaseRepository;
+        this.accountBaseRepository = accountBaseRepository;
     }
 
     @SuppressWarnings("unchecked")
@@ -28,9 +31,13 @@ public class FluxComponent {
         return FacadeBuilder
                 .make()
                 .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(baseRepository, responseMapper, CreateNewClientUseCase.class),
-                        UseCaseBuilder.makeTo(baseRepository, responseMapper, CreateNewAccountByCpfUseCase.class))
-                .withBuilderValidations(ValidationBuilder.create(ClientNotExistsValidateBuilder.class))
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, CreateNewClientUseCase.class),
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewAccountByCpfUseCase.class))
+                .withBuilderValidations(
+                        ValidationBuilder
+                                .create(ClientNotExistsValidateBuilder.class)
+                                .withRepository(clientBaseRepository)
+                )
                 .build();
     }
 }
