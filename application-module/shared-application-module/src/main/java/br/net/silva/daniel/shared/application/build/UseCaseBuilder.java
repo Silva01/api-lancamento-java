@@ -18,7 +18,7 @@ public interface UseCaseBuilder {
 
     @SuppressWarnings("unchecked")
     static <T> br.net.silva.daniel.shared.application.build.Builder<UseCase> makeTo(ApplicationBaseRepository<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
-        return (br.net.silva.daniel.shared.application.build.Builder<UseCase>) new Builder(baseRepository, mapper).prepareUseCaseFrom(clazz);
+        return new Builder(baseRepository, clazz).withGenericMapper(mapper);
     }
 
     class Builder<T extends UseCase> implements PrepareUseCaseSpec<T>, RepositorySpec<T>, MapperSpec<T> {
@@ -30,9 +30,9 @@ public interface UseCaseBuilder {
         public Builder() {
         }
 
-        public Builder(ApplicationBaseRepository<?> baseRepository, GenericResponseMapper mapper) {
-            this.mapper = mapper;
+        public Builder(ApplicationBaseRepository<?> baseRepository, Class<T> clazz) {
             this.baseRepository = baseRepository;
+            this.clazz = clazz;
         }
 
         @Override
