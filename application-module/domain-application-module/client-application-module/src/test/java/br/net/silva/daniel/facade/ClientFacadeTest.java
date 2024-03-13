@@ -6,8 +6,8 @@ import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
@@ -45,7 +45,7 @@ class ClientFacadeTest {
     private DeactivateClientUseCase deactivateClientUseCase;
 
     @Mock
-    private ApplicationBaseRepository<ClientOutput> baseRepository;
+    private ApplicationBaseGateway<ClientOutput> baseRepository;
 
     @BeforeEach
     public void setup() {
@@ -66,7 +66,7 @@ class ClientFacadeTest {
         var client = buildClient(true);
 
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.empty());
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
@@ -89,7 +89,7 @@ class ClientFacadeTest {
         var client = buildClient(true);
 
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(client));
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
 
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
@@ -108,7 +108,7 @@ class ClientFacadeTest {
     void mustDeactivateClientWithSuccess() throws GenericException {
         var client = buildClient(false);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(client));
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
 
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(deactivateClientUseCase);
@@ -126,7 +126,7 @@ class ClientFacadeTest {
     @Test
     void mustDeactivateClientErrorClientNotExists() throws GenericException {
         var client = buildClient(true);
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.empty());
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(deactivateClientUseCase);
@@ -145,7 +145,7 @@ class ClientFacadeTest {
     void mustActivateClientWithSuccess() throws GenericException {
         var client = buildClient(true);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(client));
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
 
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateClientUseCase);

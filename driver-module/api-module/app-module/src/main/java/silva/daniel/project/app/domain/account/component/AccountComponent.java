@@ -1,8 +1,8 @@
 package silva.daniel.project.app.domain.account.component;
 
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import org.springframework.stereotype.Component;
 import silva.daniel.project.app.domain.account.entity.Account;
 import silva.daniel.project.app.domain.account.entity.AccountKey;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class AccountComponent implements ApplicationBaseRepository<AccountOutput> {
+public class AccountComponent implements ApplicationBaseGateway<AccountOutput> {
 
     private final AccountRepository repository;
 
@@ -21,7 +21,7 @@ public class AccountComponent implements ApplicationBaseRepository<AccountOutput
     }
 
     @Override
-    public boolean deleteById(ParamRepository param) {
+    public boolean deleteById(ParamGateway param) {
         return false;
     }
 
@@ -31,7 +31,7 @@ public class AccountComponent implements ApplicationBaseRepository<AccountOutput
     }
 
     @Override
-    public Optional<AccountOutput> findById(ParamRepository param) {
+    public Optional<AccountOutput> findById(ParamGateway param) {
         return Optional.empty();
     }
 

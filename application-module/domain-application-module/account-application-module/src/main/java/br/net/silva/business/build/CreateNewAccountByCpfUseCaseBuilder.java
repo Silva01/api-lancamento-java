@@ -5,15 +5,15 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.build.ObjectBuilder;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 
 public class CreateNewAccountByCpfUseCaseBuilder implements ObjectBuilder<UseCase<AccountOutput>> {
 
-    private ApplicationBaseRepository<AccountOutput> baseRepository;
+    private ApplicationBaseGateway<AccountOutput> baseRepository;
     private GenericResponseMapper factory;
 
-    public CreateNewAccountByCpfUseCaseBuilder withRepositoryBase(ApplicationBaseRepository<AccountOutput> findIsExistsPeerCPFRepository) {
+    public CreateNewAccountByCpfUseCaseBuilder withRepositoryBase(ApplicationBaseGateway<AccountOutput> findIsExistsPeerCPFRepository) {
         this.baseRepository = findIsExistsPeerCPFRepository;
         return this;
     }

@@ -14,7 +14,7 @@ import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.*;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
@@ -56,7 +56,7 @@ class AccountFacadeTest {
     private Repository<AccountOutput> deactivateAccountRepository;
 
     @Mock
-    private ApplicationBaseRepository<AccountOutput> baseRepository;
+    private ApplicationBaseGateway<AccountOutput> baseRepository;
 
     @BeforeEach
     void setup() {

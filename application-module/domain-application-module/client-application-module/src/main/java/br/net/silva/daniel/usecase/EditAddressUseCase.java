@@ -3,9 +3,9 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.build.ClientBuilder;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.shared.application.value_object.Source;
@@ -14,10 +14,10 @@ import br.net.silva.daniel.value_object.output.ClientOutput;
 
 public class EditAddressUseCase implements UseCase<ClientOutput> {
 
-    private final FindApplicationBaseRepository<ClientOutput> findClientRepository;
-    private final SaveApplicationBaseRepository<ClientOutput> saveClientRepository;
+    private final FindApplicationBaseGateway<ClientOutput> findClientRepository;
+    private final SaveApplicationBaseGateway<ClientOutput> saveClientRepository;
 
-    public EditAddressUseCase(ApplicationBaseRepository<ClientOutput>  baseRepository) {
+    public EditAddressUseCase(ApplicationBaseGateway<ClientOutput> baseRepository) {
         this.findClientRepository = baseRepository;
         this.saveClientRepository = baseRepository;
     }

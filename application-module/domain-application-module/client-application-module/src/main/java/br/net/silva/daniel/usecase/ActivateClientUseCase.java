@@ -5,15 +5,15 @@ import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.IClientParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 public class ActivateClientUseCase implements UseCase<ClientOutput> {
 
-    private final ApplicationBaseRepository<ClientOutput> baseRepository;
+    private final ApplicationBaseGateway<ClientOutput> baseRepository;
 
-    public ActivateClientUseCase(ApplicationBaseRepository<ClientOutput> baseRepository) {
+    public ActivateClientUseCase(ApplicationBaseGateway<ClientOutput> baseRepository) {
         this.baseRepository = baseRepository;
     }
 

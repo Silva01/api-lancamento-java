@@ -3,7 +3,7 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 class CreateNewClientUseCaseTest {
 
     @Mock
-    private SaveApplicationBaseRepository<ClientOutput> saveRepository;
+    private SaveApplicationBaseGateway<ClientOutput> saveRepository;
 
     private CreateNewClientUseCase createNewClientUseCase;
 

@@ -5,16 +5,16 @@ import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 public class FindClientUseCase implements UseCase<ClientOutput> {
 
-    private final FindApplicationBaseRepository<ClientOutput> findClientRepository;
+    private final FindApplicationBaseGateway<ClientOutput> findClientRepository;
     private final GenericResponseMapper factory;
 
-    public FindClientUseCase(FindApplicationBaseRepository<ClientOutput> findClientRepository, GenericResponseMapper factory) {
+    public FindClientUseCase(FindApplicationBaseGateway<ClientOutput> findClientRepository, GenericResponseMapper factory) {
         this.findClientRepository = findClientRepository;
         this.factory = factory;
     }

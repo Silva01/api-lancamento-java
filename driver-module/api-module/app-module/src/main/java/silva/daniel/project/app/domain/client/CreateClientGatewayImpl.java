@@ -1,8 +1,8 @@
 package silva.daniel.project.app.domain.client;
 
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Component;
@@ -12,18 +12,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class CreateClientRepositoryImpl implements ApplicationBaseRepository<ClientOutput> {
+public class CreateClientGatewayImpl implements ApplicationBaseGateway<ClientOutput> {
 
     private final ClientRepository repository;
     private final Mapper<ClientOutput, Client> mapper;
 
-    public CreateClientRepositoryImpl(ClientRepository repository, Mapper<ClientOutput, Client> mapper) {
+    public CreateClientGatewayImpl(ClientRepository repository, Mapper<ClientOutput, Client> mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
     @Override
-    public boolean deleteById(ParamRepository param) {
+    public boolean deleteById(ParamGateway param) {
         return false;
     }
 
@@ -33,7 +33,7 @@ public class CreateClientRepositoryImpl implements ApplicationBaseRepository<Cli
     }
 
     @Override
-    public Optional<ClientOutput> findById(ParamRepository param) {
+    public Optional<ClientOutput> findById(ParamGateway param) {
         var cpf = (ICpfParam) param;
         return repository
                 .findByCpf(cpf.cpf()).map(client -> new ClientOutput(client.getAggregateId(), client.getCpf(), client.getName(), client.getTelephone(), client.isActive(), new AddressOutput(

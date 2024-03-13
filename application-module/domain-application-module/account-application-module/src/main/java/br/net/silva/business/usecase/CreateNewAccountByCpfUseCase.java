@@ -19,9 +19,9 @@ import br.net.silva.daniel.shared.application.interfaces.IAgencyParam;
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.shared.application.value_object.Source;
 
@@ -31,13 +31,13 @@ import java.util.List;
 public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
 
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
-    private final FindApplicationBaseRepository<AccountOutput> findIsExistsPeerCPFRepository;
-    private final SaveApplicationBaseRepository<AccountOutput> saveRepository;
+    private final FindApplicationBaseGateway<AccountOutput> findIsExistsPeerCPFRepository;
+    private final SaveApplicationBaseGateway<AccountOutput> saveRepository;
     private final GenericResponseMapper factory;
     private final IGenericBuilder<List<TransactionOutput>, List<TransactionDTO>> transactionOutputBuilder;
     private final IGenericBuilder<CreditCardOutput, CreditCardDTO> creditCardOutputBuilder;
 
-    public CreateNewAccountByCpfUseCase(ApplicationBaseRepository<AccountOutput> baseRepository, GenericResponseMapper factory) {
+    public CreateNewAccountByCpfUseCase(ApplicationBaseGateway<AccountOutput> baseRepository, GenericResponseMapper factory) {
         this.findIsExistsPeerCPFRepository = baseRepository;
         this.saveRepository = baseRepository;
         this.factory = factory;

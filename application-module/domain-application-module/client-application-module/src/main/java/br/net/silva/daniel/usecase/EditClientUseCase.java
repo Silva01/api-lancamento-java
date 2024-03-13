@@ -5,19 +5,19 @@ import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 public class EditClientUseCase implements UseCase<ClientOutput> {
-    private final FindApplicationBaseRepository<ClientOutput> findRepository;
-    private final SaveApplicationBaseRepository<ClientOutput> saveRepository;
+    private final FindApplicationBaseGateway<ClientOutput> findRepository;
+    private final SaveApplicationBaseGateway<ClientOutput> saveRepository;
     private final GenericResponseMapper mapper;
 
-    public EditClientUseCase(ApplicationBaseRepository<ClientOutput> baseRepository, GenericResponseMapper mapper) {
+    public EditClientUseCase(ApplicationBaseGateway<ClientOutput> baseRepository, GenericResponseMapper mapper) {
         this.findRepository = baseRepository;
         this.saveRepository = baseRepository;
         this.mapper = mapper;

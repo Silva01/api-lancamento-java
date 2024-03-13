@@ -8,7 +8,7 @@ import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
 import br.net.silva.daniel.shared.application.build.ValidationBuilder;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Component;
@@ -17,10 +17,10 @@ import org.springframework.stereotype.Component;
 public class FluxComponent {
 
     private final GenericResponseMapper responseMapper;
-    private final ApplicationBaseRepository<ClientOutput> clientBaseRepository;
-    private final ApplicationBaseRepository<AccountOutput> accountBaseRepository;
+    private final ApplicationBaseGateway<ClientOutput> clientBaseRepository;
+    private final ApplicationBaseGateway<AccountOutput> accountBaseRepository;
 
-    public FluxComponent(GenericResponseMapper responseMapper, ApplicationBaseRepository<ClientOutput> clientBaseRepository, ApplicationBaseRepository<AccountOutput> accountBaseRepository) {
+    public FluxComponent(GenericResponseMapper responseMapper, ApplicationBaseGateway<ClientOutput> clientBaseRepository, ApplicationBaseGateway<AccountOutput> accountBaseRepository) {
         this.responseMapper = responseMapper;
         this.clientBaseRepository = clientBaseRepository;
         this.accountBaseRepository = accountBaseRepository;

@@ -5,7 +5,7 @@ import br.net.silva.daniel.shared.application.interfaces.spec.MapperSpec;
 import br.net.silva.daniel.shared.application.interfaces.spec.PrepareUseCaseSpec;
 import br.net.silva.daniel.shared.application.interfaces.spec.RepositorySpec;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
 import java.lang.reflect.Constructor;
@@ -17,20 +17,20 @@ public interface UseCaseBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    static <T> br.net.silva.daniel.shared.application.build.Builder<UseCase> makeTo(ApplicationBaseRepository<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
+    static <T> br.net.silva.daniel.shared.application.build.Builder<UseCase> makeTo(ApplicationBaseGateway<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
         return new Builder(baseRepository, clazz).withGenericMapper(mapper);
     }
 
     class Builder<T extends UseCase> implements PrepareUseCaseSpec<T>, RepositorySpec<T>, MapperSpec<T> {
 
         private Class<T> clazz;
-        private ApplicationBaseRepository<?> baseRepository;
+        private ApplicationBaseGateway<?> baseRepository;
         private GenericResponseMapper mapper;
 
         public Builder() {
         }
 
-        public Builder(ApplicationBaseRepository<?> baseRepository, Class<T> clazz) {
+        public Builder(ApplicationBaseGateway<?> baseRepository, Class<T> clazz) {
             this.baseRepository = baseRepository;
             this.clazz = clazz;
         }
@@ -63,7 +63,7 @@ public interface UseCaseBuilder {
         }
 
         @Override
-        public MapperSpec withBaseRepository(ApplicationBaseRepository<T> baseRepository) {
+        public MapperSpec withBaseRepository(ApplicationBaseGateway<T> baseRepository) {
             this.baseRepository = baseRepository;
             return this;
         }

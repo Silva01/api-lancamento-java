@@ -2,8 +2,8 @@ package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.output.AddressOutput;
@@ -26,7 +26,7 @@ class ActivateClientUseCaseTest {
     private ActivateClientUseCase activateClientUseCase;
 
     @Mock
-    private ApplicationBaseRepository<ClientOutput> baseRepository;
+    private ApplicationBaseGateway<ClientOutput> baseRepository;
 
 
     @BeforeEach
@@ -37,7 +37,7 @@ class ActivateClientUseCaseTest {
 
     @Test
     void mustActivateClientWithSucess() throws GenericException {
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(createClient()));
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(createClient()));
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(createClient());
         var dto = new ClientRequestDTO("1234", "00099988877", "Daniel", "61933334444", true, 1234, null);
         var source = new Source(EmptyOutput.INSTANCE, dto);
@@ -46,7 +46,7 @@ class ActivateClientUseCaseTest {
         var mockResponse = (EmptyOutput) source.output();
         assertNotNull(mockResponse);
 
-        verify(baseRepository, Mockito.times(1)).findById(any(ParamRepository.class));
+        verify(baseRepository, Mockito.times(1)).findById(any(ParamGateway.class));
         verify(baseRepository, Mockito.times(1)).save(any(ClientOutput.class));
     }
 

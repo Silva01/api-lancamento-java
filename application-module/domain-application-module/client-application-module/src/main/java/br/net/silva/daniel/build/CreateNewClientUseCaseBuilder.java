@@ -3,17 +3,17 @@ package br.net.silva.daniel.build;
 import br.net.silva.daniel.shared.application.build.ObjectBuilder;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 public class CreateNewClientUseCaseBuilder implements ObjectBuilder<UseCase<ClientOutput>> {
 
-    private SaveApplicationBaseRepository<ClientOutput> saveRepository;
+    private SaveApplicationBaseGateway<ClientOutput> saveRepository;
     private GenericResponseMapper factory;
 
-    public CreateNewClientUseCaseBuilder withRepository(SaveApplicationBaseRepository<ClientOutput> saveRepository) {
+    public CreateNewClientUseCaseBuilder withRepository(SaveApplicationBaseGateway<ClientOutput> saveRepository) {
         this.saveRepository = saveRepository;
         return this;
     }

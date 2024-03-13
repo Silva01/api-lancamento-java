@@ -3,8 +3,8 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.FindClientByCpf;
 import br.net.silva.daniel.value_object.output.AddressOutput;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 class FindClientUseCaseTest {
 
     @Mock
-    private FindApplicationBaseRepository<ClientOutput> findClientRepository;
+    private FindApplicationBaseGateway<ClientOutput> findClientRepository;
 
     private GenericResponseMapper factory;
 
@@ -34,7 +34,7 @@ class FindClientUseCaseTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         factory = new GenericResponseMapper(Collections.emptyList());
-        when(findClientRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(buildClient()));
+        when(findClientRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
         this.findClientUseCase = new FindClientUseCase(findClientRepository, factory);
     }
 
@@ -53,7 +53,7 @@ class FindClientUseCaseTest {
     void must_looking_for_client_in_database_what_not_exists() {
         var findClientByCpf = new FindClientByCpf("22233344455");
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
-        when(findClientRepository.findById(any(ParamRepository.class))).thenReturn(Optional.empty());
+        when(findClientRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
         Assertions.assertThrows(ClientNotExistsException.class, () -> findClientUseCase.exec(source));
     }
 

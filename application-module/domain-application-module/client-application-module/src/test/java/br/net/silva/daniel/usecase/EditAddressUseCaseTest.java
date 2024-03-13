@@ -2,8 +2,8 @@ package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.output.AddressOutput;
@@ -25,12 +25,12 @@ class EditAddressUseCaseTest {
     private EditAddressUseCase editAddressUseCase;
 
     @Mock
-    private ApplicationBaseRepository<ClientOutput> baseRepository;
+    private ApplicationBaseGateway<ClientOutput> baseRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(buildClient()));
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient());
 
         this.editAddressUseCase = new EditAddressUseCase(baseRepository);

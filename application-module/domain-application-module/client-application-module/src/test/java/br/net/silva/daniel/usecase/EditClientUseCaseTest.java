@@ -3,8 +3,8 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import br.net.silva.daniel.value_object.output.AddressOutput;
@@ -25,12 +25,12 @@ class EditClientUseCaseTest {
 
     private EditClientUseCase editClientUseCase;
     @Mock
-    private ApplicationBaseRepository<ClientOutput> baseRepository;
+    private ApplicationBaseGateway<ClientOutput> baseRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(buildClient()));
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient());
 
         var facotry = new GenericResponseMapper(Collections.emptyList());
@@ -54,7 +54,7 @@ class EditClientUseCaseTest {
 
     @Test
     void shouldGiveErrorClientNotExistsTryEditClient() {
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.empty());
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
         var editClientInput = new EditClientInput("22233344455", "Daniel", "22344445555");
         var source = new Source(EmptyOutput.INSTANCE, editClientInput);
 

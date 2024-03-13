@@ -3,8 +3,8 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.gateway.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.output.AddressOutput;
@@ -30,7 +30,7 @@ class DeactivateClientUseCaseTest {
     private GenericResponseMapper facotry;
 
     @Mock
-    private ApplicationBaseRepository<ClientOutput> baseRepository;
+    private ApplicationBaseGateway<ClientOutput> baseRepository;
 
 
     @BeforeEach
@@ -42,7 +42,7 @@ class DeactivateClientUseCaseTest {
 
     @Test
     void mustDeactivateClientWithSuccess() throws GenericException {
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.of(buildClient(true)));
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient(true)));
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient(false));
 
         var deactivateClient = new DeactivateClient("99988877766");
@@ -54,7 +54,7 @@ class DeactivateClientUseCaseTest {
 
     @Test
     void mustErrorClientNotExistsWhenTryDeactivateClient() {
-        when(baseRepository.findById(any(ParamRepository.class))).thenReturn(Optional.empty());
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
         var deactivateClient = new DeactivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         var exceptionReponse = assertThrows(GenericException.class, () -> deactivateClientUseCase.exec(source));
