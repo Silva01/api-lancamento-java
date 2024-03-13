@@ -12,7 +12,7 @@ public class ClientNotExistsValidateBuilder implements ObjectBuilder<IValidation
 
     private FindApplicationBaseRepository<ClientOutput> findClientRepository;
 
-    public ClientNotExistsValidateBuilder withUseCase(FindApplicationBaseRepository<ClientOutput> findClientRepository) {
+    public ClientNotExistsValidateBuilder withRepository(FindApplicationBaseRepository<ClientOutput> findClientRepository) {
         this.findClientRepository = findClientRepository;
         return this;
     }
