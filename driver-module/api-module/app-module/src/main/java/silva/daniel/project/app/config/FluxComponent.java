@@ -8,7 +8,7 @@ import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
 import br.net.silva.daniel.shared.application.build.ValidationBuilder;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Component;

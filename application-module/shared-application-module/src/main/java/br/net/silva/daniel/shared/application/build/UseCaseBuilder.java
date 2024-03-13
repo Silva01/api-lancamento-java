@@ -5,7 +5,7 @@ import br.net.silva.daniel.shared.application.interfaces.spec.MapperSpec;
 import br.net.silva.daniel.shared.application.interfaces.spec.PrepareUseCaseSpec;
 import br.net.silva.daniel.shared.application.interfaces.spec.RepositorySpec;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
 import java.lang.reflect.Constructor;

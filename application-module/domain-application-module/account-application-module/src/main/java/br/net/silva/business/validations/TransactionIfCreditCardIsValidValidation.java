@@ -13,7 +13,7 @@ import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
-import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.value_object.Source;
 
 import java.time.LocalDate;

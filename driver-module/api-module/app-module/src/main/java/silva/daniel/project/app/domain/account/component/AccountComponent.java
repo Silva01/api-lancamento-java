@@ -1,8 +1,8 @@
 package silva.daniel.project.app.domain.account.component;
 
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.repository.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ParamRepository;
 import org.springframework.stereotype.Component;
 import silva.daniel.project.app.domain.account.entity.Account;
 import silva.daniel.project.app.domain.account.entity.AccountKey;

@@ -7,7 +7,7 @@ import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.shared.application.interfaces.IClientParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.repository.SaveApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseRepository;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 

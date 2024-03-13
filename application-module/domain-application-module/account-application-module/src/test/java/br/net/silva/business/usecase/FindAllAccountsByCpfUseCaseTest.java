@@ -9,7 +9,7 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;

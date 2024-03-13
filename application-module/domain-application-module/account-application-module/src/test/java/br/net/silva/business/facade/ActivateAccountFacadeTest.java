@@ -9,7 +9,7 @@ import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;

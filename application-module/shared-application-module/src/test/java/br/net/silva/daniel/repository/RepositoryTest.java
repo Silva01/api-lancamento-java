@@ -1,6 +1,6 @@
 package br.net.silva.daniel.repository;
 
-import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

@@ -7,7 +7,7 @@ import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
-import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.value_object.Source;
 
 public class CreditCardNumberExistsValidate implements IValidations {

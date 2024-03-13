@@ -1,4 +1,4 @@
-package br.net.silva.daniel.shared.application.repository;
+package br.net.silva.daniel.shared.application.gateway;
 
 import java.util.List;
 import java.util.Optional;

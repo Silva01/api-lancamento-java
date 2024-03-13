@@ -1,8 +1,8 @@
 package silva.daniel.project.app.domain.client;
 
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
-import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.repository.ParamRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ParamRepository;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Component;

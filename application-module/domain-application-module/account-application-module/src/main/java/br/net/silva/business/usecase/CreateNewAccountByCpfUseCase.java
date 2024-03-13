@@ -19,10 +19,9 @@ import br.net.silva.daniel.shared.application.interfaces.IAgencyParam;
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.repository.FindApplicationBaseRepository;
-import br.net.silva.daniel.shared.application.repository.Repository;
-import br.net.silva.daniel.shared.application.repository.SaveApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseRepository;
+import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseRepository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.shared.application.value_object.Source;
 

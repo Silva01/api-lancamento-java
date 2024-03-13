@@ -12,7 +12,7 @@ import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.strategy.CalculateStrategy;
 import br.net.silva.daniel.shared.application.value_object.Source;

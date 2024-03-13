@@ -4,7 +4,7 @@ import br.net.silva.daniel.shared.application.build.ObjectBuilder;
 import br.net.silva.business.validations.AccountAlreadyExistsCreditCardValidation;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
-import br.net.silva.daniel.shared.application.repository.Repository;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 
 import java.util.Optional;
 
