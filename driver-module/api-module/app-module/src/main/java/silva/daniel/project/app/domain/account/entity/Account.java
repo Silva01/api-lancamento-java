@@ -26,7 +26,6 @@ public class Account {
     @JoinColumn(name = "credit_card_number", referencedColumnName = "number")
     private CreditCard creditCard;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "transaction_id", referencedColumnName = "id")
+    @OneToMany(mappedBy = "originAccountNumber", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 }
