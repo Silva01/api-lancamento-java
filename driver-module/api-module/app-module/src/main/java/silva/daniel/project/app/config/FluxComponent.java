@@ -1,17 +1,16 @@
 package silva.daniel.project.app.config;
 
+import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
+import br.net.silva.daniel.build.ClientNotExistsValidateBuilder;
+import br.net.silva.daniel.shared.application.build.FacadeBuilder;
 import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
+import br.net.silva.daniel.shared.application.build.ValidationBuilder;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
-import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.repository.ApplicationBaseRepository;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
-import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Queue;
 
 @Component
 public class FluxComponent {
@@ -24,14 +23,14 @@ public class FluxComponent {
         this.baseRepository = baseRepository;
     }
 
-    public GenericFacadeDelegate<UseCase> fluxCreateNewClient() throws Exception {
-        Queue<UseCase> useCases = (Queue<UseCase>) UseCaseBuilder
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxCreateNewClient() throws Exception {
+        return FacadeBuilder
                 .make()
-                .prepareUseCasesFrom(CreateNewClientUseCase.class)
-                .withBaseRepository(baseRepository)
-                .withGenericMapper(responseMapper)
+                .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(baseRepository, responseMapper, CreateNewClientUseCase.class),
+                        UseCaseBuilder.makeTo(baseRepository, responseMapper, CreateNewAccountByCpfUseCase.class))
+                .withBuilderValidations(ValidationBuilder.create(ClientNotExistsValidateBuilder.class))
                 .build();
-
-        return new GenericFacadeDelegate<>(useCases, List.of(new ClientNotExistsValidate(baseRepository)));
     }
 }
