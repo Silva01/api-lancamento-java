@@ -16,23 +16,36 @@ public interface UseCaseBuilder {
         return new Builder();
     }
 
-    class Builder implements PrepareUseCaseSpec, RepositorySpec, MapperSpec<UseCase> {
+    @SuppressWarnings("unchecked")
+    static <T> br.net.silva.daniel.shared.application.build.Builder<UseCase> makeTo(ApplicationBaseRepository<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
+        return (br.net.silva.daniel.shared.application.build.Builder<UseCase>) new Builder(baseRepository, mapper).prepareUseCaseFrom(clazz);
+    }
 
-        private Class clazz;
+    class Builder<T extends UseCase> implements PrepareUseCaseSpec<T>, RepositorySpec<T>, MapperSpec<T> {
+
+        private Class<T> clazz;
         private ApplicationBaseRepository<?> baseRepository;
         private GenericResponseMapper mapper;
 
+        public Builder() {
+        }
+
+        public Builder(ApplicationBaseRepository<?> baseRepository, GenericResponseMapper mapper) {
+            this.mapper = mapper;
+            this.baseRepository = baseRepository;
+        }
+
         @Override
-        public br.net.silva.daniel.shared.application.build.Builder<UseCase> withGenericMapper(GenericResponseMapper mapper) {
+        public br.net.silva.daniel.shared.application.build.Builder<T> withGenericMapper(GenericResponseMapper mapper) {
             this.mapper = mapper;
             return () -> {
                 try {
                     Constructor[] constructors = clazz.getConstructors();
                     for (Constructor constructor : constructors) {
                         if (constructor.getParameterCount() == 1) {
-                            return (UseCase) constructor.newInstance(baseRepository);
+                            return clazz.cast(constructor.newInstance(baseRepository));
                         } else if (constructor.getParameterCount() == 2) {
-                            return (UseCase) constructor.newInstance(baseRepository, this.mapper);
+                            return clazz.cast(constructor.newInstance(baseRepository, this.mapper));
                         }
                     }
                 } catch (Exception e) {
@@ -44,13 +57,13 @@ public interface UseCaseBuilder {
         }
 
         @Override
-        public RepositorySpec prepareUseCaseFrom(Class clazz) {
+        public RepositorySpec prepareUseCaseFrom(Class<T> clazz) {
             this.clazz = clazz;
             return this;
         }
 
         @Override
-        public <T> MapperSpec withBaseRepository(ApplicationBaseRepository<T> baseRepository) {
+        public MapperSpec withBaseRepository(ApplicationBaseRepository<T> baseRepository) {
             this.baseRepository = baseRepository;
             return this;
         }
