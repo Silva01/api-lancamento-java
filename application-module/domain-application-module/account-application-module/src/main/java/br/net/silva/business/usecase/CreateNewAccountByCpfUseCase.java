@@ -54,17 +54,9 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
             throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
         }
 
-        var accountDtoParam = new AccountDTO(
-                null,
-                agencyInterface.agency(),
-                null,
-                "default",
-                true,
-                clientCpf.cpf(),
-                Collections.emptyList(),
-                null);
+        var newAccount = new Account(agencyInterface.agency(), "default", clientCpf.cpf());
 
-        var accountOutput = saveRepository.save(AccountBuilder.buildFullAccountOutput().createFrom(accountDtoParam));
+        var accountOutput = saveRepository.save(AccountBuilder.buildFullAccountOutput().createFrom(newAccount.build()));
 
         var accountAggregate = createNewAccountByCpfFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
 
