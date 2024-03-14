@@ -8,6 +8,7 @@ import silva.daniel.project.app.domain.account.entity.Account;
 import silva.daniel.project.app.domain.account.entity.AccountKey;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class AccountComponent implements ApplicationBaseGateway<AccountOutput> {
         var key = new AccountKey(entity.number(), entity.agency());
         var account = new Account(key, entity.balance(), entity.password(), entity.active(), entity.cpf(), null, null);
         var newAccount = repository.save(account);
-        return new AccountOutput(newAccount.getKeys().getNumber(), newAccount.getKeys().getBankAgencyNumber(), newAccount.getBalance(), newAccount.getPassword(), newAccount.isActive(), newAccount.getCpf(), null, null);
+        return new AccountOutput(newAccount.getKeys().getNumber(), newAccount.getKeys().getBankAgencyNumber(), newAccount.getBalance(), newAccount.getPassword(), newAccount.isActive(), newAccount.getCpf(), null, Collections.emptyList());
     }
 
     @Override
