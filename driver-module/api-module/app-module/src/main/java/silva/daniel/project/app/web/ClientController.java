@@ -23,7 +23,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<NewAccountByNewClientResponseSuccess> createNewClient(@RequestBody @Valid ClientRequest newClient) {
+    public ResponseEntity<NewAccountByNewClientResponseSuccess> createNewClient(@RequestBody @Valid ClientRequest newClient) throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.createNewClient(
                 new ClientRequestDTO(
                     newClient.id(),
