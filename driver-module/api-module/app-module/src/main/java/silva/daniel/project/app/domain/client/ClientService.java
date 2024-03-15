@@ -17,14 +17,10 @@ public class ClientService {
     }
 
     @Transactional
-    public NewAccountByNewClientResponseSuccess createNewClient(ClientRequestDTO request) {
+    public NewAccountByNewClientResponseSuccess createNewClient(ClientRequestDTO request) throws Exception {
         var source = new Source(new NewAccountByNewClientResponseSuccess(), request);
-        try {
-            fluxComponent.fluxCreateNewClient().exec(source);
-            return (NewAccountByNewClientResponseSuccess) source.output();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        fluxComponent.fluxCreateNewClient().exec(source);
+        return (NewAccountByNewClientResponseSuccess) source.output();
 
     }
 
