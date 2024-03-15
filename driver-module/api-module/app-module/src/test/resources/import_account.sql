@@ -1,1 +1,0 @@
-INSERT INTO finance.account (id, street, number, complement, neighborhood, state, city, zip_code) VALUES (1, 'Rua Teste', '123', 'Complemento', 'Bairro Teste', 'SP', 'São Paulo', '12345678');
