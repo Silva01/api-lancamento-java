@@ -1,4 +1,4 @@
-package silva.daniel.project.app.domain.account.component;
+package silva.daniel.project.app.domain.account.gateway;
 
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class AccountComponent implements ApplicationBaseGateway<AccountOutput> {
+public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
 
     private final AccountRepository repository;
 
-    public AccountComponent(AccountRepository repository) {
+    public AccountGateway(AccountRepository repository) {
         this.repository = repository;
     }
 
