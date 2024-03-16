@@ -8,19 +8,14 @@ import silva.daniel.project.app.mapper.Mapper;
 @Component
 public class ClientEntityToOutputMapper implements Mapper<ClientOutput, Client>{
     @Override
-    public boolean accept(Class<ClientOutput> output, Class<Client> entity) {
-        return output.isInstance(ClientOutput.class) && entity.isInstance(Client.class);
-    }
-
-    @Override
     public ClientOutput mapTo(Client entity) {
         var addressOutput = new AddressOutput(
                 entity.getAddress().getStreet(),
                 entity.getAddress().getNumber(),
                 entity.getAddress().getComplement(),
                 entity.getAddress().getNeighborhood(),
-                entity.getAddress().getCity(),
                 entity.getAddress().getState(),
+                entity.getAddress().getCity(),
                 entity.getAddress().getZipCode());
 
         return new ClientOutput(
@@ -40,8 +35,8 @@ public class ClientEntityToOutputMapper implements Mapper<ClientOutput, Client>{
                 output.address().number(),
                 output.address().complement(),
                 output.address().neighborhood(),
-                output.address().city(),
                 output.address().state(),
+                output.address().city(),
                 output.address().zipCode());
 
         return new Client(
