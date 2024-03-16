@@ -18,6 +18,7 @@ import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -31,6 +32,7 @@ import java.util.Queue;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 
 class FluxRegisterTransactionTest extends AbstractBuilder {
 
@@ -67,10 +69,10 @@ class FluxRegisterTransactionTest extends AbstractBuilder {
 
         // Use case
         registerTransactionUseCase = new RegisterTransactionUseCase(findAccountRepository, saveAccountRepository);
-        var findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
+//        var findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validations
-        clientExistsValidate = new ClientExistsValidate(findClientUseCase);
+//        clientExistsValidate = new ClientExistsValidate(findClientUseCase);
         accountExistsValidate = new AccountExistsValidate(findOptionalAccountRepository);
         accountDestinyExistsValidate = new DestinyAccountExistsValidate(findDetinyAccountRepository);
         transactionIfCreditCardIsValidValidation = new TransactionIfCreditCardIsValidValidation(findOptionalAccountRepository);

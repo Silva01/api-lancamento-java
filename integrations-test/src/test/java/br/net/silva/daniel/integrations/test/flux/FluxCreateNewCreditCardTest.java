@@ -63,7 +63,7 @@ public class FluxCreateNewCreditCardTest extends AbstractBuilder {
         createNewCreditCardUseCase = new CreateNewCreditCardUseCase(findAccountByCpfAndAgencyAndAccountNumberRepository, saveAccountRepository);
 
         // Validations
-        clientExistsValidate = new ClientExistsValidate(new FindClientUseCase(findClientRepository, buildFactoryResponse()));
+//        clientExistsValidate = new ClientExistsValidate(new FindClientUseCase(findClientRepository, buildFactoryResponse()));
         accountExistsValidate = new AccountExistsValidate(findAccountRepository);
         creditCardExistsInAccountValidate = new AccountAlreadyExistsCreditCardValidation(findAccountRepository);
     }

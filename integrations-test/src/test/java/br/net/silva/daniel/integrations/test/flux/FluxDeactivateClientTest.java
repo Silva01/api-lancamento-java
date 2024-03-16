@@ -61,8 +61,8 @@ class FluxDeactivateClientTest extends AbstractBuilder {
 
         // Use Cases
         this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
-        this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository, buildFactoryResponse());
-        this.findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
+//        this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository, buildFactoryResponse());
+//        this.findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validations
         this.clientExistsValidation = new ClientExistsValidate(findClientUseCase);

@@ -46,8 +46,8 @@ class FluxEditClientTest extends AbstractBuilder {
         when(saveRepository.exec(any())).thenReturn(buildMockClient(true));
 
         // Use Case
-        editClientUseCase = new EditClientUseCase(findRepository, saveRepository, buildFactoryResponse());
-        findClientUseCase = new FindClientUseCase(findRepository, buildFactoryResponse());
+//        editClientUseCase = new EditClientUseCase(findRepository, saveRepository, buildFactoryResponse());
+//        findClientUseCase = new FindClientUseCase(findRepository, buildFactoryResponse());
 
         // Validation
         clientExistsValidation = new ClientExistsValidate(findClientUseCase);

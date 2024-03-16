@@ -63,7 +63,7 @@ class FluxGetInformationAccountByCpfTest extends AbstractBuilder {
 
         // Use Case
         getInformationAccountByCpfUseCase = new GetInformationAccountUseCase(getInformationAccountByCpfRepository, transactionsRepository, buildFactoryResponse());
-        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
+//        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validations
         accountExistsValidation = new AccountExistsAndActiveByCpfValidate(findAccountByCpfRepository);

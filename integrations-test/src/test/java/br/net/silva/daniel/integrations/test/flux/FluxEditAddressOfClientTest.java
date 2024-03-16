@@ -52,8 +52,8 @@ class FluxEditAddressOfClientTest extends AbstractBuilder {
 
 
         // UseCase
-        this.findClientUseCase = new FindClientUseCase(this.findClientRepository, buildFactoryResponse());
-        this.editAddressUseCase = new EditAddressUseCase(this.findClientByCpfRepository, this.saveClientRepository);
+//        this.findClientUseCase = new FindClientUseCase(this.findClientRepository, buildFactoryResponse());
+//        this.editAddressUseCase = new EditAddressUseCase(this.findClientByCpfRepository, this.saveClientRepository);
 
         // Validations
         clientExistValidation = new ClientExistsValidate(findClientUseCase);

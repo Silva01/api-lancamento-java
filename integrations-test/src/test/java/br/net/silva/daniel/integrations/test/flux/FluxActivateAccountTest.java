@@ -4,16 +4,18 @@ import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
+import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.gateway.Repository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
-import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +45,7 @@ class FluxActivateAccountTest extends AbstractBuilder {
     private Repository<Optional<AccountOutput>> findOptionalAccountRepository;
 
     @Mock
-    private Repository<Optional<ClientOutput>> findClientRepository;
+    private FindApplicationBaseGateway<ClientOutput> findClientRepository;
 
     @Mock
     private Repository<AccountOutput> findAccountRepository;
@@ -53,7 +55,7 @@ class FluxActivateAccountTest extends AbstractBuilder {
         MockitoAnnotations.openMocks(this);
         when(activateAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(findOptionalAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true)));
-        when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildMockClient(true)));
+        when(findClientRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockClient(true)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
         // Use Case
@@ -84,7 +86,7 @@ class FluxActivateAccountTest extends AbstractBuilder {
 
     @Test
     void shouldActivateAccountWithErrorClientNotExists() throws GenericException {
-        when(findClientRepository.exec(anyString())).thenReturn(Optional.empty());
+        when(findClientRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
         var activateAccount = new ActivateAccount(1234, 123456, "12345678900");
         var source = new Source(EmptyOutput.INSTANCE, activateAccount);

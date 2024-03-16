@@ -5,16 +5,18 @@ import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
+import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.gateway.Repository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
-import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +27,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 class FluxChangePasswordAccountTest extends AbstractBuilder {
@@ -47,18 +50,18 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
     private Repository<Optional<AccountOutput>> findAccountRepository;
 
     @Mock
-    private Repository<Optional<ClientOutput>> findCLientRepository;
+    private ApplicationBaseGateway<ClientOutput> baseGateway;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(findAccountRepository.exec(anyInt(), anyInt())).thenReturn(Optional.ofNullable(buildMockAccount(true)));
-        when(findCLientRepository.exec(anyString())).thenReturn(Optional.ofNullable(buildMockClient(true)));
+        when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.ofNullable(buildMockClient(true)));
 
         //Use Cases
         findAccountUseCase = new FindAccountUseCase(findAccountRepository, buildFactoryResponse());
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(findAccountUseCase, updatePasswordRepository);
-        findClientUseCase = new FindClientUseCase(findCLientRepository, buildFactoryResponse());
+        findClientUseCase = new FindClientUseCase(baseGateway, buildFactoryResponse());
 
         //Validations
         clientExistsValidate = new ClientExistsValidate(findClientUseCase);
@@ -84,7 +87,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
 
         verify(updatePasswordRepository, times(1)).exec(any(AccountOutput.class));
         verify(findAccountRepository, times(2)).exec(anyInt(), anyInt());
-        verify(findCLientRepository, times(1)).exec(anyString());
+        verify(baseGateway, times(1)).findById(any(ParamGateway.class));
     }
 
     @Test
@@ -147,7 +150,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
     @Test
     void shouldChangePasswordAccountWithErrorCpfNotExists() {
         when(updatePasswordRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
-        when(findCLientRepository.exec(anyString())).thenReturn(Optional.empty());
+        when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
         var changePassord = new ChangePasswordDTO("12345678901", 1234, 1, "978534", "1234567");
         var source = new Source(EmptyOutput.INSTANCE, changePassord);

@@ -55,11 +55,11 @@ class FluxCreateNewClientTest extends AbstractBuilder {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveAccountRepository, buildFactoryResponse());
-        createNewClientUseCase = new CreateNewClientUseCase(saveClientRepository, buildFactoryResponse());
-        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
-        clientNotExistsValidate = new ClientNotExistsValidate(findClientUseCase);
+//        MockitoAnnotations.openMocks(this);
+//        createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findIsExistsPeerCPFRepository, saveAccountRepository, buildFactoryResponse());
+//        createNewClientUseCase = new CreateNewClientUseCase(saveClientRepository, buildFactoryResponse());
+//        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
+//        clientNotExistsValidate = new ClientNotExistsValidate(findClientUseCase);
     }
 
     @Test

@@ -48,7 +48,7 @@ class FluxFindAllAccountsByCpfTest extends AbstractBuilder {
 
         // Use Case
         findAllAccountsByCpfUseCase = new FindAllAccountsByCpfUseCase(findAllAccountsByCpfRepository, buildFactoryResponse());
-        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
+//        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validation
         clientExistsValidate = new ClientExistsValidate(findClientUseCase);

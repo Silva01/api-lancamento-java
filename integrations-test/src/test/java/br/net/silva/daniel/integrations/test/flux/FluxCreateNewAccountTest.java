@@ -5,15 +5,17 @@ import br.net.silva.business.validations.AccountNotExistsByAgencyAndCPFValidate;
 import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountResponse;
-import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
+import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.gateway.Repository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
-import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,13 +39,10 @@ class FluxCreateNewAccountTest extends AbstractBuilder {
     private IValidations clientExistsValidate;
 
     @Mock
-    private Repository<Boolean> findAccountIsExistsPeerCPFRepository;
+    private ApplicationBaseGateway<ClientOutput> clientBaseGateway;
 
     @Mock
-    private Repository<AccountOutput> saveAccountRepository;
-
-    @Mock
-    private Repository<Optional<ClientOutput>> findClientRepository;
+    private ApplicationBaseGateway<AccountOutput> accountBaseGateway;
 
     @Mock
     private Repository<Optional<AccountOutput>> findAccountRepository;
@@ -51,13 +50,13 @@ class FluxCreateNewAccountTest extends AbstractBuilder {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findClientRepository.exec(anyString())).thenReturn(Optional.ofNullable(buildMockClient(true)));
-        when(findAccountIsExistsPeerCPFRepository.exec(anyString())).thenReturn(false);
-        when(saveAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
+        when(clientBaseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.ofNullable(buildMockClient(true)));
+        when(accountBaseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
+        when(accountBaseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(findAccountRepository.exec(anyInt(), anyString())).thenReturn(Optional.empty());
 
-        createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(findAccountIsExistsPeerCPFRepository, saveAccountRepository, buildFactoryResponse());
-        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
+        createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(accountBaseGateway, buildFactoryResponse());
+        findClientUseCase = new FindClientUseCase(clientBaseGateway, buildFactoryResponse());
         clientExistsValidate = new ClientExistsValidate(findClientUseCase);
         accountNotExistsValidate = new AccountNotExistsByAgencyAndCPFValidate(findAccountRepository);
     }
@@ -82,9 +81,9 @@ class FluxCreateNewAccountTest extends AbstractBuilder {
         assertEquals(createNewAccount.agency(), response.getAgency());
         assertNotNull(response.getAccountNumber());
 
-        verify(findClientRepository, times(1)).exec(anyString());
-        verify(findAccountIsExistsPeerCPFRepository, times(1)).exec(anyString());
-        verify(saveAccountRepository, times(1)).exec(any(AccountOutput.class));
+        verify(clientBaseGateway, times(1)).findById(any(ParamGateway.class));
+        verify(accountBaseGateway, times(1)).findById(any(ParamGateway.class));
+        verify(accountBaseGateway, times(1)).save(any(AccountOutput.class));
     }
 
     @Test

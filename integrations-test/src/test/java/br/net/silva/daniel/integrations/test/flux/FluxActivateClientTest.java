@@ -2,6 +2,8 @@ package br.net.silva.daniel.integrations.test.flux;
 
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
@@ -24,7 +26,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +39,7 @@ class FluxActivateClientTest extends AbstractBuilder {
     private IValidations clientExistsValidation;
 
     @Mock
-    private Repository<Optional<ClientOutput>> findClientRepository;
+    private ApplicationBaseGateway<ClientOutput> baseGateway;
 
     @Mock
     private Repository<ClientOutput> activateClientRepository;
@@ -45,15 +47,15 @@ class FluxActivateClientTest extends AbstractBuilder {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildMockClient(false)));
-        when(activateClientRepository.exec(anyString())).thenReturn(buildMockClient(true));
+        when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockClient(false)));
+//        when(activateClientRepository.exec(anyString())).thenReturn(buildMockClient(true));
 
         // Factory
         var factory = new GenericResponseMapper(Collections.emptyList());
 
         // Use Cases
-        this.activeClientUseCase = new ActivateClientUseCase(activateClientRepository);
-        this.findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
+        this.activeClientUseCase = new ActivateClientUseCase(baseGateway);
+        this.findClientUseCase = new FindClientUseCase(baseGateway, buildFactoryResponse());
 
         // Validations
         this.clientExistsValidation = new ClientExistsValidate(findClientUseCase);
@@ -72,12 +74,12 @@ class FluxActivateClientTest extends AbstractBuilder {
 
         facade.exec(source);
 
-        verify(activateClientRepository, Mockito.times(1)).exec(Mockito.anyString());
+        verify(baseGateway, Mockito.times(1)).findById(any(ParamGateway.class));
     }
 
     @Test
     void shouldErrorActivateClientClientNotExists() {
-        when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
+        when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
         var activateClient = new ActivateClient("12345678900");
         var source = new Source(EmptyOutput.INSTANCE, activateClient);
 

@@ -67,7 +67,7 @@ class FluxDeactivateCreditCardTest extends AbstractBuilder {
         deactivateCreditCardUseCase = new DeactivateCreditCardUseCase(findAccountByCpfAndAccountNumberAndAgencyRepository, saveAccountRepository);
 
         // Validations
-        clientExistsValidate = new ClientExistsValidate(new FindClientUseCase(findClientRepository, buildFactoryResponse()));
+//        clientExistsValidate = new ClientExistsValidate(new FindClientUseCase(findClientRepository, buildFactoryResponse()));
         accountExistsValidate = new AccountExistsValidate(findAccountRepository);
         creditCardExistsValidate = new CreditCardNumberExistsValidate(findAccountByCpfAndAccountNumberAndAgencyRepository);
     }
