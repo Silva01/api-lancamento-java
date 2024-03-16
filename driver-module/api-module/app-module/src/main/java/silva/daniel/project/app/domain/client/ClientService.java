@@ -21,7 +21,6 @@ public class ClientService {
         var source = new Source(new NewAccountByNewClientResponseSuccess(), request);
         fluxComponent.fluxCreateNewClient().exec(source);
         return (NewAccountByNewClientResponseSuccess) source.output();
-
     }
 
 }
