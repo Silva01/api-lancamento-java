@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class CreateClientGatewayImpl implements ApplicationBaseGateway<ClientOutput> {
+public class ClientGatewayImpl implements ApplicationBaseGateway<ClientOutput> {
 
     private final ClientRepository repository;
     private final Mapper<ClientOutput, Client> mapper;
 
-    public CreateClientGatewayImpl(ClientRepository repository, Mapper<ClientOutput, Client> mapper) {
+    public ClientGatewayImpl(ClientRepository repository, Mapper<ClientOutput, Client> mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }

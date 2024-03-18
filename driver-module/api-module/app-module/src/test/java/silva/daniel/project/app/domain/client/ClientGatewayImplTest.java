@@ -15,11 +15,11 @@ import static org.mockito.Mockito.when;
 import static silva.daniel.project.app.commons.ClientCommons.entityMock;
 import static silva.daniel.project.app.commons.ClientCommons.outputMock;
 
-@SpringBootTest(classes = CreateClientGatewayImpl.class)
-class CreateClientGatewayImplTest {
+@SpringBootTest(classes = ClientGatewayImpl.class)
+class ClientGatewayImplTest {
 
     @Autowired
-    private CreateClientGatewayImpl createClientGatewayImpl;
+    private ClientGatewayImpl clientGatewayImpl;
 
     @MockBean
     private ClientRepository repository;
@@ -35,7 +35,7 @@ class CreateClientGatewayImplTest {
         when(mapper.mapTo(any(ClientOutput.class))).thenReturn(clientEntityMock);
         when(mapper.mapTo(any(Client.class))).thenReturn(clientOutput);
 
-        final var sut = createClientGatewayImpl.save(clientOutput);
+        final var sut = clientGatewayImpl.save(clientOutput);
 
         assertThat(sut).isNotNull();
         assertThat(sut.id()).isEqualTo(clientOutput.id());
@@ -53,7 +53,7 @@ class CreateClientGatewayImplTest {
         when(repository.save(any(Client.class))).thenThrow(new DataIntegrityViolationException("Key Duplicated in Database"));
         when(mapper.mapTo(any(ClientOutput.class))).thenReturn(clientEntityMock);
 
-        assertThatThrownBy(() -> createClientGatewayImpl.save(clientOutput))
+        assertThatThrownBy(() -> clientGatewayImpl.save(clientOutput))
                 .isInstanceOf(DataIntegrityViolationException.class)
                 .hasMessage("Key Duplicated in Database");
     }
