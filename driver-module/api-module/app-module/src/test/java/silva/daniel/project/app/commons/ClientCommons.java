@@ -1,9 +1,60 @@
 package silva.daniel.project.app.commons;
 
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
+import br.net.silva.daniel.value_object.output.AddressOutput;
+import br.net.silva.daniel.value_object.output.ClientOutput;
+import silva.daniel.project.app.domain.client.Address;
+import silva.daniel.project.app.domain.client.Client;
 import silva.daniel.project.app.domain.client.ClientRequest;
 
+import java.util.UUID;
+
 public interface ClientCommons {
+
+    static Client entityMock() {
+        return new Client(
+                "12345678901",
+                UUID.randomUUID().toString(),
+                "Test",
+                "12345678901",
+                true,
+                addressEntityMock());
+    }
+
+    static Address addressEntityMock() {
+        return new Address(
+                1L,
+                "rua 1",
+                "123",
+                "test",
+                "Bairro 1",
+                "DF",
+                "Brasilia",
+                "12345678"
+        );
+    }
+
+    static ClientOutput outputMock() {
+        return new ClientOutput(
+                UUID.randomUUID().toString(),
+                "12345678901",
+                "Test",
+                "12345678901",
+                true,
+                addressOutputMock());
+    }
+
+    static AddressOutput addressOutputMock() {
+        return new AddressOutput(
+                "rua 1",
+                "123",
+                "test",
+                "Bairro 1",
+                "DF",
+                "Brasilia",
+                "12345678"
+        );
+    }
 
     static ClientRequest requestValidMock() {
         return requestMock(
