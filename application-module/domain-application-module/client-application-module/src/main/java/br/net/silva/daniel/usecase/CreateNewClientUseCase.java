@@ -28,7 +28,7 @@ public class CreateNewClientUseCase implements UseCase<ClientOutput> {
             var addressRequestDto = clientRequest.address();
 
             var address = new AddressDTO(addressRequestDto.street(), addressRequestDto.number(), addressRequestDto.complement(), addressRequestDto.neighborhood(), addressRequestDto.state(), addressRequestDto.city(), addressRequestDto.zipCode());
-            var clientDto = new ClientDTO(clientRequest.cpf(), clientRequest.name(), clientRequest.telephone(), clientRequest.active(), address);
+            var clientDto = new ClientDTO(clientRequest.cpf(), clientRequest.name(), clientRequest.telephone(), true, address);
 
             var clientOutput = saveRepository.save(ClientBuilder.buildFullClientOutput().createFrom(clientDto));
             factory.fillIn(clientOutput, param.output());
