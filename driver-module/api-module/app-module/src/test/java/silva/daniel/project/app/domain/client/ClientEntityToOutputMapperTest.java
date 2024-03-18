@@ -25,7 +25,6 @@ class ClientEntityToOutputMapperTest {
 
         final var sut = mapper.mapTo(output);
         assertThat(sut).isNotNull();
-        assertThat(sut.getId()).isNull();
         assertThat(sut.getAggregateId()).isEqualTo(output.id());
         assertThat(sut.getCpf()).isEqualTo(output.cpf());
         assertThat(sut.getName()).isEqualTo(output.name());

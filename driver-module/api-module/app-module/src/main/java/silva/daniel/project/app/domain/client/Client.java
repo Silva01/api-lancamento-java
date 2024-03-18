@@ -11,9 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "client")
 public class Client {
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+    private @Id String cpf;
     private String aggregateId;
-    private String cpf;
     private String name;
     private String telephone;
     private boolean active;

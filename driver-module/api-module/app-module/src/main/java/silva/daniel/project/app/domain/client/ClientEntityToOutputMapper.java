@@ -40,9 +40,8 @@ public class ClientEntityToOutputMapper implements Mapper<ClientOutput, Client>{
                 output.address().zipCode());
 
         return new Client(
-                null,
-                output.id(),
                 output.cpf(),
+                output.id(),
                 output.name(),
                 output.telephone(),
                 output.active(),
