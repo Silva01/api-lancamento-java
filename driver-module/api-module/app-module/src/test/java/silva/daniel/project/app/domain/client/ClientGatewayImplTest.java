@@ -1,5 +1,6 @@
 package silva.daniel.project.app.domain.client;
 
+import br.net.silva.daniel.value_object.input.FindClientByCpf;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import silva.daniel.project.app.mapper.Mapper;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -56,6 +59,41 @@ class ClientGatewayImplTest {
         assertThatThrownBy(() -> clientGatewayImpl.save(clientOutput))
                 .isInstanceOf(DataIntegrityViolationException.class)
                 .hasMessage("Key Duplicated in Database");
+    }
+
+    @Test
+    void getClient_WithId_ReturnsClient() {
+        var clientMock = entityMock();
+        when(repository.findByCpf(any(String.class))).thenReturn(Optional.of(clientMock));
+
+        var findClientByCpf = new FindClientByCpf("12345678901");
+        var sut = clientGatewayImpl.findById(findClientByCpf);
+
+        assertThat(sut).isNotNull();
+        assertThat(sut.isPresent()).isTrue();
+        assertThat(sut.get().id()).isEqualTo(clientMock.getAggregateId());
+        assertThat(sut.get().cpf()).isEqualTo(clientMock.getCpf());
+        assertThat(sut.get().name()).isEqualTo(clientMock.getName());
+        assertThat(sut.get().telephone()).isEqualTo(clientMock.getTelephone());
+        assertThat(sut.get().active()).isEqualTo(clientMock.isActive());
+        assertThat(sut.get().address().street()).isEqualTo(clientMock.getAddress().getStreet());
+        assertThat(sut.get().address().number()).isEqualTo(clientMock.getAddress().getNumber());
+        assertThat(sut.get().address().city()).isEqualTo(clientMock.getAddress().getCity());
+        assertThat(sut.get().address().complement()).isEqualTo(clientMock.getAddress().getComplement());
+        assertThat(sut.get().address().state()).isEqualTo(clientMock.getAddress().getState());
+        assertThat(sut.get().address().neighborhood()).isEqualTo(clientMock.getAddress().getNeighborhood());
+        assertThat(sut.get().address().zipCode()).isEqualTo(clientMock.getAddress().getZipCode());
+    }
+
+    @Test
+    void getClient_WithCpf_ReturnsOptionalEmpty() {
+        when(repository.findByCpf(any(String.class))).thenReturn(Optional.empty());
+
+        var findClientByCpf = new FindClientByCpf("12345678901");
+        var sut = clientGatewayImpl.findById(findClientByCpf);
+
+        assertThat(sut).isNotNull();
+        assertThat(sut.isEmpty()).isTrue();
     }
 
 }
