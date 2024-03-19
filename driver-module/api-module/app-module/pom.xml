@@ -126,6 +126,7 @@
                         <exclude>**/entity/**</exclude>
                         <exclude>**/*Address.*</exclude>
                         <exclude>**/*Client.*</exclude>
+                        <exclude>**/*FluxComponent.*</exclude>
                     </excludes>
                 </configuration>
 
