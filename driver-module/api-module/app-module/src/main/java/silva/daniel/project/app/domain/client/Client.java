@@ -1,6 +1,8 @@
 package silva.daniel.project.app.domain.client;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,13 +11,30 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "client")
+@Table(name = "client", uniqueConstraints = @UniqueConstraint(columnNames = "cpf"))
 public class Client {
-    private @Id String cpf;
+    @Id
+    @NotEmpty
+    @NotNull
+    @Column(nullable = false)
+    private String cpf;
+
+    @NotEmpty
+    @NotNull
+    @Column(nullable = false)
     private String aggregateId;
+
+    @NotEmpty
+    @NotNull
+    @Column(nullable = false)
     private String name;
+
     private String telephone;
+
     private boolean active;
-    @OneToOne(cascade = CascadeType.ALL) @JoinColumn(name = "address_id", referencedColumnName = "id")
+
+    @NotNull
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 }
