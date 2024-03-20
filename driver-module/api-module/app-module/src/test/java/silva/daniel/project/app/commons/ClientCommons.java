@@ -6,6 +6,7 @@ import br.net.silva.daniel.value_object.output.ClientOutput;
 import silva.daniel.project.app.domain.client.Address;
 import silva.daniel.project.app.domain.client.Client;
 import silva.daniel.project.app.domain.client.ClientRequest;
+import silva.daniel.project.app.domain.client.EditClientRequest;
 
 import java.util.UUID;
 
@@ -132,5 +133,12 @@ public interface ClientCommons {
                 "Brasilia",
                 "12345678"
         );
+    }
+
+    static EditClientRequest editClientRequestMock() {
+        return new EditClientRequest(
+                "12345678901",
+                "Test",
+                "12345678901");
     }
 }
