@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import silva.daniel.project.app.domain.client.ClientRequest;
 import silva.daniel.project.app.domain.client.ClientService;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static silva.daniel.project.app.commons.ClientCommons.*;
 
+@ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
 class ClientControllerTest {
 

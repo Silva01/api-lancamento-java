@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.GeneratorCpf;
 
 import java.util.UUID;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static silva.daniel.project.app.commons.ClientCommons.addressEntityMock;
 import static silva.daniel.project.app.commons.ClientCommons.entityMock;
 
+@ActiveProfiles("unit")
 @DataJpaTest
 class ClientRepositoryTest {
 

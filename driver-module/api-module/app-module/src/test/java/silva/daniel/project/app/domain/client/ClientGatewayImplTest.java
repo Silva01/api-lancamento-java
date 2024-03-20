@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.mapper.Mapper;
 
 import java.util.Optional;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.when;
 import static silva.daniel.project.app.commons.ClientCommons.entityMock;
 import static silva.daniel.project.app.commons.ClientCommons.outputMock;
 
+@ActiveProfiles("unit")
 @SpringBootTest(classes = ClientGatewayImpl.class)
 class ClientGatewayImplTest {
 
