@@ -40,7 +40,7 @@ class FluxFindClientInfoTest extends AbstractBuilder {
         when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.ofNullable(buildMockClient(true)));
 
 //        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
-        clientNotExistsValidate = new ClientExistsValidate(findClientUseCase);
+//        clientNotExistsValidate = new ClientExistsValidate(findClientUseCase);
     }
 
     @Test

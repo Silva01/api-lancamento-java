@@ -64,7 +64,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
         findClientUseCase = new FindClientUseCase(baseGateway, buildFactoryResponse());
 
         //Validations
-        clientExistsValidate = new ClientExistsValidate(findClientUseCase);
+//        clientExistsValidate = new ClientExistsValidate(findClientUseCase);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountUseCase);
     }
 

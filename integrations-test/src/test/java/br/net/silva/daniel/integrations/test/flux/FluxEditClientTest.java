@@ -50,7 +50,7 @@ class FluxEditClientTest extends AbstractBuilder {
 //        findClientUseCase = new FindClientUseCase(findRepository, buildFactoryResponse());
 
         // Validation
-        clientExistsValidation = new ClientExistsValidate(findClientUseCase);
+//        clientExistsValidation = new ClientExistsValidate(findClientUseCase);
     }
 
     @Test

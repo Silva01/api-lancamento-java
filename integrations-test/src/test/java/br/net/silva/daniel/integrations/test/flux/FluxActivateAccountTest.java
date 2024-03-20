@@ -64,7 +64,7 @@ class FluxActivateAccountTest extends AbstractBuilder {
 
         // Validations
         accountExistsValidation = new AccountExistsValidate(findOptionalAccountRepository);
-        clientExistsValidation = new ClientExistsValidate(findClientUseCase);
+//        clientExistsValidation = new ClientExistsValidate(findClientUseCase);
     }
 
     @Test

@@ -67,7 +67,7 @@ class FluxGetInformationAccountByCpfTest extends AbstractBuilder {
 
         // Validations
         accountExistsValidation = new AccountExistsAndActiveByCpfValidate(findAccountByCpfRepository);
-        clientExistsValidation = new ClientExistsValidate(findClientUseCase);
+//        clientExistsValidation = new ClientExistsValidate(findClientUseCase);
     }
 
     @Test

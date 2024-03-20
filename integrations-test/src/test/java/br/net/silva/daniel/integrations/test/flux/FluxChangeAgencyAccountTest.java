@@ -72,7 +72,7 @@ class FluxChangeAgencyAccountTest extends AbstractBuilder {
         findClientUseCase = new FindClientUseCase(baseGateway, buildFactoryResponse());
 
         // Validations
-        clientExistsValidation = new ClientExistsValidate(findClientUseCase);
+//        clientExistsValidation = new ClientExistsValidate(findClientUseCase);
         accountExistsValidation = new AccountExistsValidate(findAccountRepository);
         accountWithNewAgencyAlreadyExistsValidation = new AccountWithNewAgencyAlreadyExistsValidate(findAccountRepository);
     }

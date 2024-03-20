@@ -65,7 +65,7 @@ class FluxDeactivateClientTest extends AbstractBuilder {
 //        this.findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validations
-        this.clientExistsValidation = new ClientExistsValidate(findClientUseCase);
+//        this.clientExistsValidation = new ClientExistsValidate(findClientUseCase);
     }
 
     @Test

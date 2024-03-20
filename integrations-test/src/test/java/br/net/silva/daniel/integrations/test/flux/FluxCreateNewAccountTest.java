@@ -57,7 +57,7 @@ class FluxCreateNewAccountTest extends AbstractBuilder {
 
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(accountBaseGateway, buildFactoryResponse());
         findClientUseCase = new FindClientUseCase(clientBaseGateway, buildFactoryResponse());
-        clientExistsValidate = new ClientExistsValidate(findClientUseCase);
+//        clientExistsValidate = new ClientExistsValidate(findClientUseCase);
         accountNotExistsValidate = new AccountNotExistsByAgencyAndCPFValidate(findAccountRepository);
     }
 
