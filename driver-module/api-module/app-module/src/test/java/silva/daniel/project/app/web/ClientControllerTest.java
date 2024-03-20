@@ -1,9 +1,10 @@
 package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
+import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import br.net.silva.daniel.value_object.input.EditClientInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,6 +21,7 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -85,8 +87,20 @@ class ClientControllerTest {
     void editClient_WithValidData_Returns200() throws Exception {
         mockMvc.perform(put("/clients")
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestValidMock())))
+                        .content(objectMapper.writeValueAsString(editClientRequestMock())))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void editClient_WithClientNotExistInDatabase_Returns404() throws Exception {
+        final var failureResponse = mockFailureResponse("Client not exists in Database", 404);
+        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateClient(any(EditClientInput.class));
+        mockMvc.perform(put("/clients")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(editClientRequestMock())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
     }
 
     private NewAccountByNewClientResponseSuccess mockResponse() {
