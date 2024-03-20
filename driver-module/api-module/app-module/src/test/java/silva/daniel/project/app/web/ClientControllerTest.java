@@ -3,6 +3,7 @@ package silva.daniel.project.app.web;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static silva.daniel.project.app.commons.ClientCommons.*;
@@ -77,6 +79,14 @@ class ClientControllerTest {
                 .andExpect(status().isNotAcceptable())
                 .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
                 .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+    }
+
+    @Test
+    void editClient_WithValidData_Returns200() throws Exception {
+        mockMvc.perform(put("/clients")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestValidMock())))
+                .andExpect(status().isOk());
     }
 
     private NewAccountByNewClientResponseSuccess mockResponse() {
