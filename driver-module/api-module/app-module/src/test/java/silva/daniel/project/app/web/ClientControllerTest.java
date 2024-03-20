@@ -93,7 +93,7 @@ class ClientControllerTest {
 
     @Test
     void editClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        final var failureResponse = mockFailureResponse("Client not exists in Database", 404);
+        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
         doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateClient(any(EditClientInput.class));
         mockMvc.perform(put("/clients")
                         .contentType(APPLICATION_JSON)
