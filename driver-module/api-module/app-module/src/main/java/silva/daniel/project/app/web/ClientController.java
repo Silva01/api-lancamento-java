@@ -2,15 +2,14 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import br.net.silva.daniel.value_object.input.EditClientInput;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import silva.daniel.project.app.domain.client.ClientRequest;
 import silva.daniel.project.app.domain.client.ClientService;
+import silva.daniel.project.app.domain.client.EditClientRequest;
 
 @RestController
 @RequestMapping("/clients")
@@ -34,6 +33,15 @@ public class ClientController {
                     newClient.agency(),
                     newClient.addressRequestDTO()
                 )));
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void updateClient(@RequestBody @Valid EditClientRequest client) throws Exception {
+        clientService.updateClient(new EditClientInput(
+                client.cpf(),
+                client.name(),
+                client.telephone()));
     }
 
 }
