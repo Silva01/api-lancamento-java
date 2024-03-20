@@ -1,20 +1,19 @@
 package br.net.silva.daniel.facade;
 
 import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
-import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
-import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.validation.ClientNotExistsValidate;
-import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.*;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -38,8 +37,6 @@ class ClientFacadeTest {
 
     private UseCase<ClientOutput> createNewClientUseCase;
 
-    private UseCase<ClientOutput> findClientUseCase;
-
     private UseCase<ClientOutput> activateClientUseCase;
 
     private DeactivateClientUseCase deactivateClientUseCase;
@@ -52,9 +49,8 @@ class ClientFacadeTest {
         MockitoAnnotations.openMocks(this);
 
         var factory = new GenericResponseMapper(Collections.emptyList());
-        this.findClientUseCase = new FindClientUseCase(baseRepository, factory);
         this.createNewClientUseCase = new CreateNewClientUseCase(baseRepository, factory);
-        this.clientExistsValidate = new ClientExistsValidate(findClientUseCase);
+        this.clientExistsValidate = new ClientExistsValidate(baseRepository);
         this.clientNotExistsValidate = new ClientNotExistsValidate(baseRepository);
         this.deactivateClientUseCase = new DeactivateClientUseCase(baseRepository, factory);
         this.activateClientUseCase = new ActivateClientUseCase(baseRepository);
