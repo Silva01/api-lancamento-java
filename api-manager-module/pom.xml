@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>silva.daniel.project.study</groupId>
-    <artifactId>app-module</artifactId>
+    <artifactId>api-manager-module</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>app-module</name>
     <description>app-module</description>
