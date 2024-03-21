@@ -1,9 +1,11 @@
 package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
+import br.net.silva.daniel.exception.ClientNotActiveException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import silva.daniel.project.app.domain.client.ClientRequest;
 import silva.daniel.project.app.domain.client.ClientService;
+import silva.daniel.project.app.domain.client.EditStatusClientRequest;
 import silva.daniel.project.app.domain.client.FailureResponse;
 
 import java.util.stream.Stream;
@@ -101,6 +104,57 @@ class ClientControllerTest {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(editClientRequestMock())))
                 .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+    }
+
+    @Test
+    void deactivateClient_WithValidData_Returns200() throws Exception {
+        mockMvc.perform(post("/clients/deactivate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(editStatusClientRequestMock())))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deactivateClient_WithInvalidData_Returns406() throws Exception {
+        final var responseMock = mockFailureResponse("Information is not valid", 406);
+        mockMvc.perform(post("/clients/deactivate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new EditStatusClientRequest(""))))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+
+        mockMvc.perform(post("/clients/deactivate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new EditStatusClientRequest(null))))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+    }
+
+    @Test
+    void deactivateClient_WithClientNotExistInDatabase_Returns404() throws Exception {
+        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
+        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
+        mockMvc.perform(post("/clients/deactivate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new EditStatusClientRequest("12345678901"))))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+    }
+
+    @Test
+    void deactivateClient_WithClientExistInDatabase_Returns409() throws Exception {
+        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
+        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
+
+        mockMvc.perform(post("/clients/deactivate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestValidMock())))
+                .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
                 .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
     }
