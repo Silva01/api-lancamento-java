@@ -3,10 +3,7 @@ package silva.daniel.project.app.commons;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
-import silva.daniel.project.app.domain.client.Address;
-import silva.daniel.project.app.domain.client.Client;
-import silva.daniel.project.app.domain.client.ClientRequest;
-import silva.daniel.project.app.domain.client.EditClientRequest;
+import silva.daniel.project.app.domain.client.*;
 
 import java.util.UUID;
 
@@ -140,5 +137,9 @@ public interface ClientCommons {
                 "12345678901",
                 "Test",
                 "12345678901");
+    }
+
+    static EditStatusClientRequest editStatusClientRequestMock() {
+        return new EditStatusClientRequest("12345678901");
     }
 }
