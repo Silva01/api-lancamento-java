@@ -1,6 +1,7 @@
 package silva.daniel.project.app.web;
 
 
+import br.net.silva.daniel.exception.ClientNotActiveException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import org.springframework.http.HttpHeaders;
@@ -34,5 +35,11 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<FailureResponse> handleClientNotExistsException(ClientNotExistsException ex) {
         var failureResponse = new FailureResponse("Client not exists in database", NOT_FOUND.value());
         return ResponseEntity.status(NOT_FOUND).body(failureResponse);
+    }
+
+    @ExceptionHandler(ClientNotActiveException.class)
+    public ResponseEntity<FailureResponse> handleClientNotExistsException(ClientNotActiveException ex) {
+        var failureResponse = new FailureResponse("Client already deactivated", CONFLICT.value());
+        return ResponseEntity.status(CONFLICT).body(failureResponse);
     }
 }
