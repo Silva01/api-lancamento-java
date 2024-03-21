@@ -1,6 +1,7 @@
 package silva.daniel.project.app.service;
 
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
+import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.build.ClientExistsValidateBuilder;
 import br.net.silva.daniel.build.ClientNotExistsValidateBuilder;
@@ -11,6 +12,7 @@ import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
+import br.net.silva.daniel.usecase.DeactivateClientUseCase;
 import br.net.silva.daniel.usecase.EditClientUseCase;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,22 @@ public class FluxService {
                 )
                 .withBuilderValidations(
                         ValidationBuilder.create(ClientExistsValidateBuilder.class)
+                                .withRepository(clientBaseRepository)
+                )
+                .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxDeactivateClient() throws Exception {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, DeactivateClientUseCase.class),
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class)
+                )
+                .withBuilderValidations(
+                        ValidationBuilder
+                                .create(ClientExistsValidateBuilder.class)
                                 .withRepository(clientBaseRepository)
                 )
                 .build();
