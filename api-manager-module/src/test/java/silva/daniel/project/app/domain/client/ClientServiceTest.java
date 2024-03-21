@@ -5,6 +5,7 @@ import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -80,6 +81,16 @@ class ClientServiceTest {
         );
 
         assertThatCode(() -> service.updateClient(request)).doesNotThrowAnyException();
+    }
+
+    @Test
+    void deactivateClient_WithValidData_ReturnsDoesNotThrows() throws Exception {
+        when(fluxService.fluxDeactivateClient()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
+
+        final var request = new DeactivateClient("12345678901");
+
+        assertThatCode(() -> service.deactivateClient(request)).doesNotThrowAnyException();
     }
 
 }
