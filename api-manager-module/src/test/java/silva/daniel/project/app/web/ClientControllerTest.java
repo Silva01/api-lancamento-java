@@ -109,6 +109,19 @@ class ClientControllerTest {
     }
 
     @Test
+    void editClient_WithClientAlreadyDeactivated_Returns409() throws Exception {
+        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
+        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).updateClient(any(EditClientInput.class));
+
+        mockMvc.perform(put("/clients")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestValidMock())))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+    }
+
+    @Test
     void deactivateClient_WithValidData_Returns200() throws Exception {
         mockMvc.perform(post("/clients/deactivate")
                         .contentType(APPLICATION_JSON)
@@ -147,7 +160,7 @@ class ClientControllerTest {
     }
 
     @Test
-    void deactivateClient_WithClientExistInDatabase_Returns409() throws Exception {
+    void deactivateClient_WithClientAlreadyDeactivated_Returns409() throws Exception {
         final var failureResponse = mockFailureResponse("Client already deactivated", 409);
         doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
 
