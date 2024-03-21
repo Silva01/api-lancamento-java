@@ -4,6 +4,7 @@ import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSu
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,4 +32,7 @@ public class ClientService {
         fluxService.fluxUpdateClient().exec(source);
     }
 
+    public void deactivateClient(DeactivateClient deactivateClient) throws Exception {
+
+    }
 }
