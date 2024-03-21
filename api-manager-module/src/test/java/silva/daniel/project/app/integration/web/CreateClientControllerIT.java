@@ -27,7 +27,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class ClientControllerIT extends MysqlTestContainer {
+class CreateClientControllerIT extends MysqlTestContainer {
 
     @Autowired
     private TestRestTemplate restTemplate;
