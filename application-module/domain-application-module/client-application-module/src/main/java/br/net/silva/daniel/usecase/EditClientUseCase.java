@@ -2,6 +2,7 @@ package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.build.ClientBuilder;
 import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
@@ -39,6 +40,8 @@ public class EditClientUseCase implements UseCase<ClientOutput> {
             return response;
         } catch (GenericException ge) {
             throw ge;
+        } catch (ClientNotActiveException cae) {
+            throw new br.net.silva.daniel.exception.ClientNotActiveException(cae.getMessage());
         } catch (Exception e) {
             throw new GenericException("Generic error");
         }
