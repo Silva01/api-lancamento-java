@@ -2,6 +2,7 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
+import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import silva.daniel.project.app.domain.client.ClientRequest;
 import silva.daniel.project.app.domain.client.ClientService;
 import silva.daniel.project.app.domain.client.EditClientRequest;
+import silva.daniel.project.app.domain.client.EditStatusClientRequest;
 
 @RestController
 @RequestMapping("/clients")
@@ -42,6 +44,12 @@ public class ClientController {
                 client.cpf(),
                 client.name(),
                 client.telephone()));
+    }
+
+    @PostMapping("/deactivate")
+    @ResponseStatus(HttpStatus.OK)
+    public void deactivateClient(@RequestBody @Valid EditStatusClientRequest request) throws Exception {
+        clientService.deactivateClient(new DeactivateClient(request.cpf()));
     }
 
 }
