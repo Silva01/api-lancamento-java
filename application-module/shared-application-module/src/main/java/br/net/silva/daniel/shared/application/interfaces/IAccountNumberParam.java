@@ -1,5 +1,7 @@
 package br.net.silva.daniel.shared.application.interfaces;
 
-public interface IAccountNumberParam {
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+
+public interface IAccountNumberParam extends ParamGateway {
     Integer accountNumber();
 }
