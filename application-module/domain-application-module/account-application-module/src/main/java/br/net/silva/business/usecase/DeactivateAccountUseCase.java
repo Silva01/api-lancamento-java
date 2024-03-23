@@ -11,11 +11,11 @@ import br.net.silva.daniel.shared.application.value_object.Source;
 public class DeactivateAccountUseCase implements UseCase<AccountOutput> {
 
     private final ApplicationBaseGateway<AccountOutput> baseGateway;
-    private final FindAccountUseCase findAccountUseCase;
+    private final FindAccountByCpfUseCase findAccountUseCase;
 
     public DeactivateAccountUseCase(ApplicationBaseGateway<AccountOutput> baseGateway, GenericResponseMapper mapper) {
         this.baseGateway = baseGateway;
-        this.findAccountUseCase = new FindAccountUseCase(baseGateway, mapper);
+        this.findAccountUseCase = new FindAccountByCpfUseCase(baseGateway, mapper);
     }
 
     @Override
