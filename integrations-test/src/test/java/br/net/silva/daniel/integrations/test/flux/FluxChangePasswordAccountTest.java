@@ -59,7 +59,7 @@ class FluxChangePasswordAccountTest extends AbstractBuilder {
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.ofNullable(buildMockClient(true)));
 
         //Use Cases
-        findAccountUseCase = new FindAccountUseCase(findAccountRepository, buildFactoryResponse());
+//        findAccountUseCase = new FindAccountUseCase(findAccountRepository, buildFactoryResponse());
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(findAccountUseCase, updatePasswordRepository);
         findClientUseCase = new FindClientUseCase(baseGateway, buildFactoryResponse());
 
