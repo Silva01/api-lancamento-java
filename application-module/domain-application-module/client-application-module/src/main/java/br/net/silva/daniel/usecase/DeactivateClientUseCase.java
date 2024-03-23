@@ -3,6 +3,7 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.build.ClientBuilder;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
+import br.net.silva.daniel.exception.ClientNotActiveException;
 import br.net.silva.daniel.factory.CreateClientByDtoFactory;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
@@ -31,6 +32,11 @@ public class DeactivateClientUseCase implements UseCase<ClientOutput> {
     @Override
     public ClientOutput exec(Source param) throws GenericException {
         var clientDto = findClientUseCase.exec(param);
+
+        if (!clientDto.active()) {
+            throw new ClientNotActiveException("Client is already deactivated");
+        }
+
         var client = factory.create(ClientBuilder.buildFullClientDto().createFrom(clientDto));
         client.deactivate();
 
