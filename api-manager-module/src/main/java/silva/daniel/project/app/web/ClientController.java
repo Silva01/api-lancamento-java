@@ -1,6 +1,7 @@
 package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
+import br.net.silva.daniel.value_object.input.ActivateClient;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditClientInput;
@@ -50,6 +51,12 @@ public class ClientController {
     @ResponseStatus(HttpStatus.OK)
     public void deactivateClient(@RequestBody @Valid silva.daniel.project.app.domain.client.DeactivateClient request) throws Exception {
         clientService.deactivateClient(new DeactivateClient(request.cpf()));
+    }
+
+    @PostMapping("/activate")
+    @ResponseStatus(HttpStatus.OK)
+    public void activateClient(@RequestBody @Valid silva.daniel.project.app.domain.client.ActivateClient request) throws Exception {
+        clientService.activateClient(new ActivateClient(request.cpf()));
     }
 
 }
