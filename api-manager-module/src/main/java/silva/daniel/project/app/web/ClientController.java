@@ -48,7 +48,7 @@ public class ClientController {
 
     @PostMapping("/deactivate")
     @ResponseStatus(HttpStatus.OK)
-    public void deactivateClient(@RequestBody @Valid EditStatusClientRequest request) throws Exception {
+    public void deactivateClient(@RequestBody @Valid silva.daniel.project.app.domain.client.DeactivateClient request) throws Exception {
         clientService.deactivateClient(new DeactivateClient(request.cpf()));
     }
 
