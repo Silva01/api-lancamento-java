@@ -17,10 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import silva.daniel.project.app.domain.client.ClientRequest;
-import silva.daniel.project.app.domain.client.ClientService;
-import silva.daniel.project.app.domain.client.EditStatusClientRequest;
-import silva.daniel.project.app.domain.client.FailureResponse;
+import silva.daniel.project.app.domain.client.*;
 
 import java.util.stream.Stream;
 
@@ -167,6 +164,57 @@ class ClientControllerTest {
         mockMvc.perform(post("/clients/deactivate")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestValidMock())))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+    }
+
+    @Test
+    void activateClient_WithValidData_Returns200() throws Exception {
+        mockMvc.perform(post("/clients/activate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(activateClientMock())))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void activateClient_WithInvalidData_Returns406() throws Exception {
+        final var responseMock = mockFailureResponse("Information is not valid", 406);
+        mockMvc.perform(post("/clients/activate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ActivateClient(""))))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+
+        mockMvc.perform(post("/clients/activate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ActivateClient(null))))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+    }
+
+    @Test
+    void activateClient_WithClientNotExistInDatabase_Returns404() throws Exception {
+        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
+        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
+        mockMvc.perform(post("/clients/activate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ActivateClient("12345678901"))))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+    }
+
+    @Test
+    void activateClient_WithClientAlreadyDeactivated_Returns409() throws Exception {
+        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
+        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
+
+        mockMvc.perform(post("/clients/activate")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(activateClientMock())))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
                 .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
