@@ -3,6 +3,7 @@ package silva.daniel.project.app.domain.client;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.value_object.input.ActivateClient;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditClientInput;
@@ -35,5 +36,9 @@ public class ClientService {
     public void deactivateClient(DeactivateClient deactivateClient) throws Exception {
         final var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         fluxService.fluxDeactivateClient().exec(source);
+    }
+
+    public void activateClient(ActivateClient deactivateClient) throws Exception {
+
     }
 }
