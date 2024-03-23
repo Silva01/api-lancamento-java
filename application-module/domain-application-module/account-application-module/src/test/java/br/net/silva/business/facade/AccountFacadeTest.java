@@ -60,7 +60,7 @@ class AccountFacadeTest {
         MockitoAnnotations.openMocks(this);
         factory = new GenericResponseMapper(List.of(new CreateResponseToNewAccountFactory(), new CreateResponseToNewAccountByClientFactory()));
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(baseRepository, factory);
-        var findAccountByCpfUseCase = new FindAccountByCpfUseCase(findAccountRepository, factory);
+        var findAccountByCpfUseCase = new FindAccountByCpfUseCase(baseRepository, factory);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountByCpfUseCase);
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(baseRepository, factory), saveRepository);
         this.deactivateAccountUseCase = new DeactivateAccountUseCase(baseRepository, factory);
