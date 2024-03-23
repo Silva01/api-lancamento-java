@@ -3,6 +3,8 @@ package silva.daniel.project.app.domain.account.gateway;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.interfaces.IAccountParam;
+import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import org.springframework.stereotype.Component;
 import silva.daniel.project.app.domain.account.entity.Account;
 import silva.daniel.project.app.domain.account.entity.AccountKey;
@@ -33,7 +35,16 @@ public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
 
     @Override
     public Optional<AccountOutput> findById(ParamGateway param) {
-        return Optional.empty();
+
+        if(param instanceof IAccountParam accountParam) {
+            var key = new AccountKey(accountParam.accountNumber(), accountParam.agency());
+            return repository.findById(key)
+                    .map(account -> new AccountOutput(account.getKeys().getNumber(), account.getKeys().getBankAgencyNumber(), account.getBalance(), account.getPassword(), account.isActive(), account.getCpf(), null, Collections.emptyList()));
+        }
+
+        final var cpf = (ICpfParam) param;
+        return repository.findByCpfAndActiveIsTrue(cpf.cpf())
+                .map(account -> new AccountOutput(account.getKeys().getNumber(), account.getKeys().getBankAgencyNumber(), account.getBalance(), account.getPassword(), account.isActive(), account.getCpf(), null, Collections.emptyList()));
     }
 
     @Override
