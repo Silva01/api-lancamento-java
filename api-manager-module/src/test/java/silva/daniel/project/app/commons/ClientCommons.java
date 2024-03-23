@@ -142,4 +142,8 @@ public interface ClientCommons {
     static EditStatusClientRequest editStatusClientRequestMock() {
         return new EditStatusClientRequest("12345678901");
     }
+
+    static ActivateClient activateClientMock() {
+        return new ActivateClient("123456789");
+    }
 }
