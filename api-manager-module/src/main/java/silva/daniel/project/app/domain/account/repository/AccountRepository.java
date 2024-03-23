@@ -4,5 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import silva.daniel.project.app.domain.account.entity.Account;
 import silva.daniel.project.app.domain.account.entity.AccountKey;
 
+import java.util.Optional;
+
 public interface AccountRepository extends JpaRepository<Account, AccountKey> {
+    Optional<Account> findByCpfAndActiveIsTrue(String cpf);
 }
