@@ -12,10 +12,10 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.shared.application.exception.GenericException;
-import br.net.silva.daniel.shared.application.interfaces.*;
-import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.Repository;
+import br.net.silva.daniel.shared.application.interfaces.*;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,9 +44,6 @@ class AccountFacadeTest {
     private GenericResponseMapper factory;
 
     @Mock
-    private Repository<Boolean> findIsExistsPeerCPFRepository;
-
-    @Mock
     private Repository<AccountOutput> saveRepository;
 
     @Mock
@@ -65,8 +62,8 @@ class AccountFacadeTest {
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(baseRepository, factory);
         var findAccountByCpfUseCase = new FindAccountByCpfUseCase(findAccountRepository, factory);
         passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountByCpfUseCase);
-        changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(findAccountRepository, factory), saveRepository);
-        this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
+        changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(baseRepository, factory), saveRepository);
+        this.deactivateAccountUseCase = new DeactivateAccountUseCase(baseRepository, factory);
     }
 
     @Test
