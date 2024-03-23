@@ -53,7 +53,7 @@ class FluxDeactivateAccountTest extends AbstractBuilder {
         when(findClientRepository.exec(anyString())).thenReturn(Optional.of(buildMockClient(true)));
 
         // Use Case
-        deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
+//        deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
 //        findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
         // Validations

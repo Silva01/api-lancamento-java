@@ -60,7 +60,7 @@ class FluxDeactivateClientTest extends AbstractBuilder {
         when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(buildMockClient(false));
 
         // Use Cases
-        this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
+//        this.deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
 //        this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository, buildFactoryResponse());
 //        this.findClientUseCase = new FindClientUseCase(findClientRepository, buildFactoryResponse());
 
