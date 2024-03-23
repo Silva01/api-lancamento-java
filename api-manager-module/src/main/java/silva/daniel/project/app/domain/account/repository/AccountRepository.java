@@ -7,5 +7,5 @@ import silva.daniel.project.app.domain.account.entity.AccountKey;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, AccountKey> {
-    Optional<Account> findByCpfAndActiveIsTrue(String cpf);
+    Optional<Account> findByCpf(String cpf);
 }

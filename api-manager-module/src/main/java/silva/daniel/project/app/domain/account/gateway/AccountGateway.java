@@ -43,7 +43,7 @@ public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
         }
 
         final var cpf = (ICpfParam) param;
-        return repository.findByCpfAndActiveIsTrue(cpf.cpf())
+        return repository.findByCpf(cpf.cpf())
                 .map(account -> new AccountOutput(account.getKeys().getNumber(), account.getKeys().getBankAgencyNumber(), account.getBalance(), account.getPassword(), account.isActive(), account.getCpf(), null, Collections.emptyList()));
     }
 
