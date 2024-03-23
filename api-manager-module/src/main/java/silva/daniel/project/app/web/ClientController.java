@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import silva.daniel.project.app.domain.client.ClientRequest;
 import silva.daniel.project.app.domain.client.ClientService;
 import silva.daniel.project.app.domain.client.EditClientRequest;
-import silva.daniel.project.app.domain.client.EditStatusClientRequest;
 
 @RestController
 @RequestMapping("/clients")
