@@ -1,6 +1,7 @@
 package br.net.silva.daniel.validation;
 
 import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
@@ -25,7 +26,7 @@ public class ClientExistsAndDeactivatedValidate implements IValidations {
         }
 
         if (optClient.get().active()) {
-            throw new GenericException("Client already activated");
+            throw new ExistsClientRegistredException("Client already activated");
         }
     }
 }
