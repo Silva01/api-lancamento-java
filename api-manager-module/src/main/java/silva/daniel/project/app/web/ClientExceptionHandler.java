@@ -27,7 +27,7 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ExistsClientRegistredException.class)
     public ResponseEntity<FailureResponse> handleExistsClientRegistredException(ExistsClientRegistredException ex) {
-        var failureResponse = new FailureResponse("Client already exists in database", CONFLICT.value());
+        var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
     }
 
