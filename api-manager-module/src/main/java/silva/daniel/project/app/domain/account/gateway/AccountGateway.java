@@ -10,6 +10,7 @@ import silva.daniel.project.app.domain.account.entity.Account;
 import silva.daniel.project.app.domain.account.entity.AccountKey;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +56,7 @@ public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
     @Override
     public AccountOutput save(AccountOutput entity) {
         var key = new AccountKey(entity.number(), entity.agency());
-        var account = new Account(key, entity.balance(), entity.password(), entity.active(), entity.cpf(), null, null);
+        var account = new Account(key, entity.balance(), entity.password(), entity.active(), entity.cpf(), null, null, LocalDateTime.now());
         var newAccount = repository.save(account);
         return new AccountOutput(newAccount.getKeys().getNumber(), newAccount.getKeys().getBankAgencyNumber(), newAccount.getBalance(), newAccount.getPassword(), newAccount.isActive(), newAccount.getCpf(), null, Collections.emptyList());
     }

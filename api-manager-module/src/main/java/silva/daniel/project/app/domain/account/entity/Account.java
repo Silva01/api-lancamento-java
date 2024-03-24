@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -28,4 +31,7 @@ public class Account {
 
     @OneToMany(mappedBy = "originAccountNumber", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }
