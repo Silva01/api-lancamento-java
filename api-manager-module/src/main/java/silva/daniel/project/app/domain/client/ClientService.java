@@ -39,6 +39,7 @@ public class ClientService {
     }
 
     public void activateClient(ActivateClient deactivateClient) throws Exception {
-
+        final var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
+        fluxService.fluxActivateClient().exec(source);
     }
 }
