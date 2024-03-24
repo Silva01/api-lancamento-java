@@ -77,7 +77,7 @@ class CreateClientControllerIT extends MysqlTestContainer {
         var sut = restTemplate.postForEntity("/clients", request, FailureResponse.class);
         assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
         assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client already exists in database");
+        assertThat(sut.getBody().getMessage()).isEqualTo("Client exists in database");
         assertThat(sut.getBody().getStatusCode()).isEqualTo(409);
     }
 
@@ -96,7 +96,7 @@ class CreateClientControllerIT extends MysqlTestContainer {
         var sut = restTemplate.postForEntity("/clients", request, FailureResponse.class);
         assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
         assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client already exists in database");
+        assertThat(sut.getBody().getMessage()).isEqualTo("Client exists in database");
         assertThat(sut.getBody().getStatusCode()).isEqualTo(409);
     }
 
