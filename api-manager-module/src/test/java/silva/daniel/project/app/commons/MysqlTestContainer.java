@@ -3,17 +3,19 @@ package silva.daniel.project.app.commons;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
 public abstract class MysqlTestContainer {
 
-    @Container
     private static final MySQLContainer MY_SQL_CONTAINER = new MySQLContainer("mysql:8.0.26")
             .withDatabaseName("finance")
             .withUsername("root")
             .withPassword("123456");
+
+    static {
+        MY_SQL_CONTAINER.start();
+    }
 
     @DynamicPropertySource
     static void configureTestProperties(DynamicPropertyRegistry registry){
