@@ -22,7 +22,7 @@ public class ActivateClientUseCase implements UseCase<ClientOutput> {
         var dto = (IClientParam) param.input();
         var clientOutput = baseRepository.findById(dto).orElseThrow(() -> new ClientNotExistsException("Client not Found"));
         var aggregateClient = ClientBuilder.buildAggregate().createFrom(clientOutput);
-        aggregateClient.deactivate();
+        aggregateClient.activate();
 
         return baseRepository.save(ClientBuilder.buildFullClientOutput().createFrom(aggregateClient.build()));
     }
