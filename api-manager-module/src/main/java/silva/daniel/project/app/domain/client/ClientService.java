@@ -33,11 +33,13 @@ public class ClientService {
         fluxService.fluxUpdateClient().exec(source);
     }
 
+    @Transactional
     public void deactivateClient(DeactivateClient deactivateClient) throws Exception {
         final var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         fluxService.fluxDeactivateClient().exec(source);
     }
 
+    @Transactional
     public void activateClient(ActivateClient deactivateClient) throws Exception {
         final var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         fluxService.fluxActivateClient().exec(source);
