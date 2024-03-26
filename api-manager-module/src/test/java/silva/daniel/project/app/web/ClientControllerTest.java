@@ -4,6 +4,7 @@ import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSu
 import br.net.silva.daniel.exception.ClientNotActiveException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
+import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditClientInput;
@@ -17,8 +18,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import silva.daniel.project.app.domain.client.*;
+import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.domain.client.request.ActivateClient;
+import silva.daniel.project.app.domain.client.request.AddressRequest;
 import silva.daniel.project.app.domain.client.request.ClientRequest;
 import silva.daniel.project.app.domain.client.request.EditStatusClientRequest;
 import silva.daniel.project.app.domain.client.service.ClientService;
@@ -26,6 +28,7 @@ import silva.daniel.project.app.domain.client.service.ClientService;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -33,7 +36,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static silva.daniel.project.app.commons.ClientCommons.*;
+import static silva.daniel.project.app.commons.ClientCommons.activateClientMock;
+import static silva.daniel.project.app.commons.ClientCommons.editClientRequestMock;
+import static silva.daniel.project.app.commons.ClientCommons.editStatusClientRequestMock;
+import static silva.daniel.project.app.commons.ClientCommons.requestCpfEmptyMock;
+import static silva.daniel.project.app.commons.ClientCommons.requestInvalidAddressMock;
+import static silva.daniel.project.app.commons.ClientCommons.requestInvalidAgencyMock;
+import static silva.daniel.project.app.commons.ClientCommons.requestInvalidNegativeAgencyMock;
+import static silva.daniel.project.app.commons.ClientCommons.requestInvalidZeroAgencyMock;
+import static silva.daniel.project.app.commons.ClientCommons.requestNullCpfMock;
+import static silva.daniel.project.app.commons.ClientCommons.requestValidMock;
 
 @ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
@@ -224,6 +236,54 @@ class ClientControllerTest {
                 .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
     }
 
+    @Test
+    void updateAddress_WithValidData_Returns200() throws Exception {
+        var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
+        mockMvc.perform(put("/clients/address")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateAddress_WithClientNotExistInDatabase_Returns404() throws Exception {
+        var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
+        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
+        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateAddress(anyString(), any(AddressRequestDTO.class));
+        mockMvc.perform(put("/clients/address")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+    }
+
+    @Test
+    void updateAddress_WithClientAlreadyDeactivated_Returns409() throws Exception {
+        var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
+        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
+        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).updateAddress(anyString(), any(AddressRequestDTO.class));
+
+        mockMvc.perform(put("/clients/address")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideAddressRequestInvalidData")
+    void updateAddress_WithInvalidData_ReturnsStatus406(AddressRequest request) throws Exception {
+        final var responseMock = mockFailureResponse("Information is not valid", 406);
+        mockMvc.perform(put("/clients/address")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+    }
+
     private NewAccountByNewClientResponseSuccess mockResponse() {
         final var response = new NewAccountByNewClientResponseSuccess();
         response.setAgency(1234);
@@ -244,6 +304,25 @@ class ClientControllerTest {
                 Arguments.of(requestInvalidAgencyMock()),
                 Arguments.of(requestInvalidNegativeAgencyMock()),
                 Arguments.of(requestInvalidZeroAgencyMock())
+        );
+    }
+
+    private static Stream<Arguments> provideAddressRequestInvalidData() {
+        return Stream.of(
+                Arguments.of(new AddressRequest("88899988800", "", "number", "complement", "neighborhood", "city", "state", "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", "", "complement", "neighborhood", "city", "state", "zipCode")),
+                Arguments.of(new AddressRequest("", "street", "number", "complement", "neighborhood", "city", "state", "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", "number", "complement", "", "city", "state", "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "", "state", "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "", "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "")),
+                Arguments.of(new AddressRequest("88899988800", null, "number", "complement", "neighborhood", "city", "state", "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", null, "complement", "neighborhood", "city", "state", "zipCode")),
+                Arguments.of(new AddressRequest(null, "street", "number", "complement", "neighborhood", "city", "state", "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", "number", "complement", null, "city", "state", "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", null, "state", "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", null, "zipCode")),
+                Arguments.of(new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", null))
         );
     }
 }
