@@ -2,6 +2,7 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.daniel.value_object.input.ActivateClient;
+import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditClientInput;
@@ -14,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import silva.daniel.project.app.domain.client.request.AddressRequest;
 import silva.daniel.project.app.domain.client.request.ClientRequest;
-import silva.daniel.project.app.domain.client.service.ClientService;
 import silva.daniel.project.app.domain.client.request.EditClientRequest;
+import silva.daniel.project.app.domain.client.service.ClientService;
 
 @RestController
 @RequestMapping("/clients")
@@ -61,6 +63,19 @@ public class ClientController {
     @ResponseStatus(HttpStatus.OK)
     public void activateClient(@RequestBody @Valid silva.daniel.project.app.domain.client.request.ActivateClient request) throws Exception {
         clientService.activateClient(new ActivateClient(request.cpf()));
+    }
+
+    @PutMapping("/address")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateAddress(@RequestBody @Valid AddressRequest request) throws Exception {
+        clientService.updateAddress(request.cpf(), new AddressRequestDTO(
+                request.street(),
+                request.number(),
+                request.complement(),
+                request.neighborhood(),
+                request.state(),
+                request.city(),
+                request.zipCode()));
     }
 
 }
