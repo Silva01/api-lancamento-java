@@ -1,9 +1,9 @@
 package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
-import br.net.silva.daniel.exception.ClientNotActiveException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
+import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditAddressInput;

@@ -3,7 +3,7 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.build.ClientBuilder;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.exception.ClientNotActiveException;
+import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import br.net.silva.daniel.factory.CreateClientByDtoFactory;
 import br.net.silva.daniel.shared.application.exception.GenericException;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;

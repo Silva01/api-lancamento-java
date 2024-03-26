@@ -41,7 +41,7 @@ public class EditClientUseCase implements UseCase<ClientOutput> {
         } catch (GenericException ge) {
             throw ge;
         } catch (ClientNotActiveException cae) {
-            throw new br.net.silva.daniel.exception.ClientNotActiveException(cae.getMessage());
+            throw new ClientNotActiveException(cae.getMessage());
         } catch (Exception e) {
             throw new GenericException("Generic error");
         }

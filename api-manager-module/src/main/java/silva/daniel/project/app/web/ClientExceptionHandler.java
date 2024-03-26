@@ -1,9 +1,9 @@
 package silva.daniel.project.app.web;
 
 
-import br.net.silva.daniel.exception.ClientNotActiveException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
+import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
