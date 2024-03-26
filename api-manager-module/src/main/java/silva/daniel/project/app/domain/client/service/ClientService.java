@@ -4,8 +4,10 @@ import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSu
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.ActivateClient;
+import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
+import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,5 +45,11 @@ public class ClientService {
     public void activateClient(ActivateClient deactivateClient) throws Exception {
         final var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         fluxService.fluxActivateClient().exec(source);
+    }
+
+    @Transactional
+    public void updateAddress(EditAddressInput addressInput) throws Exception {
+        final var source = new Source(EmptyOutput.INSTANCE, addressInput);
+        fluxService.fluxUpdateAddress().exec(source);
     }
 }
