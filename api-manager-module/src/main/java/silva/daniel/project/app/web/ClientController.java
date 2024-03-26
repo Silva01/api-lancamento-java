@@ -6,9 +6,12 @@ import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.input.EditClientInput;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,6 +80,11 @@ public class ClientController {
                 request.city(),
                 request.state(),
                 request.zipCode()));
+    }
+
+    @GetMapping("/{cpf}")
+    public ResponseEntity<ClientOutput> getClientByCpf(@PathVariable String cpf) throws Exception {
+        return ResponseEntity.ok(clientService.getClientByCpf(cpf));
     }
 
 }
