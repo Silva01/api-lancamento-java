@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import silva.daniel.project.app.commons.MysqlTestContainer;
-import silva.daniel.project.app.domain.client.ClientRepository;
-import silva.daniel.project.app.domain.client.DeactivateClient;
+import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
+import silva.daniel.project.app.domain.client.request.DeactivateClient;
 import silva.daniel.project.app.domain.client.FailureResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;

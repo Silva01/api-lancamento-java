@@ -8,6 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
+import silva.daniel.project.app.domain.client.entity.Client;
+import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
+import silva.daniel.project.app.domain.client.gateway.ClientGatewayImpl;
 import silva.daniel.project.app.mapper.Mapper;
 
 import java.util.Optional;

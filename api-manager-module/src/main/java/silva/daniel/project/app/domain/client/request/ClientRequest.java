@@ -1,4 +1,4 @@
-package silva.daniel.project.app.domain.client;
+package silva.daniel.project.app.domain.client.request;
 
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import jakarta.validation.constraints.NegativeOrZero;

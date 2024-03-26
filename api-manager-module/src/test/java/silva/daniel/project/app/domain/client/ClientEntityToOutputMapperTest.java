@@ -4,10 +4,11 @@ import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import silva.daniel.project.app.domain.client.entity.Address;
+import silva.daniel.project.app.domain.client.entity.Client;
+import silva.daniel.project.app.domain.client.mapper.ClientEntityToOutputMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ClientEntityToOutputMapperTest {
 

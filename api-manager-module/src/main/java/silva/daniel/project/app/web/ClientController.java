@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import silva.daniel.project.app.domain.client.ClientRequest;
-import silva.daniel.project.app.domain.client.ClientService;
-import silva.daniel.project.app.domain.client.EditClientRequest;
+import silva.daniel.project.app.domain.client.request.ClientRequest;
+import silva.daniel.project.app.domain.client.service.ClientService;
+import silva.daniel.project.app.domain.client.request.EditClientRequest;
 
 @RestController
 @RequestMapping("/clients")
@@ -53,13 +53,13 @@ public class ClientController {
 
     @PostMapping("/deactivate")
     @ResponseStatus(HttpStatus.OK)
-    public void deactivateClient(@RequestBody @Valid silva.daniel.project.app.domain.client.DeactivateClient request) throws Exception {
+    public void deactivateClient(@RequestBody @Valid silva.daniel.project.app.domain.client.request.DeactivateClient request) throws Exception {
         clientService.deactivateClient(new DeactivateClient(request.cpf()));
     }
 
     @PostMapping("/activate")
     @ResponseStatus(HttpStatus.OK)
-    public void activateClient(@RequestBody @Valid silva.daniel.project.app.domain.client.ActivateClient request) throws Exception {
+    public void activateClient(@RequestBody @Valid silva.daniel.project.app.domain.client.request.ActivateClient request) throws Exception {
         clientService.activateClient(new ActivateClient(request.cpf()));
     }
 

@@ -1,4 +1,4 @@
-package silva.daniel.project.app.domain.client;
+package silva.daniel.project.app.domain.client.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;

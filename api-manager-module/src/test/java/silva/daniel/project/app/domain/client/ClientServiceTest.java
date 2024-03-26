@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import silva.daniel.project.app.domain.client.service.ClientService;
 import silva.daniel.project.app.service.FluxService;
 
 import static org.assertj.core.api.Assertions.assertThat;

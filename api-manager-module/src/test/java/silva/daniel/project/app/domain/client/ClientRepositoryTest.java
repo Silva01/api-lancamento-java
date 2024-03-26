@@ -9,6 +9,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.GeneratorCpf;
+import silva.daniel.project.app.domain.client.entity.Address;
+import silva.daniel.project.app.domain.client.entity.Client;
+import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
 
 import java.util.UUID;
 import java.util.stream.Stream;

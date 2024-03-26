@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import silva.daniel.project.app.commons.MysqlTestContainer;
-import silva.daniel.project.app.domain.client.ClientRequest;
+import silva.daniel.project.app.domain.client.request.ClientRequest;
 import silva.daniel.project.app.domain.client.FailureResponse;
 
 import java.util.UUID;

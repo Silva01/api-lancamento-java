@@ -3,7 +3,12 @@ package silva.daniel.project.app.commons;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
-import silva.daniel.project.app.domain.client.*;
+import silva.daniel.project.app.domain.client.entity.Address;
+import silva.daniel.project.app.domain.client.entity.Client;
+import silva.daniel.project.app.domain.client.request.ActivateClient;
+import silva.daniel.project.app.domain.client.request.ClientRequest;
+import silva.daniel.project.app.domain.client.request.EditClientRequest;
+import silva.daniel.project.app.domain.client.request.EditStatusClientRequest;
 
 import java.util.UUID;
 

@@ -18,6 +18,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import silva.daniel.project.app.domain.client.*;
+import silva.daniel.project.app.domain.client.request.ActivateClient;
+import silva.daniel.project.app.domain.client.request.ClientRequest;
+import silva.daniel.project.app.domain.client.request.EditStatusClientRequest;
+import silva.daniel.project.app.domain.client.service.ClientService;
 
 import java.util.stream.Stream;
 

@@ -1,8 +1,10 @@
-package silva.daniel.project.app.domain.client;
+package silva.daniel.project.app.domain.client.mapper;
 
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Component;
+import silva.daniel.project.app.domain.client.entity.Address;
+import silva.daniel.project.app.domain.client.entity.Client;
 import silva.daniel.project.app.mapper.Mapper;
 
 @Component

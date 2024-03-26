@@ -1,4 +1,4 @@
-package silva.daniel.project.app.domain.client;
+package silva.daniel.project.app.domain.client.gateway;
 
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
@@ -6,6 +6,8 @@ import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Component;
+import silva.daniel.project.app.domain.client.entity.Client;
+import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
 import silva.daniel.project.app.mapper.Mapper;
 
 import java.util.List;

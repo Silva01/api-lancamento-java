@@ -1,4 +1,4 @@
-package silva.daniel.project.app.domain.client;
+package silva.daniel.project.app.domain.client.service;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
