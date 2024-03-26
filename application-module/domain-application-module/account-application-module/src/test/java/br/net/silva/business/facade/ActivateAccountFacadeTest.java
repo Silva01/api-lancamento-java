@@ -4,7 +4,7 @@ import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsAndActiveValidate;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;

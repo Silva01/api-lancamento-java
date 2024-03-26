@@ -3,7 +3,7 @@ package br.net.silva.business.usecase;
 import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;

@@ -1,4 +1,4 @@
-package br.net.silva.daniel.shared.application.exception;
+package br.net.silva.daniel.shared.business.exception;
 
 public class GenericException extends Exception {
     public GenericException(String message) {

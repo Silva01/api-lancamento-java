@@ -3,7 +3,7 @@ package br.net.silva.business.usecase;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;

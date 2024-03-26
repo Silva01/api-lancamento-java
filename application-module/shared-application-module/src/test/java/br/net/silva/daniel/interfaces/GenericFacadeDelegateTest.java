@@ -1,6 +1,6 @@
 package br.net.silva.daniel.interfaces;
 
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.*;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import org.junit.jupiter.api.Assertions;

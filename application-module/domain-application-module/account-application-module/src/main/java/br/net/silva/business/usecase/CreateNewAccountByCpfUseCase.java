@@ -13,7 +13,7 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
 import br.net.silva.daniel.shared.application.interfaces.IAgencyParam;
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
@@ -25,7 +25,6 @@ import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.shared.application.value_object.Source;
 
-import java.util.Collections;
 import java.util.List;
 
 public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {

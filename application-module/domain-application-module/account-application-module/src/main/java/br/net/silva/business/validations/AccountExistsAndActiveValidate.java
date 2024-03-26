@@ -5,7 +5,7 @@ import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.interfaces.IAccountParam;
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.value_object.Source;

@@ -1,18 +1,14 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.usecase.DeactivateClientUseCase;
-import br.net.silva.daniel.usecase.FindClientUseCase;
-import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.output.ClientOutput;

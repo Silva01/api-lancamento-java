@@ -7,7 +7,7 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
 import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;

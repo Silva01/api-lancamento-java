@@ -1,6 +1,6 @@
 package br.net.silva.daniel.exception;
 
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 
 public class ClientNotExistsException extends GenericException {
     public ClientNotExistsException(String message) {

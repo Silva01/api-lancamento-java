@@ -1,17 +1,13 @@
 package br.net.silva.daniel.integrations.test.flux;
 
-import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.integrations.test.interfaces.AbstractBuilder;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.usecase.CreateNewClientUseCase;
-import br.net.silva.daniel.usecase.FindClientUseCase;
-import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
@@ -20,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import java.util.LinkedList;
 import java.util.List;

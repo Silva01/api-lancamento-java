@@ -5,7 +5,7 @@ import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import br.net.silva.daniel.factory.CreateClientByDtoFactory;
-import br.net.silva.daniel.shared.application.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
