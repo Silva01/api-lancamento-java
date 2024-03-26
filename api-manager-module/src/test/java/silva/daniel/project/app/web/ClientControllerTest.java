@@ -8,11 +8,14 @@ import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.input.EditClientInput;
+import br.net.silva.daniel.value_object.output.AddressOutput;
+import br.net.silva.daniel.value_object.output.ClientOutput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,6 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -281,6 +285,27 @@ class ClientControllerTest {
                 .andExpect(status().isNotAcceptable())
                 .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
                 .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+    }
+
+    @Test
+    void getClient_WithValidData_ReturnsClient() throws Exception {
+        var response = new ClientOutput("a", "00099988877", "name", "telephone", true, new AddressOutput("street", "number", "complement", "neighborhood", "city", "state", "zipCode"));
+        when(service.getClientByCpf("00099988877")).thenReturn(response);
+        mockMvc.perform(get("/clients/{cpf}", "00099988877")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(response.id()))
+                .andExpect(jsonPath("$.cpf").value(response.cpf()))
+                .andExpect(jsonPath("$.name").value(response.name()))
+                .andExpect(jsonPath("$.telephone").value(response.telephone()))
+                .andExpect(jsonPath("$.active").value(response.active()))
+                .andExpect(jsonPath("$.address.street").value(response.address().street()))
+                .andExpect(jsonPath("$.address.number").value(response.address().number()))
+                .andExpect(jsonPath("$.address.complement").value(response.address().complement()))
+                .andExpect(jsonPath("$.address.neighborhood").value(response.address().neighborhood()))
+                .andExpect(jsonPath("$.address.city").value(response.address().city()))
+                .andExpect(jsonPath("$.address.state").value(response.address().state()))
+                .andExpect(jsonPath("$.address.zipCode").value(response.address().zipCode()));
     }
 
     private NewAccountByNewClientResponseSuccess mockResponse() {
