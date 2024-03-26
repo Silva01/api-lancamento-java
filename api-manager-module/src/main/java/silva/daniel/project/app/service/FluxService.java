@@ -15,6 +15,7 @@ import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
+import br.net.silva.daniel.usecase.EditAddressUseCase;
 import br.net.silva.daniel.usecase.EditClientUseCase;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Service;
@@ -90,5 +91,16 @@ public class FluxService {
                                 .withRepository(clientBaseRepository)
                 )
                 .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxUpdateAddress() throws Exception {
+        return FacadeBuilder
+                .make().withBuilderUseCases(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, EditAddressUseCase.class)
+                ).withBuilderValidations(
+                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
+                                .withRepository(clientBaseRepository)
+                ).build();
     }
 }
