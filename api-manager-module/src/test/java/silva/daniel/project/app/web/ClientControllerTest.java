@@ -4,9 +4,9 @@ import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSu
 import br.net.silva.daniel.exception.ClientNotActiveException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
-import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
+import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,6 @@ import silva.daniel.project.app.domain.client.service.ClientService;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -249,7 +248,7 @@ class ClientControllerTest {
     void updateAddress_WithClientNotExistInDatabase_Returns404() throws Exception {
         var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
         final var failureResponse = mockFailureResponse("Client not exists in database", 404);
-        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateAddress(anyString(), any(AddressRequestDTO.class));
+        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
         mockMvc.perform(put("/clients/address")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -262,7 +261,7 @@ class ClientControllerTest {
     void updateAddress_WithClientAlreadyDeactivated_Returns409() throws Exception {
         var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
         final var failureResponse = mockFailureResponse("Client already deactivated", 409);
-        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).updateAddress(anyString(), any(AddressRequestDTO.class));
+        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
 
         mockMvc.perform(put("/clients/address")
                         .contentType(APPLICATION_JSON)

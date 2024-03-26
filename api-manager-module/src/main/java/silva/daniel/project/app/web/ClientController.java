@@ -5,6 +5,7 @@ import br.net.silva.daniel.value_object.input.ActivateClient;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
+import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -68,13 +69,14 @@ public class ClientController {
     @PutMapping("/address")
     @ResponseStatus(HttpStatus.OK)
     public void updateAddress(@RequestBody @Valid AddressRequest request) throws Exception {
-        clientService.updateAddress(request.cpf(), new AddressRequestDTO(
+        clientService.updateAddress(new EditAddressInput(
+                request.cpf(),
                 request.street(),
                 request.number(),
                 request.complement(),
                 request.neighborhood(),
-                request.state(),
                 request.city(),
+                request.state(),
                 request.zipCode()));
     }
 
