@@ -7,6 +7,7 @@ import br.net.silva.daniel.value_object.input.ActivateClient;
 import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
+import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -102,6 +103,15 @@ class ClientServiceTest {
 
         final var request = new ActivateClient("12345678901");
         assertThatCode(() -> service.activateClient(request)).doesNotThrowAnyException();
+    }
+
+    @Test
+    void updateAddress_WithValidData_ReturnsDoesNotThrows() throws Exception {
+        when(fluxService.fluxUpdateAddress()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
+
+        var request = new EditAddressInput("333444555", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
+        assertThatCode(() -> service.updateAddress(request)).doesNotThrowAnyException();
     }
 
 }
