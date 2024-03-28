@@ -6,9 +6,9 @@ import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 
-public class DummyUseCase implements UseCase<String> {
+public class DummyThreeParamUseCase implements UseCase<String> {
 
-    public DummyUseCase(ApplicationBaseGateway<String> repository) {
+    public DummyThreeParamUseCase(ApplicationBaseGateway<String> repository, GenericResponseMapper mapper, String name) {
     }
 
     @Override
