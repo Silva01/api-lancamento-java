@@ -17,6 +17,7 @@ import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
 import br.net.silva.daniel.usecase.EditAddressUseCase;
 import br.net.silva.daniel.usecase.EditClientUseCase;
+import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Service;
 
@@ -98,6 +99,17 @@ public class FluxService {
         return FacadeBuilder
                 .make().withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, EditAddressUseCase.class)
+                ).withBuilderValidations(
+                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
+                                .withRepository(clientBaseRepository)
+                ).build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxFindClient() throws Exception {
+        return FacadeBuilder
+                .make().withBuilderUseCases(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class)
                 ).withBuilderValidations(
                         ValidationBuilder.create(ClientExistsValidateBuilder.class)
                                 .withRepository(clientBaseRepository)
