@@ -40,7 +40,9 @@ public class EditClientUseCase implements UseCase<ClientOutput> {
             return response;
         } catch (ClientNotActiveException cae) {
             throw new ClientNotActiveException(cae.getMessage());
-        }  catch (Exception e) {
+        } catch (ClientNotExistsException cne) {
+            throw cne;
+        } catch (Exception e) {
             throw new GenericException("Generic error");
         }
     }

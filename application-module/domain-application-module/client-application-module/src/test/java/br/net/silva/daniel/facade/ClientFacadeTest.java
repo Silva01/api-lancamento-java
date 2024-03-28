@@ -102,7 +102,7 @@ class ClientFacadeTest {
 
     @Test
     void mustDeactivateClientWithSuccess() throws GenericException {
-        var client = buildClient(false);
+        var client = buildClient(true);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
 
