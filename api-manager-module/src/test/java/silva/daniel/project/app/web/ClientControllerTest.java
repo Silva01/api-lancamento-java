@@ -8,14 +8,12 @@ import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.input.EditClientInput;
-import br.net.silva.daniel.value_object.output.AddressOutput;
-import br.net.silva.daniel.value_object.output.ClientOutput;
+import br.net.silva.daniel.value_object.output.GetInformationClientResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -289,23 +287,31 @@ class ClientControllerTest {
 
     @Test
     void getClient_WithValidData_ReturnsClient() throws Exception {
-        var response = new ClientOutput("a", "00099988877", "name", "telephone", true, new AddressOutput("street", "number", "complement", "neighborhood", "city", "state", "zipCode"));
+        var response = new GetInformationClientResponse();
+        response.setName("Test");
+        response.setCpf("00099988877");
+        response.setTelephone("99999999999");
+        response.setStreet("street");
+        response.setNumber("number");
+        response.setComplement("complement");
+        response.setNeighborhood("neighborhood");
+        response.setCity("city");
+        response.setState("state");
+        response.setZipCod("zipCode");
         when(service.getClientByCpf("00099988877")).thenReturn(response);
         mockMvc.perform(get("/clients/{cpf}", "00099988877")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(response.id()))
-                .andExpect(jsonPath("$.cpf").value(response.cpf()))
-                .andExpect(jsonPath("$.name").value(response.name()))
-                .andExpect(jsonPath("$.telephone").value(response.telephone()))
-                .andExpect(jsonPath("$.active").value(response.active()))
-                .andExpect(jsonPath("$.address.street").value(response.address().street()))
-                .andExpect(jsonPath("$.address.number").value(response.address().number()))
-                .andExpect(jsonPath("$.address.complement").value(response.address().complement()))
-                .andExpect(jsonPath("$.address.neighborhood").value(response.address().neighborhood()))
-                .andExpect(jsonPath("$.address.city").value(response.address().city()))
-                .andExpect(jsonPath("$.address.state").value(response.address().state()))
-                .andExpect(jsonPath("$.address.zipCode").value(response.address().zipCode()));
+                .andExpect(jsonPath("$.cpf").value(response.getCpf()))
+                .andExpect(jsonPath("$.name").value(response.getName()))
+                .andExpect(jsonPath("$.telephone").value(response.getTelephone()))
+                .andExpect(jsonPath("$.street").value(response.getStreet()))
+                .andExpect(jsonPath("$.number").value(response.getNumber()))
+                .andExpect(jsonPath("$.complement").value(response.getComplement()))
+                .andExpect(jsonPath("$.neighborhood").value(response.getNeighborhood()))
+                .andExpect(jsonPath("$.city").value(response.getCity()))
+                .andExpect(jsonPath("$.state").value(response.getState()))
+                .andExpect(jsonPath("$.zipCod").value(response.getZipCod()));
     }
 
     private NewAccountByNewClientResponseSuccess mockResponse() {
