@@ -59,6 +59,7 @@
                         <exclude>**/*GeneratorRandomNumber.*</exclude>
                         <exclude>**/*GenericErrorUtils.*</exclude>
                         <exclude>**/utils/*</exclude>
+                        <exclude>**/exception/*GenericException.*</exclude>
                     </excludes>
                 </configuration>
 
