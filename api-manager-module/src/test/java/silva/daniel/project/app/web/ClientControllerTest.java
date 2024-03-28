@@ -314,6 +314,17 @@ class ClientControllerTest {
                 .andExpect(jsonPath("$.zipCod").value(response.getZipCod()));
     }
 
+    @Test
+    void getClient_WithClientNotExists_ReturnsStatus404() throws Exception {
+        when(service.getClientByCpf("00099988877")).thenThrow(new ClientNotExistsException("Client not exists in database"));
+        var failureObject = new FailureResponse("Client not exists in database", 404);
+        mockMvc.perform(get("/clients/{cpf}", "00099988877")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(failureObject.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(failureObject.getStatusCode()));
+    }
+
     private NewAccountByNewClientResponseSuccess mockResponse() {
         final var response = new NewAccountByNewClientResponseSuccess();
         response.setAgency(1234);
