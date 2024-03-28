@@ -6,7 +6,7 @@ import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.input.EditClientInput;
-import br.net.silva.daniel.value_object.output.ClientOutput;
+import br.net.silva.daniel.value_object.output.GetInformationClientResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,7 +83,7 @@ public class ClientController {
     }
 
     @GetMapping("/{cpf}")
-    public ResponseEntity<ClientOutput> getClientByCpf(@PathVariable String cpf) throws Exception {
+    public ResponseEntity<GetInformationClientResponse> getClientByCpf(@PathVariable String cpf) throws Exception {
         return ResponseEntity.ok(clientService.getClientByCpf(cpf));
     }
 
