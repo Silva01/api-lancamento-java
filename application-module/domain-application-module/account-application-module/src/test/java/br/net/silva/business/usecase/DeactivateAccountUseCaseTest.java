@@ -33,7 +33,7 @@ class DeactivateAccountUseCaseTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository, new GenericResponseMapper(Collections.emptyList()));
+        deactivateAccountUseCase = new DeactivateAccountUseCase(deactivateAccountRepository);
     }
 
     @Test

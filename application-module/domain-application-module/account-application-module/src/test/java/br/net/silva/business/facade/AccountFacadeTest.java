@@ -1,33 +1,43 @@
 package br.net.silva.business.facade;
 
 import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
-import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.mapper.CreateResponseToNewAccountByClientFactory;
 import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
-import br.net.silva.business.usecase.*;
+import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
+import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
+import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.business.value_object.output.NewAccountResponse;
-import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.application.interfaces.*;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
+import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
+import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -42,35 +52,23 @@ class AccountFacadeTest {
     private IValidations passwordAndExistsAccountValidate;
 
     private GenericResponseMapper factory;
-
     @Mock
-    private Repository<AccountOutput> saveRepository;
-
-    @Mock
-    private Repository<Optional<AccountOutput>> findAccountRepository;
-
-    @Mock
-    private Repository<AccountOutput> deactivateAccountRepository;
-
-    @Mock
-    private ApplicationBaseGateway<AccountOutput> baseRepository;
+    private ApplicationBaseGateway<AccountOutput> baseAccountGateway;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
         factory = new GenericResponseMapper(List.of(new CreateResponseToNewAccountFactory(), new CreateResponseToNewAccountByClientFactory()));
-        createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(baseRepository, factory);
-        var findAccountByCpfUseCase = new FindAccountByCpfUseCase(baseRepository, factory);
-        passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(findAccountByCpfUseCase);
-        changePasswordAccountUseCase = new ChangePasswordAccountUseCase(new FindAccountUseCase(baseRepository, factory), saveRepository);
-        this.deactivateAccountUseCase = new DeactivateAccountUseCase(baseRepository, factory);
+        createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(baseAccountGateway, factory);
+        passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(baseAccountGateway);
+        changePasswordAccountUseCase = new ChangePasswordAccountUseCase(baseAccountGateway);
+        this.deactivateAccountUseCase = new DeactivateAccountUseCase(baseAccountGateway);
     }
 
     @Test
     void mustCreateNewAccountByCpf() throws GenericException {
-        when(baseRepository.findById(any(ICpfParam.class))).thenReturn(Optional.empty());
-        when(baseRepository.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
+        when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.empty());
+        when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
@@ -93,9 +91,8 @@ class AccountFacadeTest {
 
     @Test
     void mustCreateNewAccountByCpfWithObjectResponseOfClient() throws GenericException {
-        when(baseRepository.findById(any(ICpfParam.class))).thenReturn(Optional.empty());
-        when(baseRepository.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
+        when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.empty());
+        when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
@@ -120,9 +117,8 @@ class AccountFacadeTest {
 
     @Test
     void mustErrorCreateNewAccountByCpfAccountNotExists() {
-        when(baseRepository.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
-        when(baseRepository.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
+        when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
+        when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
@@ -139,9 +135,8 @@ class AccountFacadeTest {
 
     @Test
     void mustErrorCreateNewAccountByCpfAccountNotExistsValidation() {
-        when(baseRepository.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
-        when(baseRepository.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
+        when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
+        when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
@@ -151,16 +146,15 @@ class AccountFacadeTest {
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
         var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
 
-        var exceptionResponse = assertThrows(AccountNotExistsException.class, () -> accountFacade.exec(source));
+        var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
-        assertEquals("Account not found", exceptionResponse.getMessage());
+        assertEquals("Exists account active for CPF informated", exceptionResponse.getMessage());
     }
 
     @Test
     void mustErrorCreateNewAccountByCpfPasswordInvalid() {
-        when(baseRepository.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
-        when(baseRepository.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
+        when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
+        when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
@@ -177,10 +171,8 @@ class AccountFacadeTest {
 
     @Test
     void mustChangePasswordWithSuccess() throws GenericException {
-        when(baseRepository.findById(any(ICpfParam.class))).thenReturn(Optional.empty());
-        when(baseRepository.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
-        when(findAccountRepository.exec(Mockito.anyString())).thenReturn(Optional.of(buildMockAccount()));
-        when(findAccountRepository.exec(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Optional.of(buildMockAccount()));
+        when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.empty());
+        when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
 
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(changePasswordAccountUseCase);
@@ -197,7 +189,8 @@ class AccountFacadeTest {
 
     @Test
     void mustDeactivateAccountWithSuccess() throws GenericException {
-        when(deactivateAccountRepository.exec(Mockito.any(String.class))).thenReturn(buildMockAccount());
+        when(baseAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount()));
+        when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
 
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(deactivateAccountUseCase);
