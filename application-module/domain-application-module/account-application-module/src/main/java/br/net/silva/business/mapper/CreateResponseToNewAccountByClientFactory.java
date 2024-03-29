@@ -2,11 +2,9 @@ package br.net.silva.business.mapper;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.interfaces.IMapperResponse;
-import br.net.silva.daniel.interfaces.Output;
-import org.springframework.stereotype.Component;
+import br.net.silva.daniel.shared.application.interfaces.IMapperResponse;
+import br.net.silva.daniel.shared.application.interfaces.Output;
 
-@Component
 public class CreateResponseToNewAccountByClientFactory implements IMapperResponse<AccountDTO, Output> {
     @Override
     public boolean accept(Object input, Output output) {

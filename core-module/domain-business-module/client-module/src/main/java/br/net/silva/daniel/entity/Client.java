@@ -2,6 +2,7 @@ package br.net.silva.daniel.entity;
 
 import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.dto.ClientDTO;
+import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import br.net.silva.daniel.shared.business.interfaces.AggregateRoot;
 import br.net.silva.daniel.shared.business.factory.IFactoryDto;
 import br.net.silva.daniel.shared.business.validation.Validation;
@@ -58,7 +59,7 @@ public class Client extends Validation implements AggregateRoot, IFactoryDto<Cli
 
     public void validateIfAllowToEdit() {
         if (!active) {
-            throw new IllegalArgumentException("Client is not active");
+            throw new ClientNotActiveException("Client is not active");
         }
     }
 

@@ -3,12 +3,12 @@ package br.net.silva.business.usecase;
 import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.gateway.Repository;
+import br.net.silva.daniel.shared.application.value_object.Source;
 
 public class ActivateAccountUseCase implements UseCase<EmptyOutput> {
 

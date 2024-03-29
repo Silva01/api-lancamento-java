@@ -24,6 +24,10 @@ public class ValidateUtils {
         }
     }
 
+    public static void requireNotNull(Object attribute, String messageError) {
+        isNotNull(attribute, messageError);
+    }
+
     public static void isNotNull(Object attribute, String messageError) {
         Objects.requireNonNull(attribute, messageError);
     }

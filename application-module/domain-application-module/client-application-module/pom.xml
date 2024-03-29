@@ -53,6 +53,7 @@
                         <exclude>**/*GeneratorRandomNumber.*</exclude>
                         <exclude>**/*GenericErrorUtils.*</exclude>
                         <exclude>**/utils/*</exclude>
+                        <exclude>**/value_object/output/*GetInformationClientResponse.*</exclude>
                     </excludes>
                 </configuration>
 

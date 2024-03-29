@@ -1,16 +1,16 @@
 package br.net.silva.daniel.shared.business.utils;
 
-public abstract class GenericErrorUtils {
+public interface GenericErrorUtils {
 
-    private GenericErrorUtils() {
-        throw executeException("Utility class");
-    }
-
-    public static IllegalArgumentException executeException(String messageError) {
+    static IllegalArgumentException executeException(String messageError) {
         return new IllegalArgumentException(messageError);
     }
 
-    public static IllegalArgumentException executeExceptionNotPermissionOperation() {
+    static IllegalArgumentException executeExceptionNotPermissionOperation() {
         return executeException("Not Permission for this operation");
+    }
+
+    static RuntimeException executeErrorAtExecuteBuilder(Exception e) {
+        return new RuntimeException(e);
     }
 }

@@ -1,9 +1,10 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -12,10 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class EditAddressUseCaseTest {
@@ -23,18 +25,15 @@ class EditAddressUseCaseTest {
     private EditAddressUseCase editAddressUseCase;
 
     @Mock
-    private Repository<ClientOutput> findClientRepository;
-
-    @Mock
-    private Repository<ClientOutput> saveClientRepository;
+    private ApplicationBaseGateway<ClientOutput> baseRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findClientRepository.exec(anyString())).thenReturn(buildClient());
-        when(saveClientRepository.exec(any(ClientOutput.class))).thenReturn(buildClient());
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
+        when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient());
 
-        this.editAddressUseCase = new EditAddressUseCase(findClientRepository, saveClientRepository);
+        this.editAddressUseCase = new EditAddressUseCase(baseRepository);
     }
 
     @Test
@@ -54,8 +53,8 @@ class EditAddressUseCaseTest {
         var response = assertDoesNotThrow(() -> editAddressUseCase.exec(source));
         assertNotNull(response);
 
-        verify(findClientRepository, times(1)).exec(editAddressInput.cpf());
-        verify(saveClientRepository, times(1)).exec(any(ClientOutput.class));
+        verify(baseRepository, times(1)).findById(editAddressInput);
+        verify(baseRepository, times(1)).save(any(ClientOutput.class));
     }
 
     private ClientOutput buildClient() {

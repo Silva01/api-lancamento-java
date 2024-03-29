@@ -2,11 +2,11 @@ package br.net.silva.business.validations;
 
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

@@ -7,14 +7,14 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.strategy.CalculateStrategy;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.application.value_object.Source;
 
 import java.util.List;
 

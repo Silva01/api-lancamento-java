@@ -1,0 +1,10 @@
+services:
+  mysql:
+    image: 'mysql:8.3.0'
+    environment:
+      - 'MYSQL_DATABASE=finance'
+      - 'MYSQL_PASSWORD=123456'
+      - 'MYSQL_ROOT_PASSWORD=123456'
+      - 'MYSQL_USER=finance'
+    ports:
+      - '3306'

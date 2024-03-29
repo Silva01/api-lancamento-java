@@ -1,20 +1,19 @@
 package br.net.silva.daniel.facade;
 
-import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.interfaces.GenericFacadeDelegate;
-import br.net.silva.daniel.interfaces.IValidations;
-import br.net.silva.daniel.interfaces.UseCase;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
-import br.net.silva.daniel.repository.Repository;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
+import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
-import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.validation.ClientNotExistsValidate;
-import br.net.silva.daniel.value_object.Source;
 import br.net.silva.daniel.value_object.input.*;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -27,6 +26,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,29 +37,23 @@ class ClientFacadeTest {
 
     private UseCase<ClientOutput> createNewClientUseCase;
 
-    private UseCase<ClientOutput> findClientUseCase;
-
     private UseCase<ClientOutput> activateClientUseCase;
 
     private DeactivateClientUseCase deactivateClientUseCase;
 
     @Mock
-    private Repository<Optional<ClientOutput>> findClientRepository;
-
-    @Mock
-    private Repository<ClientOutput> saveRepository;
+    private ApplicationBaseGateway<ClientOutput> baseRepository;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
         var factory = new GenericResponseMapper(Collections.emptyList());
-        this.findClientUseCase = new FindClientUseCase(findClientRepository, factory);
-        this.createNewClientUseCase = new CreateNewClientUseCase(saveRepository, factory);
-        this.clientExistsValidate = new ClientExistsValidate(findClientUseCase);
-        this.clientNotExistsValidate = new ClientNotExistsValidate(findClientUseCase);
-        this.deactivateClientUseCase = new DeactivateClientUseCase(findClientRepository, saveRepository, factory);
-        this.activateClientUseCase = new ActivateClientUseCase(saveRepository);
+        this.createNewClientUseCase = new CreateNewClientUseCase(baseRepository, factory);
+        this.clientExistsValidate = new ClientExistsValidate(baseRepository);
+        this.clientNotExistsValidate = new ClientNotExistsValidate(baseRepository);
+        this.deactivateClientUseCase = new DeactivateClientUseCase(baseRepository, factory);
+        this.activateClientUseCase = new ActivateClientUseCase(baseRepository);
     }
 
     @Test
@@ -67,8 +61,8 @@ class ClientFacadeTest {
 
         var client = buildClient(true);
 
-        when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
-        when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
+        when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
@@ -82,16 +76,16 @@ class ClientFacadeTest {
         clientFacade.exec(source);
 
         assertNotNull(source.output());
-        verify(saveRepository, Mockito.times(1)).exec(Mockito.any(ClientOutput.class));
-        verify(findClientRepository, Mockito.times(1)).exec(clientRequestDto.cpf());
+        verify(baseRepository, Mockito.times(1)).save(Mockito.any(ClientOutput.class));
+        verify(baseRepository, Mockito.times(1)).findById(clientRequestDto);
     }
 
     @Test
     void mustErrorWhenClientExistsInDatabaseWhereCreateClient() {
         var client = buildClient(true);
 
-        when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
-        when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
+        when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
 
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
@@ -108,9 +102,9 @@ class ClientFacadeTest {
 
     @Test
     void mustDeactivateClientWithSuccess() throws GenericException {
-        var client = buildClient(false);
-        when(saveRepository.exec(Mockito.any(Client.class))).thenReturn(client);
-        when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
+        var client = buildClient(true);
+        when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
 
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(deactivateClientUseCase);
@@ -121,14 +115,14 @@ class ClientFacadeTest {
         var deactivateClient = new DeactivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         clientFacade.exec(source);
-        verify(saveRepository, Mockito.times(1)).exec(Mockito.any(Client.class));
-        verify(findClientRepository, Mockito.times(2)).exec(deactivateClient.cpf());
+        verify(baseRepository, Mockito.times(1)).save(Mockito.any(ClientOutput.class));
+        verify(baseRepository, Mockito.times(2)).findById(deactivateClient);
     }
 
     @Test
     void mustDeactivateClientErrorClientNotExists() throws GenericException {
         var client = buildClient(true);
-        when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.empty());
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(deactivateClientUseCase);
@@ -146,8 +140,8 @@ class ClientFacadeTest {
     @Test
     void mustActivateClientWithSuccess() throws GenericException {
         var client = buildClient(true);
-        when(saveRepository.exec(Mockito.any(String.class))).thenReturn(client);
-        when(findClientRepository.exec(Mockito.anyString())).thenReturn(Optional.of(client));
+        when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
 
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateClientUseCase);
@@ -159,8 +153,8 @@ class ClientFacadeTest {
         var source = new Source(EmptyOutput.INSTANCE, activateClient);
         clientFacade.exec(source);
 
-        verify(saveRepository, Mockito.times(1)).exec(activateClient.cpf());
-        verify(findClientRepository, Mockito.times(1)).exec(activateClient.cpf());
+        verify(baseRepository, Mockito.times(1)).save(Mockito.any(ClientOutput.class));
+        verify(baseRepository, Mockito.times(2)).findById(activateClient);
     }
 
     private ClientOutput buildClient(boolean active) {

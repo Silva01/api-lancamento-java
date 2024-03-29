@@ -1,5 +1,6 @@
 package br.net.silva.daniel.adapter;
 
+import br.net.silva.daniel.shared.application.adapter.LocalDateTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package br.net.silva.business.value_object.output;
 
 import br.net.silva.daniel.dto.AccountDTO;
-import br.net.silva.daniel.interfaces.Output;
+import br.net.silva.daniel.shared.application.interfaces.Output;
 import br.net.silva.daniel.shared.business.interfaces.IGenericOutput;
 import lombok.Getter;
 

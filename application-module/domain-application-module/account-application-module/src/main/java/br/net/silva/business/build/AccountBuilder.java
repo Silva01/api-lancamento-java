@@ -7,7 +7,7 @@ import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.interfaces.IGenericBuilder;
+import br.net.silva.daniel.shared.application.interfaces.IGenericBuilder;
 
 import java.util.List;
 

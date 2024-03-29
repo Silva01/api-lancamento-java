@@ -1,11 +1,11 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.exception.GenericException;
-import br.net.silva.daniel.interfaces.EmptyOutput;
-import br.net.silva.daniel.mapper.GenericResponseMapper;
-import br.net.silva.daniel.repository.Repository;
-import br.net.silva.daniel.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -19,28 +19,23 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class EditClientUseCaseTest {
 
     private EditClientUseCase editClientUseCase;
-
     @Mock
-    private Repository<Optional<ClientOutput>> findRepository;
-
-    @Mock
-    private Repository<ClientOutput> saveRepository;
+    private ApplicationBaseGateway<ClientOutput> baseRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findRepository.exec(anyString())).thenReturn(Optional.of(buildClient()));
-        when(saveRepository.exec(any(Client.class))).thenReturn(buildClient());
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
+        when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient());
 
         var facotry = new GenericResponseMapper(Collections.emptyList());
 
-        this.editClientUseCase = new EditClientUseCase(findRepository, saveRepository, facotry);
+        this.editClientUseCase = new EditClientUseCase(baseRepository, facotry);
     }
 
     @Test
@@ -53,34 +48,34 @@ class EditClientUseCaseTest {
         assertEquals("Daniel", response.name());
         assertEquals("22344445555", response.telephone());
 
-        verify(findRepository, times(1)).exec(editClientInput.cpf());
-        verify(saveRepository, times(1)).exec(any(Client.class));
+        verify(baseRepository, times(1)).findById(editClientInput);
+        verify(baseRepository, times(1)).save(any(ClientOutput.class));
     }
 
     @Test
     void shouldGiveErrorClientNotExistsTryEditClient() {
-        when(findRepository.exec(anyString())).thenReturn(Optional.empty());
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
         var editClientInput = new EditClientInput("22233344455", "Daniel", "22344445555");
         var source = new Source(EmptyOutput.INSTANCE, editClientInput);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> editClientUseCase.exec(source));
         assertEquals("Client not exists", exceptionResponse.getMessage());
 
-        verify(findRepository, times(1)).exec(editClientInput.cpf());
-        verify(saveRepository, times(0)).exec(any(Client.class));
+        verify(baseRepository, times(1)).findById(editClientInput);
+        verify(baseRepository, times(0)).save(any(ClientOutput.class));
     }
 
     @Test
     void shouldGiveErrorNullPointerTryEditClient() {
-        when(saveRepository.exec(any(Client.class))).thenReturn(null);
+        when(baseRepository.save(any(ClientOutput.class))).thenReturn(null);
         var editClientInput = new EditClientInput("22233344455", "Daniel", "22344445555");
         var source = new Source(EmptyOutput.INSTANCE, editClientInput);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> editClientUseCase.exec(source));
         assertEquals("Generic error", exceptionResponse.getMessage());
 
-        verify(findRepository, times(1)).exec(editClientInput.cpf());
-        verify(saveRepository, times(1)).exec(any(Client.class));
+        verify(baseRepository, times(1)).findById(editClientInput);
+        verify(baseRepository, times(1)).save(any(ClientOutput.class));
     }
 
     private ClientOutput buildClient() {
