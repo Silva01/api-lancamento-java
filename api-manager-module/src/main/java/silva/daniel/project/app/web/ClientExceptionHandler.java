@@ -1,6 +1,7 @@
 package silva.daniel.project.app.web;
 
 
+import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
@@ -15,7 +16,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import silva.daniel.project.app.domain.client.FailureResponse;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
 public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
@@ -47,6 +50,12 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ClientNotActiveException.class)
     public ResponseEntity<FailureResponse> handleClientNotExistsException(ClientNotActiveException ex) {
         var failureResponse = new FailureResponse("Client already deactivated", CONFLICT.value());
+        return ResponseEntity.status(CONFLICT).body(failureResponse);
+    }
+
+    @ExceptionHandler(CreditCardDeactivatedException.class)
+    public ResponseEntity<FailureResponse> handleClientNotExistsException(CreditCardDeactivatedException ex) {
+        var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
     }
 }
