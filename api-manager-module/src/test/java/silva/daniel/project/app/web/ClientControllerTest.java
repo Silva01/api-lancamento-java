@@ -193,13 +193,7 @@ class ClientControllerTest {
     @ParameterizedTest
     @MethodSource("provideAddressRequestInvalidData")
     void updateAddress_WithInvalidData_ReturnsStatus406(AddressRequest request) throws Exception {
-        final var responseMock = mockFailureResponse("Information is not valid", 406);
-        mockMvc.perform(put("/clients/address")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+        addressClientTestPrepare.failurePutAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
