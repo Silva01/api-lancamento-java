@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import silva.daniel.project.app.commons.FailureMessageEnum;
 import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.domain.client.request.ActivateClient;
 import silva.daniel.project.app.domain.client.request.AddressRequest;
@@ -77,7 +78,7 @@ class ClientControllerTest {
 
     @Test
     void createNewClient_WithClientExistInDatabase_Returns409() throws Exception {
-        final var failureResponse = mockFailureResponse("Client already exists in database", 409);
+        final var failureResponse = FailureMessageEnum.CLIENT_ALREADY_EXISTS;
         when(service.createNewClient(any(ClientRequestDTO.class))).thenThrow(new ExistsClientRegistredException(failureResponse.getMessage()));
 
         mockMvc.perform(post("/clients")
