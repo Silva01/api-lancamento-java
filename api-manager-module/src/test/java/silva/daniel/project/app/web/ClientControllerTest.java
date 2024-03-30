@@ -27,6 +27,7 @@ import silva.daniel.project.app.domain.client.request.AddressRequest;
 import silva.daniel.project.app.domain.client.request.ClientRequest;
 import silva.daniel.project.app.domain.client.request.EditStatusClientRequest;
 import silva.daniel.project.app.domain.client.service.ClientService;
+import silva.daniel.project.app.web.client.ActivateClientTestPrepare;
 import silva.daniel.project.app.web.client.CreateClientTestPrepare;
 import silva.daniel.project.app.web.client.DeactivateClientTestPrepare;
 
@@ -58,7 +59,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_M
 
 @ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
-@Import({CreateClientTestPrepare.class, DeactivateClientTestPrepare.class}) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
+@Import({CreateClientTestPrepare.class, DeactivateClientTestPrepare.class, ActivateClientTestPrepare.class}) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
 class ClientControllerTest {
 
     @Autowired
@@ -75,6 +76,9 @@ class ClientControllerTest {
 
     @Autowired
     private DeactivateClientTestPrepare deactivateRequestPrepare;
+
+    @Autowired
+    private ActivateClientTestPrepare activateClientTestPrepare;
 
     @Test
     void createNewClient_WithValidData_Returns201AndAccountData() throws Exception {
@@ -146,20 +150,8 @@ class ClientControllerTest {
 
     @Test
     void activateClient_WithInvalidData_Returns406() throws Exception {
-        final var responseMock = mockFailureResponse("Information is not valid", 406);
-        mockMvc.perform(post("/clients/activate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ActivateClient(""))))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
-
-        mockMvc.perform(post("/clients/activate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ActivateClient(null))))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+        activateClientTestPrepare.failurePostAssert(new ActivateClient(""), INVALID_DATA_MESSAGE, status().isNotAcceptable());
+        activateClientTestPrepare.failurePostAssert(new ActivateClient(null), INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
