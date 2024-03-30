@@ -57,7 +57,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_M
 
 @ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
-@Import(CreateClientTestPrepare.class)
+@Import(CreateClientTestPrepare.class) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
 class ClientControllerTest {
 
     @Autowired
@@ -96,14 +96,7 @@ class ClientControllerTest {
     @ParameterizedTest
     @MethodSource("provideRequestInvalidData")
     void createNewClient_WithInvalidData_Returns406(ClientRequest request) throws Exception {
-        final var responseMock = INVALID_DATA_MESSAGE;
-
-        mockMvc.perform(post("/clients")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+        prepareAsserts.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
