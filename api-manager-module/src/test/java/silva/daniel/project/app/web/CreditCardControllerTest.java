@@ -3,42 +3,28 @@ package silva.daniel.project.app.web;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.daniel.exception.ClientNotExistsException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
+import silva.daniel.project.app.commons.RequestAssertCommons;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.service.CreditCardService;
-import silva.daniel.project.app.domain.client.FailureResponse;
 
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
-@WebMvcTest(CreditCardController.class)
-class CreditCardControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+class CreditCardControllerTest extends RequestAssertCommons {
     
     @MockBean
     private CreditCardService service;
@@ -46,10 +32,7 @@ class CreditCardControllerTest {
     @Test
     void deactivateCreditCard_WithValidData_ReturnsSuccess() throws Exception {
         final var request = buildBaseRequest();
-        mockMvc.perform(post("/credit-card/deactivate")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+        successPostAssert(request, status().isOk());
     }
 
     @ParameterizedTest
@@ -57,7 +40,7 @@ class CreditCardControllerTest {
     @DisplayName("Deactivate credit card with invalid data returns exception")
     void deactivateCreditCard_WithInvalidData_ReturnsException(DeactivateCreditCardRequest request) throws Exception {
         var response = INVALID_DATA_MESSAGE.getResponse();
-        failureAssertRequest(request, response, status().isNotAcceptable());
+        failurePostAssert(request, response, status().isNotAcceptable());
     }
 
     @Test
@@ -65,7 +48,7 @@ class CreditCardControllerTest {
         doThrow(new ClientNotExistsException("Client not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
         final var request = buildBaseRequest();
         var response = CLIENT_NOT_FOUND_MESSAGE.getResponse();
-        failureAssertRequest(request, response, status().isNotFound());
+        failurePostAssert(request, response, status().isNotFound());
     }
 
     @Test
@@ -74,16 +57,7 @@ class CreditCardControllerTest {
         final var response = CREDIT_CARD_NOT_FOUND_MESSAGE.getResponse();
         final var request = buildBaseRequest();
 
-        failureAssertRequest(request, response, status().isNotFound());
-    }
-
-    private void failureAssertRequest(DeactivateCreditCardRequest request, FailureResponse response, ResultMatcher statusMatcher) throws Exception {
-        mockMvc.perform(post("/credit-card/deactivate")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(statusMatcher)
-                .andExpect(jsonPath("$.message").value(response.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(response.getStatusCode()));
+        failurePostAssert(request, response, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidDeactivateCreditCardRequests() {
@@ -106,4 +80,8 @@ class CreditCardControllerTest {
                 "1234567890123456");
     }
 
+    @Override
+    public String url() {
+        return "/credit-card/deactivate";
+    }
 }
