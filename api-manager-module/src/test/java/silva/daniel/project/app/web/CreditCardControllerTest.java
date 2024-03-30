@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestAssertCommons;
+import silva.daniel.project.app.commons.RequestBuilderCommons;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.service.CreditCardService;
 
@@ -26,7 +27,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NO
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
-class CreditCardControllerTest extends RequestAssertCommons {
+class CreditCardControllerTest extends RequestAssertCommons implements RequestBuilderCommons {
     
     @MockBean
     private CreditCardService service;
@@ -71,14 +72,6 @@ class CreditCardControllerTest extends RequestAssertCommons {
                 Arguments.of(new DeactivateCreditCardRequest("", 123456, 1234, "1234567890123456")),
                 Arguments.of(new DeactivateCreditCardRequest(null, 123456, 1234, "1234567890123456"))
         );
-    }
-
-    private DeactivateCreditCardRequest buildBaseRequest() {
-        return new DeactivateCreditCardRequest(
-                "12345678901",
-                123456,
-                1234,
-                "1234567890123456");
     }
 
     @Override
