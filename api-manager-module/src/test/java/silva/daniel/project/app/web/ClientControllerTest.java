@@ -179,14 +179,8 @@ class ClientControllerTest {
     @Test
     void updateAddress_WithClientNotExistInDatabase_Returns404() throws Exception {
         var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
-        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
-        mockMvc.perform(put("/clients/address")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
+        addressClientTestPrepare.failurePutAssert(request, CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
