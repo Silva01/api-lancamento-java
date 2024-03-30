@@ -48,6 +48,12 @@ public abstract class RequestAssertCommons {
                 .content(mapper.writeValueAsString(request)), statusMatcher);
     }
 
+    public final void successPutAssert(Object request, ResultMatcher... statusMatcher) throws Exception {
+        successRequest(put(url())
+                .contentType("application/json")
+                .content(mapper.writeValueAsString(request)), statusMatcher);
+    }
+
     private void successRequest(final RequestBuilder requestBuilder, ResultMatcher... statusMatcher) throws Exception {
         mockMvc.perform(requestBuilder)
                 .andExpectAll(statusMatcher);
