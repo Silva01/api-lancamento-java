@@ -48,6 +48,7 @@ import static silva.daniel.project.app.commons.ClientCommons.requestInvalidNegat
 import static silva.daniel.project.app.commons.ClientCommons.requestInvalidZeroAgencyMock;
 import static silva.daniel.project.app.commons.ClientCommons.requestNullCpfMock;
 import static silva.daniel.project.app.commons.ClientCommons.requestValidMock;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_EXISTS;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
@@ -127,7 +128,7 @@ class ClientControllerTest {
 
     @Test
     void editClient_WithClientAlreadyDeactivated_Returns409() throws Exception {
-        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
+        final var failureResponse = CLIENT_ALREADY_DEACTIVATED;
         doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).updateClient(any(EditClientInput.class));
 
         mockMvc.perform(put("/clients")
