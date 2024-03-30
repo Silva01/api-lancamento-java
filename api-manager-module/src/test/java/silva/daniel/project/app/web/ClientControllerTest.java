@@ -186,15 +186,8 @@ class ClientControllerTest {
     @Test
     void updateAddress_WithClientAlreadyDeactivated_Returns409() throws Exception {
         var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
-        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
-
-        mockMvc.perform(put("/clients/address")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotActiveException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
+        addressClientTestPrepare.failurePutAssert(request, CLIENT_ALREADY_DEACTIVATED, status().isConflict());
     }
 
     @ParameterizedTest
