@@ -31,33 +31,26 @@ class CreditCardControllerTest extends RequestAssertCommons {
 
     @Test
     void deactivateCreditCard_WithValidData_ReturnsSuccess() throws Exception {
-        final var request = buildBaseRequest();
-        successPostAssert(request, status().isOk());
+        successPostAssert(buildBaseRequest(), status().isOk());
     }
 
     @ParameterizedTest
     @MethodSource("provideInvalidDeactivateCreditCardRequests")
     @DisplayName("Deactivate credit card with invalid data returns exception")
     void deactivateCreditCard_WithInvalidData_ReturnsException(DeactivateCreditCardRequest request) throws Exception {
-        var response = INVALID_DATA_MESSAGE.getResponse();
-        failurePostAssert(request, response, status().isNotAcceptable());
+        failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
     void deactivateCreditCard_WithClientNotExists_ReturnsStatus406() throws Exception {
         doThrow(new ClientNotExistsException("Client not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
-        final var request = buildBaseRequest();
-        var response = CLIENT_NOT_FOUND_MESSAGE.getResponse();
-        failurePostAssert(request, response, status().isNotFound());
+        failurePostAssert(buildBaseRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void deactivateCreditCard_WithCreditCardNotFound_ReturnsStatus404() throws Exception {
         doThrow(new CreditCardNotExistsException("Credit card not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
-        final var response = CREDIT_CARD_NOT_FOUND_MESSAGE.getResponse();
-        final var request = buildBaseRequest();
-
-        failurePostAssert(request, response, status().isNotFound());
+        failurePostAssert(buildBaseRequest(), CREDIT_CARD_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidDeactivateCreditCardRequests() {
