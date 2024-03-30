@@ -123,20 +123,8 @@ class ClientControllerTest {
 
     @Test
     void deactivateClient_WithInvalidData_Returns406() throws Exception {
-        final var responseMock = mockFailureResponse("Information is not valid", 406);
-        mockMvc.perform(post("/clients/deactivate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new EditStatusClientRequest(""))))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
-
-        mockMvc.perform(post("/clients/deactivate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new EditStatusClientRequest(null))))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+        deactivateRequestPrepare.failurePostAssert(new EditStatusClientRequest(""), INVALID_DATA_MESSAGE, status().isNotAcceptable());
+        deactivateRequestPrepare.failurePostAssert(new EditStatusClientRequest(null), INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
