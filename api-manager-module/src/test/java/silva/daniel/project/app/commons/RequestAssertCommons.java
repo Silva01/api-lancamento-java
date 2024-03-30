@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.web.CreditCardController;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -52,6 +53,14 @@ public abstract class RequestAssertCommons {
         successRequest(put(url())
                 .contentType("application/json")
                 .content(mapper.writeValueAsString(request)), statusMatcher);
+    }
+
+    public final void successGetAssert(final Object[] parameters, final ResultMatcher... statusMatcher) throws Exception {
+        successRequest(get(url(), parameters), statusMatcher);
+    }
+
+    public void failureGetAssert(Object[] objects, ResultMatcher... matchers) throws Exception {
+        successRequest(get(url(), objects), matchers);
     }
 
     private void successRequest(final RequestBuilder requestBuilder, ResultMatcher... statusMatcher) throws Exception {
