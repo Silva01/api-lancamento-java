@@ -10,6 +10,7 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.web.CreditCardController;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(CreditCardController.class)
@@ -27,6 +28,15 @@ public abstract class RequestAssertCommons {
         successRequest(post(url())
                 .contentType("application/json")
                 .content(mapper.writeValueAsString(request)),
+                statusMatcher,
+                jsonPath("$.message").value(response.getMessage()),
+                jsonPath("$.statusCode").value(response.getStatusCode()));
+    }
+
+    public final void failurePutAssert(Object request, FailureResponse response, ResultMatcher statusMatcher) throws Exception {
+        successRequest(put(url())
+                        .contentType("application/json")
+                        .content(mapper.writeValueAsString(request)),
                 statusMatcher,
                 jsonPath("$.message").value(response.getMessage()),
                 jsonPath("$.statusCode").value(response.getStatusCode()));
