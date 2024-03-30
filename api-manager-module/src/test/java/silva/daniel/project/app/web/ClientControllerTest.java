@@ -76,14 +76,10 @@ class ClientControllerTest {
     void createNewClient_WithValidData_Returns201AndAccountData() throws Exception {
         final var mockResponse = mockResponse();
         when(service.createNewClient(any(ClientRequestDTO.class))).thenReturn(mockResponse);
-
-        mockMvc.perform(post("/clients")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestValidMock())))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.agency").value(mockResponse.getAgency()))
-                .andExpect(jsonPath("$.accountNumber").isNotEmpty())
-                .andExpect(jsonPath("$.provisionalPassword").isNotEmpty());
+        prepareAsserts.successPostAssert(requestValidMock(), status().isCreated(),
+                jsonPath("$.agency").value(mockResponse.getAgency()),
+                jsonPath("$.accountNumber").isNotEmpty(),
+                jsonPath("$.provisionalPassword").isNotEmpty());
     }
 
     @Test
