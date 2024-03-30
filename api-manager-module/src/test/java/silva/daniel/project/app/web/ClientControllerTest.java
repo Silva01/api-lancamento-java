@@ -109,14 +109,8 @@ class ClientControllerTest {
 
     @Test
     void editClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        final var failureResponse = CLIENT_NOT_FOUND_MESSAGE;
-        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateClient(any(EditClientInput.class));
-        mockMvc.perform(put("/clients")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(editClientRequestMock())))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).updateClient(any(EditClientInput.class));
+        prepareAsserts.failurePutAssert(editClientRequestMock(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
