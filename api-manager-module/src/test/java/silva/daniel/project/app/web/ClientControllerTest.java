@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import silva.daniel.project.app.commons.FailureMessageEnum;
@@ -26,6 +27,7 @@ import silva.daniel.project.app.domain.client.request.AddressRequest;
 import silva.daniel.project.app.domain.client.request.ClientRequest;
 import silva.daniel.project.app.domain.client.request.EditStatusClientRequest;
 import silva.daniel.project.app.domain.client.service.ClientService;
+import silva.daniel.project.app.web.client.CreateClientTestPrepare;
 
 import java.util.stream.Stream;
 
@@ -55,6 +57,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_M
 
 @ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
+@Import(CreateClientTestPrepare.class)
 class ClientControllerTest {
 
     @Autowired
@@ -65,6 +68,9 @@ class ClientControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private CreateClientTestPrepare prepareAsserts;
 
     @Test
     void createNewClient_WithValidData_Returns201AndAccountData() throws Exception {
@@ -84,13 +90,7 @@ class ClientControllerTest {
     void createNewClient_WithClientExistInDatabase_Returns409() throws Exception {
         final var failureResponse = CLIENT_ALREADY_EXISTS;
         when(service.createNewClient(any(ClientRequestDTO.class))).thenThrow(new ExistsClientRegistredException(failureResponse.getMessage()));
-
-        mockMvc.perform(post("/clients")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestValidMock())))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        prepareAsserts.failurePostAssert(requestValidMock(), failureResponse, status().isConflict());
     }
 
     @ParameterizedTest
