@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,17 +15,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.service.CreditCardService;
-import silva.daniel.project.app.domain.client.FailureResponse;
-import silva.daniel.project.app.domain.client.service.ClientService;
 
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
 @WebMvcTest(CreditCardController.class)
@@ -54,7 +52,7 @@ class CreditCardControllerTest {
     @MethodSource("provideInvalidDeactivateCreditCardRequests")
     @DisplayName("Deactivate credit card with invalid data returns exception")
     void deactivateCreditCard_WithInvalidData_ReturnsException(DeactivateCreditCardRequest request) throws Exception {
-        var response = new FailureResponse("Information is not valid", 406);
+        var response = INVALID_DATA_MESSAGE.getResponse();
         mockMvc.perform(post("/credit-card/deactivate")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request)))
@@ -67,7 +65,7 @@ class CreditCardControllerTest {
     void deactivateCreditCard_WithClientNotExists_ReturnsStatus406() throws Exception {
         doThrow(new ClientNotExistsException("Client not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
         final var request = new DeactivateCreditCardRequest("12345678901", 123456, 1234, "1234567890123456");
-        var response = new FailureResponse("Client not exists in database", 404);
+        var response = CLIENT_NOT_FOUND_MESSAGE.getResponse();
 
         mockMvc.perform(post("/credit-card/deactivate")
                         .contentType("application/json")
