@@ -1,20 +1,29 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
+import br.net.silva.daniel.exception.ClientNotExistsException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
+import silva.daniel.project.app.domain.account.service.CreditCardService;
 import silva.daniel.project.app.domain.client.FailureResponse;
+import silva.daniel.project.app.domain.client.service.ClientService;
 
 import java.util.stream.Stream;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,6 +37,9 @@ class CreditCardControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+    
+    @MockBean
+    private CreditCardService service;
 
     @Test
     void deactivateCreditCard_WithValidData_ReturnsSuccess() throws Exception {
@@ -51,11 +63,26 @@ class CreditCardControllerTest {
                 .andExpect(jsonPath("$.statusCode").value(response.getStatusCode()));
     }
 
+    @Test
+    void deactivateCreditCard_WithClientNotExists_ReturnsStatus406() throws Exception {
+        doThrow(new ClientNotExistsException("Client not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
+        final var request = new DeactivateCreditCardRequest("12345678901", 123456, 1234, "1234567890123456");
+        var response = new FailureResponse("Client not exists in database", 404);
+
+        mockMvc.perform(post("/credit-card/deactivate")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(response.getMessage()))
+                .andExpect(jsonPath("$.statusCode").value(response.getStatusCode()));
+    }
+
     private static Stream<Arguments> provideInvalidDeactivateCreditCardRequests() {
         return Stream.of(
                 Arguments.of(new DeactivateCreditCardRequest(null, 123456, 1234, "1234567890123456")),
                 Arguments.of(new DeactivateCreditCardRequest("12345678901", null, 1234, "1234567890123456")),
                 Arguments.of(new DeactivateCreditCardRequest("12345678901", 123456, null, "1234567890123456")),
+                Arguments.of(new DeactivateCreditCardRequest("12345678901", 123456, null, "")),
                 Arguments.of(new DeactivateCreditCardRequest("12345678901", 123456, 1234, null)),
                 Arguments.of(new DeactivateCreditCardRequest("", 123456, 1234, "1234567890123456")),
                 Arguments.of(new DeactivateCreditCardRequest(null, 123456, 1234, "1234567890123456"))
