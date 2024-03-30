@@ -28,6 +28,7 @@ import silva.daniel.project.app.domain.client.request.ClientRequest;
 import silva.daniel.project.app.domain.client.request.EditStatusClientRequest;
 import silva.daniel.project.app.domain.client.service.ClientService;
 import silva.daniel.project.app.web.client.ActivateClientTestPrepare;
+import silva.daniel.project.app.web.client.AddressClientTestPrepare;
 import silva.daniel.project.app.web.client.CreateClientTestPrepare;
 import silva.daniel.project.app.web.client.DeactivateClientTestPrepare;
 
@@ -59,7 +60,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_M
 
 @ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
-@Import({CreateClientTestPrepare.class, DeactivateClientTestPrepare.class, ActivateClientTestPrepare.class}) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
+@Import({CreateClientTestPrepare.class, DeactivateClientTestPrepare.class, ActivateClientTestPrepare.class, AddressClientTestPrepare.class}) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
 class ClientControllerTest {
 
     @Autowired
@@ -79,6 +80,9 @@ class ClientControllerTest {
 
     @Autowired
     private ActivateClientTestPrepare activateClientTestPrepare;
+
+    @Autowired
+    private AddressClientTestPrepare addressClientTestPrepare;
 
     @Test
     void createNewClient_WithValidData_Returns201AndAccountData() throws Exception {
@@ -169,10 +173,7 @@ class ClientControllerTest {
     @Test
     void updateAddress_WithValidData_Returns200() throws Exception {
         var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        mockMvc.perform(put("/clients/address")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+        addressClientTestPrepare.successPutAssert(request, status().isOk());
     }
 
     @Test
