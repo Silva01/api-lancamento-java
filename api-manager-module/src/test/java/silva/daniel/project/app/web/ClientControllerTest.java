@@ -211,19 +211,17 @@ class ClientControllerTest {
         response.setState("state");
         response.setZipCod("zipCode");
         when(service.getClientByCpf("00099988877")).thenReturn(response);
-        mockMvc.perform(get("/clients/{cpf}", "00099988877")
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cpf").value(response.getCpf()))
-                .andExpect(jsonPath("$.name").value(response.getName()))
-                .andExpect(jsonPath("$.telephone").value(response.getTelephone()))
-                .andExpect(jsonPath("$.street").value(response.getStreet()))
-                .andExpect(jsonPath("$.number").value(response.getNumber()))
-                .andExpect(jsonPath("$.complement").value(response.getComplement()))
-                .andExpect(jsonPath("$.neighborhood").value(response.getNeighborhood()))
-                .andExpect(jsonPath("$.city").value(response.getCity()))
-                .andExpect(jsonPath("$.state").value(response.getState()))
-                .andExpect(jsonPath("$.zipCod").value(response.getZipCod()));
+        getClientTestPrepare.successGetAssert(new Object[]{"00099988877"}, status().isOk(),
+                jsonPath("$.cpf").value(response.getCpf()),
+                jsonPath("$.name").value(response.getName()),
+                jsonPath("$.telephone").value(response.getTelephone()),
+                jsonPath("$.street").value(response.getStreet()),
+                jsonPath("$.number").value(response.getNumber()),
+                jsonPath("$.complement").value(response.getComplement()),
+                jsonPath("$.neighborhood").value(response.getNeighborhood()),
+                jsonPath("$.city").value(response.getCity()),
+                jsonPath("$.state").value(response.getState()),
+                jsonPath("$.zipCod").value(response.getZipCod()));
     }
 
     @Test
