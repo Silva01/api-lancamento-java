@@ -129,14 +129,8 @@ class ClientControllerTest {
 
     @Test
     void deactivateClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
-        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
-        mockMvc.perform(post("/clients/deactivate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new EditStatusClientRequest("12345678901"))))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
+        deactivateRequestPrepare.failurePostAssert(new EditStatusClientRequest("12345678901"), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
