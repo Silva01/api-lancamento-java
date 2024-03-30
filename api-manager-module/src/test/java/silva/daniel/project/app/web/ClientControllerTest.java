@@ -156,14 +156,8 @@ class ClientControllerTest {
 
     @Test
     void activateClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
-        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
-        mockMvc.perform(post("/clients/activate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ActivateClient("12345678901"))))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
+        activateClientTestPrepare.failurePostAssert(new ActivateClient("12345678901"), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
