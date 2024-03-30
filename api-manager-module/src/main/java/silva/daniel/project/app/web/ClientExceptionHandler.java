@@ -1,6 +1,7 @@
 package silva.daniel.project.app.web;
 
 
+import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
@@ -34,6 +35,12 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ClientNotExistsException.class)
     public ResponseEntity<FailureResponse> handleClientNotExistsException(ClientNotExistsException ex) {
         var failureResponse = new FailureResponse("Client not exists in database", NOT_FOUND.value());
+        return ResponseEntity.status(NOT_FOUND).body(failureResponse);
+    }
+
+    @ExceptionHandler(CreditCardNotExistsException.class)
+    public ResponseEntity<FailureResponse> handleClientNotExistsException(CreditCardNotExistsException ex) {
+        var failureResponse = new FailureResponse(ex.getMessage(), NOT_FOUND.value());
         return ResponseEntity.status(NOT_FOUND).body(failureResponse);
     }
 
