@@ -49,6 +49,7 @@ import static silva.daniel.project.app.commons.ClientCommons.requestInvalidZeroA
 import static silva.daniel.project.app.commons.ClientCommons.requestNullCpfMock;
 import static silva.daniel.project.app.commons.ClientCommons.requestValidMock;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_EXISTS;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
@@ -114,7 +115,7 @@ class ClientControllerTest {
 
     @Test
     void editClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
+        final var failureResponse = CLIENT_NOT_FOUND_MESSAGE;
         doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateClient(any(EditClientInput.class));
         mockMvc.perform(put("/clients")
                         .contentType(APPLICATION_JSON)
