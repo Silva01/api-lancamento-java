@@ -1,5 +1,6 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,8 +14,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.service.CreditCardService;
+import silva.daniel.project.app.domain.client.FailureResponse;
 
 import java.util.stream.Stream;
 
@@ -24,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
@@ -41,7 +45,7 @@ class CreditCardControllerTest {
 
     @Test
     void deactivateCreditCard_WithValidData_ReturnsSuccess() throws Exception {
-        final var request = new DeactivateCreditCardRequest("12345678901", 123456, 1234, "1234567890123456");
+        final var request = buildBaseRequest();
         mockMvc.perform(post("/credit-card/deactivate")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(request)))
@@ -53,24 +57,31 @@ class CreditCardControllerTest {
     @DisplayName("Deactivate credit card with invalid data returns exception")
     void deactivateCreditCard_WithInvalidData_ReturnsException(DeactivateCreditCardRequest request) throws Exception {
         var response = INVALID_DATA_MESSAGE.getResponse();
-        mockMvc.perform(post("/credit-card/deactivate")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(response.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(response.getStatusCode()));
+        failureAssertRequest(request, response, status().isNotAcceptable());
     }
 
     @Test
     void deactivateCreditCard_WithClientNotExists_ReturnsStatus406() throws Exception {
         doThrow(new ClientNotExistsException("Client not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
-        final var request = new DeactivateCreditCardRequest("12345678901", 123456, 1234, "1234567890123456");
+        final var request = buildBaseRequest();
         var response = CLIENT_NOT_FOUND_MESSAGE.getResponse();
+        failureAssertRequest(request, response, status().isNotFound());
+    }
 
+    @Test
+    void deactivateCreditCard_WithCreditCardNotFound_ReturnsStatus404() throws Exception {
+        doThrow(new CreditCardNotExistsException("Credit card not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
+        final var response = CREDIT_CARD_NOT_FOUND_MESSAGE.getResponse();
+        final var request = buildBaseRequest();
+
+        failureAssertRequest(request, response, status().isNotFound());
+    }
+
+    private void failureAssertRequest(DeactivateCreditCardRequest request, FailureResponse response, ResultMatcher statusMatcher) throws Exception {
         mockMvc.perform(post("/credit-card/deactivate")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotFound())
+                .andExpect(statusMatcher)
                 .andExpect(jsonPath("$.message").value(response.getMessage()))
                 .andExpect(jsonPath("$.statusCode").value(response.getStatusCode()));
     }
@@ -85,6 +96,14 @@ class CreditCardControllerTest {
                 Arguments.of(new DeactivateCreditCardRequest("", 123456, 1234, "1234567890123456")),
                 Arguments.of(new DeactivateCreditCardRequest(null, 123456, 1234, "1234567890123456"))
         );
+    }
+
+    private DeactivateCreditCardRequest buildBaseRequest() {
+        return new DeactivateCreditCardRequest(
+                "12345678901",
+                123456,
+                1234,
+                "1234567890123456");
     }
 
 }
