@@ -30,6 +30,7 @@ import silva.daniel.project.app.web.client.ActivateClientTestPrepare;
 import silva.daniel.project.app.web.client.AddressClientTestPrepare;
 import silva.daniel.project.app.web.client.CreateClientTestPrepare;
 import silva.daniel.project.app.web.client.DeactivateClientTestPrepare;
+import silva.daniel.project.app.web.client.GetClientTestPrepare;
 
 import java.util.stream.Stream;
 
@@ -57,7 +58,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_M
 
 @ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
-@Import({CreateClientTestPrepare.class, DeactivateClientTestPrepare.class, ActivateClientTestPrepare.class, AddressClientTestPrepare.class}) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
+@Import({CreateClientTestPrepare.class, DeactivateClientTestPrepare.class, ActivateClientTestPrepare.class, AddressClientTestPrepare.class, GetClientTestPrepare.class}) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
 class ClientControllerTest {
 
     @Autowired
@@ -80,6 +81,9 @@ class ClientControllerTest {
 
     @Autowired
     private AddressClientTestPrepare addressClientTestPrepare;
+
+    @Autowired
+    private GetClientTestPrepare getClientTestPrepare;
 
     @Test
     void createNewClient_WithValidData_Returns201AndAccountData() throws Exception {
@@ -225,12 +229,9 @@ class ClientControllerTest {
     @Test
     void getClient_WithClientNotExists_ReturnsStatus404() throws Exception {
         when(service.getClientByCpf("00099988877")).thenThrow(new ClientNotExistsException("Client not exists in database"));
-        var failureObject = new FailureResponse("Client not exists in database", 404);
-        mockMvc.perform(get("/clients/{cpf}", "00099988877")
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureObject.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureObject.getStatusCode()));
+        getClientTestPrepare.failureGetAssert(new Object[]{"00099988877"}, status().isNotFound(),
+                jsonPath("$.message").value(CLIENT_NOT_FOUND_MESSAGE.getMessage()),
+                jsonPath("$.statusCode").value(CLIENT_NOT_FOUND_MESSAGE.getStatusCode()));
     }
 
     private NewAccountByNewClientResponseSuccess mockResponse() {
