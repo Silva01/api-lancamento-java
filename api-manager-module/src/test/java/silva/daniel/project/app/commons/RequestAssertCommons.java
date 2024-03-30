@@ -38,7 +38,7 @@ public abstract class RequestAssertCommons {
                 .content(mapper.writeValueAsString(request)), statusMatcher);
     }
 
-    private final void successRequest(final RequestBuilder requestBuilder, ResultMatcher... statusMatcher) throws Exception {
+    private void successRequest(final RequestBuilder requestBuilder, ResultMatcher... statusMatcher) throws Exception {
         mockMvc.perform(requestBuilder)
                 .andExpectAll(statusMatcher);
     }
