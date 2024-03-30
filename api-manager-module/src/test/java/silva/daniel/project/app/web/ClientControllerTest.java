@@ -48,6 +48,8 @@ import static silva.daniel.project.app.commons.ClientCommons.requestInvalidNegat
 import static silva.daniel.project.app.commons.ClientCommons.requestInvalidZeroAgencyMock;
 import static silva.daniel.project.app.commons.ClientCommons.requestNullCpfMock;
 import static silva.daniel.project.app.commons.ClientCommons.requestValidMock;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_EXISTS;
+import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
@@ -78,7 +80,7 @@ class ClientControllerTest {
 
     @Test
     void createNewClient_WithClientExistInDatabase_Returns409() throws Exception {
-        final var failureResponse = FailureMessageEnum.CLIENT_ALREADY_EXISTS;
+        final var failureResponse = CLIENT_ALREADY_EXISTS;
         when(service.createNewClient(any(ClientRequestDTO.class))).thenThrow(new ExistsClientRegistredException(failureResponse.getMessage()));
 
         mockMvc.perform(post("/clients")
@@ -92,8 +94,7 @@ class ClientControllerTest {
     @ParameterizedTest
     @MethodSource("provideRequestInvalidData")
     void createNewClient_WithInvalidData_Returns406(ClientRequest request) throws Exception {
-        final var responseMock = mockFailureResponse("Information is not valid", 406);
-        final var requestMockInvalid = requestInvalidAddressMock();
+        final var responseMock = INVALID_DATA_MESSAGE;
 
         mockMvc.perform(post("/clients")
                         .contentType(APPLICATION_JSON)
