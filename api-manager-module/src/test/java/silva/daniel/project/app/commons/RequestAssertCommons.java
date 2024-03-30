@@ -42,7 +42,7 @@ public abstract class RequestAssertCommons {
                 jsonPath("$.statusCode").value(response.getStatusCode()));
     }
 
-    public final void successPostAssert(Object request, ResultMatcher statusMatcher) throws Exception {
+    public final void successPostAssert(Object request, ResultMatcher... statusMatcher) throws Exception {
         successRequest(post(url())
                 .contentType("application/json")
                 .content(mapper.writeValueAsString(request)), statusMatcher);
