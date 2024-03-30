@@ -97,10 +97,7 @@ class ClientControllerTest {
 
     @Test
     void editClient_WithValidData_Returns200() throws Exception {
-        mockMvc.perform(put("/clients")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(editClientRequestMock())))
-                .andExpect(status().isOk());
+        prepareAsserts.successPutAssert(editClientRequestMock(), status().isOk());
     }
 
     @Test
