@@ -141,10 +141,7 @@ class ClientControllerTest {
 
     @Test
     void activateClient_WithValidData_Returns200() throws Exception {
-        mockMvc.perform(post("/clients/activate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(activateClientMock())))
-                .andExpect(status().isOk());
+        deactivateRequestPrepare.successPostAssert(activateClientMock(), status().isOk());
     }
 
     @Test
