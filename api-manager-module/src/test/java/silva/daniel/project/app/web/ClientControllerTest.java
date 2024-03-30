@@ -28,6 +28,7 @@ import silva.daniel.project.app.domain.client.request.ClientRequest;
 import silva.daniel.project.app.domain.client.request.EditStatusClientRequest;
 import silva.daniel.project.app.domain.client.service.ClientService;
 import silva.daniel.project.app.web.client.CreateClientTestPrepare;
+import silva.daniel.project.app.web.client.DeactivateClientTestPrepare;
 
 import java.util.stream.Stream;
 
@@ -57,7 +58,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_M
 
 @ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
-@Import(CreateClientTestPrepare.class) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
+@Import({CreateClientTestPrepare.class, DeactivateClientTestPrepare.class}) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
 class ClientControllerTest {
 
     @Autowired
@@ -71,6 +72,9 @@ class ClientControllerTest {
 
     @Autowired
     private CreateClientTestPrepare prepareAsserts;
+
+    @Autowired
+    private DeactivateClientTestPrepare deactivateRequestPrepare;
 
     @Test
     void createNewClient_WithValidData_Returns201AndAccountData() throws Exception {
@@ -114,10 +118,7 @@ class ClientControllerTest {
 
     @Test
     void deactivateClient_WithValidData_Returns200() throws Exception {
-        mockMvc.perform(post("/clients/deactivate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(editStatusClientRequestMock())))
-                .andExpect(status().isOk());
+        deactivateRequestPrepare.successPostAssert(editStatusClientRequestMock(), status().isOk());
     }
 
     @Test
