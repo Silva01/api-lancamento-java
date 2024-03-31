@@ -2,6 +2,7 @@ package br.net.silva.business.validations;
 
 import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.exception.CreditCardNumberDifferentException;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
@@ -36,7 +37,7 @@ public class CreditCardNumberExistsValidate implements IValidations {
         }
 
         if (!creditCardDto.active()) {
-            throw new CreditCardNotExistsException("Credit card deactivated in the account");
+            throw new CreditCardDeactivatedException("Credit card deactivated in the account");
         }
     }
 }
