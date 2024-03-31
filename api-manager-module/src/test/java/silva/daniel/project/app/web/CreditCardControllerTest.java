@@ -1,5 +1,6 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
@@ -48,6 +50,12 @@ class CreditCardControllerTest extends RequestAssertCommons implements RequestBu
     void deactivateCreditCard_WithClientNotExists_ReturnsStatus404() throws Exception {
         doThrow(new ClientNotExistsException("Client not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
         failurePostAssert(buildBaseRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void deactivateCreditCard_WithAccountNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new AccountNotExistsException("Account not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
+        failurePostAssert(buildBaseRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
