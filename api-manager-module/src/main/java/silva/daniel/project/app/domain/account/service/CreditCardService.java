@@ -15,7 +15,6 @@ public final class CreditCardService {
     }
 
     public void deactivateCreditCard(final DeactivateCreditCardInput deactivateCreditCard) throws Exception {
-        var source = new Source(deactivateCreditCard);
-        fluxService.fluxDeactivateCreditCard().exec(source);
+        fluxService.fluxDeactivateCreditCard().exec(Source.of(deactivateCreditCard));
     }
 }
