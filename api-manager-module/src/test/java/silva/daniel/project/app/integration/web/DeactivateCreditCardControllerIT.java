@@ -19,6 +19,7 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
@@ -61,6 +62,15 @@ class DeactivateCreditCardControllerIT extends MysqlTestContainer {
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(sut.getBody().getMessage()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getMessage());
         assertThat(sut.getBody().getStatusCode()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getStatusCode());
+    }
+
+    @Test
+    void deactivateCreditCard_WithAccountNotExists_ReturnsStatus404() {
+        var request = new DeactivateCreditCardRequest("12345678910", 1220, 33, "1234567890123456");
+        var sut = restTemplate.postForEntity("/credit-card/deactivate", request, FailureResponse.class);
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(sut.getBody().getMessage()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
+        assertThat(sut.getBody().getStatusCode()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getStatusCode());
     }
 
     private static Stream<Arguments> provideInvalidData() {
