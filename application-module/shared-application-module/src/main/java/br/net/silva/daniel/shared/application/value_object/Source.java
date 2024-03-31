@@ -11,4 +11,8 @@ public record Source(
     public Source(Input input) {
         this(EmptyOutput.INSTANCE, input);
     }
+
+    public static Source of(Input input) {
+        return new Source(input);
+    }
 }
