@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import silva.daniel.project.app.commons.FailureMessageEnum;
 import silva.daniel.project.app.commons.MysqlTestContainer;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
