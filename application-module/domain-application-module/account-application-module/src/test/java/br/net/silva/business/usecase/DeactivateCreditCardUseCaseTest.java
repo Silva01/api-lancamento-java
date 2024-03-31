@@ -5,10 +5,11 @@ import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.daniel.enuns.FlagEnum;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -17,28 +18,32 @@ import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class DeactivateCreditCardUseCaseTest {
 
     private DeactivateCreditCardUseCase useCase;
 
     @Mock
-    private Repository<AccountOutput> findAccountRepository;
-
-    @Mock
-    private Repository<AccountOutput> saveAccountRepository;
+    private ApplicationBaseGateway<AccountOutput> baseAccountGateway;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findAccountRepository.exec(any(), any(), any())).thenReturn(buildMockAccount(true, buildMockCreditCard(true)));
-        doAnswer(invocation -> invocation.getArguments()[0]).when(saveAccountRepository).exec(any(AccountOutput.class));
+        when(baseAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(true))));
+        doAnswer(invocation -> invocation.getArguments()[0]).when(baseAccountGateway).save(any(AccountOutput.class));
 
-        useCase = new DeactivateCreditCardUseCase(findAccountRepository, saveAccountRepository);
+        useCase = new DeactivateCreditCardUseCase(baseAccountGateway);
     }
 
     @Test
@@ -48,8 +53,8 @@ class DeactivateCreditCardUseCaseTest {
 
         assertDoesNotThrow(() -> useCase.exec(source));
 
-        verify(findAccountRepository, times(1)).exec(input.accountNumber(), input.agency(), input.cpf());
-        verify(saveAccountRepository, times(1)).exec(any(AccountOutput.class));
+        verify(baseAccountGateway, times(1)).findById(any(ParamGateway.class));
+        verify(baseAccountGateway, times(1)).save(any(AccountOutput.class));
     }
 
     @Test
@@ -60,8 +65,8 @@ class DeactivateCreditCardUseCaseTest {
         var responseException = assertThrows(CreditCardNumberDifferentException.class, () -> useCase.exec(source));
         assertEquals("Credit card number is different the credit card informed for the user", responseException.getMessage());
 
-        verify(findAccountRepository, times(1)).exec(input.accountNumber(), input.agency(), input.cpf());
-        verify(saveAccountRepository, never()).exec(any(AccountOutput.class));
+        verify(baseAccountGateway, times(1)).findById(any(ParamGateway.class));
+        verify(baseAccountGateway, never()).save(any(AccountOutput.class));
     }
 
     private AccountOutput buildMockAccount(boolean active, CreditCardOutput creditCard) {

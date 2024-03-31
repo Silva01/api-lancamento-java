@@ -1,7 +1,10 @@
 package silva.daniel.project.app.service;
 
+import br.net.silva.business.build.AccountExistsValidationBuilder;
+import br.net.silva.business.build.CreditCardNumberExistsValidationBuilder;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
+import br.net.silva.business.usecase.DeactivateCreditCardUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.build.ClientExistsAndDeactivatedValidateBuilder;
 import br.net.silva.daniel.build.ClientExistsValidateBuilder;
@@ -113,6 +116,21 @@ public class FluxService {
                 ).withBuilderValidations(
                         ValidationBuilder.create(ClientExistsValidateBuilder.class)
                                 .withRepository(clientBaseRepository)
+                ).build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxDeactivateCreditCard() throws Exception {
+        return FacadeBuilder
+                .make().withBuilderUseCases(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateCreditCardUseCase.class)
+                ).withBuilderValidations(
+                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
+                                .withRepository(clientBaseRepository),
+                        ValidationBuilder.create(AccountExistsValidationBuilder.class)
+                                .withRepository(accountBaseRepository),
+                        ValidationBuilder.create(CreditCardNumberExistsValidationBuilder.class)
+                                .withRepository(accountBaseRepository)
                 ).build();
     }
 }

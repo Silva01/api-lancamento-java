@@ -3,10 +3,11 @@ package br.net.silva.business.validations;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.FindAccountDTO;
 import br.net.silva.business.value_object.output.AccountOutput;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,9 +17,10 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class AccountExistsValidateTest {
@@ -26,14 +28,14 @@ class AccountExistsValidateTest {
     private AccountExistsValidate validation;
 
     @Mock
-    private Repository<Optional<AccountOutput>> findAccountRepository;
+    private FindApplicationBaseGateway<AccountOutput> findAccountGateway;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true)));
+        when(findAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
 
-        validation = new AccountExistsValidate(findAccountRepository);
+        validation = new AccountExistsValidate(findAccountGateway);
     }
 
     @Test
@@ -47,7 +49,7 @@ class AccountExistsValidateTest {
     void mustValidateAccountWithError() {
         var findAccount = new FindAccountDTO("99988877766", 1, 123, null);
         var source = new Source(EmptyOutput.INSTANCE, findAccount);
-        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.empty());
+        when(findAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
         var exceptionResponse = assertThrows(AccountNotExistsException.class, () -> validation.validate(source));
         assertEquals("Account not exists", exceptionResponse.getMessage());
     }
