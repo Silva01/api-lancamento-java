@@ -1,6 +1,7 @@
 package silva.daniel.project.app.web;
 
 
+import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
@@ -57,5 +58,11 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<FailureResponse> handleClientNotExistsException(CreditCardDeactivatedException ex) {
         var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
+    }
+
+    @ExceptionHandler(AccountNotExistsException.class)
+    public ResponseEntity<FailureResponse> handleClientNotExistsException(AccountNotExistsException ex) {
+        var failureResponse = new FailureResponse("Account not Found", NOT_FOUND.value());
+        return ResponseEntity.status(NOT_FOUND).body(failureResponse);
     }
 }
