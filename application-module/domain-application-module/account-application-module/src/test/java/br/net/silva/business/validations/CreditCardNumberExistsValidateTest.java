@@ -1,5 +1,6 @@
 package br.net.silva.business.validations;
 
+import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.exception.CreditCardNumberDifferentException;
 import br.net.silva.business.interfaces.AbstractAccountBuilder;
@@ -76,7 +77,7 @@ class CreditCardNumberExistsValidateTest extends AbstractAccountBuilder {
         var input = new DeactivateCreditCardInput("99988877766", 1, 45678, "99988877766");
         var source = new Source(input);
 
-        var responseException = assertThrows(CreditCardNotExistsException.class, () -> validate.validate(source));
+        var responseException = assertThrows(CreditCardDeactivatedException.class, () -> validate.validate(source));
         assertEquals("Credit card deactivated in the account", responseException.getMessage());
 
         verify(findAccountGateway, times(1)).findById(any(ParamGateway.class));
