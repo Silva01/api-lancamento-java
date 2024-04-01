@@ -3,6 +3,7 @@ package silva.daniel.project.app.web;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
+import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import org.junit.jupiter.api.DisplayName;
@@ -90,6 +91,12 @@ class CreditCardControllerTest implements RequestBuilderCommons {
     @MethodSource("provideInvalidCreateCreditCardRequests")
     void createCreditCard_WithInvalidData_ReturnsStatus406(CreateCreditCardRequest request) throws Exception {
         createCreditCardPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void createCreditCard_WithClientNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client not exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
+        createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidCreateCreditCardRequests() {
