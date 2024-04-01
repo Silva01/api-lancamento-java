@@ -107,6 +107,12 @@ class CreditCardControllerTest implements RequestBuilderCommons {
         createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), CLIENT_ALREADY_DEACTIVATED, status().isConflict());
     }
 
+    @Test
+    void createCreditCard_WithAccountNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new AccountNotExistsException("Account not exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
+        createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
     private static Stream<Arguments> provideInvalidCreateCreditCardRequests() {
         return Stream.of(
                 Arguments.of(new CreateCreditCardRequest(null, 123456, 1234)),
