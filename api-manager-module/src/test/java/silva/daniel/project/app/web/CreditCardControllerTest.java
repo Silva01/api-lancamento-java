@@ -73,7 +73,7 @@ class CreditCardControllerTest extends RequestAssertCommons implements RequestBu
     @Test
     void deactivateCreditCard_WithCreditCardNotFound_ReturnsStatus404() throws Exception {
         doThrow(new CreditCardNotExistsException("Credit card not exists in the account")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
-        failurePostAssert(buildBaseRequest(), CREDIT_CARD_NOT_FOUND_MESSAGE, status().isNotFound());
+        deactivateCreditCardPrepare.failurePostAssert(buildBaseRequest(), CREDIT_CARD_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
