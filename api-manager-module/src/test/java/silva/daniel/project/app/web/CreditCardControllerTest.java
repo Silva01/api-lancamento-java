@@ -1,6 +1,7 @@
 package silva.daniel.project.app.web;
 
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.CreditCardAlreadyExistsException;
 import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
@@ -32,6 +33,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FO
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_EXISTS_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
@@ -117,6 +119,12 @@ class CreditCardControllerTest implements RequestBuilderCommons {
     void createCreditCard_WithAccountDeactivated_ReturnsStatus409() throws Exception {
         doThrow(new ClientNotActiveException("Account is deactivated")).when(service).createCreditCard(any(CreateCreditCardInput.class));
         createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), CLIENT_ALREADY_DEACTIVATED, status().isConflict());
+    }
+
+    @Test
+    void createCreditCard_WithAlreadyCreditCard_ReturnsStatus409() throws Exception {
+        doThrow(new CreditCardAlreadyExistsException("Credit card already exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
+        createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), CREDIT_CARD_ALREADY_EXISTS_MESSAGE, status().isConflict());
     }
 
     private static Stream<Arguments> provideInvalidCreateCreditCardRequests() {
