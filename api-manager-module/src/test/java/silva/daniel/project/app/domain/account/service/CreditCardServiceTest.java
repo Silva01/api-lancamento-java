@@ -17,6 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,5 +48,15 @@ class CreditCardServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.createCreditCard(buildNewBaseCreditCardInput()))
                 .isInstanceOf(ClientNotExistsException.class)
                 .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void createCreditCard_WithClientDeactivated_ReturnsException() throws Exception {
+        when(fluxService.fluxCreateCreditCard()).thenReturn(facade);
+        doThrow(new ClientNotExistsException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.createCreditCard(buildNewBaseCreditCardInput()))
+                .isInstanceOf(ClientNotExistsException.class)
+                .hasMessage(CLIENT_ALREADY_DEACTIVATED.getMessage());
     }
 }
