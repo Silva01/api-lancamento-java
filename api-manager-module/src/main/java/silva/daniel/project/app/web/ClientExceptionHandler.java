@@ -44,25 +44,25 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CreditCardNotExistsException.class)
-    public ResponseEntity<FailureResponse> handleClientNotExistsException(CreditCardNotExistsException ex) {
+    public ResponseEntity<FailureResponse> handleCreditCardNotExistsException(CreditCardNotExistsException ex) {
         var failureResponse = new FailureResponse(ex.getMessage(), NOT_FOUND.value());
         return ResponseEntity.status(NOT_FOUND).body(failureResponse);
     }
 
     @ExceptionHandler(ClientNotActiveException.class)
-    public ResponseEntity<FailureResponse> handleClientNotExistsException(ClientNotActiveException ex) {
+    public ResponseEntity<FailureResponse> handleClientNotActiveException(ClientNotActiveException ex) {
         var failureResponse = new FailureResponse("Client already deactivated", CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
     }
 
     @ExceptionHandler(CreditCardDeactivatedException.class)
-    public ResponseEntity<FailureResponse> handleClientNotExistsException(CreditCardDeactivatedException ex) {
+    public ResponseEntity<FailureResponse> handleCreditCardDeactivatedException(CreditCardDeactivatedException ex) {
         var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
     }
 
     @ExceptionHandler(AccountNotExistsException.class)
-    public ResponseEntity<FailureResponse> handleClientNotExistsException(AccountNotExistsException ex) {
+    public ResponseEntity<FailureResponse> handleAccountNotExistsException(AccountNotExistsException ex) {
         var failureResponse = new FailureResponse("Account not Found", NOT_FOUND.value());
         return ResponseEntity.status(NOT_FOUND).body(failureResponse);
     }
