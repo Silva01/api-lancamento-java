@@ -34,7 +34,7 @@ public final class CreditCardController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createCreditCard(@Valid @RequestBody CreateCreditCardRequest request) throws Exception {
         var input = new CreateCreditCardInput(request.cpf(), request.account(), request.agencyNumber());
-//        service.createCreditCard(input);
+        service.createCreditCard(input);
     }
 
 }
