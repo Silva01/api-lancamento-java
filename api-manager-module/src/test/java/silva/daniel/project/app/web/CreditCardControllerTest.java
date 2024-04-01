@@ -79,7 +79,7 @@ class CreditCardControllerTest extends RequestAssertCommons implements RequestBu
     @Test
     void deactivateCreditCard_WithCreditCardDeactivated_ReturnsStatus409() throws Exception {
         doThrow(new CreditCardDeactivatedException("Credit card deactivated in the account")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
-        failurePostAssert(buildBaseRequest(), CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
+        deactivateCreditCardPrepare.failurePostAssert(buildBaseRequest(), CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
     private static Stream<Arguments> provideInvalidDeactivateCreditCardRequests() {
