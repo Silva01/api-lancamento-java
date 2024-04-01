@@ -1,5 +1,6 @@
 package silva.daniel.project.app.domain.account.service;
 
+import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,8 @@ public final class CreditCardService {
 
     public void deactivateCreditCard(final DeactivateCreditCardInput deactivateCreditCard) throws Exception {
         fluxService.fluxDeactivateCreditCard().exec(Source.of(deactivateCreditCard));
+    }
+
+    public void createCreditCard(CreateCreditCardInput input) throws Exception {
     }
 }
