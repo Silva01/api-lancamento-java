@@ -81,18 +81,6 @@ class CreditCardControllerTest implements RequestBuilderCommons {
         deactivateCreditCardPrepare.failurePostAssert(buildBaseRequest(), CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
-    private static Stream<Arguments> provideInvalidDeactivateCreditCardRequests() {
-        return Stream.of(
-                Arguments.of(new DeactivateCreditCardRequest(null, 123456, 1234, "1234567890123456")),
-                Arguments.of(new DeactivateCreditCardRequest("12345678901", null, 1234, "1234567890123456")),
-                Arguments.of(new DeactivateCreditCardRequest("12345678901", 123456, null, "1234567890123456")),
-                Arguments.of(new DeactivateCreditCardRequest("12345678901", 123456, null, "")),
-                Arguments.of(new DeactivateCreditCardRequest("12345678901", 123456, 1234, null)),
-                Arguments.of(new DeactivateCreditCardRequest("", 123456, 1234, "1234567890123456")),
-                Arguments.of(new DeactivateCreditCardRequest(null, 123456, 1234, "1234567890123456"))
-        );
-    }
-
     @Test
     void createCreditCard_WithValidData_ReturnsStatus201() throws Exception {
         createCreditCardPrepare.successPostAssert(buildBaseCreateCreditCardRequest(), status().isCreated());
@@ -110,6 +98,18 @@ class CreditCardControllerTest implements RequestBuilderCommons {
                 Arguments.of(new CreateCreditCardRequest("", 123456, 1234)),
                 Arguments.of(new CreateCreditCardRequest("12345678901", null, 1234)),
                 Arguments.of(new CreateCreditCardRequest("12345678901", 123456, null))
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidDeactivateCreditCardRequests() {
+        return Stream.of(
+                Arguments.of(new DeactivateCreditCardRequest(null, 123456, 1234, "1234567890123456")),
+                Arguments.of(new DeactivateCreditCardRequest("12345678901", null, 1234, "1234567890123456")),
+                Arguments.of(new DeactivateCreditCardRequest("12345678901", 123456, null, "1234567890123456")),
+                Arguments.of(new DeactivateCreditCardRequest("12345678901", 123456, null, "")),
+                Arguments.of(new DeactivateCreditCardRequest("12345678901", 123456, 1234, null)),
+                Arguments.of(new DeactivateCreditCardRequest("", 123456, 1234, "1234567890123456")),
+                Arguments.of(new DeactivateCreditCardRequest(null, 123456, 1234, "1234567890123456"))
         );
     }
 }
