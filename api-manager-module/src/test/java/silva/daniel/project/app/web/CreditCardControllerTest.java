@@ -13,7 +13,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import silva.daniel.project.app.commons.RequestAssertCommons;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
 import silva.daniel.project.app.domain.account.request.CreateCreditCardRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
@@ -35,7 +34,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_M
 
 @ActiveProfiles("unit")
 @EnableCreditCardPrepare
-class CreditCardControllerTest extends RequestAssertCommons implements RequestBuilderCommons {
+class CreditCardControllerTest implements RequestBuilderCommons {
     
     @MockBean
     private CreditCardService service;
@@ -98,10 +97,5 @@ class CreditCardControllerTest extends RequestAssertCommons implements RequestBu
     void createCreditCard_WithValidData_ReturnsStatus201() throws Exception {
         var request = new CreateCreditCardRequest("12345678901", 123456, 1234);
         createCreditCardPrepare.successPostAssert(request, status().isCreated());
-    }
-
-    @Override
-    public String url() {
-        return "/credit-card/deactivate";
     }
 }
