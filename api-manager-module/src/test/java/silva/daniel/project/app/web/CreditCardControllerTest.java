@@ -10,12 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestAssertCommons;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
+import silva.daniel.project.app.domain.account.request.CreateCreditCardRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.service.CreditCardService;
+import silva.daniel.project.app.web.account.CreateCreditCardPrepare;
+import silva.daniel.project.app.web.account.annotations.EnableCreditCardPrepare;
 
 import java.util.stream.Stream;
 
@@ -29,10 +33,14 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NO
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
+@EnableCreditCardPrepare
 class CreditCardControllerTest extends RequestAssertCommons implements RequestBuilderCommons {
     
     @MockBean
     private CreditCardService service;
+
+    @Autowired
+    private CreateCreditCardPrepare createCreditCardPrepare;
 
     @Test
     void deactivateCreditCard_WithValidData_ReturnsSuccess() throws Exception {
@@ -80,6 +88,12 @@ class CreditCardControllerTest extends RequestAssertCommons implements RequestBu
                 Arguments.of(new DeactivateCreditCardRequest("", 123456, 1234, "1234567890123456")),
                 Arguments.of(new DeactivateCreditCardRequest(null, 123456, 1234, "1234567890123456"))
         );
+    }
+
+    @Test
+    void createCreditCard_WithValidData_ReturnsStatus201() throws Exception {
+        var request = new CreateCreditCardRequest("12345678901", 123456, 1234);
+        createCreditCardPrepare.successPostAssert(request, status().isCreated());
     }
 
     @Override
