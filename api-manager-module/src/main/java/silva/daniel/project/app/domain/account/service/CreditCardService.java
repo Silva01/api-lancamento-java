@@ -19,6 +19,7 @@ public final class CreditCardService {
         fluxService.fluxDeactivateCreditCard().exec(Source.of(deactivateCreditCard));
     }
 
-    public void createCreditCard(CreateCreditCardInput input) throws Exception {
+    public void createCreditCard(final CreateCreditCardInput input) throws Exception {
+        fluxService.fluxCreateCreditCard().exec(Source.of(input));
     }
 }
