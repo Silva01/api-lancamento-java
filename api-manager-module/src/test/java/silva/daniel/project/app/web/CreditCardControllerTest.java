@@ -95,7 +95,6 @@ class CreditCardControllerTest implements RequestBuilderCommons {
 
     @Test
     void createCreditCard_WithValidData_ReturnsStatus201() throws Exception {
-        var request = new CreateCreditCardRequest("12345678901", 123456, 1234);
-        createCreditCardPrepare.successPostAssert(request, status().isCreated());
+        createCreditCardPrepare.successPostAssert(buildBaseCreateCreditCardRequest(), status().isCreated());
     }
 }
