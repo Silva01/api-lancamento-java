@@ -97,4 +97,19 @@ class CreditCardControllerTest implements RequestBuilderCommons {
     void createCreditCard_WithValidData_ReturnsStatus201() throws Exception {
         createCreditCardPrepare.successPostAssert(buildBaseCreateCreditCardRequest(), status().isCreated());
     }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidCreateCreditCardRequests")
+    void createCreditCard_WithInvalidData_ReturnsStatus406(CreateCreditCardRequest request) throws Exception {
+        createCreditCardPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    private static Stream<Arguments> provideInvalidCreateCreditCardRequests() {
+        return Stream.of(
+                Arguments.of(new CreateCreditCardRequest(null, 123456, 1234)),
+                Arguments.of(new CreateCreditCardRequest("", 123456, 1234)),
+                Arguments.of(new CreateCreditCardRequest("12345678901", null, 1234)),
+                Arguments.of(new CreateCreditCardRequest("12345678901", 123456, null))
+        );
+    }
 }
