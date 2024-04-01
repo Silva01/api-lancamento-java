@@ -55,7 +55,7 @@ class CreditCardControllerTest extends RequestAssertCommons implements RequestBu
     @MethodSource("provideInvalidDeactivateCreditCardRequests")
     @DisplayName("Deactivate credit card with invalid data returns exception")
     void deactivateCreditCard_WithInvalidData_ReturnsException(DeactivateCreditCardRequest request) throws Exception {
-        failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+        deactivateCreditCardPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
