@@ -19,6 +19,7 @@ import silva.daniel.project.app.domain.account.request.CreateCreditCardRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.service.CreditCardService;
 import silva.daniel.project.app.web.account.CreateCreditCardPrepare;
+import silva.daniel.project.app.web.account.DeactivateCreditCardPrepare;
 import silva.daniel.project.app.web.account.annotations.EnableCreditCardPrepare;
 
 import java.util.stream.Stream;
@@ -42,9 +43,12 @@ class CreditCardControllerTest extends RequestAssertCommons implements RequestBu
     @Autowired
     private CreateCreditCardPrepare createCreditCardPrepare;
 
+    @Autowired
+    private DeactivateCreditCardPrepare deactivateCreditCardPrepare;
+
     @Test
     void deactivateCreditCard_WithValidData_ReturnsSuccess() throws Exception {
-        successPostAssert(buildBaseRequest(), status().isOk());
+        deactivateCreditCardPrepare.successPostAssert(buildBaseRequest(), status().isOk());
     }
 
     @ParameterizedTest
