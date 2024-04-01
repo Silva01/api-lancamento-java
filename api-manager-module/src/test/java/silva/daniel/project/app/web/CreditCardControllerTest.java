@@ -113,6 +113,12 @@ class CreditCardControllerTest implements RequestBuilderCommons {
         createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
+    @Test
+    void createCreditCard_WithAccountDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new ClientNotActiveException("Account is deactivated")).when(service).createCreditCard(any(CreateCreditCardInput.class));
+        createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), CLIENT_ALREADY_DEACTIVATED, status().isConflict());
+    }
+
     private static Stream<Arguments> provideInvalidCreateCreditCardRequests() {
         return Stream.of(
                 Arguments.of(new CreateCreditCardRequest(null, 123456, 1234)),
