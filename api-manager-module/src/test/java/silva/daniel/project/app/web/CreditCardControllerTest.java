@@ -6,6 +6,7 @@ import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
@@ -97,6 +99,12 @@ class CreditCardControllerTest implements RequestBuilderCommons {
     void createCreditCard_WithClientNotExists_ReturnsStatus404() throws Exception {
         doThrow(new ClientNotExistsException("Client not exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
         createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void createCreditCard_WithClientDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new ClientNotActiveException("Client is deactivated")).when(service).createCreditCard(any(CreateCreditCardInput.class));
+        createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), CLIENT_ALREADY_DEACTIVATED, status().isConflict());
     }
 
     private static Stream<Arguments> provideInvalidCreateCreditCardRequests() {
