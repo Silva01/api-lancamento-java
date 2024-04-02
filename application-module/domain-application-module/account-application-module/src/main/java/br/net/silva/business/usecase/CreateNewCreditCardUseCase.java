@@ -6,23 +6,21 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.CreditCard;
-import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 
 public class CreateNewCreditCardUseCase implements UseCase<AccountOutput> {
 
-    private final Repository<AccountOutput> findAccountByCpfAndAgencyAndAccountNumberRepository;
-    private final Repository<AccountOutput> saveAccountRepository;
+    private final ApplicationBaseGateway<AccountOutput> baseGateway;
 
     private final IFactoryAggregate<Account, AccountDTO> aggregateFactory;
 
-    public CreateNewCreditCardUseCase(Repository<AccountOutput> findAccountByCpfAndAgencyAndAccountNumberRepository, Repository<AccountOutput> saveAccountRepository) {
-        this.findAccountByCpfAndAgencyAndAccountNumberRepository = findAccountByCpfAndAgencyAndAccountNumberRepository;
-        this.saveAccountRepository = saveAccountRepository;
+    public CreateNewCreditCardUseCase(ApplicationBaseGateway<AccountOutput> baseGateway) {
+        this.baseGateway = baseGateway;
         this.aggregateFactory = new CreateAccountByAccountDTOFactory();
     }
 
@@ -32,13 +30,12 @@ public class CreateNewCreditCardUseCase implements UseCase<AccountOutput> {
             var newCreditCardInput = (CreateCreditCardInput) param.input();
             var creditCard = new CreditCard();
 
-            var accountOutput = findAccountByCpfAndAgencyAndAccountNumberRepository.exec(
-                    newCreditCardInput.agency(), newCreditCardInput.accountNumber(), newCreditCardInput.cpf());
+            var accountOutput = baseGateway.findById(newCreditCardInput);
 
-            var account = aggregateFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
+            var account = aggregateFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput.get()));
 
             account.vinculateCreditCard(creditCard);
-            return saveAccountRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
+            return baseGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
         } catch (Exception e) {
             throw new GenericException("Generic error", e);
         }
