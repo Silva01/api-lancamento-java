@@ -27,6 +27,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_EXISTS_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("e2e")
@@ -96,6 +97,15 @@ class CreateCreditCardControllerIT extends MysqlTestContainer {
         assertThat(response.getStatusCode()).isEqualTo(CONFLICT);
         assertThat(response.getBody().getMessage()).isEqualTo(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
         assertThat(response.getBody().getStatusCode()).isEqualTo(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getStatusCode());
+    }
+
+    @Test
+    void createCreditCard_WithAlreadyHasCreditCard_ReturnsStatus409() {
+        var request = new CreateCreditCardRequest("12345678910", 1237, 1);
+        var response = restTemplate.postForEntity("/credit-card", request, FailureResponse.class);
+        assertThat(response.getStatusCode()).isEqualTo(CONFLICT);
+        assertThat(response.getBody().getMessage()).isEqualTo(CREDIT_CARD_ALREADY_EXISTS_MESSAGE.getMessage());
+        assertThat(response.getBody().getStatusCode()).isEqualTo(CREDIT_CARD_ALREADY_EXISTS_MESSAGE.getStatusCode());
     }
 
     private static Stream<Arguments> provideInvalidData() {
