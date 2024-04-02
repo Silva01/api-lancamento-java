@@ -28,7 +28,7 @@ class CreateCreditCardControllerIT extends MysqlTestContainer {
 
     @Test
     void createCreditCard_WithValidData_ReturnsStatus200() {
-        var request = new CreateCreditCardRequest("12345678904", 1237, 1);
+        var request = new CreateCreditCardRequest("12345678901", 1234, 1);
         var response = restTemplate.postForEntity("/credit-card", request, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
