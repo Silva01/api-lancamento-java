@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
@@ -86,6 +87,15 @@ class CreateCreditCardControllerIT extends MysqlTestContainer {
         assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
         assertThat(response.getBody().getMessage()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
         assertThat(response.getBody().getStatusCode()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getStatusCode());
+    }
+
+    @Test
+    void createCreditCard_WithAccountDeactivated_ReturnsStatus409() {
+        var request = new CreateCreditCardRequest("12345678904", 1236, 1);
+        var response = restTemplate.postForEntity("/credit-card", request, FailureResponse.class);
+        assertThat(response.getStatusCode()).isEqualTo(CONFLICT);
+        assertThat(response.getBody().getMessage()).isEqualTo(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
+        assertThat(response.getBody().getStatusCode()).isEqualTo(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getStatusCode());
     }
 
     private static Stream<Arguments> provideInvalidData() {
