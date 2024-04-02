@@ -54,7 +54,7 @@ class AccountAlreadyExistsCreditCardValidationTest extends AbstractAccountBuilde
         var source = new Source(EmptyOutput.INSTANCE, createCreditCardInput);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> validation.validate(source));
-        assertEquals("This account already have a credit card", exceptionResponse.getMessage());
+        assertEquals("Credit card already exists", exceptionResponse.getMessage());
 
         verify(findAccountGateway, times(1)).findById(createCreditCardInput);
     }
@@ -66,7 +66,7 @@ class AccountAlreadyExistsCreditCardValidationTest extends AbstractAccountBuilde
         var source = new Source(EmptyOutput.INSTANCE, createCreditCardInput);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> validation.validate(source));
-        assertEquals("This account already have a credit card", exceptionResponse.getMessage());
+        assertEquals("Credit card already exists", exceptionResponse.getMessage());
 
         verify(findAccountGateway, times(1)).findById(createCreditCardInput);
     }

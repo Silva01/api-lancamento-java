@@ -24,7 +24,7 @@ public class AccountAlreadyExistsCreditCardValidation implements IValidations {
         var account = optionalAccount.get();
 
         if (account.creditCard() != null){
-            throw new CreditCardAlreadyExistsException("This account already have a credit card");
+            throw new CreditCardAlreadyExistsException("Credit card already exists");
         }
     }
 }
