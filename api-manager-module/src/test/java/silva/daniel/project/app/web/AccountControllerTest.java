@@ -1,5 +1,7 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.daniel.exception.ClientNotExistsException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,7 +17,11 @@ import silva.daniel.project.app.web.account.annotations.EnableAccountPrepare;
 
 import java.util.stream.Stream;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
@@ -37,6 +43,12 @@ class AccountControllerTest implements RequestBuilderCommons {
     @MethodSource("provideInvalidDataOfEditAgencyOfAccount")
     void editAgencyOfAccount_WithValidData_ReturnsStatus406(EditAgencyOfAccountRequest request) throws Exception {
         editAgencyOfAccountPrepare.failurePutAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void editAgencyOfAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).editAgencyOfAccount(any(ChangeAgencyInput.class));
+        editAgencyOfAccountPrepare.failurePutAssert(buildBaseEditAgencyOfAccountRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
