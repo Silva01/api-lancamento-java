@@ -1,7 +1,7 @@
 package br.net.silva.business.validations;
 
 import br.net.silva.business.build.AccountBuilder;
-import br.net.silva.business.exception.AccountDeactivatedException;
+import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
@@ -10,11 +10,11 @@ import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 
-public class AccountExistsAndActiveValidate implements IValidations {
+public class AccountExistsAndDeactivatedValidate implements IValidations {
 
     private final FindApplicationBaseGateway<AccountOutput> findAccountGateway;
 
-    public AccountExistsAndActiveValidate(FindApplicationBaseGateway<AccountOutput> findAccountGateway) {
+    public AccountExistsAndDeactivatedValidate(FindApplicationBaseGateway<AccountOutput> findAccountGateway) {
         this.findAccountGateway = findAccountGateway;
     }
 
@@ -28,8 +28,8 @@ public class AccountExistsAndActiveValidate implements IValidations {
         }
 
         var accountDto = AccountBuilder.buildFullAccountDto().createFrom(optionalAccount.get());
-        if (!accountDto.active()) {
-            throw new AccountDeactivatedException("Account is Deactivated");
+        if (accountDto.active()) {
+            throw new AccountAlreadyActiveException("Account already active");
         }
 
     }

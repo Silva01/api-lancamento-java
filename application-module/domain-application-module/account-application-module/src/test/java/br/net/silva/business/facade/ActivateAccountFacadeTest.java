@@ -2,26 +2,37 @@ package br.net.silva.business.facade;
 
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsAndActiveValidate;
+import br.net.silva.business.validations.AccountExistsAndDeactivatedValidate;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,19 +49,19 @@ class ActivateAccountFacadeTest {
     private Repository<AccountOutput> findAccountRepository;
 
     @Mock
-    private Repository<Optional<AccountOutput>> optionalFindAccountRepository;
+    private FindApplicationBaseGateway<AccountOutput> optionalFindAccountGateway;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         this.activateAccountUseCase = new ActivateAccountUseCase(activateAccountRepository, findAccountRepository);
-        this.accountExistsValidate = new AccountExistsAndActiveValidate(optionalFindAccountRepository);
+        this.accountExistsValidate = new AccountExistsAndDeactivatedValidate(optionalFindAccountGateway);
     }
 
     @Test
     void shouldActivateAccountWithSuccess() throws GenericException {
         when(activateAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
-        when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(false)));
+        when(optionalFindAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(false)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
         Queue<UseCase> useCases = new LinkedList<>();
@@ -72,7 +83,7 @@ class ActivateAccountFacadeTest {
     @Test
     void shouldActivateAccountErrorWhenAccountNotExists() {
         when(activateAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
-        when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.empty());
+        when(optionalFindAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
         Queue<UseCase> useCases = new LinkedList<>();
@@ -92,7 +103,7 @@ class ActivateAccountFacadeTest {
     @Test
     void shouldActivateAccountErrorWhenAccountIsActive() {
         when(activateAccountRepository.exec(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
-        when(optionalFindAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(buildMockAccount(true)));
+        when(optionalFindAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(false));
 
         Queue<UseCase> useCases = new LinkedList<>();
