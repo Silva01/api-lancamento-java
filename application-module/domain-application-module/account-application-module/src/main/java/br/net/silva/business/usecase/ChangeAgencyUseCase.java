@@ -5,6 +5,7 @@ import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
@@ -15,14 +16,12 @@ import br.net.silva.daniel.shared.application.value_object.Source;
 
 public class ChangeAgencyUseCase implements UseCase<EmptyOutput> {
 
-    private final Repository<AccountOutput> findAccountByCpfAndAccountNumberRepository;
-    private final Repository<AccountOutput> saveAccountRepository;
+    private final ApplicationBaseGateway<AccountOutput> baseGateway;
 
     private final IFactoryAggregate<Account, AccountDTO> factoryAggregate;
 
-    public ChangeAgencyUseCase(Repository<AccountOutput> findAccountByCpfAndAccountNumberRepository, Repository<AccountOutput> saveAccountRepository) {
-        this.findAccountByCpfAndAccountNumberRepository = findAccountByCpfAndAccountNumberRepository;
-        this.saveAccountRepository = saveAccountRepository;
+    public ChangeAgencyUseCase(ApplicationBaseGateway<AccountOutput> baseGateway) {
+        this.baseGateway = baseGateway;
         this.factoryAggregate = new CreateAccountByAccountDTOFactory();
     }
 
@@ -30,9 +29,9 @@ public class ChangeAgencyUseCase implements UseCase<EmptyOutput> {
     public EmptyOutput exec(Source param) throws GenericException {
         try {
             var changeAgencyInput = (ChangeAgencyInput) param.input();
-            var accountOutput = findAccountByCpfAndAccountNumberRepository.exec(changeAgencyInput.cpf(), changeAgencyInput.accountNumber(), changeAgencyInput.oldAgencyNumber());
+            var accountOutput = baseGateway.findById(changeAgencyInput);
 
-            var accountDto = AccountBuilder.buildFullAccountDto().createFrom(accountOutput);
+            var accountDto = AccountBuilder.buildFullAccountDto().createFrom(accountOutput.get());
             var account = factoryAggregate.create(accountDto);
 
             var newAccountDto = new AccountDTO(
@@ -47,10 +46,10 @@ public class ChangeAgencyUseCase implements UseCase<EmptyOutput> {
             );
 
             account.deactivate();
-            saveAccountRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
+            baseGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
 
             var newAccount = factoryAggregate.create(newAccountDto);
-            saveAccountRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(newAccount.build()));
+            baseGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(newAccount.build()));
 
             return EmptyOutput.INSTANCE;
         } catch (Exception e) {
