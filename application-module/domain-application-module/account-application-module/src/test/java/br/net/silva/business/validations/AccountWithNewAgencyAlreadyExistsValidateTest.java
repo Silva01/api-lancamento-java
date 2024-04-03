@@ -2,11 +2,12 @@ package br.net.silva.business.validations;
 
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,23 +17,27 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class AccountWithNewAgencyAlreadyExistsValidateTest {
 
     private AccountWithNewAgencyAlreadyExistsValidate accountWithNewAgencyAlreadyExistsValidate;
 
     @Mock
-    private Repository<Optional<AccountOutput>> findAccountByNewAgencyNumberAndAccountNumberRepository;
+    private FindApplicationBaseGateway<AccountOutput> findAccountGateway;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(findAccountByNewAgencyNumberAndAccountNumberRepository.exec(anyInt(), anyInt())).thenReturn(Optional.empty());
+        when(findAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
-        accountWithNewAgencyAlreadyExistsValidate = new AccountWithNewAgencyAlreadyExistsValidate(findAccountByNewAgencyNumberAndAccountNumberRepository);
+        accountWithNewAgencyAlreadyExistsValidate = new AccountWithNewAgencyAlreadyExistsValidate(findAccountGateway);
     }
 
     @Test
@@ -41,7 +46,7 @@ class AccountWithNewAgencyAlreadyExistsValidateTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         assertDoesNotThrow(() -> accountWithNewAgencyAlreadyExistsValidate.validate(source));
-        verify(findAccountByNewAgencyNumberAndAccountNumberRepository, times(1)).exec(45678, 4321);
+        verify(findAccountGateway, times(1)).findById(input);
     }
 
     @Test
@@ -49,11 +54,11 @@ class AccountWithNewAgencyAlreadyExistsValidateTest {
         var input = new ChangeAgencyInput("99988877766", 45678, 1234, 4321);
         var source = new Source(EmptyOutput.INSTANCE, input);
 
-        when(findAccountByNewAgencyNumberAndAccountNumberRepository.exec(anyInt(), anyInt())).thenReturn(Optional.of(buildMockAccount(true)));
+        when(findAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
 
         var exceptionResponse = assertThrows(GenericException.class, () -> accountWithNewAgencyAlreadyExistsValidate.validate(source));
         assertEquals("Account with new agency already exists", exceptionResponse.getMessage());
-        verify(findAccountByNewAgencyNumberAndAccountNumberRepository, times(1)).exec(45678, 4321);
+        verify(findAccountGateway, times(1)).findById(input);
     }
 
     private AccountOutput buildMockAccount(boolean active) {
