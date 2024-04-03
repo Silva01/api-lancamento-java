@@ -1,5 +1,6 @@
 package silva.daniel.project.app.domain.account.service;
 
+import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
@@ -16,6 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,5 +50,15 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.editAgencyOfAccount(buildNewBaseChangeAgencyInput()))
                 .isInstanceOf(ClientNotExistsException.class)
                 .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void editAgencyOfAccount_WithAccountNotExists_ReturnsException() throws Exception {
+        when(fluxService.fluxEditAgencyOfAccount()).thenReturn(facade);
+        doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.editAgencyOfAccount(buildNewBaseChangeAgencyInput()))
+                .isInstanceOf(AccountNotExistsException.class)
+                .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
     }
 }
