@@ -3,7 +3,9 @@ package silva.daniel.project.app.service;
 import br.net.silva.business.build.AccountAlreadyExistsCreditCardValidationBuilder;
 import br.net.silva.business.build.AccountExistsAndActiveValidationBuilder;
 import br.net.silva.business.build.AccountExistsValidationBuilder;
+import br.net.silva.business.build.AccountWithNewAgencyAlreadyExistsValidateBuilder;
 import br.net.silva.business.build.CreditCardNumberExistsValidationBuilder;
+import br.net.silva.business.usecase.ChangeAgencyUseCase;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
@@ -151,5 +153,23 @@ public class FluxService {
                         ValidationBuilder.create(AccountAlreadyExistsCreditCardValidationBuilder.class)
                                 .withRepository(accountBaseRepository)
                 ).build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxEditAgencyOfAccount() throws Exception {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangeAgencyUseCase.class)
+                )
+                .withBuilderValidations(
+                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
+                                .withRepository(clientBaseRepository),
+                        ValidationBuilder.create(AccountExistsValidationBuilder.class)
+                                .withRepository(accountBaseRepository),
+                        ValidationBuilder.create(AccountWithNewAgencyAlreadyExistsValidateBuilder.class)
+                                .withRepository(accountBaseRepository)
+                )
+                .build();
     }
 }
