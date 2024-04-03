@@ -2,6 +2,7 @@ package br.net.silva.business.facade;
 
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.validations.AccountExistsAndActiveValidate;
+import br.net.silva.business.validations.AccountExistsAndDeactivatedValidate;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
@@ -54,7 +55,7 @@ class ActivateAccountFacadeTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         this.activateAccountUseCase = new ActivateAccountUseCase(activateAccountRepository, findAccountRepository);
-        this.accountExistsValidate = new AccountExistsAndActiveValidate(optionalFindAccountGateway);
+        this.accountExistsValidate = new AccountExistsAndDeactivatedValidate(optionalFindAccountGateway);
     }
 
     @Test
