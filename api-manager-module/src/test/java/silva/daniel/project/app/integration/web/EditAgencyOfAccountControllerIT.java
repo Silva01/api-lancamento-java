@@ -23,6 +23,7 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
@@ -57,7 +58,8 @@ class EditAgencyOfAccountControllerIT extends MysqlTestContainer {
         var httpEntity = new HttpEntity<>(request);
         var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sut.getBody()).isEqualTo(INVALID_DATA_MESSAGE);
+        assertThat(sut.getBody().getMessage()).isEqualTo(INVALID_DATA_MESSAGE.getMessage());
+        assertThat(sut.getBody().getStatusCode()).isEqualTo(INVALID_DATA_MESSAGE.getStatusCode());
     }
 
     @Test
@@ -66,7 +68,8 @@ class EditAgencyOfAccountControllerIT extends MysqlTestContainer {
         var httpEntity = new HttpEntity<>(request);
         var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sut.getBody()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE);
+        assertThat(sut.getBody().getMessage()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+        assertThat(sut.getBody().getStatusCode()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getStatusCode());
     }
 
     @Test
@@ -75,7 +78,18 @@ class EditAgencyOfAccountControllerIT extends MysqlTestContainer {
         var httpEntity = new HttpEntity<>(request);
         var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sut.getBody()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE);
+        assertThat(sut.getBody().getMessage()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
+        assertThat(sut.getBody().getStatusCode()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getStatusCode());
+    }
+
+    @Test
+    void editAgencyOfAccount_WithNewAgencyAlreadyUsed_ReturnsStatus409() {
+        final var request = new EditAgencyOfAccountRequest("12345678901", 1234, 1, 5);
+        var httpEntity = new HttpEntity<>(request);
+        var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(sut.getBody().getMessage()).isEqualTo(ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE.getMessage());
+        assertThat(sut.getBody().getStatusCode()).isEqualTo(ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE.getStatusCode());
     }
 
     private static Stream<Arguments> provideInvalidData() {
