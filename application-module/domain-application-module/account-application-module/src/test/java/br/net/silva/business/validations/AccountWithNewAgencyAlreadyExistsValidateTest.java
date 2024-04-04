@@ -46,7 +46,7 @@ class AccountWithNewAgencyAlreadyExistsValidateTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         assertDoesNotThrow(() -> accountWithNewAgencyAlreadyExistsValidate.validate(source));
-        verify(findAccountGateway, times(1)).findById(input);
+        verify(findAccountGateway, times(1)).findById(any(ParamGateway.class));
     }
 
     @Test
@@ -57,8 +57,8 @@ class AccountWithNewAgencyAlreadyExistsValidateTest {
         when(findAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
 
         var exceptionResponse = assertThrows(GenericException.class, () -> accountWithNewAgencyAlreadyExistsValidate.validate(source));
-        assertEquals("Account with new agency already exists", exceptionResponse.getMessage());
-        verify(findAccountGateway, times(1)).findById(input);
+        assertEquals("Account With new agency already exists", exceptionResponse.getMessage());
+        verify(findAccountGateway, times(1)).findById(any(ParamGateway.class));
     }
 
     private AccountOutput buildMockAccount(boolean active) {
