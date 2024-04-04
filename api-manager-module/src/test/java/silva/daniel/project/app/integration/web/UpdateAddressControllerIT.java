@@ -63,7 +63,7 @@ class UpdateAddressControllerIT extends MysqlTestContainer implements Integratio
     void editClient_WithInvalidData_ReturnsStatus406(AddressRequest request) {
         final var httpEntity = new HttpEntity<>(request);
         var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertFailureApi(sut, INVALID_DATA_MESSAGE);
+        assertInvalidData(sut);
     }
 
     @Test
