@@ -1,5 +1,6 @@
 package br.net.silva.business.validations;
 
+import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
@@ -26,6 +27,6 @@ public class AccountWithNewAgencyAlreadyExistsValidate implements IValidations {
         var optionalAccount = findAccountGateway.findById(inputNewAgency);
 
         if (optionalAccount.isPresent())
-            throw new GenericException("Account with new agency already exists");
+            throw new AccountAlreadyExistsForNewAgencyException("Account With new agency already exists");
     }
 }
