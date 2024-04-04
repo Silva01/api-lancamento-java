@@ -6,6 +6,7 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
@@ -21,6 +22,10 @@ public interface IntegrationAssertCommons {
 
     default void assertAccountNotExists(ResponseEntity<FailureResponse> sut) {
         assertFailureApi(sut, ACCOUNT_NOT_FOUND_MESSAGE);
+    }
+
+    default void assertClientAlreadyDeactivatedExists(ResponseEntity<FailureResponse> sut) {
+        assertFailureApi(sut, CLIENT_ALREADY_DEACTIVATED);
     }
     default void assertFailureApi(ResponseEntity<FailureResponse> sut, FailureResponse expected) {
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.resolve(expected.getStatusCode()));
