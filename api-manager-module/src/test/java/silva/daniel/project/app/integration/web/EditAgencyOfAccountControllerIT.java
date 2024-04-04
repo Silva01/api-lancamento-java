@@ -24,6 +24,7 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("e2e")
@@ -57,6 +58,15 @@ class EditAgencyOfAccountControllerIT extends MysqlTestContainer {
         var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
         assertThat(sut.getBody()).isEqualTo(INVALID_DATA_MESSAGE);
+    }
+
+    @Test
+    void editAgencyOfAccount_WithClientNotExists_ReturnsStatus404() {
+        final var request = new EditAgencyOfAccountRequest("12345678920", 1234, 1, 2);
+        var httpEntity = new HttpEntity<>(request);
+        var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(sut.getBody()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE);
     }
 
     private static Stream<Arguments> provideInvalidData() {
