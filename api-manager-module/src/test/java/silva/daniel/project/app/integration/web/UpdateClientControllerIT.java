@@ -73,12 +73,7 @@ class UpdateClientControllerIT extends MysqlTestContainer implements Integration
     @Test
     void editClient_WithCpfDeactivated_ReturnsStatus409() {
         final var request = new EditClientRequest("12345678903", "Ace", "000000000");
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo(CLIENT_ALREADY_DEACTIVATED.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(CLIENT_ALREADY_DEACTIVATED.getStatusCode());
+        requestCommons.assertPutRequest("/clients", request, FailureResponse.class, this::assertClientAlreadyDeactivatedExists);
     }
 
     private static Stream<Arguments> provideInvalidData() {
