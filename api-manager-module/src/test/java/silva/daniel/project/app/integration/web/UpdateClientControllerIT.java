@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import silva.daniel.project.app.commons.FailureMessageEnum;
 import silva.daniel.project.app.commons.MysqlTestContainer;
 import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
 import silva.daniel.project.app.domain.client.request.EditClientRequest;
@@ -22,6 +23,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -57,8 +59,8 @@ class UpdateClientControllerIT extends MysqlTestContainer {
         var sut = restTemplate.exchange("/clients", HttpMethod.PUT, httpEntity, FailureResponse.class);
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
         assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Information is not valid");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(406);
+        assertThat(sut.getBody().getMessage()).isEqualTo(INVALID_DATA_MESSAGE.getMessage());
+        assertThat(sut.getBody().getStatusCode()).isEqualTo(INVALID_DATA_MESSAGE.getStatusCode());
 
     }
 
