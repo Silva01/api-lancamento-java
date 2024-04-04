@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import silva.daniel.project.app.commons.IntegrationAssertCommons;
 import silva.daniel.project.app.commons.MysqlTestContainer;
 import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
@@ -30,7 +31,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_M
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
-class UpdateAddressControllerIT extends MysqlTestContainer {
+class UpdateAddressControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -62,11 +63,7 @@ class UpdateAddressControllerIT extends MysqlTestContainer {
     void editClient_WithInvalidData_ReturnsStatus406(AddressRequest request) {
         final var httpEntity = new HttpEntity<>(request);
         var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo(INVALID_DATA_MESSAGE.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(INVALID_DATA_MESSAGE.getStatusCode());
-
+        assertFailureApi(sut, INVALID_DATA_MESSAGE);
     }
 
     @Test
