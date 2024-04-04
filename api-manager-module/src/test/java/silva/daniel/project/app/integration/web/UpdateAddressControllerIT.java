@@ -1,5 +1,7 @@
 package silva.daniel.project.app.integration.web;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,6 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import silva.daniel.project.app.commons.IntegrationAssertCommons;
 import silva.daniel.project.app.commons.MysqlTestContainer;
+import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
 import silva.daniel.project.app.domain.client.request.AddressRequest;
@@ -34,6 +37,9 @@ class UpdateAddressControllerIT extends MysqlTestContainer implements Integratio
 
     @Autowired
     private ClientRepository repository;
+
+    @Autowired
+    private RequestIntegrationCommons requestCommons;
 
     @Test
     void editClient_WithValidData_Returns201AndAccountData() {
@@ -57,9 +63,7 @@ class UpdateAddressControllerIT extends MysqlTestContainer implements Integratio
     @ParameterizedTest
     @MethodSource("provideAddressRequestInvalidData")
     void editClient_WithInvalidData_ReturnsStatus406(AddressRequest request) {
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertInvalidData(sut);
+        requestCommons.assertPutRequest("/clients/address", request, FailureResponse.class, this::assertInvalidData);
     }
 
     @Test
