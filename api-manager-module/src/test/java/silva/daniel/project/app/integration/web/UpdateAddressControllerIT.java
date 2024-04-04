@@ -1,7 +1,5 @@
 package silva.daniel.project.app.integration.web;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -77,9 +75,7 @@ class UpdateAddressControllerIT extends MysqlTestContainer implements Integratio
     @Test
     void editClient_WithCpfDeactivated_ReturnsStatus409() {
         var request = new AddressRequest("12345678903", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertClientAlreadyDeactivatedExists(sut);
+        requestCommons.assertPutRequest(ADDRESS_PATH, request, FailureResponse.class, this::assertClientAlreadyDeactivatedExists);
     }
 
     private static Stream<Arguments> provideAddressRequestInvalidData() {
