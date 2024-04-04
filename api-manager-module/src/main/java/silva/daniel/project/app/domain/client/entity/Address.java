@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.builder.EqualsBuilder;
 
 @Entity
 @Data
@@ -41,9 +40,4 @@ public class Address {
     @NotNull
     @NotEmpty
     private String zipCode;
-
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
 }
