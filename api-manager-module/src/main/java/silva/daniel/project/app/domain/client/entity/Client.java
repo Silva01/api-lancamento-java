@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.builder.EqualsBuilder;
 
 @Entity
 @Data
@@ -38,9 +37,4 @@ public class Client {
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
-
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
 }
