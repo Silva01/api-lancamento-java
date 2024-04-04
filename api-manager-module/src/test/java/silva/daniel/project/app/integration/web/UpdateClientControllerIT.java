@@ -67,12 +67,7 @@ class UpdateClientControllerIT extends MysqlTestContainer implements Integration
     @Test
     void editClient_WithCpfNotExists_ReturnsStatus404() {
         final var request = new EditClientRequest("12345600000", "Ace", "000000000");
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getStatusCode());
+        requestCommons.assertPutRequest("/clients", request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
