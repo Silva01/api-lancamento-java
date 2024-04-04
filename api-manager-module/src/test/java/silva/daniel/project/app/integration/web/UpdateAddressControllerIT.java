@@ -71,10 +71,7 @@ class UpdateAddressControllerIT extends MysqlTestContainer implements Integratio
         var request = new AddressRequest("12345600000", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
         final var httpEntity = new HttpEntity<>(request);
         var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getStatusCode());
+        assertClientNotExists(sut);
     }
 
     @Test
