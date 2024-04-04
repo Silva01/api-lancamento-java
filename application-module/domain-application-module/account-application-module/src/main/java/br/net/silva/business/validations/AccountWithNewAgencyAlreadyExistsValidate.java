@@ -18,7 +18,12 @@ public class AccountWithNewAgencyAlreadyExistsValidate implements IValidations {
     @Override
     public void validate(Source input) throws GenericException {
         var changeAgencyInput = (ChangeAgencyInput) input.input();
-        var optionalAccount = findAccountGateway.findById(changeAgencyInput);
+        var inputNewAgency = new ChangeAgencyInput(
+                changeAgencyInput.cpf(),
+                changeAgencyInput.accountNumber(),
+                changeAgencyInput.newAgencyNumber(),
+                changeAgencyInput.oldAgencyNumber());
+        var optionalAccount = findAccountGateway.findById(inputNewAgency);
 
         if (optionalAccount.isPresent())
             throw new GenericException("Account with new agency already exists");
