@@ -32,6 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 class UpdateAddressControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
 
+    public static final String ADDRESS_PATH = "/clients/address";
+
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -63,15 +65,13 @@ class UpdateAddressControllerIT extends MysqlTestContainer implements Integratio
     @ParameterizedTest
     @MethodSource("provideAddressRequestInvalidData")
     void editClient_WithInvalidData_ReturnsStatus406(AddressRequest request) {
-        requestCommons.assertPutRequest("/clients/address", request, FailureResponse.class, this::assertInvalidData);
+        requestCommons.assertPutRequest(ADDRESS_PATH, request, FailureResponse.class, this::assertInvalidData);
     }
 
     @Test
     void editClient_WithCpfNotExists_ReturnsStatus404() {
         var request = new AddressRequest("12345600000", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertClientNotExists(sut);
+        requestCommons.assertPutRequest(ADDRESS_PATH, request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
