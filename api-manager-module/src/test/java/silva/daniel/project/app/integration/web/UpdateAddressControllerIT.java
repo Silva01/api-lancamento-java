@@ -22,10 +22,6 @@ import silva.daniel.project.app.domain.client.request.AddressRequest;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
-import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
-import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -79,10 +75,7 @@ class UpdateAddressControllerIT extends MysqlTestContainer implements Integratio
         var request = new AddressRequest("12345678903", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
         final var httpEntity = new HttpEntity<>(request);
         var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo(CLIENT_ALREADY_DEACTIVATED.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(CLIENT_ALREADY_DEACTIVATED.getStatusCode());
+        assertClientAlreadyDeactivatedExists(sut);
     }
 
     private static Stream<Arguments> provideAddressRequestInvalidData() {
