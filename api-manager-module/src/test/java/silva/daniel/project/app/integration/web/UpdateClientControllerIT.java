@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
@@ -83,8 +84,8 @@ class UpdateClientControllerIT extends MysqlTestContainer {
         var sut = restTemplate.exchange("/clients", HttpMethod.PUT, httpEntity, FailureResponse.class);
         assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
         assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client already deactivated");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(409);
+        assertThat(sut.getBody().getMessage()).isEqualTo(CLIENT_ALREADY_DEACTIVATED.getMessage());
+        assertThat(sut.getBody().getStatusCode()).isEqualTo(CLIENT_ALREADY_DEACTIVATED.getStatusCode());
     }
 
     private static Stream<Arguments> provideInvalidData() {
