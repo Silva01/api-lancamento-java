@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import silva.daniel.project.app.commons.FailureMessageEnum;
 import silva.daniel.project.app.commons.MysqlTestContainer;
 import silva.daniel.project.app.domain.account.entity.AccountKey;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
@@ -24,6 +23,7 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
@@ -67,6 +67,15 @@ class EditAgencyOfAccountControllerIT extends MysqlTestContainer {
         var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(sut.getBody()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE);
+    }
+
+    @Test
+    void editAgencyOfAccount_WithAccountNotExists_ReturnsStatus404() {
+        final var request = new EditAgencyOfAccountRequest("12345678901", 9999, 1, 2);
+        var httpEntity = new HttpEntity<>(request);
+        var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(sut.getBody()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE);
     }
 
     private static Stream<Arguments> provideInvalidData() {
