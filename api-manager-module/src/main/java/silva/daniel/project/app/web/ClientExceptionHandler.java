@@ -1,6 +1,7 @@
 package silva.daniel.project.app.web;
 
 
+import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.CreditCardAlreadyExistsException;
@@ -83,6 +84,12 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ClientDeactivatedException.class)
     public ResponseEntity<FailureResponse> handleAccountDeactivatedException(ClientDeactivatedException ex) {
+        var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
+        return ResponseEntity.status(CONFLICT).body(failureResponse);
+    }
+
+    @ExceptionHandler(AccountAlreadyExistsForNewAgencyException.class)
+    public ResponseEntity<FailureResponse> handleAccountAlreadyExistsForNewAgencyException(AccountAlreadyExistsForNewAgencyException ex) {
         var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
     }

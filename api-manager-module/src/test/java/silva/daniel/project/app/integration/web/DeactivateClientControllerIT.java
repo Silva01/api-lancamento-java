@@ -8,10 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import silva.daniel.project.app.commons.IntegrationAssertCommons;
 import silva.daniel.project.app.commons.MysqlTestContainer;
+import silva.daniel.project.app.commons.RequestIntegrationCommons;
+import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
 import silva.daniel.project.app.domain.client.request.DeactivateClient;
-import silva.daniel.project.app.domain.client.FailureResponse;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,13 +23,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
-class DeactivateClientControllerIT extends MysqlTestContainer {
+class DeactivateClientControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
     private ClientRepository repository;
+
+    @Autowired
+    private RequestIntegrationCommons requestCommons;
 
     @Test
     void deactivateClient_WithValidData_ReturnsStatus200() {
@@ -51,38 +58,19 @@ class DeactivateClientControllerIT extends MysqlTestContainer {
 
     @Test
     void deactivateClient_WithInvalidData_ReturnsStatus406() {
-        final var requestEmpty = new DeactivateClient("");
-        var sutEmpty = restTemplate.postForEntity("/clients/deactivate", requestEmpty, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Information is not valid");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
-
-        final var requestNull = new DeactivateClient(null);
-        var sutNull = restTemplate.postForEntity("/clients/deactivate", requestNull, Void.class);
-        assertThat(sutNull.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Information is not valid");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
+        Stream.of(new DeactivateClient(""), new DeactivateClient(null))
+                .forEach(request -> requestCommons.assertPostRequest("/clients/deactivate", request, FailureResponse.class, this::assertInvalidData));
     }
 
     @Test
     void deactivateClient_WithNoExistsClient_ReturnsStatus404() {
         final var request = new DeactivateClient("00000000000");
-        var sutEmpty = restTemplate.postForEntity("/clients/deactivate", request, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Client not exists in database");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        requestCommons.assertPostRequest("/clients/deactivate", request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
     void deactivateClient_WithAlreadyDeactivatedClient_ReturnsStatus406() {
         final var request = new DeactivateClient("12345678903");
-        var sutEmpty = restTemplate.postForEntity("/clients/deactivate", request, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Client already deactivated");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        requestCommons.assertPostRequest("/clients/deactivate", request, FailureResponse.class, this::assertClientAlreadyDeactivatedExists);
     }
 }

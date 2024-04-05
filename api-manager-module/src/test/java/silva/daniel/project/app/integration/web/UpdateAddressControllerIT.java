@@ -13,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import silva.daniel.project.app.commons.IntegrationAssertCommons;
 import silva.daniel.project.app.commons.MysqlTestContainer;
+import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
 import silva.daniel.project.app.domain.client.request.AddressRequest;
@@ -21,19 +23,23 @@ import silva.daniel.project.app.domain.client.request.AddressRequest;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpStatus.CONFLICT;
 
 @ActiveProfiles("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
-class UpdateAddressControllerIT extends MysqlTestContainer {
+class UpdateAddressControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
+
+    public static final String ADDRESS_PATH = "/clients/address";
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
     private ClientRepository repository;
+
+    @Autowired
+    private RequestIntegrationCommons requestCommons;
 
     @Test
     void editClient_WithValidData_Returns201AndAccountData() {
@@ -57,35 +63,19 @@ class UpdateAddressControllerIT extends MysqlTestContainer {
     @ParameterizedTest
     @MethodSource("provideAddressRequestInvalidData")
     void editClient_WithInvalidData_ReturnsStatus406(AddressRequest request) {
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Information is not valid");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(406);
-
+        requestCommons.assertPutRequest(ADDRESS_PATH, request, FailureResponse.class, this::assertInvalidData);
     }
 
     @Test
     void editClient_WithCpfNotExists_ReturnsStatus404() {
         var request = new AddressRequest("12345600000", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client not exists in database");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(404);
+        requestCommons.assertPutRequest(ADDRESS_PATH, request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
     void editClient_WithCpfDeactivated_ReturnsStatus409() {
         var request = new AddressRequest("12345678903", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients/address", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client already deactivated");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(409);
+        requestCommons.assertPutRequest(ADDRESS_PATH, request, FailureResponse.class, this::assertClientAlreadyDeactivatedExists);
     }
 
     private static Stream<Arguments> provideAddressRequestInvalidData() {

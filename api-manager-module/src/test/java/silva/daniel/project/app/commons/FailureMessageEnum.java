@@ -9,7 +9,9 @@ public class FailureMessageEnum {
     public static final FailureResponse CLIENT_ALREADY_DEACTIVATED = new FailureResponse("Client already deactivated", HttpStatus.CONFLICT.value());
     public static final FailureResponse CLIENT_DEACTIVATED = new FailureResponse("Client is Deactivated", HttpStatus.CONFLICT.value());
     public static final FailureResponse CLIENT_ALREADY_EXISTS = new FailureResponse("Client already exists in database", HttpStatus.CONFLICT.value());
+    public static final FailureResponse CLIENT_ALREADY_ACTIVATED = new FailureResponse("Client already activated", HttpStatus.CONFLICT.value());
     public static final FailureResponse ACCOUNT_NOT_FOUND_MESSAGE = new FailureResponse("Account not Found", HttpStatus.NOT_FOUND.value());
+    public static final FailureResponse ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE = new FailureResponse("Account With new agency already exists", HttpStatus.CONFLICT.value());
     public static final FailureResponse ACCOUNT_ALREADY_DEACTIVATED_MESSAGE = new FailureResponse("Account is Deactivated", HttpStatus.CONFLICT.value());
     public static final FailureResponse CREDIT_CARD_NOT_FOUND_MESSAGE = new FailureResponse("Credit card not exists in the account", HttpStatus.NOT_FOUND.value());
     public static final FailureResponse CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE = new FailureResponse("Credit card deactivated in the account", HttpStatus.CONFLICT.value());

@@ -14,9 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import silva.daniel.project.app.commons.IntegrationAssertCommons;
 import silva.daniel.project.app.commons.MysqlTestContainer;
-import silva.daniel.project.app.domain.client.request.ClientRequest;
+import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.client.FailureResponse;
+import silva.daniel.project.app.domain.client.request.ClientRequest;
 
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -28,10 +30,13 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
-class CreateClientControllerIT extends MysqlTestContainer {
+class CreateClientControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private RequestIntegrationCommons requestCommons;
 
     @Test
     void createClient_WithValidData_Returns201AndAccountData() {
@@ -56,11 +61,7 @@ class CreateClientControllerIT extends MysqlTestContainer {
     @ParameterizedTest
     @MethodSource("provideInvalidData")
     void createClient_WithInvalidData_ReturnsStatus406(ClientRequest request) {
-        var sut = restTemplate.postForEntity("/clients", request, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Information is not valid");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(406);
+        requestCommons.assertPostRequest("/clients", request, FailureResponse.class, this::assertInvalidData);
     }
 
     @Test
@@ -75,11 +76,7 @@ class CreateClientControllerIT extends MysqlTestContainer {
                 new AddressRequestDTO("Rua 1", "123", "Casa", "Bairro", "SP", "Cidade", "12345678")
         );
 
-        var sut = restTemplate.postForEntity("/clients", request, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client exists in database");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(409);
+        requestCommons.assertPostRequest("/clients", request, FailureResponse.class, this::assertClientAlreadyExists);
     }
 
     @Test
@@ -94,11 +91,7 @@ class CreateClientControllerIT extends MysqlTestContainer {
                 new AddressRequestDTO("Rua 1", "123", "Casa", "Bairro", "SP", "Cidade", "12345678")
         );
 
-        var sut = restTemplate.postForEntity("/clients", request, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client exists in database");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(409);
+        requestCommons.assertPostRequest("/clients", request, FailureResponse.class, this::assertClientAlreadyExists);
     }
 
     private static Stream<Arguments> provideInvalidData() {
