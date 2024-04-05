@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
-import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 
 @ActiveProfiles("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -70,11 +69,7 @@ class EditAgencyOfAccountControllerIT extends MysqlTestContainer implements Inte
     @Test
     void editAgencyOfAccount_WithAccountNotExists_ReturnsStatus404() {
         final var request = new EditAgencyOfAccountRequest("12345678901", 9999, 1, 2);
-        var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sut.getBody().getMessage()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getStatusCode());
+        requestCommons.assertPutRequest("/api/account/update/agency", request, FailureResponse.class, this::assertAccountNotExists);
     }
 
     @Test
