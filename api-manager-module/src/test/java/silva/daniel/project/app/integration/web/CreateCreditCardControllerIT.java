@@ -22,9 +22,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
-import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_EXISTS_MESSAGE;
 
 @ActiveProfiles("e2e")
@@ -75,10 +73,7 @@ class CreateCreditCardControllerIT extends MysqlTestContainer implements Integra
     @Test
     void createCreditCard_WithAccountNotExists_ReturnsStatus404() {
         var request = new CreateCreditCardRequest("12345678901", 1299, 1);
-        var response = restTemplate.postForEntity("/credit-card", request, FailureResponse.class);
-        assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
-        assertThat(response.getBody().getMessage()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
-        assertThat(response.getBody().getStatusCode()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getStatusCode());
+        requestCommons.assertPostRequest("/credit-card", request, FailureResponse.class, this::assertAccountNotExists);
     }
 
     @Test
