@@ -66,10 +66,7 @@ class DeactivateCreditCardControllerIT extends MysqlTestContainer implements Int
     @Test
     void deactivateCreditCard_WithAccountNotExists_ReturnsStatus404() {
         var request = new DeactivateCreditCardRequest("12345678910", 1220, 33, "1234567890123456");
-        var sut = restTemplate.postForEntity("/credit-card/deactivate", request, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sut.getBody().getMessage()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(ACCOUNT_NOT_FOUND_MESSAGE.getStatusCode());
+        requestCommons.assertPostRequest("/credit-card/deactivate", request, FailureResponse.class, this::assertAccountNotExists);
     }
 
     @Test
