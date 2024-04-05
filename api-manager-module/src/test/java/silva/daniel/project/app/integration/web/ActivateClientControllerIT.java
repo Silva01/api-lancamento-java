@@ -60,10 +60,6 @@ class ActivateClientControllerIT extends MysqlTestContainer implements Integrati
     @Test
     void deactivateClient_WithAlreadyActivatedClient_ReturnsStatus406() {
         final var request = new ActivateClient("12345678904");
-        var sutEmpty = restTemplate.postForEntity("/clients/activate", request, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Client already activated");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        requestCommons.assertPostRequest("/clients/activate", request, FailureResponse.class, this::assertClientActivated);
     }
 }
