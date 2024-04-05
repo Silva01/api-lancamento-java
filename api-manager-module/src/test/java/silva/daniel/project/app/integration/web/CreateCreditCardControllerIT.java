@@ -25,7 +25,6 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
-import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_EXISTS_MESSAGE;
 
 @ActiveProfiles("e2e")
@@ -70,10 +69,7 @@ class CreateCreditCardControllerIT extends MysqlTestContainer implements Integra
     @Test
     void createCreditCard_WithClientDeactivated_ReturnsStatus409() {
         var request = new CreateCreditCardRequest("12345678903", 1234, 1);
-        var response = restTemplate.postForEntity("/credit-card", request, FailureResponse.class);
-        assertThat(response.getStatusCode()).isEqualTo(CONFLICT);
-        assertThat(response.getBody().getMessage()).isEqualTo(CLIENT_DEACTIVATED.getMessage());
-        assertThat(response.getBody().getStatusCode()).isEqualTo(CLIENT_DEACTIVATED.getStatusCode());
+        requestCommons.assertPostRequest("/credit-card", request, FailureResponse.class, this::assertClientDeactivatedExists);
     }
 
     @Test
