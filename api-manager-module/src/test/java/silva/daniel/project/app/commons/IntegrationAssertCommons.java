@@ -9,6 +9,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_EXISTS;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE;
@@ -24,6 +25,10 @@ public interface IntegrationAssertCommons {
 
     default void assertClientNotExists(ResponseEntity<FailureResponse> sut) {
         assertFailureApi(sut, CLIENT_NOT_FOUND_MESSAGE);
+    }
+
+    default void assertClientAlreadyExists(ResponseEntity<FailureResponse> sut) {
+        assertFailureApi(sut, CLIENT_ALREADY_EXISTS);
     }
 
     default void assertAccountNotExists(ResponseEntity<FailureResponse> sut) {
