@@ -65,11 +65,7 @@ class DeactivateClientControllerIT extends MysqlTestContainer implements Integra
     @Test
     void deactivateClient_WithNoExistsClient_ReturnsStatus404() {
         final var request = new DeactivateClient("00000000000");
-        var sutEmpty = restTemplate.postForEntity("/clients/deactivate", request, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Client not exists in database");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        requestCommons.assertPostRequest("/clients/deactivate", request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
