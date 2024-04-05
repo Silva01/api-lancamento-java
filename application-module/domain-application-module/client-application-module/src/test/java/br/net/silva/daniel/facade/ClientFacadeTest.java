@@ -97,7 +97,7 @@ class ClientFacadeTest {
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
 
         var exception = assertThrows(GenericException.class, () -> clientFacade.exec(source));
-        assertEquals("Client exists in database", exception.getMessage());
+        assertEquals("Client already exists in database", exception.getMessage());
     }
 
     @Test
