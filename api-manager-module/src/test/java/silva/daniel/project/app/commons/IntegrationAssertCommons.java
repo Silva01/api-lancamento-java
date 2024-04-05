@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import silva.daniel.project.app.domain.client.FailureResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
@@ -38,6 +39,10 @@ public interface IntegrationAssertCommons {
 
     default void assertAccountAlreadyWithNewAgencyNumber(ResponseEntity<FailureResponse> sut) {
         assertFailureApi(sut, ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE);
+    }
+
+    default void assertAccountAlreadyDeactivated(ResponseEntity<FailureResponse> sut) {
+        assertFailureApi(sut, ACCOUNT_ALREADY_DEACTIVATED_MESSAGE);
     }
 
     default void assertCreditCardNotExists(ResponseEntity<FailureResponse> sut) {
