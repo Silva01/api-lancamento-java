@@ -21,7 +21,6 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE;
 
 @ActiveProfiles("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -76,10 +75,7 @@ class DeactivateCreditCardControllerIT extends MysqlTestContainer implements Int
     @Test
     void deactivateCreditCard_WithCreditCardAlreadyDeactivated_ReturnsStatus409() {
         var request = new DeactivateCreditCardRequest("12345678911", 1238, 1, "1234567890123457");
-        var sut = restTemplate.postForEntity("/credit-card/deactivate", request, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(sut.getBody().getMessage()).isEqualTo(CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE.getStatusCode());
+        requestCommons.assertPostRequest("/credit-card/deactivate", request, FailureResponse.class, this::assertCredicCardAlreadyDeactivated);
     }
 
     private static Stream<Arguments> provideInvalidData() {
