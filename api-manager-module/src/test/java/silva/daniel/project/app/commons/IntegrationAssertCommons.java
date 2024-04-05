@@ -12,6 +12,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_EXISTS_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
@@ -51,6 +52,10 @@ public interface IntegrationAssertCommons {
 
     default void assertCredicCardAlreadyDeactivated(ResponseEntity<FailureResponse> sut) {
         assertFailureApi(sut, CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE);
+    }
+
+    default void assertCredicCardAlreadyExists(ResponseEntity<FailureResponse> sut) {
+        assertFailureApi(sut, CREDIT_CARD_ALREADY_EXISTS_MESSAGE);
     }
 
     default void assertFailureApi(ResponseEntity<FailureResponse> sut, FailureResponse expected) {
