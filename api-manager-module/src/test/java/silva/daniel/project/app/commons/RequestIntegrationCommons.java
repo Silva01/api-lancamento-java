@@ -26,8 +26,16 @@ public final class RequestIntegrationCommons {
         assertFunction.accept(request(url, HttpMethod.POST, pRequest, response));
     }
 
+    public void assertGetRequest(String url, Class<?> response, Consumer<ResponseEntity<?>> assertFunction, Object... params) {
+        assertFunction.accept(getRequest(url, response, params));
+    }
+
     private ResponseEntity<?> request(String url, HttpMethod method, Object request, Class<?> response) {
         var httpEntity = new HttpEntity<>(request);
         return restTemplate.exchange(url, method, httpEntity, response);
+    }
+
+    private ResponseEntity<?> getRequest(String url, Class<?> response, Object... params) {
+        return restTemplate.getForEntity(url, response, params);
     }
 }
