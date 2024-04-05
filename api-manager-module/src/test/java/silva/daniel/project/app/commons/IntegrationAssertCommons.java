@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
@@ -29,6 +30,10 @@ public interface IntegrationAssertCommons {
 
     default void assertClientAlreadyDeactivatedExists(ResponseEntity<FailureResponse> sut) {
         assertFailureApi(sut, CLIENT_ALREADY_DEACTIVATED);
+    }
+
+    default void assertClientDeactivatedExists(ResponseEntity<FailureResponse> sut) {
+        assertFailureApi(sut, CLIENT_DEACTIVATED);
     }
 
     default void assertAccountAlreadyWithNewAgencyNumber(ResponseEntity<FailureResponse> sut) {
