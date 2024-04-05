@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_ACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_EXISTS;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
@@ -31,16 +32,20 @@ public interface IntegrationAssertCommons {
         assertFailureApi(sut, CLIENT_ALREADY_EXISTS);
     }
 
-    default void assertAccountNotExists(ResponseEntity<FailureResponse> sut) {
-        assertFailureApi(sut, ACCOUNT_NOT_FOUND_MESSAGE);
-    }
-
     default void assertClientAlreadyDeactivatedExists(ResponseEntity<FailureResponse> sut) {
         assertFailureApi(sut, CLIENT_ALREADY_DEACTIVATED);
     }
 
     default void assertClientDeactivatedExists(ResponseEntity<FailureResponse> sut) {
         assertFailureApi(sut, CLIENT_DEACTIVATED);
+    }
+
+    default void assertClientActivated(ResponseEntity<FailureResponse> sut) {
+        assertFailureApi(sut, CLIENT_ALREADY_ACTIVATED);
+    }
+
+    default void assertAccountNotExists(ResponseEntity<FailureResponse> sut) {
+        assertFailureApi(sut, ACCOUNT_NOT_FOUND_MESSAGE);
     }
 
     default void assertAccountAlreadyWithNewAgencyNumber(ResponseEntity<FailureResponse> sut) {
