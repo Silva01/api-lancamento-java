@@ -22,12 +22,14 @@ public final class RequestIntegrationCommons {
         assertFunction.accept((ResponseEntity<T>) request(url, HttpMethod.PUT, pRequest, response));
     }
 
-    public void assertPostRequest(String url, Object pRequest, Class<?> response, Consumer<ResponseEntity<?>> assertFunction) {
-        assertFunction.accept(request(url, HttpMethod.POST, pRequest, response));
+    @SuppressWarnings("unchecked")
+    public <T> void assertPostRequest(String url, Object pRequest, Class<?> response, Consumer<ResponseEntity<T>> assertFunction) {
+        assertFunction.accept((ResponseEntity<T>) request(url, HttpMethod.POST, pRequest, response));
     }
 
-    public void assertGetRequest(String url, Class<?> response, Consumer<ResponseEntity<?>> assertFunction, Object... params) {
-        assertFunction.accept(getRequest(url, response, params));
+    @SuppressWarnings("unchecked")
+    public <T> void assertGetRequest(String url, Class<?> response, Consumer<ResponseEntity<T>> assertFunction, Object... params) {
+        assertFunction.accept((ResponseEntity<T>) getRequest(url, response, params));
     }
 
     private ResponseEntity<?> request(String url, HttpMethod method, Object request, Class<?> response) {
