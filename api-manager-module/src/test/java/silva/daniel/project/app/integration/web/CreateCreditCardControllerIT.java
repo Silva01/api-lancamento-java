@@ -26,7 +26,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
-import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_EXISTS_MESSAGE;
 
 @ActiveProfiles("e2e")
@@ -65,10 +64,7 @@ class CreateCreditCardControllerIT extends MysqlTestContainer implements Integra
     @Test
     void createCreditCard_WithClientNotExists_ReturnsStatus404() {
         var request = new CreateCreditCardRequest("12345678900", 1234, 1);
-        var response = restTemplate.postForEntity("/credit-card", request, FailureResponse.class);
-        assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
-        assertThat(response.getBody().getMessage()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getMessage());
-        assertThat(response.getBody().getStatusCode()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getStatusCode());
+        requestCommons.assertPostRequest("/credit-card", request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
