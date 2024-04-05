@@ -76,11 +76,7 @@ class CreateClientControllerIT extends MysqlTestContainer implements Integration
                 new AddressRequestDTO("Rua 1", "123", "Casa", "Bairro", "SP", "Cidade", "12345678")
         );
 
-        var sut = restTemplate.postForEntity("/clients", request, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client exists in database");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(409);
+        requestCommons.assertPostRequest("/clients", request, FailureResponse.class, this::assertClientAlreadyExists);
     }
 
     @Test
@@ -95,11 +91,7 @@ class CreateClientControllerIT extends MysqlTestContainer implements Integration
                 new AddressRequestDTO("Rua 1", "123", "Casa", "Bairro", "SP", "Cidade", "12345678")
         );
 
-        var sut = restTemplate.postForEntity("/clients", request, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client exists in database");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(409);
+        requestCommons.assertPostRequest("/clients", request, FailureResponse.class, this::assertClientAlreadyExists);
     }
 
     private static Stream<Arguments> provideInvalidData() {
