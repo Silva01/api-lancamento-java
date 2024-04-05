@@ -25,7 +25,6 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 
 @ActiveProfiles("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -75,11 +74,7 @@ class EditAgencyOfAccountControllerIT extends MysqlTestContainer implements Inte
     @Test
     void editAgencyOfAccount_WithNewAgencyAlreadyUsed_ReturnsStatus409() {
         final var request = new EditAgencyOfAccountRequest("12345678901", 1234, 1, 5);
-        var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/api/account/update/agency", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(sut.getBody().getMessage()).isEqualTo(ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE.getStatusCode());
+        requestCommons.assertPutRequest("/api/account/update/agency", request, FailureResponse.class, this::assertAccountAlreadyWithNewAgencyNumber);
     }
 
     private static Stream<Arguments> provideInvalidData() {
