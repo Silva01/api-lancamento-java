@@ -54,11 +54,7 @@ class ActivateClientControllerIT extends MysqlTestContainer implements Integrati
     @Test
     void deactivateClient_WithNoExistsClient_ReturnsStatus404() {
         final var request = new ActivateClient("00000000000");
-        var sutEmpty = restTemplate.postForEntity("/clients/activate", request, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Client not exists in database");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        requestCommons.assertPostRequest("/clients/activate", request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
