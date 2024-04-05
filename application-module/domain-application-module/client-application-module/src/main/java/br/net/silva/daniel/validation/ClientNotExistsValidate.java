@@ -21,7 +21,7 @@ public class ClientNotExistsValidate implements IValidations {
         var optClient = findClientRepository.findById(param);
 
         if (optClient.isPresent()) {
-            throw new ExistsClientRegistredException("Client exists in database");
+            throw new ExistsClientRegistredException("Client already exists in database");
         }
     }
 }
