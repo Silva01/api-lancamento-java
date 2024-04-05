@@ -71,10 +71,6 @@ class DeactivateClientControllerIT extends MysqlTestContainer implements Integra
     @Test
     void deactivateClient_WithAlreadyDeactivatedClient_ReturnsStatus406() {
         final var request = new DeactivateClient("12345678903");
-        var sutEmpty = restTemplate.postForEntity("/clients/deactivate", request, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Client already deactivated");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        requestCommons.assertPostRequest("/clients/deactivate", request, FailureResponse.class, this::assertClientAlreadyDeactivatedExists);
     }
 }
