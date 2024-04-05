@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import silva.daniel.project.app.commons.IntegrationAssertCommons;
 import silva.daniel.project.app.commons.MysqlTestContainer;
+import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.client.FailureResponse;
@@ -20,22 +22,23 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
-import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
-import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
-class DeactivateCreditCardControllerIT extends MysqlTestContainer {
+class DeactivateCreditCardControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
     private AccountRepository repository;
+
+    @Autowired
+    private RequestIntegrationCommons requestCommons;
 
     @Test
     void deactivateCreditCard_WithValidData_ReturnsStatus200() {
@@ -51,19 +54,13 @@ class DeactivateCreditCardControllerIT extends MysqlTestContainer {
     @ParameterizedTest
     @MethodSource("provideInvalidData")
     void deactivateCreditCard_WithInvalidData_ReturnsStatus406(DeactivateCreditCardRequest request) {
-        var sut = restTemplate.postForEntity("/credit-card/deactivate", request, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sut.getBody().getMessage()).isEqualTo(INVALID_DATA_MESSAGE.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(INVALID_DATA_MESSAGE.getStatusCode());
+        requestCommons.assertPostRequest("/credit-card/deactivate", request, FailureResponse.class, this::assertInvalidData);
     }
 
     @Test
     void deactivateCreditCard_WithClientNotExists_ReturnsStatus404() {
         var request = new DeactivateCreditCardRequest("12345678999", 1237, 1, "1234567890123456");
-        var sut = restTemplate.postForEntity("/credit-card/deactivate", request, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sut.getBody().getMessage()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getMessage());
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(CLIENT_NOT_FOUND_MESSAGE.getStatusCode());
+        requestCommons.assertPostRequest("/credit-card/deactivate", request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
