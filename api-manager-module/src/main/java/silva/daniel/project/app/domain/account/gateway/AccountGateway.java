@@ -73,18 +73,4 @@ public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
     public void saveAll(List<AccountOutput> paramList) {
 
     }
-
-    private CreditCardOutput buildCreditCard(CreditCard creditCard) {
-        if (creditCard == null) {
-            return null;
-        }
-
-        return new CreditCardOutput(
-                creditCard.getNumber(),
-                creditCard.getCvv(),
-                creditCard.getFlag(),
-                creditCard.getBalance(),
-                creditCard.getExpirationDate(),
-                creditCard.isActive());
-    }
 }
