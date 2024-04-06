@@ -100,6 +100,15 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThat(response.getStatus()).isEqualTo(ACTIVE);
         assertThat(response.getBalance()).isEqualTo(BigDecimal.valueOf(1000));
         assertThat(response.isHaveCreditCard()).isTrue();
+    }
 
+    @Test
+    void getInformationAccount_WithCpfNotExists_ReturnsException() throws Exception {
+        when(fluxService.fluxGetAccountByCpf()).thenReturn(facade);
+        doThrow(new AccountNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.getAccountByCpf(new GetInformationAccountInput("12345678901")))
+                .isInstanceOf(AccountNotExistsException.class)
+                .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
     }
 }
