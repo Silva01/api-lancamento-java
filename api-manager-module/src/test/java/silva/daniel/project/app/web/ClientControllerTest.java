@@ -227,9 +227,7 @@ class ClientControllerTest {
     @Test
     void getClient_WithClientNotExists_ReturnsStatus404() throws Exception {
         when(service.getClientByCpf("00099988877")).thenThrow(new ClientNotExistsException("Client not exists in database"));
-        getClientTestPrepare.failureGetAssert(new Object[]{"00099988877"}, status().isNotFound(),
-                jsonPath("$.message").value(CLIENT_NOT_FOUND_MESSAGE.getMessage()),
-                jsonPath("$.statusCode").value(CLIENT_NOT_FOUND_MESSAGE.getStatusCode()));
+        getClientTestPrepare.failureGetAssert(new Object[]{"00099988877"}, CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private NewAccountByNewClientResponseSuccess mockResponse() {
