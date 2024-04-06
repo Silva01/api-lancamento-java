@@ -111,4 +111,14 @@ class AccountServiceTest implements InputBuilderCommons {
                 .isInstanceOf(AccountNotExistsException.class)
                 .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
     }
+
+    @Test
+    void getInformationAccount_WithAccountNotExists_ReturnsException() throws Exception {
+        when(fluxService.fluxGetAccountByCpf()).thenReturn(facade);
+        doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.getAccountByCpf(new GetInformationAccountInput("12345678901")))
+                .isInstanceOf(AccountNotExistsException.class)
+                .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
+    }
 }
