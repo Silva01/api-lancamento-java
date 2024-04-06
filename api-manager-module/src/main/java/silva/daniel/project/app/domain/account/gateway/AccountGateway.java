@@ -1,7 +1,6 @@
 package silva.daniel.project.app.domain.account.gateway;
 
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.IAccountParam;
@@ -14,7 +13,6 @@ import silva.daniel.project.app.domain.account.mapper.AccountMapper;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
