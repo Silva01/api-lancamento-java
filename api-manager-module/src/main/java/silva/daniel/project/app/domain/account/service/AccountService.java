@@ -21,7 +21,8 @@ public class AccountService {
     }
 
     public GetInformationAccountOutput getAccountByCpf(final GetInformationAccountInput input) throws Exception {
-        //TODO: Will be implemented
-        return null;
+        var source = new Source(new GetInformationAccountOutput(), input);
+        fluxService.fluxGetAccountByCpf().exec(source);
+        return ((GetInformationAccountOutput) source.output());
     }
 }
