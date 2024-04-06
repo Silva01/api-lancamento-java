@@ -66,7 +66,7 @@ public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
 
         var account = new Account(key, entity.balance(), entity.password(), entity.active(), entity.cpf(), creditCard, null, LocalDateTime.now());
         var newAccount = repository.save(account);
-        return new AccountOutput(newAccount.getKeys().getNumber(), newAccount.getKeys().getBankAgencyNumber(), newAccount.getBalance(), newAccount.getPassword(), newAccount.isActive(), newAccount.getCpf(), null, Collections.emptyList());
+        return AccountMapper.toOutput(newAccount);
     }
 
     @Override
