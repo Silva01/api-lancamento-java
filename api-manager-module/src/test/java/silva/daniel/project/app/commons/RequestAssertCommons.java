@@ -59,8 +59,10 @@ public abstract class RequestAssertCommons {
         successRequest(get(url(), parameters), statusMatcher);
     }
 
-    public void failureGetAssert(Object[] objects, ResultMatcher... matchers) throws Exception {
-        successRequest(get(url(), objects), matchers);
+    public void failureGetAssert(Object[] objects, FailureResponse response, ResultMatcher statusMatcher) throws Exception {
+        successRequest(get(url(), objects), statusMatcher,
+                       jsonPath("$.message").value(response.getMessage()),
+                       jsonPath("$.statusCode").value(response.getStatusCode()));
     }
 
     private void successRequest(final RequestBuilder requestBuilder, ResultMatcher... statusMatcher) throws Exception {
