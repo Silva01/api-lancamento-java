@@ -96,6 +96,12 @@ class AccountControllerTest implements RequestBuilderCommons {
         );
     }
 
+    @Test
+    void getInformationAccount_WithCpfNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).getAccountByCpf(any(GetInformationAccountInput.class));
+        getInformationAccountTestPrepare.failureGetAssert(new Object[]{"1234"}, CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
