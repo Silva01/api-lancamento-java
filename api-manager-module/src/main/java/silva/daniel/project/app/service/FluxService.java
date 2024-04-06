@@ -10,6 +10,7 @@ import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.usecase.DeactivateCreditCardUseCase;
+import br.net.silva.business.usecase.GetInformationAccountUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.build.ClientExistsAndActivatedValidateBuilder;
 import br.net.silva.daniel.build.ClientExistsAndDeactivatedValidateBuilder;
@@ -19,6 +20,7 @@ import br.net.silva.daniel.shared.application.build.FacadeBuilder;
 import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
 import br.net.silva.daniel.shared.application.build.ValidationBuilder;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
@@ -171,5 +173,19 @@ public class FluxService {
                                 .withRepository(accountBaseRepository)
                 )
                 .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxGetAccountByCpf() throws Exception {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, GetInformationAccountUseCase.class)
+                ).withBuilderValidations(
+                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
+                                .withRepository(clientBaseRepository),
+                        ValidationBuilder.create(AccountExistsValidationBuilder.class)
+                                .withRepository(accountBaseRepository)
+                ).build();
     }
 }
