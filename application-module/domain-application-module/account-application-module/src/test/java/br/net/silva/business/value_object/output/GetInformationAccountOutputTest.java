@@ -21,7 +21,7 @@ class GetInformationAccountOutputTest {
         // Set values using setters
         output.setAgency(123);
         output.setAccountNumber(456);
-        output.setStatus(AccountStatusEnum.ACTIVE);
+        output.setStatus(AccountStatusEnum.ACTIVE.name());
         output.setBalance(new BigDecimal("1000.00"));
         output.setHaveCreditCard(true);
 

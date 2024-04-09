@@ -87,7 +87,7 @@ class AccountServiceTest implements InputBuilderCommons {
             var source = ((Source) argumentsOnMock.getArgument(0));
             ((GetInformationAccountOutput) source.output()).setAccountNumber(123456);
             ((GetInformationAccountOutput) source.output()).setAgency(1234);
-            ((GetInformationAccountOutput) source.output()).setStatus(ACTIVE);
+            ((GetInformationAccountOutput) source.output()).setStatus(ACTIVE.name());
             ((GetInformationAccountOutput) source.output()).setBalance(BigDecimal.valueOf(1000));
             ((GetInformationAccountOutput) source.output()).setHaveCreditCard(true);
             return null;

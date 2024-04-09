@@ -16,7 +16,7 @@ public interface ResponseBuilderCommons {
         mock.setAccountNumber(1234);
         mock.setAgency(1);
         mock.setBalance(BigDecimal.valueOf(1000));
-        mock.setStatus(ACTIVE);
+        mock.setStatus(ACTIVE.name());
         mock.setTransactions(List.of(
                 new TransactionDTO(
                         1L,
