@@ -20,7 +20,6 @@ import br.net.silva.daniel.shared.application.build.FacadeBuilder;
 import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
 import br.net.silva.daniel.shared.application.build.ValidationBuilder;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
-import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
@@ -181,11 +180,6 @@ public class FluxService {
                 .make()
                 .withBuilderUseCases(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, GetInformationAccountUseCase.class)
-                ).withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository),
-                        ValidationBuilder.create(AccountExistsValidationBuilder.class)
-                                .withRepository(accountBaseRepository)
-                ).build();
+                ).withBuilderValidations().build();
     }
 }
