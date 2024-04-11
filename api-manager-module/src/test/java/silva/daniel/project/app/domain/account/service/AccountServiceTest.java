@@ -97,7 +97,7 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThat(response).isNotNull();
         assertThat(response.getAccountNumber()).isEqualTo(123456);
         assertThat(response.getAgency()).isEqualTo(1234);
-        assertThat(response.getStatus()).isEqualTo(ACTIVE);
+        assertThat(response.getStatus()).isEqualTo(ACTIVE.name());
         assertThat(response.getBalance()).isEqualTo(BigDecimal.valueOf(1000));
         assertThat(response.isHaveCreditCard()).isTrue();
     }
