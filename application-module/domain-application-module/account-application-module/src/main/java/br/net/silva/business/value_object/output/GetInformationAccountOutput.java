@@ -12,7 +12,7 @@ import java.util.List;
 public class GetInformationAccountOutput implements Output {
     private Integer agency;
     private Integer accountNumber;
-    private AccountStatusEnum status;
+    private String status;
     private BigDecimal balance;
     private boolean isHaveCreditCard;
     private List<TransactionDTO> transactions;

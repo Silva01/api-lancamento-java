@@ -7,6 +7,7 @@ import silva.daniel.project.app.web.CreditCardController;
 import silva.daniel.project.app.web.account.CreateCreditCardPrepare;
 import silva.daniel.project.app.web.account.DeactivateCreditCardPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
+import silva.daniel.project.app.web.client.GetInformationAccountTestPrepare;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,7 +18,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @WebMvcTest(AccountController.class)
 @Import({
-        EditAgencyOfAccountPrepare.class
+        EditAgencyOfAccountPrepare.class,
+        GetInformationAccountTestPrepare.class
 })
 public @interface EnableAccountPrepare {
 }

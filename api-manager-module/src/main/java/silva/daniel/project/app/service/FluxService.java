@@ -10,6 +10,7 @@ import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.usecase.DeactivateCreditCardUseCase;
+import br.net.silva.business.usecase.GetInformationAccountUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.build.ClientExistsAndActivatedValidateBuilder;
 import br.net.silva.daniel.build.ClientExistsAndDeactivatedValidateBuilder;
@@ -171,5 +172,14 @@ public class FluxService {
                                 .withRepository(accountBaseRepository)
                 )
                 .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxGetAccountByCpf() throws Exception {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, GetInformationAccountUseCase.class)
+                ).withBuilderValidations().build();
     }
 }

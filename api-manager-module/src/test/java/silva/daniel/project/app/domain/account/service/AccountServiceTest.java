@@ -2,6 +2,8 @@ package silva.daniel.project.app.domain.account.service;
 
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.value_object.input.GetInformationAccountInput;
+import br.net.silva.business.value_object.output.GetInformationAccountOutput;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
@@ -13,6 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import silva.daniel.project.app.commons.InputBuilderCommons;
 import silva.daniel.project.app.service.FluxService;
 
+import java.math.BigDecimal;
+
+import static br.net.silva.business.enums.AccountStatusEnum.ACTIVE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -72,5 +78,47 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.editAgencyOfAccount(buildNewBaseChangeAgencyInput()))
                 .isInstanceOf(AccountAlreadyExistsForNewAgencyException.class)
                 .hasMessage(ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE.getMessage());
+    }
+
+    @Test
+    void getInformationAccount_WithCpfValid_ReturnsSuccessAndAccountData() throws Exception {
+        when(fluxService.fluxGetAccountByCpf()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> {
+            var source = ((Source) argumentsOnMock.getArgument(0));
+            ((GetInformationAccountOutput) source.output()).setAccountNumber(123456);
+            ((GetInformationAccountOutput) source.output()).setAgency(1234);
+            ((GetInformationAccountOutput) source.output()).setStatus(ACTIVE.name());
+            ((GetInformationAccountOutput) source.output()).setBalance(BigDecimal.valueOf(1000));
+            ((GetInformationAccountOutput) source.output()).setHaveCreditCard(true);
+            return null;
+        }).when(facade).exec(any(Source.class));
+
+        final var response = service.getAccountByCpf(new GetInformationAccountInput("12345678901"));
+        assertThat(response).isNotNull();
+        assertThat(response.getAccountNumber()).isEqualTo(123456);
+        assertThat(response.getAgency()).isEqualTo(1234);
+        assertThat(response.getStatus()).isEqualTo(ACTIVE.name());
+        assertThat(response.getBalance()).isEqualTo(BigDecimal.valueOf(1000));
+        assertThat(response.isHaveCreditCard()).isTrue();
+    }
+
+    @Test
+    void getInformationAccount_WithCpfNotExists_ReturnsException() throws Exception {
+        when(fluxService.fluxGetAccountByCpf()).thenReturn(facade);
+        doThrow(new AccountNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.getAccountByCpf(new GetInformationAccountInput("12345678901")))
+                .isInstanceOf(AccountNotExistsException.class)
+                .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void getInformationAccount_WithAccountNotExists_ReturnsException() throws Exception {
+        when(fluxService.fluxGetAccountByCpf()).thenReturn(facade);
+        doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.getAccountByCpf(new GetInformationAccountInput("12345678901")))
+                .isInstanceOf(AccountNotExistsException.class)
+                .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
     }
 }

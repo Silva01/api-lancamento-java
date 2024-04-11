@@ -19,7 +19,7 @@ public class GetInformationMapper implements IMapperResponse<AccountDTO, Output>
         ((GetInformationAccountOutput) output).setAgency(input.agency());
         ((GetInformationAccountOutput) output).setAccountNumber(input.number());
         ((GetInformationAccountOutput) output).setBalance(input.balance());
-        ((GetInformationAccountOutput) output).setStatus(input.active() ? AccountStatusEnum.ACTIVE : AccountStatusEnum.INACTIVE);
+        ((GetInformationAccountOutput) output).setStatus(input.active() ? AccountStatusEnum.ACTIVE.name() : AccountStatusEnum.INACTIVE.name());
         ((GetInformationAccountOutput) output).setHaveCreditCard(Objects.nonNull(input.creditCard()));
         ((GetInformationAccountOutput) output).setTransactions(input.transactions());
     }

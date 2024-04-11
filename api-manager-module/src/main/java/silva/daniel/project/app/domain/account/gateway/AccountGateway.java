@@ -1,7 +1,6 @@
 package silva.daniel.project.app.domain.account.gateway;
 
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.IAccountParam;
@@ -10,10 +9,10 @@ import org.springframework.stereotype.Component;
 import silva.daniel.project.app.domain.account.entity.Account;
 import silva.daniel.project.app.domain.account.entity.AccountKey;
 import silva.daniel.project.app.domain.account.entity.CreditCard;
+import silva.daniel.project.app.domain.account.mapper.AccountMapper;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,20 +41,12 @@ public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
         if(param instanceof IAccountParam accountParam) {
             var key = new AccountKey(accountParam.accountNumber(), accountParam.agency());
             return repository.findById(key)
-                    .map(account -> new AccountOutput(
-                            account.getKeys().getNumber(),
-                            account.getKeys().getBankAgencyNumber(),
-                            account.getBalance(),
-                            account.getPassword(),
-                            account.isActive(),
-                            account.getCpf(),
-                            buildCreditCard(account.getCreditCard()),
-                            Collections.emptyList()));
+                    .map(AccountMapper::toOutput);
         }
 
         final var cpf = (ICpfParam) param;
         return repository.findByCpf(cpf.cpf())
-                .map(account -> new AccountOutput(account.getKeys().getNumber(), account.getKeys().getBankAgencyNumber(), account.getBalance(), account.getPassword(), account.isActive(), account.getCpf(), null, Collections.emptyList()));
+                .map(AccountMapper::toOutput);
     }
 
     @Override
@@ -73,25 +64,11 @@ public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
 
         var account = new Account(key, entity.balance(), entity.password(), entity.active(), entity.cpf(), creditCard, null, LocalDateTime.now());
         var newAccount = repository.save(account);
-        return new AccountOutput(newAccount.getKeys().getNumber(), newAccount.getKeys().getBankAgencyNumber(), newAccount.getBalance(), newAccount.getPassword(), newAccount.isActive(), newAccount.getCpf(), null, Collections.emptyList());
+        return AccountMapper.toOutput(newAccount);
     }
 
     @Override
     public void saveAll(List<AccountOutput> paramList) {
 
-    }
-
-    private CreditCardOutput buildCreditCard(CreditCard creditCard) {
-        if (creditCard == null) {
-            return null;
-        }
-
-        return new CreditCardOutput(
-                creditCard.getNumber(),
-                creditCard.getCvv(),
-                creditCard.getFlag(),
-                creditCard.getBalance(),
-                creditCard.getExpirationDate(),
-                creditCard.isActive());
     }
 }

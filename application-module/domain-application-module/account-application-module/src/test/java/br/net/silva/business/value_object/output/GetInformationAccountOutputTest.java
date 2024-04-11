@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GetInformationAccountOutputTest {
 
@@ -21,7 +22,7 @@ class GetInformationAccountOutputTest {
         // Set values using setters
         output.setAgency(123);
         output.setAccountNumber(456);
-        output.setStatus(AccountStatusEnum.ACTIVE);
+        output.setStatus(AccountStatusEnum.ACTIVE.name());
         output.setBalance(new BigDecimal("1000.00"));
         output.setHaveCreditCard(true);
 
@@ -47,7 +48,7 @@ class GetInformationAccountOutputTest {
         // Validate values using getters
         assertEquals(123, output.getAgency());
         assertEquals(456, output.getAccountNumber());
-        assertEquals(AccountStatusEnum.ACTIVE, output.getStatus());
+        assertEquals(AccountStatusEnum.ACTIVE.name(), output.getStatus());
         assertEquals(new BigDecimal("1000.00"), output.getBalance());
         assertTrue(output.isHaveCreditCard());
 

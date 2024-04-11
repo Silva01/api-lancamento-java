@@ -3,6 +3,7 @@ package silva.daniel.project.app.web;
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,11 +17,15 @@ import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountReques
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.annotations.EnableAccountPrepare;
+import silva.daniel.project.app.web.client.GetInformationAccountTestPrepare;
 
+import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
@@ -33,6 +38,9 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private EditAgencyOfAccountPrepare editAgencyOfAccountPrepare;
+
+    @Autowired
+    private GetInformationAccountTestPrepare getInformationAccountTestPrepare;
 
     @MockBean
     private AccountService accountService;
@@ -64,6 +72,40 @@ class AccountControllerTest implements RequestBuilderCommons {
     void editAgencyOfAccount_WithAlreadyAccountWithNewAgency_ReturnsStatus409() throws Exception {
         doThrow(new AccountAlreadyExistsForNewAgencyException(ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE.getMessage())).when(accountService).editAgencyOfAccount(any(ChangeAgencyInput.class));
         editAgencyOfAccountPrepare.failurePutAssert(buildBaseEditAgencyOfAccountRequest(), ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE, status().isConflict());
+    }
+
+    @Test
+    void getInformationAccount_WithValidData_ReturnsStatus200AndAccountData() throws Exception {
+        when(accountService.getAccountByCpf(any(GetInformationAccountInput.class))).thenReturn(getInformationAccountTestPrepare.buildResponseMockAccountInformation());
+        getInformationAccountTestPrepare.successGetAssert(new Object[]{"12345678901"},
+                                                          status().isOk(),
+                                                          jsonPath("$.accountNumber").value(1234),
+                                                          jsonPath("$.agency").value(1),
+                                                          jsonPath("$.balance").value(1000.0),
+                                                          jsonPath("$.status").value("ACTIVE"),
+                                                          jsonPath("$.transactions[0].id").value(1L),
+                                                          jsonPath("$.transactions[0].description").value("test"),
+                                                          jsonPath("$.transactions[0].price").value(BigDecimal.valueOf(100)),
+                                                          jsonPath("$.transactions[0].quantity").value(1),
+                                                          jsonPath("$.transactions[0].type").value("DEBIT"),
+                                                          jsonPath("$.transactions[0].originAccountNumber").value(1234),
+                                                          jsonPath("$.transactions[0].destinationAccountNumber").value(5678),
+                                                          jsonPath("$.transactions[0].idempotencyId").value(123L),
+                                                          jsonPath("$.transactions[0].creditCardNumber").isEmpty(),
+                                                          jsonPath("$.transactions[0].creditCardCvv").isEmpty()
+        );
+    }
+
+    @Test
+    void getInformationAccount_WithCpfNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).getAccountByCpf(any(GetInformationAccountInput.class));
+        getInformationAccountTestPrepare.failureGetAssert(new Object[]{"1234"}, CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void getInformationAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new AccountNotExistsException("Account not Found")).when(accountService).getAccountByCpf(any(GetInformationAccountInput.class));
+        getInformationAccountTestPrepare.failureGetAssert(new Object[]{"1234"}, ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
