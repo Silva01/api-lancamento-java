@@ -46,6 +46,7 @@
                         <!-- Padrões Ant para excluir classes específicas -->
                         <exclude>**/*GeneratorRandomNumber.*</exclude>
                         <exclude>**/*GenericErrorUtils.*</exclude>
+                        <exclude>**/*UseCase.*</exclude>
                         <exclude>**/utils/*</exclude>
                     </excludes>
                 </configuration>

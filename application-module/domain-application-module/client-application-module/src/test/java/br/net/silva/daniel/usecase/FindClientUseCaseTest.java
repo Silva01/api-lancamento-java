@@ -6,6 +6,7 @@ import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.value_object.input.FindClientByCpf;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -39,7 +40,7 @@ class FindClientUseCaseTest {
     }
 
     @Test
-    void must_looking_for_client_in_database_with_success() throws ClientNotExistsException {
+    void must_looking_for_client_in_database_with_success() throws GenericException {
         var findClientByCpf = new FindClientByCpf("22233344455");
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
         var clientDto = findClientUseCase.exec(source);
