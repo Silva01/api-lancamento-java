@@ -57,6 +57,8 @@
                         <!-- Padrões Ant para excluir classes específicas -->
                         <exclude>**/*GeneratorRandomNumber.*</exclude>
                         <exclude>**/*GenericErrorUtils.*</exclude>
+                        <exclude>**/*GetInformationAccountOutput.*</exclude>
+                        <exclude>**/*NewAccountByNewClientResponseSuccess.*</exclude>
                         <exclude>**/utils/*</exclude>
                     </excludes>
                 </configuration>
