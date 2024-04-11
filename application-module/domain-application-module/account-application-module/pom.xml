@@ -59,6 +59,10 @@
                         <exclude>**/*GenericErrorUtils.*</exclude>
                         <exclude>**/*GetInformationAccountOutput.*</exclude>
                         <exclude>**/*NewAccountByNewClientResponseSuccess.*</exclude>
+                        <exclude>**/*AccountWithNewAgencyAlreadyExistsValidateBuilder.*</exclude>
+                        <exclude>**/*AccountExistsAndActiveValidationBuilder.*</exclude>
+                        <exclude>**/*AccountExistsValidationBuilder.*</exclude>
+                        <exclude>**/*AccountAlreadyExistsCreditCardValidationBuilder.*</exclude>
                         <exclude>**/utils/*</exclude>
                     </excludes>
                 </configuration>
