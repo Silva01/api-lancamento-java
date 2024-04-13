@@ -4,6 +4,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import silva.daniel.project.app.web.AccountController;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
+import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
 import silva.daniel.project.app.web.account.GetInformationAccountTestPrepare;
 
 import java.lang.annotation.ElementType;
@@ -16,7 +17,8 @@ import java.lang.annotation.Target;
 @WebMvcTest(AccountController.class)
 @Import({
         EditAgencyOfAccountPrepare.class,
-        GetInformationAccountTestPrepare.class
+        GetInformationAccountTestPrepare.class,
+        GetAccountListTestPrepare.class
 })
 public @interface EnableAccountPrepare {
 }
