@@ -1,4 +1,4 @@
-package silva.daniel.project.app.web.client;
+package silva.daniel.project.app.web.account;
 
 import silva.daniel.project.app.commons.RequestAssertCommons;
 import silva.daniel.project.app.commons.RequestBuilderCommons;

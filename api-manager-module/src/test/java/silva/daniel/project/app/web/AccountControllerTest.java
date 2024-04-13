@@ -17,7 +17,7 @@ import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountReques
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.annotations.EnableAccountPrepare;
-import silva.daniel.project.app.web.client.GetInformationAccountTestPrepare;
+import silva.daniel.project.app.web.account.GetInformationAccountTestPrepare;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
@@ -106,6 +106,11 @@ class AccountControllerTest implements RequestBuilderCommons {
     void getInformationAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
         doThrow(new AccountNotExistsException("Account not Found")).when(accountService).getAccountByCpf(any(GetInformationAccountInput.class));
         getInformationAccountTestPrepare.failureGetAssert(new Object[]{"1234"}, ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void getAccountList_WithValidData_ReturnsAllAccounts() {
+
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
