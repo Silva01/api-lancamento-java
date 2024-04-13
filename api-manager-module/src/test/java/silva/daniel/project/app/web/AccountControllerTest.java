@@ -16,12 +16,14 @@ import silva.daniel.project.app.commons.RequestBuilderCommons;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
-import silva.daniel.project.app.web.account.annotations.EnableAccountPrepare;
+import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
 import silva.daniel.project.app.web.account.GetInformationAccountTestPrepare;
+import silva.daniel.project.app.web.account.annotations.EnableAccountPrepare;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -31,6 +33,8 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
+import static silva.daniel.project.app.commons.MatcherCommons.ActiveDataMatcher.hasOneOrZeroDataActived;
+import static silva.daniel.project.app.commons.MatcherCommons.DuplicateMatcher.hasNotDuplicate;
 
 @ActiveProfiles("unit")
 @EnableAccountPrepare
@@ -41,6 +45,9 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private GetInformationAccountTestPrepare getInformationAccountTestPrepare;
+
+    @Autowired
+    private GetAccountListTestPrepare getAccountListTestPrepare;
 
     @MockBean
     private AccountService accountService;
@@ -109,8 +116,14 @@ class AccountControllerTest implements RequestBuilderCommons {
     }
 
     @Test
-    void getAccountList_WithValidData_ReturnsAllAccounts() {
-
+    void getAccountList_WithValidData_ReturnsAllAccounts() throws Exception {
+        when(accountService.getAllAccountsByCpf("12345678901")).thenReturn(getAccountListTestPrepare.buildAccounts());
+        getAccountListTestPrepare.successGetAssert(new Object[]{"12345678901"},
+                                                   status().isOk(),
+                                                   jsonPath("$.accounts", hasSize(4)),
+                                                   jsonPath("$.accounts[*].number").value(hasNotDuplicate()),
+                                                   jsonPath("$.accounts[*].active").value(hasOneOrZeroDataActived())
+        );
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
