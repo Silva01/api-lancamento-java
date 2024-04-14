@@ -1,8 +1,12 @@
 package silva.daniel.project.app.commons;
 
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.AnyOf;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,28 +42,11 @@ public class MatcherCommons {
         }
     }
 
-    public static class ActiveDataMatcher extends TypeSafeMatcher<Iterable<Boolean>> {
+    public static class ConditionalMatcher {
 
-        public static ActiveDataMatcher hasOneOrZeroDataActived() {
-            return new ActiveDataMatcher();
-        }
-
-        @Override
-        public boolean matchesSafely(Iterable<Boolean> numbers) {
-            return countRegisterActived(numbers) <= 1;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("No has 2 register actived");
-        }
-
-        private Long countRegisterActived(Iterable<Boolean> numbers) {
-            return StreamSupport.stream(numbers.spliterator(), false)
-                    .filter(entry -> entry)
-                    .count();
+        public static AnyOf<Collection<?>> or(Matcher<Collection<?>> matcher1, Matcher<Collection<?>> matcher2) {
+            return Matchers.anyOf(matcher1, matcher2);
         }
     }
-
 
 }
