@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ValidateOn {
+public @interface ValidateStrategyOn {
     Class<?>[] validations();
 }
