@@ -1,7 +1,6 @@
 package br.net.silva.business.facade;
 
 import br.net.silva.business.usecase.ActivateAccountUseCase;
-import br.net.silva.business.validations.AccountExistsAndActiveValidate;
 import br.net.silva.business.validations.AccountExistsAndDeactivatedValidate;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.output.AccountOutput;
