@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
@@ -44,6 +42,6 @@ public class AccountController {
 
     @GetMapping("/all/{cpf}")
     public ResponseEntity<AccountsByCpfResponseDto> getAllAccountsByCpf(@PathVariable String cpf) throws Exception {
-        return ResponseEntity.ok(accountService.getAllAccountsByCpf(cpf));
+        return ResponseEntity.ok(accountService.getAllAccountsByCpf(new GetInformationAccountInput(cpf)));
     }
 }
