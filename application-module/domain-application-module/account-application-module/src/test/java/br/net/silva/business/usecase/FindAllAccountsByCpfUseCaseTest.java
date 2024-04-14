@@ -47,7 +47,7 @@ class FindAllAccountsByCpfUseCaseTest {
 
     @Test
     void shouldListAllAccountsByCpf() throws GenericException {
-        when(findGateway.findAllByCpf(any(ParamGateway.class))).thenReturn(buildMockListAccount());
+        when(findGateway.findAllBy(any(ParamGateway.class))).thenReturn(buildMockListAccount());
         var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
         var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);
 
@@ -66,7 +66,7 @@ class FindAllAccountsByCpfUseCaseTest {
 
     @Test
     void shouldListEmptyAccountsByCpf() throws GenericException {
-        when(findGateway.findAllByCpf(any(ParamGateway.class))).thenReturn(Collections.emptyList());
+        when(findGateway.findAllBy(any(ParamGateway.class))).thenReturn(Collections.emptyList());
         var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
         var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);
 

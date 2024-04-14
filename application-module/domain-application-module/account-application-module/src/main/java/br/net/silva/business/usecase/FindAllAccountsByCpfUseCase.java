@@ -28,7 +28,7 @@ public class FindAllAccountsByCpfUseCase implements UseCase<List<AccountOutput>>
     @Override
     public List<AccountOutput> exec(Source param) throws GenericException {
         var findAccountDto = (ICpfParam) param.input();
-        var outputAccounts = findGateway.findAllByCpf(findAccountDto);
+        var outputAccounts = findGateway.findAllBy(findAccountDto);
         var dtoList = outputAccounts.stream().map(AccountBuilder.buildFullAccountDto()::createFrom).toList();
 
         factory.fillIn(dtoList, param.output());
