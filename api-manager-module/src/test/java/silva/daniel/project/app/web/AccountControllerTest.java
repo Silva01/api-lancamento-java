@@ -5,7 +5,6 @@ import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.daniel.exception.ClientNotExistsException;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,7 +12,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import silva.daniel.project.app.commons.MatcherCommons;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
@@ -23,7 +21,6 @@ import silva.daniel.project.app.web.account.GetInformationAccountTestPrepare;
 import silva.daniel.project.app.web.account.annotations.EnableAccountPrepare;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.stream.Stream;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -36,7 +33,6 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
-import static silva.daniel.project.app.commons.MatcherCommons.ActiveDataMatcher.hasOneOrZeroDataActived;
 import static silva.daniel.project.app.commons.MatcherCommons.ConditionalMatcher.or;
 import static silva.daniel.project.app.commons.MatcherCommons.DuplicateMatcher.hasNotDuplicate;
 
