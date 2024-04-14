@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -78,6 +79,9 @@ class ActivateAccountFacadeTest {
         var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account not exists", exceptionResponse.getMessage());
+
+        verify(baseGateway, never()).save(any(AccountOutput.class));
+        verify(baseGateway, times(1)).findById(any(ParamGateway.class));
     }
 
     @Test
@@ -95,6 +99,9 @@ class ActivateAccountFacadeTest {
         var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account already active", exceptionResponse.getMessage());
+
+        verify(baseGateway, never()).save(any(AccountOutput.class));
+        verify(baseGateway, times(1)).findById(any(ParamGateway.class));
     }
 
     private AccountOutput buildMockAccount(boolean active) {
