@@ -55,6 +55,12 @@ public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
     }
 
     @Override
+    public List<AccountOutput> findAllByCpf(ParamGateway param) {
+        var cpfParam = (ICpfParam) param;
+        return repository.findAllByCpf(cpfParam.cpf()).stream().map(AccountMapper::toOutput).toList();
+    }
+
+    @Override
     public AccountOutput save(AccountOutput entity) {
         var key = new AccountKey(entity.number(), entity.agency());
         CreditCard creditCard = null;
