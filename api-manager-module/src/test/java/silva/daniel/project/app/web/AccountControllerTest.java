@@ -117,7 +117,7 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Test
     void getAccountList_WithValidData_ReturnsAllAccounts() throws Exception {
-        when(accountService.getAllAccountsByCpf("12345678901")).thenReturn(getAccountListTestPrepare.buildAccounts());
+        when(accountService.getAllAccountsByCpf(new GetInformationAccountInput("12345678901"))).thenReturn(getAccountListTestPrepare.buildAccounts());
         getAccountListTestPrepare.successGetAssert(new Object[]{"12345678901"},
                                                    status().isOk(),
                                                    jsonPath("$.accounts", hasSize(4)),
