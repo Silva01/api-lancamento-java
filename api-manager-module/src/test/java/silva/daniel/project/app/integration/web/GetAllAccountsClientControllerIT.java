@@ -57,4 +57,12 @@ class GetAllAccountsClientControllerIT extends MysqlTestContainer implements Int
         assertThat(sut.getBody().getAccounts()).isEmpty();
     }
 
+    @Test
+    void getAllAccounts_WithAccountNotExistsForCpf_ReturnsEmptyList() {
+        final var cpf = "12345678988";
+        final var sut = restTemplate.getForEntity("/api/account/all/{cpf}", AccountsByCpfResponseDto.class, cpf);
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).isNotNull();
+        assertThat(sut.getBody().getAccounts()).isEmpty();
+    }
 }
