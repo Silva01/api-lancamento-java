@@ -24,8 +24,8 @@ public final class FindClientUseCase implements UseCase<ClientOutput> {
 
     @Override
     public ClientOutput exec(Source param) throws GenericException {
-        var clientRequestDTO = (ICpfParam) param.input();
-        var optionalClient = findClientRepository.findById(clientRequestDTO);
+        var cpfParam = (ICpfParam) param.input();
+        var optionalClient = findClientRepository.findById(cpfParam);
 
         var client = execValidate(optionalClient).extract();
 
