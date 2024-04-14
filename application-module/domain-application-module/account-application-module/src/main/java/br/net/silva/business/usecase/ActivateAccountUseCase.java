@@ -10,7 +10,7 @@ import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.gateway.Repository;
 import br.net.silva.daniel.shared.application.value_object.Source;
 
-public class ActivateAccountUseCase implements UseCase<EmptyOutput> {
+public final class ActivateAccountUseCase implements UseCase<EmptyOutput> {
 
     private final Repository<AccountOutput> activateAccountRepository;
     private final Repository<AccountOutput> findAccountRepository;
