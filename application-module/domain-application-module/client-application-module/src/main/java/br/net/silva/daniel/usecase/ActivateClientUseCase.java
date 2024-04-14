@@ -9,7 +9,7 @@ import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
-public class ActivateClientUseCase implements UseCase<ClientOutput> {
+public final class ActivateClientUseCase implements UseCase<ClientOutput> {
 
     private final ApplicationBaseGateway<ClientOutput> baseRepository;
 

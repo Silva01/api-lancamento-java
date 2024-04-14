@@ -11,7 +11,7 @@ import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
-public class CreateNewClientUseCase implements UseCase<ClientOutput> {
+public final class CreateNewClientUseCase implements UseCase<ClientOutput> {
     private final SaveApplicationBaseGateway<ClientOutput> saveRepository;
     private final GenericResponseMapper factory;
 

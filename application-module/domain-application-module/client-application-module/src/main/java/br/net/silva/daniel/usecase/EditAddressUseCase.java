@@ -12,7 +12,7 @@ import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
-public class EditAddressUseCase implements UseCase<ClientOutput> {
+public final class EditAddressUseCase implements UseCase<ClientOutput> {
 
     private final FindApplicationBaseGateway<ClientOutput> findClientRepository;
     private final SaveApplicationBaseGateway<ClientOutput> saveClientRepository;

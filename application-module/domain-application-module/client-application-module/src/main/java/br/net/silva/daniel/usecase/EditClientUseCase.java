@@ -13,7 +13,7 @@ import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
-public class EditClientUseCase implements UseCase<ClientOutput> {
+public final class EditClientUseCase implements UseCase<ClientOutput> {
     private final FindApplicationBaseGateway<ClientOutput> findRepository;
     private final SaveApplicationBaseGateway<ClientOutput> saveRepository;
     private final GenericResponseMapper mapper;

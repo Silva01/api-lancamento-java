@@ -12,7 +12,7 @@ import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 @ValidateStrategyOn(validations = ClientExistsValidate.class)
-public class FindClientUseCase implements UseCase<ClientOutput> {
+public final class FindClientUseCase implements UseCase<ClientOutput> {
 
     private final FindApplicationBaseGateway<ClientOutput> findClientRepository;
     private final GenericResponseMapper factory;
