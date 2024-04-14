@@ -46,13 +46,15 @@ class GetAllAccountsClientControllerIT extends MysqlTestContainer implements Int
         assertThat(sut.getBody().getAccounts().get(0).number()).isEqualTo(client.getKeys().getNumber());
         assertThat(sut.getBody().getAccounts().get(0).cpf()).isEqualTo(client.getCpf());
         assertThat(sut.getBody().getAccounts().get(0).balance()).isEqualTo(client.getBalance());
-
-
     }
 
     @Test
-    void getClient_WithClientNotExists_Returns404() {
-        requestCommons.assertGetRequest("/clients/{cpf}", FailureResponse.class, this::assertClientNotExists, "12345678933");
+    void getAllAccounts_WithClientNotExists_ReturnsEmptyList() {
+        final var cpf = "12345679999";
+        final var sut = restTemplate.getForEntity("/api/account/all/{cpf}", AccountsByCpfResponseDto.class, cpf);
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).isNotNull();
+        assertThat(sut.getBody().getAccounts()).isEmpty();
     }
 
 }
