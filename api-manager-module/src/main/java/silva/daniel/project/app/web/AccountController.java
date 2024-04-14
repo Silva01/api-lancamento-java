@@ -2,6 +2,7 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
+import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,5 +38,10 @@ public class AccountController {
     @GetMapping("/{cpf}")
     public ResponseEntity<GetInformationAccountOutput> getAccountByCpf(@PathVariable String cpf) throws Exception {
         return ResponseEntity.ok(accountService.getAccountByCpf(new GetInformationAccountInput(cpf)));
+    }
+
+    @GetMapping("/all/{cpf}")
+    public ResponseEntity<AccountsByCpfResponseDto> getAllAccountsByCpf(@PathVariable String cpf) throws Exception {
+        return ResponseEntity.ok(accountService.getAllAccountsByCpf(new GetInformationAccountInput(cpf)));
     }
 }

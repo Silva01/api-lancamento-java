@@ -50,8 +50,9 @@ public class AccountGateway implements ApplicationBaseGateway<AccountOutput> {
     }
 
     @Override
-    public List<AccountOutput> findAll() {
-        return null;
+    public List<AccountOutput> findAllBy(ParamGateway param) {
+        var cpfParam = (ICpfParam) param;
+        return repository.findAllByCpf(cpfParam.cpf()).stream().map(AccountMapper::toOutput).toList();
     }
 
     @Override

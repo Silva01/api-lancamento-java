@@ -7,24 +7,29 @@ import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
 import br.net.silva.business.value_object.input.FindAccountDTO;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class FindAllAccountsByCpfUseCaseTest {
 
     private FindAllAccountsByCpfUseCase useCase;
@@ -32,18 +37,17 @@ class FindAllAccountsByCpfUseCaseTest {
     private GenericResponseMapper factory;
 
     @Mock
-    private Repository<List<AccountOutput>> repository;
+    private FindApplicationBaseGateway<AccountOutput> findGateway;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         factory = new GenericResponseMapper(List.of(new CreateResponseToNewAccountByClientFactory(), new CreateResponseToNewAccountFactory(), new CreateResponseToFindAccountsByCpfFactory()));
-        useCase = new FindAllAccountsByCpfUseCase(repository, factory);
+        useCase = new FindAllAccountsByCpfUseCase(findGateway, factory);
     }
 
     @Test
     void shouldListAllAccountsByCpf() throws GenericException {
-        when(repository.exec(anyString())).thenReturn(buildMockListAccount());
+        when(findGateway.findAllBy(any(ParamGateway.class))).thenReturn(buildMockListAccount());
         var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
         var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);
 
@@ -62,7 +66,7 @@ class FindAllAccountsByCpfUseCaseTest {
 
     @Test
     void shouldListEmptyAccountsByCpf() throws GenericException {
-        when(repository.exec(anyString())).thenReturn(Collections.emptyList());
+        when(findGateway.findAllBy(any(ParamGateway.class))).thenReturn(Collections.emptyList());
         var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
         var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);
 

@@ -2,6 +2,7 @@ package silva.daniel.project.app.domain.account.service;
 
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
+import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,11 @@ public class AccountService {
         var source = new Source(new GetInformationAccountOutput(), input);
         fluxService.fluxGetAccountByCpf().exec(source);
         return ((GetInformationAccountOutput) source.output());
+    }
+
+    public AccountsByCpfResponseDto getAllAccountsByCpf(GetInformationAccountInput getInformationAccountInput) throws Exception {
+        var source = new Source(new AccountsByCpfResponseDto(), getInformationAccountInput);
+        fluxService.fluxGetAllAccount().exec(source);
+        return ((AccountsByCpfResponseDto) source.output());
     }
 }

@@ -238,9 +238,6 @@ class ClientControllerTest {
         return response;
     }
 
-    private FailureResponse mockFailureResponse(String message, Integer statusCode) {
-        return new FailureResponse(message, statusCode);
-    }
 
     private static Stream<Arguments> provideRequestInvalidData() {
         return Stream.of(
