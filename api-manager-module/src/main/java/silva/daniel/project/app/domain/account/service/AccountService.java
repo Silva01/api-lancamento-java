@@ -8,9 +8,6 @@ import br.net.silva.daniel.shared.application.value_object.Source;
 import org.springframework.stereotype.Service;
 import silva.daniel.project.app.service.FluxService;
 
-import java.util.Collections;
-import java.util.List;
-
 @Service
 public class AccountService {
 
@@ -30,7 +27,9 @@ public class AccountService {
         return ((GetInformationAccountOutput) source.output());
     }
 
-    public AccountsByCpfResponseDto getAllAccountsByCpf(String cpf) throws Exception {
-        return null;
+    public AccountsByCpfResponseDto getAllAccountsByCpf(GetInformationAccountInput getInformationAccountInput) throws Exception {
+        var source = new Source(new AccountsByCpfResponseDto(), getInformationAccountInput);
+        fluxService.fluxGetAllAccount().exec(source);
+        return ((AccountsByCpfResponseDto) source.output());
     }
 }
