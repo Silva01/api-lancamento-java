@@ -121,4 +121,13 @@ class AccountServiceTest implements InputBuilderCommons {
                 .isInstanceOf(AccountNotExistsException.class)
                 .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
     }
+
+    @Test
+    void getAllAccount_WithValidData_ReturnsAccounts() throws Exception {
+        when(fluxService.fluxGetAllAccount()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.getAllAccountsByCpf(new GetInformationAccountInput("123")))
+                .doesNotThrowAnyException();
+    }
 }
