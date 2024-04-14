@@ -44,7 +44,7 @@ public class ClientGatewayImpl implements ApplicationBaseGateway<ClientOutput> {
     }
 
     @Override
-    public List<ClientOutput> findAll() {
+    public List<ClientOutput> findAllBy(ParamGateway param) {
         return null;
     }
 
