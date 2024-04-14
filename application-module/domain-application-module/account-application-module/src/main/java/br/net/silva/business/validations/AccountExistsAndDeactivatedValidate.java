@@ -17,6 +17,10 @@ public class AccountExistsAndDeactivatedValidate implements IValidations, Valida
 
     private final FindApplicationBaseGateway<AccountOutput> findAccountGateway;
 
+    public AccountExistsAndDeactivatedValidate() {
+        this.findAccountGateway = null;
+    }
+
     public AccountExistsAndDeactivatedValidate(FindApplicationBaseGateway<AccountOutput> findAccountGateway) {
         this.findAccountGateway = findAccountGateway;
     }
