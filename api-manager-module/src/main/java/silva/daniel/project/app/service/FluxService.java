@@ -192,4 +192,16 @@ public class FluxService {
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, FindAllAccountsByCpfUseCase.class)
                 ).withBuilderValidations().build();
     }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxActivateAccount() throws Exception {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class),
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ActivateClientUseCase.class)
+                )
+                .withBuilderValidations()
+                .build();
+    }
 }
