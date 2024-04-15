@@ -13,6 +13,6 @@ public class ClientActivedValidation implements Validation<ClientOutput> {
     public void validate(Optional<ClientOutput> opt) throws GenericException {
         var isClientDeactivated = opt.isPresent() && !opt.get().active();
         if (isClientDeactivated)
-            throw new ClientDeactivatedException("Client is not actived");
+            throw new ClientDeactivatedException("Client is Deactivated");
     }
 }
