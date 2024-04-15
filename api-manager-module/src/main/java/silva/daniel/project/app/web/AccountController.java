@@ -9,11 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 
@@ -43,5 +45,11 @@ public class AccountController {
     @GetMapping("/all/{cpf}")
     public ResponseEntity<AccountsByCpfResponseDto> getAllAccountsByCpf(@PathVariable String cpf) throws Exception {
         return ResponseEntity.ok(accountService.getAllAccountsByCpf(new GetInformationAccountInput(cpf)));
+    }
+
+    @PostMapping("/activate")
+    @ResponseStatus(HttpStatus.OK)
+    public void activateAccount(@Valid @RequestBody ActivateAccountRequest request) {
+
     }
 }
