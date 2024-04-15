@@ -25,16 +25,12 @@ public final class ActivateAccountUseCase implements UseCase<AccountOutput> {
 
     @Override
     public AccountOutput exec(Source param) throws GenericException {
-        try {
-            var dto = (ActivateAccount) param.input();
-            var accountOutput = execValidate(baseGateway.findById(dto)).extract();
+        var dto = (ActivateAccount) param.input();
+        var accountOutput = execValidate(baseGateway.findById(dto)).extract();
 
-            var account = accountFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
-            account.activate();
+        var account = accountFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
+        account.activate();
 
-            return baseGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
-        } catch (Exception e) {
-            throw new GenericException(e.getMessage());
-        }
+        return baseGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
     }
 }
