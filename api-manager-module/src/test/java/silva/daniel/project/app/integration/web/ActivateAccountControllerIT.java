@@ -2,6 +2,9 @@ package silva.daniel.project.app.integration.web;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -16,6 +19,9 @@ import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.account.entity.AccountKey;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
+import silva.daniel.project.app.domain.client.FailureResponse;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,6 +51,23 @@ class ActivateAccountControllerIT extends MysqlTestContainer implements Integrat
         var sut = repository.findById(new AccountKey(request.accountNumber(), request.agency()));
         assertThat(sut).isPresent();
         assertThat(sut.get().isActive()).isTrue();
+    }
 
+    @ParameterizedTest
+    @MethodSource("provideInvalidData")
+    void activateAccount_WithInvalidData_ReturnsStatus406(ActivateAccountRequest request) {
+        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertInvalidData);
+    }
+
+    private static Stream<Arguments> provideInvalidData() {
+        return Stream.of(
+                Arguments.of(new ActivateAccountRequest("1234567890", 1, 1235)),
+                Arguments.of(new ActivateAccountRequest("", 1, 1235)),
+                Arguments.of(new ActivateAccountRequest(null, 1, 1235)),
+                Arguments.of(new ActivateAccountRequest("12345678900", null, 1235)),
+                Arguments.of(new ActivateAccountRequest("12345678900", 1, null)),
+                Arguments.of(new ActivateAccountRequest("12345678900", -1, 1235)),
+                Arguments.of(new ActivateAccountRequest("12345678900", 1, -1235))
+        );
     }
 }
