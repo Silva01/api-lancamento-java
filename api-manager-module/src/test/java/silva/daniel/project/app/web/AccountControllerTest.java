@@ -2,6 +2,7 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.daniel.exception.ClientNotExistsException;
@@ -140,6 +141,12 @@ class AccountControllerTest implements RequestBuilderCommons {
     @MethodSource("provideInvalidDataOfActivateAccount")
     void activateAccount_WithInvalidData_ReturnsStatus406(ActivateAccountRequest request) throws Exception {
         activateAccountTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void activateAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).activateAccount(any(ActivateAccount.class));
+        activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
