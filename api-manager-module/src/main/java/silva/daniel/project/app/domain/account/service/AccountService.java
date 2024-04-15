@@ -35,5 +35,6 @@ public class AccountService {
     }
 
     public void activateAccount(ActivateAccount input) throws Exception {
+        fluxService.fluxActivateAccount().exec(Source.of(input));
     }
 }
