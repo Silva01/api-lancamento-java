@@ -5,6 +5,7 @@ import br.net.silva.business.build.AccountExistsAndActiveValidationBuilder;
 import br.net.silva.business.build.AccountExistsValidationBuilder;
 import br.net.silva.business.build.AccountWithNewAgencyAlreadyExistsValidateBuilder;
 import br.net.silva.business.build.CreditCardNumberExistsValidationBuilder;
+import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.usecase.ChangeAgencyUseCase;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
@@ -199,7 +200,7 @@ public class FluxService {
                 .make()
                 .withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class),
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ActivateClientUseCase.class)
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ActivateAccountUseCase.class)
                 )
                 .withBuilderValidations()
                 .build();
