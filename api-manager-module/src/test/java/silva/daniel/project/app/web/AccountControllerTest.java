@@ -5,6 +5,7 @@ import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
+import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 import static silva.daniel.project.app.commons.MatcherCommons.ConditionalMatcher.or;
@@ -147,6 +149,12 @@ class AccountControllerTest implements RequestBuilderCommons {
     void activateAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
         doThrow(new ClientNotExistsException("Client not Found")).when(accountService).activateAccount(any(ActivateAccount.class));
         activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void activateAccount_WithClientDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new ClientDeactivatedException("Client is Deactivated")).when(accountService).activateAccount(any(ActivateAccount.class));
+        activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), CLIENT_DEACTIVATED, status().isConflict());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
