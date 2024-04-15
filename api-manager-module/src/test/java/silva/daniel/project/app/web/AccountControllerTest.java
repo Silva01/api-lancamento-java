@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
+import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
 import silva.daniel.project.app.web.account.GetInformationAccountTestPrepare;
@@ -48,6 +49,9 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private GetAccountListTestPrepare getAccountListTestPrepare;
+
+    @Autowired
+    private ActivateAccountTestPrepare activateAccountTestPrepare;
 
     @MockBean
     private AccountService accountService;
@@ -124,6 +128,11 @@ class AccountControllerTest implements RequestBuilderCommons {
                                                    jsonPath("$.accounts[*].number").value(hasNotDuplicate()),
                                                    jsonPath("$.accounts[?(@.active == true)]").value(or(hasSize(0), hasSize(1)))
         );
+    }
+
+    @Test
+    void activateAccount_WithValidData_ReturnsSuccess() throws Exception {
+        activateAccountTestPrepare.successPostAssert(buildBaseActivateAccount(), status().isOk());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
