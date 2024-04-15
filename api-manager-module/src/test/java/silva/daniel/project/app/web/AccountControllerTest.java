@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
+import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
@@ -135,6 +136,12 @@ class AccountControllerTest implements RequestBuilderCommons {
         activateAccountTestPrepare.successPostAssert(buildBaseActivateAccount(), status().isOk());
     }
 
+    @ParameterizedTest
+    @MethodSource("provideInvalidDataOfActivateAccount")
+    void activateAccount_WithInvalidData_ReturnsStatus406(ActivateAccountRequest request) throws Exception {
+        activateAccountTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
@@ -144,6 +151,19 @@ class AccountControllerTest implements RequestBuilderCommons {
                 Arguments.of(new EditAgencyOfAccountRequest("22233344455", null, 1234, 1234)),
                 Arguments.of(new EditAgencyOfAccountRequest("22233344455", 1234, null, 1234)),
                 Arguments.of(new EditAgencyOfAccountRequest("22233344455", 1234, 1234, null))
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidDataOfActivateAccount() {
+        return Stream.of(
+                Arguments.of(new ActivateAccountRequest(null, 1, 1234)),
+                Arguments.of(new ActivateAccountRequest("", 1, 1234)),
+                Arguments.of(new ActivateAccountRequest("999", 1, 1234)),
+                Arguments.of(new ActivateAccountRequest("9999999999999999", 1, 1234)),
+                Arguments.of(new ActivateAccountRequest("22233344455", null, 1234)),
+                Arguments.of(new ActivateAccountRequest("22233344455", 1, null)),
+                Arguments.of(new ActivateAccountRequest("22233344455", 1, -2)),
+                Arguments.of(new ActivateAccountRequest("22233344455", -1, 123))
         );
     }
 }
