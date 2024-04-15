@@ -5,10 +5,10 @@ import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
+import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,6 +28,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 
 @ExtendWith(MockitoExtension.class)
@@ -150,5 +151,15 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.activateAccount(new ActivateAccount(1, 2, "123444")))
                 .isInstanceOf(ClientNotExistsException.class)
                 .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void activateAccount_WithClientNotExists_ThrowsClientDeactivatedException() throws Exception {
+        when(fluxService.fluxActivateAccount()).thenReturn(facade);
+        doThrow(new ClientDeactivatedException(CLIENT_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.activateAccount(new ActivateAccount(1, 2, "123444")))
+                .isInstanceOf(ClientDeactivatedException.class)
+                .hasMessage(CLIENT_DEACTIVATED.getMessage());
     }
 }
