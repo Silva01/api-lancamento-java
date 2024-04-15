@@ -44,7 +44,7 @@ class ActivateAccountControllerIT extends MysqlTestContainer implements Integrat
 
     @Test
     void activateAccount_WithValidData_ReturnsSuccess() {
-        var request = new ActivateAccountRequest("12345678903", 1, 1235);
+        var request = new ActivateAccountRequest("12345678904", 1, 1235);
         var response = restTemplate.postForEntity(API_ACTIVATE_ACCOUNT, request, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
