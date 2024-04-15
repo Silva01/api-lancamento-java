@@ -4,14 +4,14 @@ import br.net.silva.daniel.build.ClientBuilder;
 import br.net.silva.daniel.dto.AddressDTO;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
+import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.IClientParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
-public class CreateNewClientUseCase implements UseCase<ClientOutput> {
+public final class CreateNewClientUseCase implements UseCase<ClientOutput> {
     private final SaveApplicationBaseGateway<ClientOutput> saveRepository;
     private final GenericResponseMapper factory;
 

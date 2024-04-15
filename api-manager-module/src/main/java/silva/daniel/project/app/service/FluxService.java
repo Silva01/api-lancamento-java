@@ -5,6 +5,7 @@ import br.net.silva.business.build.AccountExistsAndActiveValidationBuilder;
 import br.net.silva.business.build.AccountExistsValidationBuilder;
 import br.net.silva.business.build.AccountWithNewAgencyAlreadyExistsValidateBuilder;
 import br.net.silva.business.build.CreditCardNumberExistsValidationBuilder;
+import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.usecase.ChangeAgencyUseCase;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
@@ -28,6 +29,7 @@ import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
 import br.net.silva.daniel.usecase.EditAddressUseCase;
 import br.net.silva.daniel.usecase.EditClientUseCase;
+import br.net.silva.daniel.usecase.FindActiveClientUseCase;
 import br.net.silva.daniel.usecase.FindClientUseCase;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Service;
@@ -191,5 +193,17 @@ public class FluxService {
                 .withBuilderUseCases(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, FindAllAccountsByCpfUseCase.class)
                 ).withBuilderValidations().build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxActivateAccount() throws Exception {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ActivateAccountUseCase.class)
+                )
+                .withBuilderValidations()
+                .build();
     }
 }

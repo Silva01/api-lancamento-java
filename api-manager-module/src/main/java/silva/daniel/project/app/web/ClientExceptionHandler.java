@@ -1,6 +1,7 @@
 package silva.daniel.project.app.web;
 
 
+import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
@@ -90,6 +91,12 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccountAlreadyExistsForNewAgencyException.class)
     public ResponseEntity<FailureResponse> handleAccountAlreadyExistsForNewAgencyException(AccountAlreadyExistsForNewAgencyException ex) {
+        var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
+        return ResponseEntity.status(CONFLICT).body(failureResponse);
+    }
+
+    @ExceptionHandler(AccountAlreadyActiveException.class)
+    public ResponseEntity<FailureResponse> handleAccountAlreadyActiveException(AccountAlreadyActiveException ex) {
         var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
     }

@@ -1,6 +1,6 @@
 package br.net.silva.daniel.shared.application.interfaces;
 
-import br.net.silva.daniel.shared.application.annotations.ValidateOn;
+import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
 import br.net.silva.daniel.shared.application.exception.BuildValidationException;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
@@ -12,7 +12,7 @@ public interface UseCase<R> {
 
     @SuppressWarnings("unchecked")
     default Extractor<R> execValidate(Optional<R> opt) throws GenericException {
-        var validationAnnotation = this.getClass().getAnnotation(ValidateOn.class);
+        var validationAnnotation = this.getClass().getAnnotation(ValidateStrategyOn.class);
         if (validationAnnotation != null) {
             for (var validationClass : validationAnnotation.validations()) {
                 try {

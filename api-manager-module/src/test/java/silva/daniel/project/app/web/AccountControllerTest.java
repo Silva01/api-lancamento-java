@@ -1,9 +1,12 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
+import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
+import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
+import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
 import silva.daniel.project.app.web.account.GetInformationAccountTestPrepare;
@@ -29,8 +34,10 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_ACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 import static silva.daniel.project.app.commons.MatcherCommons.ConditionalMatcher.or;
@@ -48,6 +55,9 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private GetAccountListTestPrepare getAccountListTestPrepare;
+
+    @Autowired
+    private ActivateAccountTestPrepare activateAccountTestPrepare;
 
     @MockBean
     private AccountService accountService;
@@ -126,6 +136,41 @@ class AccountControllerTest implements RequestBuilderCommons {
         );
     }
 
+    @Test
+    void activateAccount_WithValidData_ReturnsSuccess() throws Exception {
+        activateAccountTestPrepare.successPostAssert(buildBaseActivateAccount(), status().isOk());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidDataOfActivateAccount")
+    void activateAccount_WithInvalidData_ReturnsStatus406(ActivateAccountRequest request) throws Exception {
+        activateAccountTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void activateAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).activateAccount(any(ActivateAccount.class));
+        activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void activateAccount_WithClientDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new ClientDeactivatedException("Client is Deactivated")).when(accountService).activateAccount(any(ActivateAccount.class));
+        activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), CLIENT_DEACTIVATED, status().isConflict());
+    }
+
+    @Test
+    void activateAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new AccountNotExistsException("Account not Found")).when(accountService).activateAccount(any(ActivateAccount.class));
+        activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void activateAccount_WithAccountAlreadyActivated_ReturnsStatus409() throws Exception {
+        doThrow(new AccountAlreadyActiveException("Account already active")).when(accountService).activateAccount(any(ActivateAccount.class));
+        activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), ACCOUNT_ALREADY_ACTIVATED_MESSAGE, status().isConflict());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
@@ -135,6 +180,19 @@ class AccountControllerTest implements RequestBuilderCommons {
                 Arguments.of(new EditAgencyOfAccountRequest("22233344455", null, 1234, 1234)),
                 Arguments.of(new EditAgencyOfAccountRequest("22233344455", 1234, null, 1234)),
                 Arguments.of(new EditAgencyOfAccountRequest("22233344455", 1234, 1234, null))
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidDataOfActivateAccount() {
+        return Stream.of(
+                Arguments.of(new ActivateAccountRequest(null, 1, 1234)),
+                Arguments.of(new ActivateAccountRequest("", 1, 1234)),
+                Arguments.of(new ActivateAccountRequest("999", 1, 1234)),
+                Arguments.of(new ActivateAccountRequest("9999999999999999", 1, 1234)),
+                Arguments.of(new ActivateAccountRequest("22233344455", null, 1234)),
+                Arguments.of(new ActivateAccountRequest("22233344455", 1, null)),
+                Arguments.of(new ActivateAccountRequest("22233344455", 1, -2)),
+                Arguments.of(new ActivateAccountRequest("22233344455", -1, 123))
         );
     }
 }
