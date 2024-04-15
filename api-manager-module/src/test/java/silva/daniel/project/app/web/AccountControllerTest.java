@@ -1,5 +1,6 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_ACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
@@ -161,6 +163,12 @@ class AccountControllerTest implements RequestBuilderCommons {
     void activateAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
         doThrow(new AccountNotExistsException("Account not Found")).when(accountService).activateAccount(any(ActivateAccount.class));
         activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void activateAccount_WithAccountAlreadyActivated_ReturnsStatus409() throws Exception {
+        doThrow(new AccountAlreadyActiveException("Account already active")).when(accountService).activateAccount(any(ActivateAccount.class));
+        activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), ACCOUNT_ALREADY_ACTIVATED_MESSAGE, status().isConflict());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
