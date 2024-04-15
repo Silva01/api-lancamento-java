@@ -1,5 +1,6 @@
 package silva.daniel.project.app.domain.account.service;
 
+import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
@@ -31,5 +32,8 @@ public class AccountService {
         var source = new Source(new AccountsByCpfResponseDto(), getInformationAccountInput);
         fluxService.fluxGetAllAccount().exec(source);
         return ((AccountsByCpfResponseDto) source.output());
+    }
+
+    public void activateAccount(ActivateAccount input) throws Exception {
     }
 }
