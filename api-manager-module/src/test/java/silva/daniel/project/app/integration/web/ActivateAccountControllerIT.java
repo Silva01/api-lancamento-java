@@ -71,6 +71,12 @@ class ActivateAccountControllerIT extends MysqlTestContainer implements Integrat
         requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertClientDeactivatedExists);
     }
 
+    @Test
+    void activateAccount_WithAccountNotExists_ReturnsStatus404() {
+        var request = new ActivateAccountRequest("12345678988", 2, 1235);
+        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertAccountNotExists);
+    }
+
     private static Stream<Arguments> provideInvalidData() {
         return Stream.of(
                 Arguments.of(new ActivateAccountRequest("1234567890", 1, 1235)),
