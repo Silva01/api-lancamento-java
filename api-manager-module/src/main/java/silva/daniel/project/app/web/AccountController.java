@@ -1,5 +1,6 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
@@ -49,7 +50,7 @@ public class AccountController {
 
     @PostMapping("/activate")
     @ResponseStatus(HttpStatus.OK)
-    public void activateAccount(@Valid @RequestBody ActivateAccountRequest request) {
-
+    public void activateAccount(@Valid @RequestBody ActivateAccountRequest request) throws Exception {
+        accountService.activateAccount(new ActivateAccount(request.agency(), request.accountNumber(), request.cpf()));
     }
 }
