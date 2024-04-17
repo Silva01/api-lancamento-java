@@ -159,7 +159,7 @@ class AccountServiceTest implements InputBuilderCommons {
     }
 
     @Test
-    void activateAccount_WithClientNotExists_ThrowsClientDeactivatedException() throws Exception {
+    void activateAccount_WithClientDeactivated_ThrowsClientDeactivatedException() throws Exception {
         when(fluxService.fluxActivateAccount()).thenReturn(facade);
         doThrow(new ClientDeactivatedException(CLIENT_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
 
@@ -169,7 +169,7 @@ class AccountServiceTest implements InputBuilderCommons {
     }
 
     @Test
-    void activateAccount_WithClientNotExists_ThrowsAccountNotExistsException() throws Exception {
+    void activateAccount_WithAccountNotExists_ThrowsAccountNotExistsException() throws Exception {
         when(fluxService.fluxActivateAccount()).thenReturn(facade);
         doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
@@ -179,7 +179,7 @@ class AccountServiceTest implements InputBuilderCommons {
     }
 
     @Test
-    void activateAccount_WithClientNotExists_ThrowsAccountAlreadyActiveException() throws Exception {
+    void activateAccount_WithAccountAlreadyActive_ThrowsAccountAlreadyActiveException() throws Exception {
         when(fluxService.fluxActivateAccount()).thenReturn(facade);
         doThrow(new AccountAlreadyActiveException(ACCOUNT_ALREADY_ACTIVATED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
@@ -208,7 +208,7 @@ class AccountServiceTest implements InputBuilderCommons {
     }
 
     @Test
-    void deactivateAccount_WithClientNotExists_ThrowsAccountNotExistsException() throws Exception {
+    void deactivateAccount_WithAccountNotExists_ThrowsAccountNotExistsException() throws Exception {
         when(fluxService.fluxDeactivateAccount()).thenReturn(facade);
         doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
@@ -218,12 +218,22 @@ class AccountServiceTest implements InputBuilderCommons {
     }
 
     @Test
-    void deactivateAccount_WithClientNotExists_ThrowsAccountDeactivatedException() throws Exception {
+    void deactivateAccount_WithAccountDeactivated_ThrowsAccountDeactivatedException() throws Exception {
         when(fluxService.fluxDeactivateAccount()).thenReturn(facade);
         doThrow(new AccountDeactivatedException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.deactivateAccount(new DeactivateAccount( "123444", 1, 2)))
                 .isInstanceOf(AccountDeactivatedException.class)
                 .hasMessage(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
+    }
+
+    @Test
+    void deactivateAccount_WithClientDeactivated_ThrowsClientDeactivatedException() throws Exception {
+        when(fluxService.fluxDeactivateAccount()).thenReturn(facade);
+        doThrow(new ClientDeactivatedException(CLIENT_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.deactivateAccount(new DeactivateAccount( "123444", 1, 2)))
+                .isInstanceOf(ClientDeactivatedException.class)
+                .hasMessage(CLIENT_DEACTIVATED.getMessage());
     }
 }
