@@ -17,9 +17,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
+import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
+import silva.daniel.project.app.web.account.DeactivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
 import silva.daniel.project.app.web.account.GetInformationAccountTestPrepare;
@@ -58,6 +60,9 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private ActivateAccountTestPrepare activateAccountTestPrepare;
+
+    @Autowired
+    private DeactivateAccountTestPrepare deactivateAccountTestPrepare;
 
     @MockBean
     private AccountService accountService;
@@ -171,6 +176,17 @@ class AccountControllerTest implements RequestBuilderCommons {
         activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), ACCOUNT_ALREADY_ACTIVATED_MESSAGE, status().isConflict());
     }
 
+    @Test
+    void deactivateAccount_WithValidData_ReturnsStatus200() throws Exception {
+        deactivateAccountTestPrepare.successPostAssert(buildBaseDeactivateAccount(), status().isOk());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidDataOfDeactivateAccount")
+    void deactivateAccount_WithInvalidData_ReturnsStatus406(DeactivateAccountRequest request) throws Exception {
+        deactivateAccountTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
@@ -193,6 +209,19 @@ class AccountControllerTest implements RequestBuilderCommons {
                 Arguments.of(new ActivateAccountRequest("22233344455", 1, null)),
                 Arguments.of(new ActivateAccountRequest("22233344455", 1, -2)),
                 Arguments.of(new ActivateAccountRequest("22233344455", -1, 123))
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidDataOfDeactivateAccount() {
+        return Stream.of(
+                Arguments.of(new DeactivateAccountRequest(null, 123456, 1234)),
+                Arguments.of(new DeactivateAccountRequest("", 123456, 1234)),
+                Arguments.of(new DeactivateAccountRequest("999", 123456, 1234)),
+                Arguments.of(new DeactivateAccountRequest("9999999999999999", 123456, 1234)),
+                Arguments.of(new DeactivateAccountRequest("22233344455", null, 1234)),
+                Arguments.of(new DeactivateAccountRequest("22233344455", 0, 1234)),
+                Arguments.of(new DeactivateAccountRequest("22233344455", 123456, null)),
+                Arguments.of(new DeactivateAccountRequest("22233344455", 123456, 0))
         );
     }
 }
