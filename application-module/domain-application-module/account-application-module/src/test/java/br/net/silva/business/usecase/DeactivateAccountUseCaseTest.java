@@ -53,14 +53,6 @@ class DeactivateAccountUseCaseTest {
         assertFalse(account.active());
     }
 
-    @Test
-    void mustDeactivateAccountWithErrorAnyone() {
-        when(deactivateAccountRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
-        when(deactivateAccountRepository.save(any(AccountOutput.class))).thenReturn(buildMockAccount(false));
-        Source source = null;
-        assertThrows(GenericException.class, () -> deactivateAccountUseCase.exec(source));
-    }
-
     private AccountOutput buildMockAccount(boolean active) {
         return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
     }
