@@ -42,6 +42,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
@@ -194,6 +195,12 @@ class AccountControllerTest implements RequestBuilderCommons {
     void deactivateAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
         doThrow(new ClientNotExistsException("Client not Found")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
         deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void deactivateAccount_WithClientDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new ClientDeactivatedException("Client is Deactivated")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
+        deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), CLIENT_DEACTIVATED, status().isConflict());
     }
 
     @Test
