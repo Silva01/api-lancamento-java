@@ -7,15 +7,22 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.IAccountParam;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.interfaces.Validation;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 
-public class AccountExistsAndActiveValidate implements IValidations {
+import java.util.Optional;
+
+public class AccountExistsAndActiveValidate implements IValidations, Validation<AccountOutput> {
 
     private final FindApplicationBaseGateway<AccountOutput> findAccountGateway;
 
     public AccountExistsAndActiveValidate(FindApplicationBaseGateway<AccountOutput> findAccountGateway) {
         this.findAccountGateway = findAccountGateway;
+    }
+
+    public AccountExistsAndActiveValidate() {
+        this.findAccountGateway = null;
     }
 
     @Override
@@ -32,5 +39,16 @@ public class AccountExistsAndActiveValidate implements IValidations {
             throw new AccountDeactivatedException("Account is Deactivated");
         }
 
+    }
+
+    @Override
+    public void validate(Optional<AccountOutput> optAccount) throws GenericException {
+        if (optAccount.isEmpty()) {
+            throw new AccountNotExistsException("Account not found");
+        }
+
+        if (!optAccount.get().active()) {
+            throw new AccountDeactivatedException("Account is Deactivated");
+        }
     }
 }
