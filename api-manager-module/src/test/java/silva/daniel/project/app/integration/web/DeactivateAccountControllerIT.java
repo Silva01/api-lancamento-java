@@ -59,8 +59,8 @@ class DeactivateAccountControllerIT extends MysqlTestContainer implements Integr
     }
 
     @Test
-    void activateAccount_WithClientNotExists_ReturnsStatus404() {
-        var request = new ActivateAccountRequest("12345678900", 1, 1235);
+    void deactivateAccount_WithClientNotExists_ReturnsStatus404() {
+        var request = new DeactivateAccountRequest("12345678900", 1, 1235);
         requestCommons.assertPostRequest(API_DEACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertClientNotExists);
     }
 
