@@ -59,6 +59,6 @@ public class AccountController {
     @PostMapping("/deactivate")
     @ResponseStatus(HttpStatus.OK)
     public void deactivateAccount(@Valid @RequestBody DeactivateAccountRequest request) throws Exception {
-        accountService.deactivateAccount(new DeactivateAccount(request.getCpf(), request.getAccount(), request.getAgency()));
+        accountService.deactivateAccount(new DeactivateAccount(request.getCpf(), request.getAgency(), request.getAccount()));
     }
 }
