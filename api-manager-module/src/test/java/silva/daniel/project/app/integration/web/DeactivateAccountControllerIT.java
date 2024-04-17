@@ -77,9 +77,9 @@ class DeactivateAccountControllerIT extends MysqlTestContainer implements Integr
     }
 
     @Test
-    void activateAccount_WithAccountAlreadyActive_ReturnsStatus409() {
-        var request = new ActivateAccountRequest("12345678901", 1, 1234);
-        requestCommons.assertPostRequest(API_DEACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertAccountAlreadyActive);
+    void deactivateAccount_WithAccountAlreadyDeactivated_ReturnsStatus409() {
+        var request = new DeactivateAccountRequest("12345678905", 5, 1234);
+        requestCommons.assertPostRequest(API_DEACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertAccountAlreadyDeactivated);
     }
 
     private static Stream<Arguments> provideInvalidData() {
