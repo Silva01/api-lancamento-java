@@ -42,7 +42,7 @@ class DeactivateAccountControllerIT extends MysqlTestContainer implements Integr
     private RequestIntegrationCommons requestCommons;
 
     @Test
-    void activateAccount_WithValidData_ReturnsSuccess() {
+    void deactivateAccount_WithValidData_ReturnsSuccess() {
         var request = new DeactivateAccountRequest("12345678901", 1, 1234);
         var response = restTemplate.postForEntity(API_ACTIVATE_ACCOUNT, request, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
