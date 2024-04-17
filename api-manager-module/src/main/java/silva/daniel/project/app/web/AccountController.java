@@ -2,6 +2,7 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
@@ -58,6 +59,6 @@ public class AccountController {
     @PostMapping("/deactivate")
     @ResponseStatus(HttpStatus.OK)
     public void deactivateAccount(@Valid @RequestBody DeactivateAccountRequest request) throws Exception {
-
+        accountService.deactivateAccount(new DeactivateAccount(request.getCpf(), request.getAccount(), request.getAgency()));
     }
 }
