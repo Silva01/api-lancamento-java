@@ -2,6 +2,7 @@ package silva.daniel.project.app.domain.account.service;
 
 import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
+import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.DeactivateAccount;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_ACTIVATED_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
@@ -213,5 +215,15 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.deactivateAccount(new DeactivateAccount( "123444", 1, 2)))
                 .isInstanceOf(AccountNotExistsException.class)
                 .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void deactivateAccount_WithClientNotExists_ThrowsAccountDeactivatedException() throws Exception {
+        when(fluxService.fluxDeactivateAccount()).thenReturn(facade);
+        doThrow(new AccountDeactivatedException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.deactivateAccount(new DeactivateAccount( "123444", 1, 2)))
+                .isInstanceOf(AccountDeactivatedException.class)
+                .hasMessage(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
     }
 }
