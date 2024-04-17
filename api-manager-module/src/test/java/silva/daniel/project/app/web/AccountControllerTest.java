@@ -194,6 +194,12 @@ class AccountControllerTest implements RequestBuilderCommons {
         deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
+    @Test
+    void deactivateAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new AccountNotExistsException("Account not Found")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
+        deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
