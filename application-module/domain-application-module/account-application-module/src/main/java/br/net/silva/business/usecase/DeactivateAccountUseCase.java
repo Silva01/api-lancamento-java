@@ -31,7 +31,7 @@ public class DeactivateAccountUseCase implements UseCase<AccountOutput> {
             account.deactivate();
             return baseAccountGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
         } catch (Exception e) {
-            throw new GenericException(e.getMessage());
+            throw new AccountNotExistsException(e.getMessage());
         }
     }
 }
