@@ -31,11 +31,6 @@ public interface RequestBuilderCommons {
     }
 
     default DeactivateAccountRequest buildBaseDeactivateAccount() {
-        return DeactivateAccountRequest
-                .builder()
-                .cpf("12345678901")
-                .agency(123456)
-                .account(1234)
-                .build();
+        return new DeactivateAccountRequest("12345678901", 123456, 1234);
     }
 }
