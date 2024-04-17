@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
+import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 
@@ -52,5 +53,11 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public void activateAccount(@Valid @RequestBody ActivateAccountRequest request) throws Exception {
         accountService.activateAccount(new ActivateAccount(request.agency(), request.accountNumber(), request.cpf()));
+    }
+
+    @PostMapping("/deactivate")
+    @ResponseStatus(HttpStatus.OK)
+    public void deactivateAccount(@Valid @RequestBody DeactivateAccountRequest request) throws Exception {
+
     }
 }
