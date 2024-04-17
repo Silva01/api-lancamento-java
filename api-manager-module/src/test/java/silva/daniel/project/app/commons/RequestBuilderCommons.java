@@ -4,6 +4,7 @@ import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.CreateCreditCardRequest;
+import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 
@@ -29,7 +30,12 @@ public interface RequestBuilderCommons {
         return new ActivateAccountRequest("12345678901", 1, 1234);
     }
 
-    default DeactivateAccount buildBaseDeactivateAccount() {
-        return new DeactivateAccount("12345678901", 1, 1234);
+    default DeactivateAccountRequest buildBaseDeactivateAccount() {
+        return DeactivateAccountRequest
+                .builder()
+                .cpf("12345678901")
+                .agency(123456)
+                .account(1234)
+                .build();
     }
 }
