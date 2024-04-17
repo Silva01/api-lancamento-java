@@ -5,6 +5,7 @@ import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
@@ -185,6 +186,12 @@ class AccountControllerTest implements RequestBuilderCommons {
     @MethodSource("provideInvalidDataOfDeactivateAccount")
     void deactivateAccount_WithInvalidData_ReturnsStatus406(DeactivateAccountRequest request) throws Exception {
         deactivateAccountTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void deactivateAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
+        deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
