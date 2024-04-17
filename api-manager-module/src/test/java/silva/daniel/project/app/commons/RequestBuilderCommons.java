@@ -1,8 +1,10 @@
 package silva.daniel.project.app.commons;
 
 import br.net.silva.business.value_object.input.ActivateAccount;
+import br.net.silva.business.value_object.input.DeactivateAccount;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.CreateCreditCardRequest;
+import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 
@@ -26,5 +28,9 @@ public interface RequestBuilderCommons {
 
     default ActivateAccountRequest buildBaseActivateAccount() {
         return new ActivateAccountRequest("12345678901", 1, 1234);
+    }
+
+    default DeactivateAccountRequest buildBaseDeactivateAccount() {
+        return new DeactivateAccountRequest("12345678901", 123456, 1234);
     }
 }

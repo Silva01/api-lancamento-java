@@ -206,4 +206,16 @@ public class FluxService {
                 .withBuilderValidations()
                 .build();
     }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxDeactivateAccount() throws Exception {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class)
+                )
+                .withBuilderValidations()
+                .build();
+    }
 }
