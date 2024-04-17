@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 class DeactivateAccountControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
 
-    private static final String API_ACTIVATE_ACCOUNT = "/api/account/deactivate";
+    private static final String API_DEACTIVATE_ACCOUNT = "/api/account/deactivate";
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -44,7 +44,7 @@ class DeactivateAccountControllerIT extends MysqlTestContainer implements Integr
     @Test
     void deactivateAccount_WithValidData_ReturnsSuccess() {
         var request = new DeactivateAccountRequest("12345678901", 1, 1234);
-        var response = restTemplate.postForEntity(API_ACTIVATE_ACCOUNT, request, Void.class);
+        var response = restTemplate.postForEntity(API_DEACTIVATE_ACCOUNT, request, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         var sut = repository.findById(new AccountKey(request.getAccount(), request.getAgency()));
@@ -54,43 +54,46 @@ class DeactivateAccountControllerIT extends MysqlTestContainer implements Integr
 
     @ParameterizedTest
     @MethodSource("provideInvalidData")
-    void activateAccount_WithInvalidData_ReturnsStatus406(ActivateAccountRequest request) {
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertInvalidData);
+    void deactivateAccount_WithInvalidData_ReturnsStatus406(DeactivateAccountRequest request) {
+        requestCommons.assertPostRequest(API_DEACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertInvalidData);
     }
 
     @Test
     void activateAccount_WithClientNotExists_ReturnsStatus404() {
         var request = new ActivateAccountRequest("12345678900", 1, 1235);
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertClientNotExists);
+        requestCommons.assertPostRequest(API_DEACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
     void activateAccount_WithClientDeactivated_ReturnsStatus409() {
         var request = new ActivateAccountRequest("12345678903", 1, 1235);
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertClientDeactivatedExists);
+        requestCommons.assertPostRequest(API_DEACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertClientDeactivatedExists);
     }
 
     @Test
     void activateAccount_WithAccountNotExists_ReturnsStatus404() {
         var request = new ActivateAccountRequest("12345678988", 2, 1235);
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertAccountNotExists);
+        requestCommons.assertPostRequest(API_DEACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertAccountNotExists);
     }
 
     @Test
     void activateAccount_WithAccountAlreadyActive_ReturnsStatus409() {
         var request = new ActivateAccountRequest("12345678901", 1, 1234);
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertAccountAlreadyActive);
+        requestCommons.assertPostRequest(API_DEACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertAccountAlreadyActive);
     }
 
     private static Stream<Arguments> provideInvalidData() {
         return Stream.of(
-                Arguments.of(new ActivateAccountRequest("1234567890", 1, 1235)),
-                Arguments.of(new ActivateAccountRequest("", 1, 1235)),
-                Arguments.of(new ActivateAccountRequest(null, 1, 1235)),
-                Arguments.of(new ActivateAccountRequest("12345678900", null, 1235)),
-                Arguments.of(new ActivateAccountRequest("12345678900", 1, null)),
-                Arguments.of(new ActivateAccountRequest("12345678900", -1, 1235)),
-                Arguments.of(new ActivateAccountRequest("12345678900", 1, -1235))
+                Arguments.of(new DeactivateAccountRequest("1234567890", 1, 1235)),
+                Arguments.of(new DeactivateAccountRequest("12345678900000000000", 1, 1235)),
+                Arguments.of(new DeactivateAccountRequest("", 1, 1235)),
+                Arguments.of(new DeactivateAccountRequest(null, 1, 1235)),
+                Arguments.of(new DeactivateAccountRequest("12345678900", null, 1235)),
+                Arguments.of(new DeactivateAccountRequest("12345678900", 1, null)),
+                Arguments.of(new DeactivateAccountRequest("12345678900", -1, 1235)),
+                Arguments.of(new DeactivateAccountRequest("12345678900", 0, 1235)),
+                Arguments.of(new DeactivateAccountRequest("12345678900", 1, -1235)),
+                Arguments.of(new DeactivateAccountRequest("12345678900", 1, 0))
         );
     }
 }
