@@ -2,6 +2,7 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
+import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
@@ -38,6 +39,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_ACTIVATED_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
@@ -198,6 +200,12 @@ class AccountControllerTest implements RequestBuilderCommons {
     void deactivateAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
         doThrow(new AccountNotExistsException("Account not Found")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
         deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void deactivateAccount_WithAlreadyAccountDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new AccountDeactivatedException("Account is Deactivated")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
+        deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
