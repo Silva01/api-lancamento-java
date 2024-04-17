@@ -40,5 +40,6 @@ public class AccountService {
     }
 
     public void deactivateAccount(DeactivateAccount input) throws Exception {
+        fluxService.fluxDeactivateAccount().exec(Source.of(input));
     }
 }
