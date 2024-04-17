@@ -4,6 +4,7 @@ import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
+import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
@@ -137,7 +138,7 @@ class AccountServiceTest implements InputBuilderCommons {
     }
 
     @Test
-    void activateAccount_WithValidData_executeWithoutThrowsException() throws Exception {
+    void activateAccount_WithValidData_ExecuteWithoutThrowsException() throws Exception {
         when(fluxService.fluxActivateAccount()).thenReturn(facade);
         doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
 
@@ -183,5 +184,14 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.activateAccount(new ActivateAccount(1, 2, "123444")))
                 .isInstanceOf(AccountAlreadyActiveException.class)
                 .hasMessage(ACCOUNT_ALREADY_ACTIVATED_MESSAGE.getMessage());
+    }
+
+    @Test
+    void deactivateAccount_WithValidData_ExecuteWithoutThrowsException() throws Exception {
+        when(fluxService.fluxDeactivateAccount()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.deactivateAccount(new DeactivateAccount( "123444", 1, 2)))
+                .doesNotThrowAnyException();
     }
 }
