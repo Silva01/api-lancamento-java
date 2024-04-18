@@ -249,6 +249,12 @@ class AccountControllerTest implements RequestBuilderCommons {
         changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
+    @Test
+    void changePassword_WithAccountDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new AccountDeactivatedException("Account is Deactivated")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
