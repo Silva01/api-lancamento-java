@@ -60,8 +60,8 @@ class ChangePasswordOfAccountControllerIT extends MysqlTestContainer implements 
 
     @ParameterizedTest
     @MethodSource("provideInvalidData")
-    void activateAccount_WithInvalidData_ReturnsStatus406(ActivateAccountRequest request) {
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertInvalidData);
+    void changePassword_WithInvalidData_ReturnsStatus406(ChangePasswordRequest request) {
+        requestCommons.assertPutRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertInvalidData);
     }
 
     @Test
@@ -90,13 +90,22 @@ class ChangePasswordOfAccountControllerIT extends MysqlTestContainer implements 
 
     private static Stream<Arguments> provideInvalidData() {
         return Stream.of(
-                Arguments.of(new ActivateAccountRequest("1234567890", 1, 1235)),
-                Arguments.of(new ActivateAccountRequest("", 1, 1235)),
-                Arguments.of(new ActivateAccountRequest(null, 1, 1235)),
-                Arguments.of(new ActivateAccountRequest("12345678900", null, 1235)),
-                Arguments.of(new ActivateAccountRequest("12345678900", 1, null)),
-                Arguments.of(new ActivateAccountRequest("12345678900", -1, 1235)),
-                Arguments.of(new ActivateAccountRequest("12345678900", 1, -1235))
+                Arguments.of(new ChangePasswordRequest(null, 123456, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(0, 123456, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(-1, 123456, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, null, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 0, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, -233, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, null, "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "999", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "9999999999999", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", null, "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "12345", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", null)),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "12345"))
         );
     }
 }
