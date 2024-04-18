@@ -11,6 +11,7 @@ import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -45,6 +46,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_WITH_PASSWORD_DIFFERENT;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
@@ -253,6 +255,12 @@ class AccountControllerTest implements RequestBuilderCommons {
     void changePassword_WithAccountDeactivated_ReturnsStatus409() throws Exception {
         doThrow(new AccountDeactivatedException("Account is Deactivated")).when(accountService).changePassword(any(ChangePasswordDTO.class));
         changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
+    }
+
+    @Test
+    void changePassword_WithPasswordDifferentThatRegistered_ReturnsStatus400() throws Exception {
+        doThrow(new PasswordDivergentException("Password is different")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_WITH_PASSWORD_DIFFERENT, status().isBadRequest());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
