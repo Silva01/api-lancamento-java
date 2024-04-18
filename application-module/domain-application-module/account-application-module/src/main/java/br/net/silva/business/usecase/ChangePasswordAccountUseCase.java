@@ -35,6 +35,7 @@ public class ChangePasswordAccountUseCase implements UseCase<AccountOutput> {
         var accountOutput = execValidate(accountOpt).extract();
 
         var account = createNewAccountByCpfFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
+        account.validatePassword(CryptoUtils.convertToSHA256(changePasswordDTO.password()));
         account.changePassword(CryptoUtils.convertToSHA256(changePasswordDTO.newPassword()));
         baseAccountGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
         return null;
