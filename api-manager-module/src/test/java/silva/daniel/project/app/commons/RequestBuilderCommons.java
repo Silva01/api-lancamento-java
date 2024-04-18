@@ -1,12 +1,11 @@
 package silva.daniel.project.app.commons;
 
-import br.net.silva.business.value_object.input.ActivateAccount;
-import br.net.silva.business.value_object.input.DeactivateAccount;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.CreateCreditCardRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
+import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 
 public interface RequestBuilderCommons {
 
@@ -32,5 +31,16 @@ public interface RequestBuilderCommons {
 
     default DeactivateAccountRequest buildBaseDeactivateAccount() {
         return new DeactivateAccountRequest("12345678901", 123456, 1234);
+    }
+
+    default ChangePasswordRequest buildBaseCreateNewPasswordForAccount() {
+        return ChangePasswordRequest
+                .builder()
+                .agency(1)
+                .accountNumber(1234)
+                .cpf("12345678901")
+                .password("123456")
+                .newPassword("876543")
+                .build();
     }
 }
