@@ -6,6 +6,7 @@ import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
@@ -228,6 +229,12 @@ class AccountControllerTest implements RequestBuilderCommons {
     @MethodSource("provideInvalidDataOfChangePassword")
     void changePassword_WithInvalidData_ReturnsStatus406(ChangePasswordRequest request) throws Exception {
         changePasswordForAccountTestPrepare.failurePutAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void changePassword_WithClientNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
