@@ -277,4 +277,14 @@ class AccountServiceTest implements InputBuilderCommons {
                 .isInstanceOf(AccountNotExistsException.class)
                 .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
     }
+
+    @Test
+    void changePassword_WithAccountDeactivated_ThrowsAccountDeactivatedException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doThrow(new AccountDeactivatedException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .isInstanceOf(AccountDeactivatedException.class)
+                .hasMessage(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
+    }
 }
