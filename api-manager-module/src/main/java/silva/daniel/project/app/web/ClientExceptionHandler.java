@@ -12,6 +12,7 @@ import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
+import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import silva.daniel.project.app.domain.client.FailureResponse;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -99,5 +101,11 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<FailureResponse> handleAccountAlreadyActiveException(AccountAlreadyActiveException ex) {
         var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
+    }
+
+    @ExceptionHandler(PasswordDivergentException.class)
+    public ResponseEntity<FailureResponse> handlePasswordDivergentException(PasswordDivergentException ex) {
+        var failureResponse = new FailureResponse(ex.getMessage(), BAD_REQUEST.value());
+        return ResponseEntity.status(BAD_REQUEST).body(failureResponse);
     }
 }
