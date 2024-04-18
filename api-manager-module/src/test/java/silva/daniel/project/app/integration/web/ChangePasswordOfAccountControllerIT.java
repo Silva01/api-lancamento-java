@@ -71,9 +71,9 @@ class ChangePasswordOfAccountControllerIT extends MysqlTestContainer implements 
     }
 
     @Test
-    void activateAccount_WithClientDeactivated_ReturnsStatus409() {
-        var request = new ActivateAccountRequest("12345678903", 1, 1235);
-        requestCommons.assertPostRequest(API_CHANGE_PASSWORD, request, FailureResponse.class, this::assertClientDeactivatedExists);
+    void changePassword_WithClientDeactivated_ReturnsStatus409() {
+        var request = new ChangePasswordRequest(1, 1234, "12345678903", "123456", "654321");
+        requestCommons.assertPutRequest(API_CHANGE_PASSWORD, request, FailureResponse.class, this::assertClientDeactivatedExists);
     }
 
     @Test
