@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
+import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
@@ -60,5 +61,11 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public void deactivateAccount(@Valid @RequestBody DeactivateAccountRequest request) throws Exception {
         accountService.deactivateAccount(new DeactivateAccount(request.getCpf(), request.getAgency(), request.getAccount()));
+    }
+
+    @PutMapping("/change/password")
+    @ResponseStatus(HttpStatus.OK)
+    public void changePassword(@Valid @RequestBody ChangePasswordRequest request) throws Exception {
+
     }
 }
