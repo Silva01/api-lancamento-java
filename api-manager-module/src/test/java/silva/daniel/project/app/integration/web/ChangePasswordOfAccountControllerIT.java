@@ -88,6 +88,12 @@ class ChangePasswordOfAccountControllerIT extends MysqlTestContainer implements 
         requestCommons.assertPutRequest(API_CHANGE_PASSWORD, request, FailureResponse.class, this::assertAccountAlreadyDeactivated);
     }
 
+    @Test
+    void changePassword_WithPasswordDifferent_ReturnsStatus400() {
+        var request = new ChangePasswordRequest(1, 1234, "12345678901", "123499", "654321");
+        requestCommons.assertPutRequest(API_CHANGE_PASSWORD, request, FailureResponse.class, this::assertAccountWithPasswordDifferent);
+    }
+
     private static Stream<Arguments> provideInvalidData() {
         return Stream.of(
                 Arguments.of(new ChangePasswordRequest(null, 123456, "12345678901", "123456", "876543")),
