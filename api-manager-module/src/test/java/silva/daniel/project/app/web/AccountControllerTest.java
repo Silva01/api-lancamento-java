@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
+import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
@@ -223,6 +224,12 @@ class AccountControllerTest implements RequestBuilderCommons {
         changePasswordForAccountTestPrepare.successPutAssert(buildBaseCreateNewPasswordForAccount(), status().isOk());
     }
 
+    @ParameterizedTest
+    @MethodSource("provideInvalidDataOfChangePassword")
+    void changePassword_WithInvalidData_ReturnsStatus406(ChangePasswordRequest request) throws Exception {
+        changePasswordForAccountTestPrepare.failurePutAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
@@ -258,6 +265,27 @@ class AccountControllerTest implements RequestBuilderCommons {
                 Arguments.of(new DeactivateAccountRequest("22233344455", 0, 1234)),
                 Arguments.of(new DeactivateAccountRequest("22233344455", 123456, null)),
                 Arguments.of(new DeactivateAccountRequest("22233344455", 123456, 0))
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidDataOfChangePassword() {
+        return Stream.of(
+                Arguments.of(new ChangePasswordRequest(null, 123456, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(0, 123456, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(-1, 123456, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, null, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 0, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, -233, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, null, "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "999", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "9999999999999", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", null, "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "12345", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", null)),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "12345"))
         );
     }
 }
