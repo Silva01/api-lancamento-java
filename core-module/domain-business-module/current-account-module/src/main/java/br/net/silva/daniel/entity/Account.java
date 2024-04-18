@@ -105,7 +105,7 @@ public class Account extends Validation implements AggregateRoot, IFactoryDto<Ac
 
     public void validatePassword(String password) {
         if (!this.password.equals(password)) {
-            throw GenericErrorUtils.executeException("Password is different");
+            throw GenericErrorUtils.executePasswordDivergentException("Password is different");
         }
     }
 
