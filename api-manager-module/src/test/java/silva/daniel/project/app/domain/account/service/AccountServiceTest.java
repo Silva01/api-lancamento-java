@@ -5,6 +5,7 @@ import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException
 import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
+import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
@@ -235,5 +236,14 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.deactivateAccount(new DeactivateAccount( "123444", 1, 2)))
                 .isInstanceOf(ClientDeactivatedException.class)
                 .hasMessage(CLIENT_DEACTIVATED.getMessage());
+    }
+
+    @Test
+    void changePassword_WithValidData_ExecuteWithoutThrowsException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .doesNotThrowAnyException();
     }
 }
