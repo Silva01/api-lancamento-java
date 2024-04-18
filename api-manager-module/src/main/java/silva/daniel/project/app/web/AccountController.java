@@ -2,6 +2,7 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
@@ -66,6 +67,12 @@ public class AccountController {
     @PutMapping("/change/password")
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(@Valid @RequestBody ChangePasswordRequest request) throws Exception {
-
+        accountService.changePassword(new ChangePasswordDTO(
+                request.getCpf(),
+                request.getAgency(),
+                request.getAccountNumber(),
+                request.getPassword(),
+                request.getNewPassword()
+        ));
     }
 }
