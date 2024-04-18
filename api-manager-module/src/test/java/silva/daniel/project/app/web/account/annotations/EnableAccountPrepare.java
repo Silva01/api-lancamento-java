@@ -4,6 +4,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import silva.daniel.project.app.web.AccountController;
 import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
+import silva.daniel.project.app.web.account.ChangePasswordForAccountTestPrepare;
 import silva.daniel.project.app.web.account.DeactivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
@@ -22,7 +23,8 @@ import java.lang.annotation.Target;
         GetInformationAccountTestPrepare.class,
         GetAccountListTestPrepare.class,
         ActivateAccountTestPrepare.class,
-        DeactivateAccountTestPrepare.class
+        DeactivateAccountTestPrepare.class,
+        ChangePasswordForAccountTestPrepare.class
 })
 public @interface EnableAccountPrepare {
 }
