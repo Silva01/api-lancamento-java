@@ -246,4 +246,14 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
                 .doesNotThrowAnyException();
     }
+
+    @Test
+    void changePassword_WithClientNotExists_ThrowsClientNorExistsException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .isInstanceOf(ClientNotExistsException.class)
+                .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
 }
