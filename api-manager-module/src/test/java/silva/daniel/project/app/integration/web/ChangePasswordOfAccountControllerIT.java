@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 class ChangePasswordOfAccountControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
 
-    private static final String API_ACTIVATE_ACCOUNT = "/api/account/change/password";
+    private static final String API_CHANGE_PASSWORD = "/api/account/change/password";
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -50,7 +50,7 @@ class ChangePasswordOfAccountControllerIT extends MysqlTestContainer implements 
         assertThat(initialData).isPresent();
 
         var httpEntity = new HttpEntity<ChangePasswordRequest>(request);
-        var response = restTemplate.exchange(API_ACTIVATE_ACCOUNT, HttpMethod.PUT, httpEntity, Void.class);
+        var response = restTemplate.exchange(API_CHANGE_PASSWORD, HttpMethod.PUT, httpEntity, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         var sut = repository.findById(new AccountKey(request.getAccountNumber(), request.getAgency()));
@@ -61,31 +61,31 @@ class ChangePasswordOfAccountControllerIT extends MysqlTestContainer implements 
     @ParameterizedTest
     @MethodSource("provideInvalidData")
     void changePassword_WithInvalidData_ReturnsStatus406(ChangePasswordRequest request) {
-        requestCommons.assertPutRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertInvalidData);
+        requestCommons.assertPutRequest(API_CHANGE_PASSWORD, request, FailureResponse.class, this::assertInvalidData);
     }
 
     @Test
-    void activateAccount_WithClientNotExists_ReturnsStatus404() {
-        var request = new ActivateAccountRequest("12345678900", 1, 1235);
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertClientNotExists);
+    void changePassword_WithClientNotExists_ReturnsStatus404() {
+        var request = new ChangePasswordRequest(1, 1234, "12345678900", "123456", "654321");
+        requestCommons.assertPutRequest(API_CHANGE_PASSWORD, request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
     void activateAccount_WithClientDeactivated_ReturnsStatus409() {
         var request = new ActivateAccountRequest("12345678903", 1, 1235);
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertClientDeactivatedExists);
+        requestCommons.assertPostRequest(API_CHANGE_PASSWORD, request, FailureResponse.class, this::assertClientDeactivatedExists);
     }
 
     @Test
     void activateAccount_WithAccountNotExists_ReturnsStatus404() {
         var request = new ActivateAccountRequest("12345678988", 2, 1235);
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertAccountNotExists);
+        requestCommons.assertPostRequest(API_CHANGE_PASSWORD, request, FailureResponse.class, this::assertAccountNotExists);
     }
 
     @Test
     void activateAccount_WithAccountAlreadyActive_ReturnsStatus409() {
         var request = new ActivateAccountRequest("12345678901", 1, 1234);
-        requestCommons.assertPostRequest(API_ACTIVATE_ACCOUNT, request, FailureResponse.class, this::assertAccountAlreadyActive);
+        requestCommons.assertPostRequest(API_CHANGE_PASSWORD, request, FailureResponse.class, this::assertAccountAlreadyActive);
     }
 
     private static Stream<Arguments> provideInvalidData() {
