@@ -23,6 +23,7 @@ import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
+import silva.daniel.project.app.web.account.ChangePasswordForAccountTestPrepare;
 import silva.daniel.project.app.web.account.DeactivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
@@ -42,7 +43,6 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
-import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
@@ -67,6 +67,9 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private DeactivateAccountTestPrepare deactivateAccountTestPrepare;
+
+    @Autowired
+    private ChangePasswordForAccountTestPrepare changePasswordForAccountTestPrepare;
 
     @MockBean
     private AccountService accountService;
@@ -213,6 +216,11 @@ class AccountControllerTest implements RequestBuilderCommons {
     void deactivateAccount_WithAlreadyAccountDeactivated_ReturnsStatus409() throws Exception {
         doThrow(new AccountDeactivatedException("Account is Deactivated")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
         deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
+    }
+
+    @Test
+    void changePassword_WithValidData_ReturnsStatus200() throws Exception {
+        changePasswordForAccountTestPrepare.successPutAssert(buildBaseCreateNewPasswordForAccount(), status().isOk());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
