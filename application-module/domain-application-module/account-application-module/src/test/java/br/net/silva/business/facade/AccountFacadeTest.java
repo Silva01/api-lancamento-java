@@ -22,6 +22,7 @@ import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -164,7 +165,7 @@ class AccountFacadeTest {
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "123456");
         var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
 
-        var exceptionResponse = assertThrows(IllegalArgumentException.class, () -> accountFacade.exec(source));
+        var exceptionResponse = assertThrows(PasswordDivergentException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Password is different", exceptionResponse.getMessage());
     }
