@@ -7,6 +7,7 @@ import br.net.silva.business.build.AccountWithNewAgencyAlreadyExistsValidateBuil
 import br.net.silva.business.build.CreditCardNumberExistsValidationBuilder;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.usecase.ChangeAgencyUseCase;
+import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
@@ -214,6 +215,18 @@ public class FluxService {
                 .withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class)
+                )
+                .withBuilderValidations()
+                .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericFacadeDelegate fluxChangePassword() throws Exception {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangePasswordAccountUseCase.class)
                 )
                 .withBuilderValidations()
                 .build();
