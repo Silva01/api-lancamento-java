@@ -34,6 +34,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 
@@ -248,12 +249,22 @@ class AccountServiceTest implements InputBuilderCommons {
     }
 
     @Test
-    void changePassword_WithClientNotExists_ThrowsClientNorExistsException() throws Exception {
+    void changePassword_WithClientNotExists_ThrowsClientNotExistsException() throws Exception {
         when(fluxService.fluxChangePassword()).thenReturn(facade);
         doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
                 .isInstanceOf(ClientNotExistsException.class)
                 .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void changePassword_WithClientDeactivated_ThrowsClientDeactivatedException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doThrow(new ClientDeactivatedException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .isInstanceOf(ClientDeactivatedException.class)
+                .hasMessage(CLIENT_ALREADY_DEACTIVATED.getMessage());
     }
 }
