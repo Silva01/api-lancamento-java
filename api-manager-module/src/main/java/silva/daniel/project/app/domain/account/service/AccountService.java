@@ -45,5 +45,6 @@ public class AccountService {
     }
 
     public void changePassword(ChangePasswordDTO input) throws Exception {
+        fluxService.fluxChangePassword().exec(Source.of(input));
     }
 }
