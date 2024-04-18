@@ -46,7 +46,7 @@ class AccountFacadeTest {
 
     private UseCase<AccountOutput> createNewAccountByCpfUseCase;
 
-    private UseCase<EmptyOutput> changePasswordAccountUseCase;
+    private UseCase<AccountOutput> changePasswordAccountUseCase;
 
     private UseCase<AccountOutput> deactivateAccountUseCase;
 
@@ -172,7 +172,7 @@ class AccountFacadeTest {
 
     @Test
     void mustChangePasswordWithSuccess() throws GenericException {
-        when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.empty());
+        when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
 
         Queue<UseCase> useCases = new LinkedList<>();
