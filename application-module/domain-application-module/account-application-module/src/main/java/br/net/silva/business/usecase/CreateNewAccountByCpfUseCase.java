@@ -3,7 +3,6 @@ package br.net.silva.business.usecase;
 import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.build.CreditCardBuilder;
 import br.net.silva.business.build.TransactionBuilder;
-import br.net.silva.business.factory.AccountOutputFactory;
 import br.net.silva.business.validations.AccountNotExistsValidation;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.CreditCardOutput;
@@ -55,24 +54,8 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
         execValidate(findIsExistsPeerCPFRepository.findById(clientCpf));
 
         var newAccount = new Account(agencyInterface.agency(), "default", clientCpf.cpf());
-
         var accountOutput = saveRepository.save(AccountBuilder.buildFullAccountOutput().createFrom(newAccount.build()));
-
-        var accountAggregate = createNewAccountByCpfFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
-
-        factory.fillIn(accountAggregate.build(), param.output());
-        var accountDto = accountAggregate.build();
-        return AccountOutputFactory
-                .createOutput()
-                .withNumber(accountDto.number())
-                .withAgency(accountDto.agency())
-                .withBalance(accountDto.balance())
-                .withPassword(accountDto.password())
-                .withFlagActive(accountDto.active())
-                .withCpf(accountDto.cpf())
-                .withTransactions(transactionOutputBuilder.createFrom(accountDto.transactions()))
-                .andWithCreditCard(creditCardOutputBuilder.createFrom(accountDto.creditCard()))
-                .build();
-
+        factory.fillIn(AccountBuilder.buildFullAccountDto().createFrom(accountOutput), param.output());
+        return accountOutput;
     }
 }
