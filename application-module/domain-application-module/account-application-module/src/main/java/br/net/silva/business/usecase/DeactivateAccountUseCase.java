@@ -5,7 +5,7 @@ import br.net.silva.business.validations.AccountExistsAndActiveValidate;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
-import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
@@ -21,8 +21,7 @@ public class DeactivateAccountUseCase implements UseCase<AccountOutput> {
 
     @Override
     public AccountOutput exec(Source param) throws GenericException {
-        var input = (ICpfParam) param.input();
-        var optAccount = baseAccountGateway.findById(input);
+        var optAccount = baseAccountGateway.findById((ParamGateway) param.input());
 
         var accountOutput = execValidate(optAccount).extract();
         var account = AccountBuilder.buildAggregate().createFrom(accountOutput);
