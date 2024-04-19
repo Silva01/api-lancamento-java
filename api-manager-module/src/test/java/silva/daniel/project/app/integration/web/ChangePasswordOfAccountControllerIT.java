@@ -18,7 +18,6 @@ import silva.daniel.project.app.commons.MysqlTestContainer;
 import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.account.entity.AccountKey;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
-import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.client.FailureResponse;
 
