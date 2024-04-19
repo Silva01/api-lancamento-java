@@ -34,8 +34,7 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
 
         execValidate(findIsExistsPeerCPFRepository.findById(clientCpf));
 
-        var newAccount = createAccount((IAgencyParam) param.input(), clientCpf);
-        var accountOutput = save(newAccount);
+        var accountOutput = save(createAccount((IAgencyParam) param.input(), clientCpf));
         createResponse(param, accountOutput);
         return accountOutput;
     }
