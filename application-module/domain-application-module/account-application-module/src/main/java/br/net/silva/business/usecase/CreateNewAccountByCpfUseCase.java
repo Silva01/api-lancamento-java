@@ -31,13 +31,24 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
     @Override
     public AccountOutput exec(Source param) throws GenericException {
         var clientCpf = (ICpfParam) param.input();
-        var agencyInterface = (IAgencyParam) param.input();
 
         execValidate(findIsExistsPeerCPFRepository.findById(clientCpf));
 
-        var newAccount = new Account(agencyInterface.agency(), "default", clientCpf.cpf());
-        var accountOutput = saveRepository.save(AccountBuilder.buildFullAccountOutput().createFrom(newAccount.build()));
-        factory.fillIn(AccountBuilder.buildFullAccountDto().createFrom(accountOutput), param.output());
+        var newAccount = createAccount((IAgencyParam) param.input(), clientCpf);
+        var accountOutput = save(newAccount);
+        createResponse(param, accountOutput);
         return accountOutput;
+    }
+
+    private void createResponse(Source param, AccountOutput accountOutput) {
+        factory.fillIn(AccountBuilder.buildFullAccountDto().createFrom(accountOutput), param.output());
+    }
+
+    private AccountOutput save(Account newAccount) {
+        return saveRepository.save(AccountBuilder.buildFullAccountOutput().createFrom(newAccount.build()));
+    }
+
+    private static Account createAccount(IAgencyParam agencyInterface, ICpfParam clientCpf) {
+        return new Account(agencyInterface.agency(), "default", clientCpf.cpf());
     }
 }
