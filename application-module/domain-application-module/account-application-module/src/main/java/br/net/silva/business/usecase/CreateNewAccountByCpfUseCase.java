@@ -2,10 +2,9 @@ package br.net.silva.business.usecase;
 
 import br.net.silva.business.build.AccountBuilder;
 import br.net.silva.business.build.CreditCardBuilder;
-import br.net.silva.daniel.shared.application.interfaces.IGenericBuilder;
 import br.net.silva.business.build.TransactionBuilder;
-import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.factory.AccountOutputFactory;
+import br.net.silva.business.validations.AccountNotExistsValidation;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.CreditCardOutput;
 import br.net.silva.business.value_object.output.TransactionOutput;
@@ -13,20 +12,23 @@ import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.CreditCardDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.factory.CreateNewAccountByCpfFactory;
-import br.net.silva.daniel.shared.application.interfaces.IAgencyParam;
-import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
-import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
+import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
-import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
+import br.net.silva.daniel.shared.application.interfaces.IAgencyParam;
+import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
+import br.net.silva.daniel.shared.application.interfaces.IGenericBuilder;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 
 import java.util.List;
 
+@ValidateStrategyOn(validations = {AccountNotExistsValidation.class})
 public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
 
     private final IFactoryAggregate<Account, AccountDTO> createNewAccountByCpfFactory;
@@ -49,9 +51,8 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
     public AccountOutput exec(Source param) throws GenericException {
         var clientCpf = (ICpfParam) param.input();
         var agencyInterface = (IAgencyParam) param.input();
-        if (isExistsAccountActiveForCPF(clientCpf)) {
-            throw new AccountExistsForCPFInformatedException("Exists account active for CPF informated");
-        }
+
+        execValidate(findIsExistsPeerCPFRepository.findById(clientCpf));
 
         var newAccount = new Account(agencyInterface.agency(), "default", clientCpf.cpf());
 
@@ -73,9 +74,5 @@ public class CreateNewAccountByCpfUseCase implements UseCase<AccountOutput> {
                 .andWithCreditCard(creditCardOutputBuilder.createFrom(accountDto.creditCard()))
                 .build();
 
-    }
-
-    private boolean isExistsAccountActiveForCPF(ICpfParam cpf) {
-        return findIsExistsPeerCPFRepository.findById(cpf).isPresent();
     }
 }
