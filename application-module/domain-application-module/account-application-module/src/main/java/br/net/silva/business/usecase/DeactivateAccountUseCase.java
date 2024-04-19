@@ -1,7 +1,7 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.build.AccountBuilder;
-import br.net.silva.business.validations.AccountExistsValidate;
+import br.net.silva.business.validations.AccountExistsAndActiveValidate;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
@@ -10,7 +10,7 @@ import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 
-@ValidateStrategyOn(validations = {AccountExistsValidate.class})
+@ValidateStrategyOn(validations = {AccountExistsAndActiveValidate.class})
 public class DeactivateAccountUseCase implements UseCase<AccountOutput> {
 
     private final ApplicationBaseGateway<AccountOutput> baseAccountGateway;
