@@ -131,7 +131,7 @@ class AccountFacadeTest {
 
         var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
-        assertEquals("Exists account active for CPF informated", exceptionResponse.getMessage());
+        assertEquals("Account already exists for the CPF informed", exceptionResponse.getMessage());
     }
 
     @Test
@@ -149,7 +149,7 @@ class AccountFacadeTest {
 
         var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
-        assertEquals("Exists account active for CPF informated", exceptionResponse.getMessage());
+        assertEquals("Account already exists for the CPF informed", exceptionResponse.getMessage());
     }
 
     @Test
