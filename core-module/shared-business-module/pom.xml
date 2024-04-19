@@ -58,6 +58,7 @@
                         <!-- Padrões Ant para excluir classes específicas -->
                         <exclude>**/*GeneratorRandomNumber.*</exclude>
                         <exclude>**/*GenericErrorUtils.*</exclude>
+                        <exclude>**/*PasswordDivergentException.*</exclude>
                         <exclude>**/utils/*</exclude>
                         <exclude>**/exception/*GenericException.*</exclude>
                     </excludes>

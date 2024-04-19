@@ -2,6 +2,7 @@ package silva.daniel.project.app.domain.account.service;
 
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
@@ -41,5 +42,9 @@ public class AccountService {
 
     public void deactivateAccount(DeactivateAccount input) throws Exception {
         fluxService.fluxDeactivateAccount().exec(Source.of(input));
+    }
+
+    public void changePassword(ChangePasswordDTO input) throws Exception {
+        fluxService.fluxChangePassword().exec(Source.of(input));
     }
 }

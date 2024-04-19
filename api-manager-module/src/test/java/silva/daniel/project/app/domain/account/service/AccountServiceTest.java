@@ -5,6 +5,7 @@ import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException
 import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
+import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
@@ -12,6 +13,7 @@ import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,6 +35,8 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_WITH_PASSWORD_DIFFERENT;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 
@@ -235,5 +239,64 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.deactivateAccount(new DeactivateAccount( "123444", 1, 2)))
                 .isInstanceOf(ClientDeactivatedException.class)
                 .hasMessage(CLIENT_DEACTIVATED.getMessage());
+    }
+
+    @Test
+    void changePassword_WithValidData_ExecuteWithoutThrowsException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    void changePassword_WithClientNotExists_ThrowsClientNotExistsException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .isInstanceOf(ClientNotExistsException.class)
+                .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void changePassword_WithClientDeactivated_ThrowsClientDeactivatedException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doThrow(new ClientDeactivatedException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .isInstanceOf(ClientDeactivatedException.class)
+                .hasMessage(CLIENT_ALREADY_DEACTIVATED.getMessage());
+    }
+
+    @Test
+    void changePassword_WithAccountNotFound_ThrowsAccountNotExistsException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .isInstanceOf(AccountNotExistsException.class)
+                .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void changePassword_WithAccountDeactivated_ThrowsAccountDeactivatedException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doThrow(new AccountDeactivatedException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .isInstanceOf(AccountDeactivatedException.class)
+                .hasMessage(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
+    }
+
+    @Test
+    void changePassword_WithPasswordDifferentThatRegistered_ThrowsPasswordDivergentException() throws Exception {
+        when(fluxService.fluxChangePassword()).thenReturn(facade);
+        doThrow(new PasswordDivergentException(ACCOUNT_WITH_PASSWORD_DIFFERENT.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
+                .isInstanceOf(PasswordDivergentException.class)
+                .hasMessage(ACCOUNT_WITH_PASSWORD_DIFFERENT.getMessage());
     }
 }

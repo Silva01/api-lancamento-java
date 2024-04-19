@@ -6,10 +6,12 @@ import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
+import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -19,10 +21,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
+import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
+import silva.daniel.project.app.web.account.ChangePasswordForAccountTestPrepare;
 import silva.daniel.project.app.web.account.DeactivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
@@ -42,7 +46,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
-import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_WITH_PASSWORD_DIFFERENT;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
@@ -67,6 +71,9 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private DeactivateAccountTestPrepare deactivateAccountTestPrepare;
+
+    @Autowired
+    private ChangePasswordForAccountTestPrepare changePasswordForAccountTestPrepare;
 
     @MockBean
     private AccountService accountService;
@@ -215,6 +222,47 @@ class AccountControllerTest implements RequestBuilderCommons {
         deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
+    @Test
+    void changePassword_WithValidData_ReturnsStatus200() throws Exception {
+        changePasswordForAccountTestPrepare.successPutAssert(buildBaseCreateNewPasswordForAccount(), status().isOk());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidDataOfChangePassword")
+    void changePassword_WithInvalidData_ReturnsStatus406(ChangePasswordRequest request) throws Exception {
+        changePasswordForAccountTestPrepare.failurePutAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void changePassword_WithClientNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void changePassword_WithClientDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new ClientDeactivatedException("Client is Deactivated")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), CLIENT_DEACTIVATED, status().isConflict());
+    }
+
+    @Test
+    void changePassword_WithAccountNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new AccountNotExistsException("Account not Found")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void changePassword_WithAccountDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new AccountDeactivatedException("Account is Deactivated")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
+    }
+
+    @Test
+    void changePassword_WithPasswordDifferentThatRegistered_ReturnsStatus400() throws Exception {
+        doThrow(new PasswordDivergentException("Password is different")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_WITH_PASSWORD_DIFFERENT, status().isBadRequest());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
@@ -250,6 +298,27 @@ class AccountControllerTest implements RequestBuilderCommons {
                 Arguments.of(new DeactivateAccountRequest("22233344455", 0, 1234)),
                 Arguments.of(new DeactivateAccountRequest("22233344455", 123456, null)),
                 Arguments.of(new DeactivateAccountRequest("22233344455", 123456, 0))
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidDataOfChangePassword() {
+        return Stream.of(
+                Arguments.of(new ChangePasswordRequest(null, 123456, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(0, 123456, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(-1, 123456, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, null, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 0, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, -233, "12345678901", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, null, "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "999", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "9999999999999", "123456", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", null, "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "12345", "876543")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", null)),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "")),
+                Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "12345"))
         );
     }
 }
