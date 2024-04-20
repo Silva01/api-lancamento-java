@@ -1,9 +1,5 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.build.ClientBuilder;
-import br.net.silva.daniel.dto.AddressDTO;
-import br.net.silva.daniel.dto.ClientDTO;
-import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
@@ -31,7 +27,6 @@ public final class CreateNewClientUseCase implements UseCase<ClientOutput> {
         this.factory = factory;
     }
 
-    //TODO: This method need refactor urgent, it's are very ugly
     @Override
     public ClientOutput exec(Source param) throws GenericException {
         var clientRequest = (IClientParam) param.input();
@@ -39,11 +34,13 @@ public final class CreateNewClientUseCase implements UseCase<ClientOutput> {
 
         execValidate(clientOpt);
 
-        final var clientDto = createNewClient(clientRequest.address(), clientRequest);
+        var newClient = saveRepository.save(createNewClient(clientRequest.address(), clientRequest));
+        buildResponse(param, newClient);
+        return newClient;
+    }
 
-        var clientOutput = saveRepository.save(clientDto);
+    private void buildResponse(Source param, ClientOutput clientOutput) {
         factory.fillIn(clientOutput, param.output());
-        return clientOutput;
     }
 
     private static ClientOutput createNewClient(IAddressParam addressRequestDto, IClientParam clientRequest) {
