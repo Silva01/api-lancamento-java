@@ -15,6 +15,7 @@ import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.validation.ClientNotExistsValidate;
+import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 
@@ -38,17 +39,15 @@ public final class CreateNewClientUseCase implements UseCase<ClientOutput> {
 
         execValidate(clientOpt);
 
-        var addressRequestDto = clientRequest.address();
+        final var clientDto = createNewClient(clientRequest.address(), clientRequest);
 
-        final var clientDto = createNewClient(addressRequestDto, clientRequest);
-
-        var clientOutput = saveRepository.save(ClientBuilder.buildFullClientOutput().createFrom(clientDto));
+        var clientOutput = saveRepository.save(clientDto);
         factory.fillIn(clientOutput, param.output());
         return clientOutput;
     }
 
-    private static ClientDTO createNewClient(IAddressParam addressRequestDto, IClientParam clientRequest) {
-        var address = new AddressDTO(addressRequestDto.street(), addressRequestDto.number(), addressRequestDto.complement(), addressRequestDto.neighborhood(), addressRequestDto.state(), addressRequestDto.city(), addressRequestDto.zipCode());
-        return new ClientDTO(clientRequest.cpf(), clientRequest.name(), clientRequest.telephone(), true, address);
+    private static ClientOutput createNewClient(IAddressParam addressRequestDto, IClientParam clientRequest) {
+        var address = new AddressOutput(addressRequestDto.street(), addressRequestDto.number(), addressRequestDto.complement(), addressRequestDto.neighborhood(), addressRequestDto.state(), addressRequestDto.city(), addressRequestDto.zipCode());
+        return new ClientOutput(null, clientRequest.cpf(), clientRequest.name(), clientRequest.telephone(), true, address);
     }
 }
