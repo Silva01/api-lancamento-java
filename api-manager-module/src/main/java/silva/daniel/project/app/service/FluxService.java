@@ -55,11 +55,7 @@ public class FluxService {
                 .withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, CreateNewClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewAccountByCpfUseCase.class))
-                .withBuilderValidations(
-                        ValidationBuilder
-                                .create(ClientNotExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository)
-                )
+                .withBuilderValidations()
                 .build();
     }
 
