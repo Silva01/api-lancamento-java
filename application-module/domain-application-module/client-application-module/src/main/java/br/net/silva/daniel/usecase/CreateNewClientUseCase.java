@@ -14,6 +14,8 @@ import br.net.silva.daniel.validation.ClientNotExistsValidate;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
+import java.util.UUID;
+
 
 @ValidateStrategyOn(validations = {ClientNotExistsValidate.class})
 public final class CreateNewClientUseCase implements UseCase<ClientOutput> {
@@ -45,6 +47,6 @@ public final class CreateNewClientUseCase implements UseCase<ClientOutput> {
 
     private static ClientOutput createNewClient(IAddressParam addressRequestDto, IClientParam clientRequest) {
         var address = new AddressOutput(addressRequestDto.street(), addressRequestDto.number(), addressRequestDto.complement(), addressRequestDto.neighborhood(), addressRequestDto.state(), addressRequestDto.city(), addressRequestDto.zipCode());
-        return new ClientOutput(null, clientRequest.cpf(), clientRequest.name(), clientRequest.telephone(), true, address);
+        return new ClientOutput(UUID.randomUUID().toString(), clientRequest.cpf(), clientRequest.name(), clientRequest.telephone(), true, address);
     }
 }
