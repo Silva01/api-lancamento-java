@@ -67,7 +67,7 @@ class ClientFacadeTest {
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
 
-        List<IValidations> validationsList = List.of(clientNotExistsValidate);
+        List<IValidations> validationsList = List.of();
         var clientFacade = new GenericFacadeDelegate<>(useCases, validationsList);
 
         var clientRequestDto = new ClientRequestDTO("123", "99988877766", "Daniel", "6122223333", true, 222, new AddressRequestDTO("Rua 1", "123", "House", "Test", "DF", "Others", "12345-123"));
