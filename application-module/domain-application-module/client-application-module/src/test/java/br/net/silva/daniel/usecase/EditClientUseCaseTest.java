@@ -1,11 +1,11 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.shared.business.exception.GenericException;
-import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
-import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
+import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
@@ -70,7 +69,7 @@ class EditClientUseCaseTest {
     @Test
     void shouldGiveErrorNullPointerTryEditClient() {
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
-        when(baseRepository.save(any(ClientOutput.class))).thenReturn(null);
+        when(baseRepository.save(any(ClientOutput.class))).thenThrow(new NullPointerException("Generic error"));
         var editClientInput = new EditClientInput("22233344455", "Daniel", "22344445555");
         var source = new Source(EmptyOutput.INSTANCE, editClientInput);
 
