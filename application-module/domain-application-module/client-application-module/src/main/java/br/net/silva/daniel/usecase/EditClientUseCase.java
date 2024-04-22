@@ -1,6 +1,8 @@
 package br.net.silva.daniel.usecase;
 
 import br.net.silva.daniel.build.ClientBuilder;
+import br.net.silva.daniel.dto.ClientDTO;
+import br.net.silva.daniel.entity.Client;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
@@ -31,16 +33,13 @@ public final class EditClientUseCase implements UseCase<ClientOutput> {
     public ClientOutput exec(Source param) throws GenericException {
         try {
             var input = (EditClientInput) param.input();
+
             var clientOutput = execValidate(findRepository.findById(input)).extract();
 
-            var client = ClientBuilder.buildAggregate().createFrom(clientOutput);
-            client.editName(input.name());
-            client.editTelephone(input.telephone());
+            final var client = updateClient(clientOutput, input);
+            buildResponse(param, client.build());
 
-            var response = saveRepository.save(ClientBuilder.buildFullClientOutput().createFrom(client.build()));
-
-            mapper.fillIn(ClientBuilder.buildFullClientDto().createFrom(response), param.output());
-            return response;
+            return saveRepository.save(convertToOutput(client));
         } catch (ClientNotActiveException cae) {
             throw new ClientNotActiveException(cae.getMessage());
         } catch (ClientNotExistsException cne) {
@@ -48,5 +47,20 @@ public final class EditClientUseCase implements UseCase<ClientOutput> {
         } catch (Exception e) {
             throw new GenericException("Generic error");
         }
+    }
+
+    private void buildResponse(Source param, ClientDTO dto) {
+        mapper.fillIn(dto, param.output());
+    }
+
+    private static ClientOutput convertToOutput(Client client) {
+        return ClientBuilder.buildFullClientOutput().createFrom(client.build());
+    }
+
+    private static Client updateClient(ClientOutput clientOutput, EditClientInput input) {
+        var client = ClientBuilder.buildAggregate().createFrom(clientOutput);
+        client.editName(input.name());
+        client.editTelephone(input.telephone());
+        return client;
     }
 }
