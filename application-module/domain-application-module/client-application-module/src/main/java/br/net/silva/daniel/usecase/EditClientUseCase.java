@@ -32,11 +32,9 @@ public final class EditClientUseCase implements UseCase<ClientOutput> {
     @Override
     public ClientOutput exec(Source param) throws GenericException {
         try {
-            var input = (EditClientInput) param.input();
+            var clientOutput = execValidate(findRepository.findById(getParameters(param))).extract();
 
-            var clientOutput = execValidate(findRepository.findById(input)).extract();
-
-            final var client = updateClient(clientOutput, input);
+            final var client = updateClient(clientOutput, getParameters(param));
             buildResponse(param, client.build());
 
             return saveRepository.save(convertToOutput(client));
@@ -47,6 +45,10 @@ public final class EditClientUseCase implements UseCase<ClientOutput> {
         } catch (Exception e) {
             throw new GenericException("Generic error");
         }
+    }
+
+    private static EditClientInput getParameters(Source param) {
+        return (EditClientInput) param.input();
     }
 
     private void buildResponse(Source param, ClientDTO dto) {
