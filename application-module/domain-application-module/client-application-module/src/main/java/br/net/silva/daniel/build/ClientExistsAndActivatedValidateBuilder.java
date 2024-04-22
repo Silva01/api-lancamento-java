@@ -8,6 +8,7 @@ import br.net.silva.daniel.value_object.output.ClientOutput;
 
 import java.util.Objects;
 
+@Deprecated(forRemoval = true)
 public class ClientExistsAndActivatedValidateBuilder implements ObjectBuilder<IValidations> {
 
     private FindApplicationBaseGateway<ClientOutput> findClientRepository;
