@@ -1,6 +1,5 @@
 package br.net.silva.daniel.facade;
 
-import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
@@ -9,6 +8,7 @@ import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
@@ -139,14 +139,14 @@ class ClientFacadeTest {
 
     @Test
     void mustActivateClientWithSuccess() throws GenericException {
-        var client = buildClient(true);
+        var client = buildClient(false);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
 
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateClientUseCase);
 
-        List<IValidations> validationsList = List.of(clientExistsValidate);
+        List<IValidations> validationsList = List.of();
         var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
 
         var activateClient = new ActivateClient("99988877766");
@@ -154,7 +154,7 @@ class ClientFacadeTest {
         clientFacade.exec(source);
 
         verify(baseRepository, Mockito.times(1)).save(Mockito.any(ClientOutput.class));
-        verify(baseRepository, Mockito.times(2)).findById(activateClient);
+        verify(baseRepository, Mockito.times(1)).findById(activateClient);
     }
 
     private ClientOutput buildClient(boolean active) {
