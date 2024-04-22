@@ -79,11 +79,7 @@ public class FluxService {
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, DeactivateClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class)
                 )
-                .withBuilderValidations(
-                        ValidationBuilder
-                                .create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository)
-                )
+                .withBuilderValidations()
                 .build();
     }
 
