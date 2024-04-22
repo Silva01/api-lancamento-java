@@ -11,8 +11,10 @@ import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class EditClientUseCaseTest {
 
     private EditClientUseCase editClientUseCase;
@@ -29,17 +32,15 @@ class EditClientUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
-        when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient());
-
         var facotry = new GenericResponseMapper(Collections.emptyList());
-
         this.editClientUseCase = new EditClientUseCase(baseRepository, facotry);
     }
 
     @Test
     void shouldEditClientWithSuccess() throws GenericException {
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
+        when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient());
+
         var editClientInput = new EditClientInput("22233344455", "Daniel", "22344445555");
         var source = new Source(EmptyOutput.INSTANCE, editClientInput);
 
@@ -55,18 +56,20 @@ class EditClientUseCaseTest {
     @Test
     void shouldGiveErrorClientNotExistsTryEditClient() {
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
+
         var editClientInput = new EditClientInput("22233344455", "Daniel", "22344445555");
         var source = new Source(EmptyOutput.INSTANCE, editClientInput);
 
         var exceptionResponse = assertThrows(GenericException.class, () -> editClientUseCase.exec(source));
-        assertEquals("Client not exists", exceptionResponse.getMessage());
+        assertEquals("Client not exists in database", exceptionResponse.getMessage());
 
         verify(baseRepository, times(1)).findById(editClientInput);
-        verify(baseRepository, times(0)).save(any(ClientOutput.class));
+        verify(baseRepository, never()).save(any(ClientOutput.class));
     }
 
     @Test
     void shouldGiveErrorNullPointerTryEditClient() {
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(null);
         var editClientInput = new EditClientInput("22233344455", "Daniel", "22344445555");
         var source = new Source(EmptyOutput.INSTANCE, editClientInput);
