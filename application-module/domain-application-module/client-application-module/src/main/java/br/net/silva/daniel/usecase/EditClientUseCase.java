@@ -3,6 +3,7 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.build.ClientBuilder;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
+import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
@@ -10,9 +11,11 @@ import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
+@ValidateStrategyOn(validations = {ClientExistsValidate.class})
 public final class EditClientUseCase implements UseCase<ClientOutput> {
     private final FindApplicationBaseGateway<ClientOutput> findRepository;
     private final SaveApplicationBaseGateway<ClientOutput> saveRepository;
@@ -28,7 +31,7 @@ public final class EditClientUseCase implements UseCase<ClientOutput> {
     public ClientOutput exec(Source param) throws GenericException {
         try {
             var input = (EditClientInput) param.input();
-            var clientOutput = findRepository.findById(input).orElseThrow(() -> new ClientNotExistsException("Client not exists"));
+            var clientOutput = execValidate(findRepository.findById(input)).extract();
 
             var client = ClientBuilder.buildAggregate().createFrom(clientOutput);
             client.editName(input.name());
