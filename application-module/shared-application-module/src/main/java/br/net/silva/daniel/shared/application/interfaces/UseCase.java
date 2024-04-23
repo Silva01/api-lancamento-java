@@ -27,13 +27,13 @@ public interface UseCase<R> {
                 try {
                     var validation = (Validation<R>) validationClass.getDeclaredConstructor().newInstance();
                     validation.validate(opt);
-                    return () -> opt.orElse(null);
                 } catch (GenericException e) {
                     throw e;
                 } catch (Exception e) {
                     throw new BuildValidationException(e);
                 }
             }
+            return () -> opt.orElse(null);
         }
         return () -> opt.orElse(null);
     }
