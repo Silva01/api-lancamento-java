@@ -99,10 +99,8 @@ public class FluxService {
         return FacadeBuilder
                 .make().withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, EditAddressUseCase.class)
-                ).withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository)
-                ).build();
+                ).withBuilderValidations()
+                .build();
     }
 
     @SuppressWarnings("unchecked")
