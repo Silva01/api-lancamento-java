@@ -116,15 +116,9 @@ public class FluxService {
     public GenericFacadeDelegate fluxDeactivateCreditCard() throws Exception {
         return FacadeBuilder
                 .make().withBuilderUseCases(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateCreditCardUseCase.class)
-                ).withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository),
-                        ValidationBuilder.create(AccountExistsValidationBuilder.class)
-                                .withRepository(accountBaseRepository),
-                        ValidationBuilder.create(CreditCardNumberExistsValidationBuilder.class)
-                                .withRepository(accountBaseRepository)
-                ).build();
+                ).withBuilderValidations().build();
     }
 
     @SuppressWarnings("unchecked")
