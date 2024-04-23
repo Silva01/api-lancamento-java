@@ -12,24 +12,20 @@ import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class DeactivateCreditCardUseCaseTest {
 
     private DeactivateCreditCardUseCase useCase;
@@ -39,15 +35,14 @@ class DeactivateCreditCardUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        when(baseAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(true))));
-        doAnswer(invocation -> invocation.getArguments()[0]).when(baseAccountGateway).save(any(AccountOutput.class));
-
         useCase = new DeactivateCreditCardUseCase(baseAccountGateway);
     }
 
     @Test
     void shouldDeactivateCreditCardWithSuccess() {
+        when(baseAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(true))));
+        doAnswer(invocation -> invocation.getArguments()[0]).when(baseAccountGateway).save(any(AccountOutput.class));
+
         var input = new DeactivateCreditCardInput("1234", 1, 1234, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, input);
 
@@ -59,6 +54,8 @@ class DeactivateCreditCardUseCaseTest {
 
     @Test
     void shouldErrorAtDeactivateCreditCardNumberIsDifferent() {
+        when(baseAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(true))));
+
         var input = new DeactivateCreditCardInput("1234", 1, 1234, "1234456653");
         var source = new Source(EmptyOutput.INSTANCE, input);
 
