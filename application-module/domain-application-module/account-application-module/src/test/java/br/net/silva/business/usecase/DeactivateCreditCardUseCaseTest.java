@@ -1,5 +1,6 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
 import br.net.silva.business.exception.CreditCardNumberDifferentException;
@@ -100,6 +101,17 @@ class DeactivateCreditCardUseCaseTest {
         assertThatThrownBy(() -> useCase.exec(source))
                 .isInstanceOf(CreditCardNumberDifferentException.class)
                 .hasMessage("Credit Card number is different at register in account");
+    }
+
+    @Test
+    void deactivateCreditCard_WithAccountNotExists_ThrowsAccountNotExistsException() {
+        when(baseAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
+        var input = new DeactivateCreditCardInput("1234", 1, 1234, "1234456699");
+        var source = new Source(EmptyOutput.INSTANCE, input);
+
+        assertThatThrownBy(() -> useCase.exec(source))
+                .isInstanceOf(AccountNotExistsException.class)
+                .hasMessage("Account not exists");
     }
 
     private AccountOutput buildMockAccount(boolean active, CreditCardOutput creditCard) {
