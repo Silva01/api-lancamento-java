@@ -9,12 +9,20 @@ import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.interfaces.Validation;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
-public class CreditCardNumberExistsValidate implements IValidations {
+import java.util.Optional;
+
+public class CreditCardNumberExistsValidate implements IValidations, Validation<AccountOutput> {
 
     private final FindApplicationBaseGateway<AccountOutput> findAccountGateway;
+
+    public CreditCardNumberExistsValidate() {
+        this.findAccountGateway = null;
+    }
 
     public CreditCardNumberExistsValidate(FindApplicationBaseGateway<AccountOutput> findAccountGateway) {
         this.findAccountGateway = findAccountGateway;
@@ -39,5 +47,20 @@ public class CreditCardNumberExistsValidate implements IValidations {
         if (!creditCardDto.active()) {
             throw new CreditCardDeactivatedException("Credit card deactivated in the account");
         }
+    }
+
+    @Override
+    public void validate(Optional<AccountOutput> opt) throws GenericException {
+        final var account = opt.orElseThrow(GenericErrorUtils::executeExceptionNotPermissionOperation);
+        final var creditCard = account.creditCard();
+
+        if (creditCard == null) {
+            throw new CreditCardNotExistsException("Credit card not exists in the account");
+        }
+
+        if (!creditCard.active()) {
+            throw new CreditCardDeactivatedException("Credit card deactivated in the account");
+        }
+
     }
 }
