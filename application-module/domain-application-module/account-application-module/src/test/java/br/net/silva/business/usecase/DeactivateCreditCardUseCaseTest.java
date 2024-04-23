@@ -60,7 +60,7 @@ class DeactivateCreditCardUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         var responseException = assertThrows(CreditCardNumberDifferentException.class, () -> useCase.exec(source));
-        assertEquals("Credit card number is different the credit card informed for the user", responseException.getMessage());
+        assertEquals("Credit Card number is different at register in account", responseException.getMessage());
 
         verify(baseAccountGateway, times(1)).findById(any(ParamGateway.class));
         verify(baseAccountGateway, never()).save(any(AccountOutput.class));
