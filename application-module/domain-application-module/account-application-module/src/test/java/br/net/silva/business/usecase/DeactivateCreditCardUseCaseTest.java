@@ -91,6 +91,17 @@ class DeactivateCreditCardUseCaseTest {
             .hasMessage("Credit card deactivated in the account");
     }
 
+    @Test
+    void deactivateCreditCard_WithCreditCardNumberDifferent_ThrowsCreditCardNumberDifferentException() {
+        when(baseAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(true))));
+        var input = new DeactivateCreditCardInput("1234", 1, 1234, "1234456699");
+        var source = new Source(EmptyOutput.INSTANCE, input);
+
+        assertThatThrownBy(() -> useCase.exec(source))
+                .isInstanceOf(CreditCardNumberDifferentException.class)
+                .hasMessage("Credit Card number is different at register in account");
+    }
+
     private AccountOutput buildMockAccount(boolean active, CreditCardOutput creditCard) {
         return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, Collections.emptyList());
     }
