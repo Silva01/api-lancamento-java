@@ -31,14 +31,14 @@ class EditAddressUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
-        when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient());
-
         this.editAddressUseCase = new EditAddressUseCase(baseRepository);
     }
 
     @Test
     void shouldEditAddressWithSuccess() throws GenericException {
+        when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
+        when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient());
+
         var editAddressInput = new EditAddressInput(
                 "22233344455",
                 "Rua 2",
