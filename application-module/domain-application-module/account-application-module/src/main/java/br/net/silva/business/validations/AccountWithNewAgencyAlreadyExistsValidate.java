@@ -5,13 +5,21 @@ import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
+import br.net.silva.daniel.shared.application.interfaces.Validation;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 
-public class AccountWithNewAgencyAlreadyExistsValidate implements IValidations {
+import java.util.Optional;
+
+public class AccountWithNewAgencyAlreadyExistsValidate implements IValidations, Validation<AccountOutput> {
 
     private final FindApplicationBaseGateway<AccountOutput> findAccountGateway;
 
+    public AccountWithNewAgencyAlreadyExistsValidate() {
+        this.findAccountGateway = null;
+    }
+
+    @Deprecated(forRemoval = true)
     public AccountWithNewAgencyAlreadyExistsValidate(FindApplicationBaseGateway<AccountOutput> findAccountGateway) {
         this.findAccountGateway = findAccountGateway;
     }
@@ -28,5 +36,12 @@ public class AccountWithNewAgencyAlreadyExistsValidate implements IValidations {
 
         if (optionalAccount.isPresent())
             throw new AccountAlreadyExistsForNewAgencyException("Account With new agency already exists");
+    }
+
+    @Override
+    public void validate(Optional<AccountOutput> opt) throws GenericException {
+        if (opt.isPresent())
+            throw new AccountAlreadyExistsForNewAgencyException("Account With new agency already exists");
+
     }
 }
