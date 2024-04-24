@@ -1,5 +1,6 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
@@ -66,6 +67,20 @@ class CreateNewCreditCardUseCaseTest {
         assertThatThrownBy(() -> useCase.exec(source))
                 .isInstanceOf(AccountNotExistsException.class)
                 .hasMessage("Account not found");
+
+        verify(baseGateway, times(1)).findById(any(ParamGateway.class));
+        verify(baseGateway, never()).save(any(AccountOutput.class));
+    }
+
+    @Test
+    void createNewCreditCard_WithAccountDeactivated_ThrowsAccountDeactivatedException() {
+        when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(false, null)));
+        final var input = buildInputBase();
+        var source = new Source(EmptyOutput.INSTANCE, input);
+
+        assertThatThrownBy(() -> useCase.exec(source))
+                .isInstanceOf(AccountDeactivatedException.class)
+                .hasMessage("Account is Deactivated");
 
         verify(baseGateway, times(1)).findById(any(ParamGateway.class));
         verify(baseGateway, never()).save(any(AccountOutput.class));
