@@ -2,6 +2,7 @@ package br.net.silva.business.usecase;
 
 import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.CreditCardAlreadyExistsException;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.CreditCardOutput;
@@ -43,7 +44,7 @@ class CreateNewCreditCardUseCaseTest {
     @Test
     void shouldCreateNewCreditCardWithSuccess() {
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true, null)));
-        when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true, buildMockCreditCard()));
+        when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true, buildMockCreditCard(true)));
 
         final var input = buildInputBase();
         var source = new Source(EmptyOutput.INSTANCE, input);
@@ -86,12 +87,39 @@ class CreateNewCreditCardUseCaseTest {
         verify(baseGateway, never()).save(any(AccountOutput.class));
     }
 
+    @Test
+    void createNewCreditCard_WithAccountWithCreditCard_ThrowsCreditCardAlreadyExistsException() {
+
+        // With Credit Card Active
+        when(baseGateway.findById(any(ParamGateway.class)))
+                .thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(true))));
+
+        final var input = buildInputBase();
+        var source = new Source(EmptyOutput.INSTANCE, input);
+
+        assertThatThrownBy(() -> useCase.exec(source))
+                .isInstanceOf(CreditCardAlreadyExistsException.class)
+                .hasMessage("Credit card already exists");
+
+
+        // With Credit Card Deactivated
+        when(baseGateway.findById(any(ParamGateway.class)))
+                .thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(false))));
+
+        assertThatThrownBy(() -> useCase.exec(source))
+                .isInstanceOf(CreditCardAlreadyExistsException.class)
+                .hasMessage("Credit card already exists");
+
+        verify(baseGateway, times(2)).findById(any(ParamGateway.class));
+        verify(baseGateway, never()).save(any(AccountOutput.class));
+    }
+
     private AccountOutput buildMockAccount(boolean active, CreditCardOutput creditCard) {
         return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, Collections.emptyList());
     }
 
-    private CreditCardOutput buildMockCreditCard() {
-        return new CreditCardOutput("99988877766", 45678, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2027, 1, 1), true);
+    private CreditCardOutput buildMockCreditCard(boolean active) {
+        return new CreditCardOutput("99988877766", 45678, FlagEnum.MASTER_CARD, BigDecimal.valueOf(1000), LocalDate.of(2027, 1, 1), active);
     }
 
     private static CreateCreditCardInput buildInputBase() {
