@@ -17,10 +17,9 @@ class FacadeBuilderTest {
 
         var validation = ValidationBuilder.create(DammyValidationBuilder.class);
 
-        var sut = ((Builder) FacadeBuilder
+        var sut = ((Builder<?>) FacadeBuilder
                 .make()
-                .withBuilderUseCases(useCase1, useCase2)
-                .withBuilderValidations(validation))
+                .withBuilderUseCases(useCase1, useCase2))
                 .build();
 
         assertNotNull(sut);

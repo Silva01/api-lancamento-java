@@ -4,7 +4,6 @@ import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.interfaces.spec.UseCaseBuilderSpec;
-import br.net.silva.daniel.shared.application.interfaces.spec.ValidationSpec;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
 import java.util.ArrayList;
@@ -15,11 +14,11 @@ import java.util.stream.Stream;
 
 public interface FacadeBuilder {
 
-    static UseCaseBuilderSpec<ValidationSpec<br.net.silva.daniel.shared.application.build.Builder<GenericFacadeDelegate>>> make() {
+    static UseCaseBuilderSpec<br.net.silva.daniel.shared.application.build.Builder<GenericFacadeDelegate>> make() {
         return new Builder<>();
     }
 
-    class Builder<T> implements UseCaseBuilderSpec<ValidationSpec<br.net.silva.daniel.shared.application.build.Builder<T>>>, ValidationSpec<br.net.silva.daniel.shared.application.build.Builder<T>> {
+    class Builder<T> implements UseCaseBuilderSpec<br.net.silva.daniel.shared.application.build.Builder<T>> {
 
         private final Queue<UseCase> useCaseQueue;
         private final List<IValidations> validations;
@@ -30,22 +29,10 @@ public interface FacadeBuilder {
         }
 
         @Override
-        public ValidationSpec withBuilderUseCases(br.net.silva.daniel.shared.application.build.Builder<UseCase>... useCaseBuilders) {
+        public br.net.silva.daniel.shared.application.build.Builder<T> withBuilderUseCases(br.net.silva.daniel.shared.application.build.Builder<UseCase>... useCaseBuilders) {
             Stream.of(useCaseBuilders).forEach(useCase -> {
                 try {
                     useCaseQueue.add(useCase.build());
-                } catch (Exception e) {
-                    throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
-                }
-            });
-            return this;
-        }
-
-        @Override
-        public br.net.silva.daniel.shared.application.build.Builder<T> withBuilderValidations(ObjectBuilder<IValidations>... validationBuilders) {
-            Stream.of(validationBuilders).forEach(validation -> {
-                try {
-                    validations.add(validation.build());
                 } catch (Exception e) {
                     throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
                 }

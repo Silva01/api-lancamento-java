@@ -1,37 +1,13 @@
 package silva.daniel.project.app.service;
 
-import br.net.silva.business.build.AccountAlreadyExistsCreditCardValidationBuilder;
-import br.net.silva.business.build.AccountExistsAndActiveValidationBuilder;
-import br.net.silva.business.build.AccountExistsValidationBuilder;
-import br.net.silva.business.build.AccountWithNewAgencyAlreadyExistsValidateBuilder;
-import br.net.silva.business.build.CreditCardNumberExistsValidationBuilder;
-import br.net.silva.business.usecase.ActivateAccountUseCase;
-import br.net.silva.business.usecase.ChangeAgencyUseCase;
-import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
-import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
-import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
-import br.net.silva.business.usecase.DeactivateAccountUseCase;
-import br.net.silva.business.usecase.DeactivateCreditCardUseCase;
-import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
-import br.net.silva.business.usecase.GetInformationAccountUseCase;
+import br.net.silva.business.usecase.*;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.build.ClientExistsAndActivatedValidateBuilder;
-import br.net.silva.daniel.build.ClientExistsAndDeactivatedValidateBuilder;
-import br.net.silva.daniel.build.ClientExistsValidateBuilder;
-import br.net.silva.daniel.build.ClientNotExistsValidateBuilder;
 import br.net.silva.daniel.shared.application.build.FacadeBuilder;
 import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
-import br.net.silva.daniel.shared.application.build.ValidationBuilder;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.usecase.ActivateClientUseCase;
-import br.net.silva.daniel.usecase.CreateNewClientUseCase;
-import br.net.silva.daniel.usecase.DeactivateClientUseCase;
-import br.net.silva.daniel.usecase.EditAddressUseCase;
-import br.net.silva.daniel.usecase.EditClientUseCase;
-import br.net.silva.daniel.usecase.FindActiveClientUseCase;
-import br.net.silva.daniel.usecase.FindClientUseCase;
+import br.net.silva.daniel.usecase.*;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +31,6 @@ public class FluxService {
                 .withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, CreateNewClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewAccountByCpfUseCase.class))
-                .withBuilderValidations()
                 .build();
     }
 
@@ -67,7 +42,6 @@ public class FluxService {
                         UseCaseBuilder
                                 .makeTo(clientBaseRepository, responseMapper, EditClientUseCase.class)
                 )
-                .withBuilderValidations()
                 .build();
     }
 
@@ -79,7 +53,6 @@ public class FluxService {
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, DeactivateClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class)
                 )
-                .withBuilderValidations()
                 .build();
     }
 
@@ -90,7 +63,6 @@ public class FluxService {
                 .withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, ActivateClientUseCase.class)
                 )
-                .withBuilderValidations()
                 .build();
     }
 
@@ -99,7 +71,7 @@ public class FluxService {
         return FacadeBuilder
                 .make().withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, EditAddressUseCase.class)
-                ).withBuilderValidations()
+                )
                 .build();
     }
 
@@ -108,7 +80,7 @@ public class FluxService {
         return FacadeBuilder
                 .make().withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class)
-                ).withBuilderValidations()
+                )
                 .build();
     }
 
@@ -118,7 +90,7 @@ public class FluxService {
                 .make().withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateCreditCardUseCase.class)
-                ).withBuilderValidations().build();
+                ).build();
     }
 
     @SuppressWarnings("unchecked")
@@ -127,7 +99,7 @@ public class FluxService {
                 .make().withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewCreditCardUseCase.class)
-                ).withBuilderValidations()
+                )
                 .build();
     }
 
@@ -139,7 +111,6 @@ public class FluxService {
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangeAgencyUseCase.class)
                 )
-                .withBuilderValidations()
                 .build();
     }
 
@@ -149,7 +120,7 @@ public class FluxService {
                 .make()
                 .withBuilderUseCases(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, GetInformationAccountUseCase.class)
-                ).withBuilderValidations().build();
+                ).build();
     }
 
     @SuppressWarnings("unchecked")
@@ -158,7 +129,7 @@ public class FluxService {
                 .make()
                 .withBuilderUseCases(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, FindAllAccountsByCpfUseCase.class)
-                ).withBuilderValidations().build();
+                ).build();
     }
 
     @SuppressWarnings("unchecked")
@@ -169,7 +140,6 @@ public class FluxService {
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ActivateAccountUseCase.class)
                 )
-                .withBuilderValidations()
                 .build();
     }
 
@@ -181,7 +151,6 @@ public class FluxService {
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class)
                 )
-                .withBuilderValidations()
                 .build();
     }
 
@@ -193,7 +162,6 @@ public class FluxService {
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangePasswordAccountUseCase.class)
                 )
-                .withBuilderValidations()
                 .build();
     }
 }
