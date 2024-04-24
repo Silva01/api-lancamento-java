@@ -37,7 +37,7 @@ public interface FacadeBuilder {
                     throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
                 }
             });
-            return () -> (T) new GenericFacadeDelegate<>(useCaseQueue, validations);
+            return () -> (T) new GenericFacadeDelegate<>(useCaseQueue);
         }
     }
 }

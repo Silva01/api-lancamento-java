@@ -51,7 +51,7 @@ class GenericFacadeDelegateTest {
         List<IValidations> validationsList = List.of(stringNotNullValidation);
 
         // Finally create a object that type is GenericFacadeDelegate and pass the useCases and validationsList
-        genericFacadeDelegate = new GenericFacadeDelegate<>(useCases, validationsList);
+        genericFacadeDelegate = new GenericFacadeDelegate<>(useCases);
 
     }
     @Test
@@ -68,23 +68,6 @@ class GenericFacadeDelegateTest {
 
         assertNotNull(basicTest);
         assertEquals("Test List", basicTest.getName());
-    }
-
-    @Test
-    void mustExecuteFacadeWithException() {
-
-        var basicInput = new BasicTest();
-        basicInput.setName("");
-
-        var source = new Source(new BasicTest(), basicInput);
-        var exceptionResponse = Assertions.assertThrows(GenericException.class, () -> genericFacadeDelegate.exec(source));
-        assertEquals("String must not be null", exceptionResponse.getMessage());
-    }
-
-    @Test
-    void mustExecuteFacadeWithExceptionWhenPortIsNull() {
-        var source = new Source(new BasicTest(), null);
-        Assertions.assertThrows(NullPointerException.class, () -> genericFacadeDelegate.exec(source));
     }
 
     private class BasicTest implements Input, Output {

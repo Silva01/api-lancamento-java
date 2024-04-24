@@ -52,7 +52,7 @@ class ActivateAccountFacadeTest {
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
-        var facade = new GenericFacadeDelegate(useCases, Collections.emptyList());
+        var facade = new GenericFacadeDelegate(useCases);
         var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 
@@ -72,7 +72,7 @@ class ActivateAccountFacadeTest {
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
-        var facade = new GenericFacadeDelegate(useCases, Collections.emptyList());
+        var facade = new GenericFacadeDelegate(useCases);
         var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 
@@ -92,7 +92,7 @@ class ActivateAccountFacadeTest {
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
-        var facade = new GenericFacadeDelegate(useCases, Collections.emptyList());
+        var facade = new GenericFacadeDelegate(useCases);
         var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 

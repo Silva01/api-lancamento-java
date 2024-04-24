@@ -75,7 +75,7 @@ class AccountFacadeTest {
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
-        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var accountFacade = new GenericFacadeDelegate(useCases);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
         var source = new Source(new NewAccountResponse(), createNewAccountByCpfDTO);
 
@@ -99,7 +99,7 @@ class AccountFacadeTest {
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
-        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var accountFacade = new GenericFacadeDelegate(useCases);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
         var source = new Source(new NewAccountByNewClientResponseSuccess(), createNewAccountByCpfDTO);
 
@@ -125,7 +125,7 @@ class AccountFacadeTest {
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
-        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var accountFacade = new GenericFacadeDelegate(useCases);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
         var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
 
@@ -143,31 +143,13 @@ class AccountFacadeTest {
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
-        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var accountFacade = new GenericFacadeDelegate(useCases);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
         var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
 
         var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account already exists for the CPF informed", exceptionResponse.getMessage());
-    }
-
-    @Test
-    void mustErrorCreateNewAccountByCpfPasswordInvalid() {
-        when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
-        when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
-        Queue<UseCase> useCases = new LinkedList<>();
-        useCases.add(createNewAccountByCpfUseCase);
-
-        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
-
-        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
-        CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "123456");
-        var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
-
-        var exceptionResponse = assertThrows(PasswordDivergentException.class, () -> accountFacade.exec(source));
-        assertNotNull(exceptionResponse);
-        assertEquals("Password is different", exceptionResponse.getMessage());
     }
 
     @Test
@@ -180,7 +162,7 @@ class AccountFacadeTest {
 
         List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
-        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var accountFacade = new GenericFacadeDelegate(useCases);
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
         var source = new Source(EmptyOutput.INSTANCE, changePasswordDTO);
         accountFacade.exec(source);
@@ -198,7 +180,7 @@ class AccountFacadeTest {
 
         List<IValidations> validationsList = Collections.emptyList();
 
-        var accountFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var accountFacade = new GenericFacadeDelegate(useCases);
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
         var source = new Source(EmptyOutput.INSTANCE, changePasswordDTO);
 

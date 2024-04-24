@@ -68,7 +68,7 @@ class ClientFacadeTest {
         useCases.add(createNewClientUseCase);
 
         List<IValidations> validationsList = List.of();
-        var clientFacade = new GenericFacadeDelegate<>(useCases, validationsList);
+        var clientFacade = new GenericFacadeDelegate<>(useCases);
 
         var clientRequestDto = new ClientRequestDTO("123", "99988877766", "Daniel", "6122223333", true, 222, new AddressRequestDTO("Rua 1", "123", "House", "Test", "DF", "Others", "12345-123"));
         var source = new Source(EmptyOutput.INSTANCE, clientRequestDto);
@@ -91,7 +91,7 @@ class ClientFacadeTest {
         useCases.add(createNewClientUseCase);
 
         List<IValidations> validationsList = List.of(clientNotExistsValidate);
-        var clientFacade = new GenericFacadeDelegate<>(useCases, validationsList);
+        var clientFacade = new GenericFacadeDelegate<>(useCases);
 
         var findClientByCpf = new FindClientByCpf("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
@@ -110,13 +110,13 @@ class ClientFacadeTest {
         useCases.add(deactivateClientUseCase);
 
         List<IValidations> validationsList = List.of(clientExistsValidate);
-        var clientFacade = new GenericFacadeDelegate<>(useCases, validationsList);
+        var clientFacade = new GenericFacadeDelegate<>(useCases);
 
         var deactivateClient = new DeactivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
         clientFacade.exec(source);
         verify(baseRepository, Mockito.times(1)).save(Mockito.any(ClientOutput.class));
-        verify(baseRepository, Mockito.times(2)).findById(deactivateClient);
+        verify(baseRepository, Mockito.times(1)).findById(deactivateClient);
     }
 
     @Test
@@ -128,7 +128,7 @@ class ClientFacadeTest {
         useCases.add(deactivateClientUseCase);
 
         List<IValidations> validationsList = List.of(clientExistsValidate);
-        var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var clientFacade = new GenericFacadeDelegate(useCases);
 
         var deactivateClient = new DeactivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
@@ -147,7 +147,7 @@ class ClientFacadeTest {
         useCases.add(activateClientUseCase);
 
         List<IValidations> validationsList = List.of();
-        var clientFacade = new GenericFacadeDelegate(useCases, validationsList);
+        var clientFacade = new GenericFacadeDelegate(useCases);
 
         var activateClient = new ActivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, activateClient);
