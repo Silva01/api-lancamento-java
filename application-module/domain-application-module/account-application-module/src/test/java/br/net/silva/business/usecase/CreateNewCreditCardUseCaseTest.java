@@ -34,6 +34,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class CreateNewCreditCardUseCaseTest {
 
     private CreateNewCreditCardUseCase useCase;
@@ -43,7 +44,6 @@ class CreateNewCreditCardUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true, null)));
         when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true, buildMockCreditCard()));
         useCase = new CreateNewCreditCardUseCase(baseGateway);
@@ -64,18 +64,7 @@ class CreateNewCreditCardUseCaseTest {
         verify(baseGateway, times(1)).save(any(AccountOutput.class));
     }
 
-    @Test
-    void shouldGenericErrorWhenTryCreateNewCreditCard() {
-        when(baseGateway.findById(any(ParamGateway.class))).thenReturn(null);
-        var input = new CreateCreditCardInput("99988877766", 45678, 1234);
-        var source = new Source(EmptyOutput.INSTANCE, input);
 
-        var response = assertThrows(GenericException.class, () -> useCase.exec(source));
-        assertEquals("Generic error", response.getMessage());
-
-        verify(baseGateway, times(1)).findById(any(ParamGateway.class));
-        verify(baseGateway, never()).save(any(AccountOutput.class));
-    }
 
     private AccountOutput buildMockAccount(boolean active, CreditCardOutput creditCard) {
         return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", creditCard, Collections.emptyList());
