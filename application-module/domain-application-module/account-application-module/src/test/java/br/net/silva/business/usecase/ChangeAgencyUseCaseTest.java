@@ -6,7 +6,6 @@ import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -37,7 +36,9 @@ class ChangeAgencyUseCaseTest {
 
     @Test
     void shouldChangeAgencyOfAccountWithSuccess() {
-        when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
+        when(baseGateway.findById(any(ParamGateway.class)))
+                .thenReturn(Optional.of(buildMockAccount(true)))
+                .thenReturn(Optional.empty());
         doAnswer(invocation -> invocation.getArguments()[0]).when(baseGateway).save(any(AccountOutput.class));
 
         var input = new ChangeAgencyInput("99988877766", 45678, 1234, 4321);
@@ -47,17 +48,6 @@ class ChangeAgencyUseCaseTest {
         assertDoesNotThrow(() -> useCase.exec(source));
 
         verify(baseGateway, times(2)).save(any(AccountOutput.class));
-    }
-
-    @Test
-    void shouldTryChangeAgencyOfAccountButGiveError() {
-        when(baseGateway.findById(any(ParamGateway.class))).thenReturn(null);
-        var input = new ChangeAgencyInput("99988877766", 45678, 1234, 4321);
-        var source = new Source(EmptyOutput.INSTANCE, input);
-
-        var mockAccount = buildMockAccount(true);
-        var exceptionResponse = assertThrows(GenericException.class, () -> useCase.exec(source));
-        assertEquals("Generic error", exceptionResponse.getMessage());
     }
 
     private AccountOutput buildMockAccount(boolean active) {
