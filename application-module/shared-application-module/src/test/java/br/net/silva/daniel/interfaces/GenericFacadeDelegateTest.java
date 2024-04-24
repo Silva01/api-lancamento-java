@@ -1,15 +1,16 @@
 package br.net.silva.daniel.interfaces;
 
-import br.net.silva.daniel.shared.business.exception.GenericException;
-import br.net.silva.daniel.shared.application.interfaces.*;
+import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
+import br.net.silva.daniel.shared.application.interfaces.Input;
+import br.net.silva.daniel.shared.application.interfaces.Output;
+import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import org.junit.jupiter.api.Assertions;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,9 +23,6 @@ class GenericFacadeDelegateTest {
     @Mock
     private UseCase<String> useCase;
 
-    @Mock
-    private IValidations stringNotNullValidation;
-
     @BeforeEach
     void setup() {
         var basicInput = new BasicTest();
@@ -35,20 +33,9 @@ class GenericFacadeDelegateTest {
             return "return test";
         };
 
-        // Next create a object that type is IValidations and validate if the string is not null
-        stringNotNullValidation = (p) -> {
-            var basicTest = (BasicTest) p.input();
-            if (basicTest.getName().isEmpty()) {
-                throw new GenericException("String must not be null");
-            }
-        };
-
         // Next create a object that type is Queue and add the useCase
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(useCase);
-
-        // Next create a object that type is List and add the stringNotNullValidation
-        List<IValidations> validationsList = List.of(stringNotNullValidation);
 
         // Finally create a object that type is GenericFacadeDelegate and pass the useCases and validationsList
         genericFacadeDelegate = new GenericFacadeDelegate<>(useCases);

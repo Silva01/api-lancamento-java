@@ -1,14 +1,11 @@
 package br.net.silva.daniel.shared.application.build;
 
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
-import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.interfaces.spec.UseCaseBuilderSpec;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.stream.Stream;
 
@@ -21,11 +18,9 @@ public interface FacadeBuilder {
     class Builder<T> implements UseCaseBuilderSpec<br.net.silva.daniel.shared.application.build.Builder<T>> {
 
         private final Queue<UseCase> useCaseQueue;
-        private final List<IValidations> validations;
 
         public Builder() {
             useCaseQueue = new LinkedList<>();
-            validations = new ArrayList<>();
         }
 
         @Override

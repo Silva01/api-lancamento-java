@@ -1,7 +1,6 @@
 package br.net.silva.daniel.shared.application.build;
 
 import br.net.silva.daniel.commons.DummyUseCase;
-import br.net.silva.daniel.commons.build.DammyValidationBuilder;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +13,6 @@ class FacadeBuilderTest {
     void createQueueThatUseCase_WithBuilders_ReturnsQueue() throws Exception {
         var useCase1 = UseCaseBuilder.make().prepareUseCaseFrom(DummyUseCase.class).withBaseRepository(null).withGenericMapper(null);
         var useCase2 = UseCaseBuilder.make().prepareUseCaseFrom(DummyUseCase.class).withBaseRepository(null).withGenericMapper(null);
-
-        var validation = ValidationBuilder.create(DammyValidationBuilder.class);
 
         var sut = ((Builder<?>) FacadeBuilder
                 .make()
