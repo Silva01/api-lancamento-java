@@ -6,6 +6,7 @@ import br.net.silva.daniel.shared.application.build.ObjectBuilder;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.IValidations;
 
+@Deprecated(forRemoval = true)
 public class AccountAlreadyExistsCreditCardValidationBuilder implements ObjectBuilder<IValidations> {
 
     private FindApplicationBaseGateway<AccountOutput> findAccountGateway;
