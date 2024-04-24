@@ -6,7 +6,6 @@ import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
 import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
 import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
-import br.net.silva.business.validations.PasswordAndExistsAccountValidate;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.output.AccountOutput;
@@ -17,12 +16,10 @@ import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
-import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
-import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,15 +27,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -50,9 +41,8 @@ class AccountFacadeTest {
 
     private UseCase<AccountOutput> deactivateAccountUseCase;
 
-    private IValidations passwordAndExistsAccountValidate;
-
     private GenericResponseMapper factory;
+
     @Mock
     private ApplicationBaseGateway<AccountOutput> baseAccountGateway;
 
@@ -61,7 +51,6 @@ class AccountFacadeTest {
         MockitoAnnotations.openMocks(this);
         factory = new GenericResponseMapper(List.of(new CreateResponseToNewAccountFactory(), new CreateResponseToNewAccountByClientFactory()));
         createNewAccountByCpfUseCase = new CreateNewAccountByCpfUseCase(baseAccountGateway, factory);
-        passwordAndExistsAccountValidate = new PasswordAndExistsAccountValidate(baseAccountGateway);
         changePasswordAccountUseCase = new ChangePasswordAccountUseCase(baseAccountGateway);
         this.deactivateAccountUseCase = new DeactivateAccountUseCase(baseAccountGateway);
     }
@@ -72,8 +61,6 @@ class AccountFacadeTest {
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
-
-        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
         var accountFacade = new GenericFacadeDelegate(useCases);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
@@ -96,8 +83,6 @@ class AccountFacadeTest {
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
-
-        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
         var accountFacade = new GenericFacadeDelegate(useCases);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
@@ -123,8 +108,6 @@ class AccountFacadeTest {
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
-        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
-
         var accountFacade = new GenericFacadeDelegate(useCases);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
         var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
@@ -140,8 +123,6 @@ class AccountFacadeTest {
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
-
-        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
 
         var accountFacade = new GenericFacadeDelegate(useCases);
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
@@ -160,8 +141,6 @@ class AccountFacadeTest {
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(changePasswordAccountUseCase);
 
-        List<IValidations> validationsList = List.of(passwordAndExistsAccountValidate);
-
         var accountFacade = new GenericFacadeDelegate(useCases);
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
         var source = new Source(EmptyOutput.INSTANCE, changePasswordDTO);
@@ -177,8 +156,6 @@ class AccountFacadeTest {
 
         Queue<UseCase> useCases = new LinkedList<>();
         useCases.add(deactivateAccountUseCase);
-
-        List<IValidations> validationsList = Collections.emptyList();
 
         var accountFacade = new GenericFacadeDelegate(useCases);
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("99988877766", 45678, 1, "978534", "123456");
