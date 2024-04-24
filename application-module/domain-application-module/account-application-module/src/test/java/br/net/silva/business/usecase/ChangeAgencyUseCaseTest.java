@@ -1,5 +1,6 @@
 package br.net.silva.business.usecase;
 
+import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.output.AccountOutput;
@@ -63,6 +64,23 @@ class ChangeAgencyUseCaseTest {
         assertThatThrownBy(() -> useCase.exec(source))
                 .isInstanceOf(AccountNotExistsException.class)
                 .hasMessage("Account not exists");
+
+        verify(baseGateway, never()).save(any(AccountOutput.class));
+        verify(baseGateway, times(2)).findById(any(ParamGateway.class));
+    }
+
+    @Test
+    void changeAgency_WithAccountExistsToNewAgency_ThrowsAccountAlreadyExistsForNewAgencyException() {
+        when(baseGateway.findById(any(ParamGateway.class)))
+                .thenReturn(Optional.of(buildMockAccount(true)))
+                .thenReturn(Optional.of(buildMockAccount(true)));
+
+        final var input = buildInputBase();
+        final var source = new Source(EmptyOutput.INSTANCE, input);
+
+        assertThatThrownBy(() -> useCase.exec(source))
+                .isInstanceOf(AccountAlreadyExistsForNewAgencyException.class)
+                .hasMessage("Account With new agency already exists");
 
         verify(baseGateway, never()).save(any(AccountOutput.class));
         verify(baseGateway, times(2)).findById(any(ParamGateway.class));
