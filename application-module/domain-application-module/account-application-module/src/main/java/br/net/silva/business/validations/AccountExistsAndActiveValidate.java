@@ -17,6 +17,7 @@ public class AccountExistsAndActiveValidate implements IValidations, Validation<
 
     private final FindApplicationBaseGateway<AccountOutput> findAccountGateway;
 
+    @Deprecated(forRemoval = true)
     public AccountExistsAndActiveValidate(FindApplicationBaseGateway<AccountOutput> findAccountGateway) {
         this.findAccountGateway = findAccountGateway;
     }
