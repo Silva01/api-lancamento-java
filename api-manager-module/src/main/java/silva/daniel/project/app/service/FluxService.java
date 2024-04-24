@@ -136,16 +136,10 @@ public class FluxService {
         return FacadeBuilder
                 .make()
                 .withBuilderUseCases(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangeAgencyUseCase.class)
                 )
-                .withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository),
-                        ValidationBuilder.create(AccountExistsValidationBuilder.class)
-                                .withRepository(accountBaseRepository),
-                        ValidationBuilder.create(AccountWithNewAgencyAlreadyExistsValidateBuilder.class)
-                                .withRepository(accountBaseRepository)
-                )
+                .withBuilderValidations()
                 .build();
     }
 
