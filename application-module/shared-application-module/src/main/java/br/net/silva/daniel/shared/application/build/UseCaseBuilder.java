@@ -3,8 +3,6 @@ package br.net.silva.daniel.shared.application.build;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.interfaces.spec.MapperSpec;
-import br.net.silva.daniel.shared.application.interfaces.spec.PrepareUseCaseSpec;
-import br.net.silva.daniel.shared.application.interfaces.spec.RepositorySpec;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
@@ -17,14 +15,11 @@ public interface UseCaseBuilder {
         return new UseCaseProcessor(baseRepository, clazz).withGenericMapper(mapper);
     }
 
-    class UseCaseProcessor<T extends UseCase<?>> implements PrepareUseCaseSpec<T>, RepositorySpec, MapperSpec {
+    class UseCaseProcessor<T extends UseCase<?>> implements MapperSpec {
 
         private Class<T> clazz;
         private ApplicationBaseGateway<?> baseRepository;
         private GenericResponseMapper mapper;
-
-        public UseCaseProcessor() {
-        }
 
         public UseCaseProcessor(ApplicationBaseGateway<?> baseRepository, Class<T> clazz) {
             this.baseRepository = baseRepository;
@@ -50,18 +45,6 @@ public interface UseCaseBuilder {
 
                 throw GenericErrorUtils.executeException("Invalid constructor for use case");
             };
-        }
-
-        @Override
-        public RepositorySpec prepareUseCaseFrom(Class<T> clazz) {
-            this.clazz = clazz;
-            return this;
-        }
-
-        @Override
-        public MapperSpec withBaseRepository(ApplicationBaseGateway<?> baseRepository) {
-            this.baseRepository = baseRepository;
-            return this;
         }
     }
 }
