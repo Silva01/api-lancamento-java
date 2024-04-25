@@ -12,10 +12,10 @@ import java.util.stream.Stream;
 public interface FacadeBuilder {
 
     static UseCaseBuilderSpec<Builder<GenericFacadeDelegate>> make() {
-        return new FacadeProcessor<>();
+        return new FacadeProcessor();
     }
 
-    class FacadeProcessor<T> implements UseCaseBuilderSpec<Builder<T>> {
+    class FacadeProcessor implements UseCaseBuilderSpec<Builder<GenericFacadeDelegate>> {
 
         private final Queue<UseCase<?>> useCaseQueue;
 
@@ -24,7 +24,7 @@ public interface FacadeBuilder {
         }
 
         @Override
-        public Builder<T> withBuilderUseCases(Builder<UseCase<?>>... useCaseBuilders) {
+        public Builder<GenericFacadeDelegate> withBuilderUseCases(Builder<UseCase<?>>... useCaseBuilders) {
             Stream.of(useCaseBuilders).forEach(useCase -> {
                 try {
                     useCaseQueue.add(useCase.build());
@@ -32,7 +32,7 @@ public interface FacadeBuilder {
                     throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
                 }
             });
-            return () -> (T) new GenericFacadeDelegate(useCaseQueue);
+            return () -> new GenericFacadeDelegate(useCaseQueue);
         }
     }
 }
