@@ -96,7 +96,8 @@ public class FluxService {
     @SuppressWarnings("unchecked")
     public GenericFacadeDelegate fluxCreateCreditCard() throws Exception {
         return FacadeBuilder
-                .make().withBuilderUseCases(
+                .make()
+                .withBuilderUseCases(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewCreditCardUseCase.class)
                 )

@@ -17,11 +17,11 @@ public interface UseCaseBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    static <T> br.net.silva.daniel.shared.application.build.Builder<UseCase> makeTo(ApplicationBaseGateway<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
+    static <T, R> br.net.silva.daniel.shared.application.build.Builder<UseCase<R>> makeTo(ApplicationBaseGateway<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
         return new Builder(baseRepository, clazz).withGenericMapper(mapper);
     }
 
-    class Builder<T extends UseCase> implements PrepareUseCaseSpec<T>, RepositorySpec<T>, MapperSpec<T> {
+    class Builder<T extends UseCase<?>> implements PrepareUseCaseSpec<T>, RepositorySpec<T>, MapperSpec<T> {
 
         private Class<T> clazz;
         private ApplicationBaseGateway<?> baseRepository;

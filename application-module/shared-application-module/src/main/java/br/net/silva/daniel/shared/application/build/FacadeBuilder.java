@@ -24,7 +24,7 @@ public interface FacadeBuilder {
         }
 
         @Override
-        public br.net.silva.daniel.shared.application.build.Builder<T> withBuilderUseCases(br.net.silva.daniel.shared.application.build.Builder<UseCase>... useCaseBuilders) {
+        public <R> br.net.silva.daniel.shared.application.build.Builder<T> withBuilderUseCases(br.net.silva.daniel.shared.application.build.Builder<UseCase<R>>... useCaseBuilders) {
             Stream.of(useCaseBuilders).forEach(useCase -> {
                 try {
                     useCaseQueue.add(useCase.build());
