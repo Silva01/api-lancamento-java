@@ -24,7 +24,7 @@ public interface FacadeBuilder {
         }
 
         @Override
-        public <R> Builder<T> withBuilderUseCases(Builder<UseCase<R>>... useCaseBuilders) {
+        public Builder<T> withBuilderUseCases(Builder<UseCase<?>>... useCaseBuilders) {
             Stream.of(useCaseBuilders).forEach(useCase -> {
                 try {
                     useCaseQueue.add(useCase.build());
