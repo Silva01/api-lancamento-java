@@ -11,20 +11,20 @@ import java.util.stream.Stream;
 
 public interface FacadeBuilder {
 
-    static UseCaseBuilderSpec<br.net.silva.daniel.shared.application.build.Builder<GenericFacadeDelegate>> make() {
-        return new Builder<>();
+    static UseCaseBuilderSpec<Builder<GenericFacadeDelegate>> make() {
+        return new FacadeProcessor<>();
     }
 
-    class Builder<T> implements UseCaseBuilderSpec<br.net.silva.daniel.shared.application.build.Builder<T>> {
+    class FacadeProcessor<T> implements UseCaseBuilderSpec<Builder<T>> {
 
         private final Queue<UseCase<?>> useCaseQueue;
 
-        public Builder() {
+        public FacadeProcessor() {
             useCaseQueue = new LinkedList<>();
         }
 
         @Override
-        public <R> br.net.silva.daniel.shared.application.build.Builder<T> withBuilderUseCases(br.net.silva.daniel.shared.application.build.Builder<UseCase<R>>... useCaseBuilders) {
+        public <R> Builder<T> withBuilderUseCases(Builder<UseCase<R>>... useCaseBuilders) {
             Stream.of(useCaseBuilders).forEach(useCase -> {
                 try {
                     useCaseQueue.add(useCase.build());

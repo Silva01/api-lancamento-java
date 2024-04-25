@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class FacadeBuilderTest {
+class FacadeProcessorBuilderTest {
 
     @Test
     void createQueueThatUseCase_WithBuilders_ReturnsQueue() throws Exception {

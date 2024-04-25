@@ -16,7 +16,7 @@ import java.util.Queue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class GenericFacadeDelegateTest {
+class GenericFacadeProcessorDelegateTest {
 
     private GenericFacadeDelegate genericFacadeDelegate;
 
