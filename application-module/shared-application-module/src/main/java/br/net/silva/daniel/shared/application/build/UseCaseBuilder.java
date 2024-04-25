@@ -63,7 +63,7 @@ public interface UseCaseBuilder {
         }
 
         @Override
-        public MapperSpec withBaseRepository(ApplicationBaseGateway<T> baseRepository) {
+        public MapperSpec withBaseRepository(ApplicationBaseGateway<?> baseRepository) {
             this.baseRepository = baseRepository;
             return this;
         }
