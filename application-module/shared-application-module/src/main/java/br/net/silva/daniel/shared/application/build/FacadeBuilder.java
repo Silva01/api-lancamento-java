@@ -43,7 +43,7 @@ public interface FacadeBuilder {
 
         private void addUseCase(Builder<UseCase<?>> useCaseBuilder) {
             try {
-                addUseCase(useCaseBuilder);
+                this.useCaseQueue.add(useCaseBuilder.build());
             } catch (Exception e) {
                 throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
             }
