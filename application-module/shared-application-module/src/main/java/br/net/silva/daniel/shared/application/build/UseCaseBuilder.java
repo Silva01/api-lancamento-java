@@ -10,8 +10,7 @@ import java.lang.reflect.Constructor;
 
 public interface UseCaseBuilder {
 
-    @SuppressWarnings("unchecked")
-    static <T, R> Builder<UseCase<?>> makeTo(ApplicationBaseGateway<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
+    static <T> Builder<UseCase<?>> makeTo(ApplicationBaseGateway<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
         return new UseCaseProcessor(baseRepository, clazz).withGenericMapper(mapper);
     }
 
