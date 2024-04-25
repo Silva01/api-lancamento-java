@@ -13,30 +13,30 @@ import java.lang.reflect.Constructor;
 public interface UseCaseBuilder {
 
     static PrepareUseCaseSpec make() {
-        return new Builder();
+        return new UseCaseProcessor();
     }
 
     @SuppressWarnings("unchecked")
-    static <T, R> br.net.silva.daniel.shared.application.build.Builder<UseCase<R>> makeTo(ApplicationBaseGateway<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
-        return new Builder(baseRepository, clazz).withGenericMapper(mapper);
+    static <T, R> Builder<UseCase<R>> makeTo(ApplicationBaseGateway<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
+        return new UseCaseProcessor(baseRepository, clazz).withGenericMapper(mapper);
     }
 
-    class Builder<T extends UseCase<?>> implements PrepareUseCaseSpec<T>, RepositorySpec, MapperSpec<T> {
+    class UseCaseProcessor<T extends UseCase<?>> implements PrepareUseCaseSpec<T>, RepositorySpec, MapperSpec<T> {
 
         private Class<T> clazz;
         private ApplicationBaseGateway<?> baseRepository;
         private GenericResponseMapper mapper;
 
-        public Builder() {
+        public UseCaseProcessor() {
         }
 
-        public Builder(ApplicationBaseGateway<?> baseRepository, Class<T> clazz) {
+        public UseCaseProcessor(ApplicationBaseGateway<?> baseRepository, Class<T> clazz) {
             this.baseRepository = baseRepository;
             this.clazz = clazz;
         }
 
         @Override
-        public br.net.silva.daniel.shared.application.build.Builder<T> withGenericMapper(GenericResponseMapper mapper) {
+        public Builder<T> withGenericMapper(GenericResponseMapper mapper) {
             this.mapper = mapper;
             return () -> {
                 try {
