@@ -38,7 +38,7 @@ class GenericFacadeDelegateTest {
         useCases.add(useCase);
 
         // Finally create a object that type is GenericFacadeDelegate and pass the useCases and validationsList
-        genericFacadeDelegate = new GenericFacadeDelegate<>(useCases);
+        genericFacadeDelegate = new GenericFacadeDelegate(useCases);
 
     }
     @Test

@@ -50,7 +50,7 @@ class ActivateAccountFacadeTest {
         when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(false)));
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
         var facade = new GenericFacadeDelegate(useCases);
@@ -69,7 +69,7 @@ class ActivateAccountFacadeTest {
     void shouldActivateAccountErrorWhenAccountNotExists() {
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
         var facade = new GenericFacadeDelegate(useCases);
@@ -88,7 +88,7 @@ class ActivateAccountFacadeTest {
     void shouldActivateAccountErrorWhenAccountIsActive() {
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
         var facade = new GenericFacadeDelegate(useCases);

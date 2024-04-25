@@ -105,7 +105,7 @@ class AccountFacadeTest {
     void mustErrorCreateNewAccountByCpfAccountNotExists() {
         when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
         var accountFacade = new GenericFacadeDelegate(useCases);
@@ -121,7 +121,7 @@ class AccountFacadeTest {
     void mustErrorCreateNewAccountByCpfAccountNotExistsValidation() {
         when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewAccountByCpfUseCase);
 
         var accountFacade = new GenericFacadeDelegate(useCases);
@@ -138,7 +138,7 @@ class AccountFacadeTest {
         when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(changePasswordAccountUseCase);
 
         var accountFacade = new GenericFacadeDelegate(useCases);
@@ -154,7 +154,7 @@ class AccountFacadeTest {
         when(baseAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount()));
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(deactivateAccountUseCase);
 
         var accountFacade = new GenericFacadeDelegate(useCases);

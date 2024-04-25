@@ -62,7 +62,7 @@ class ClientFacadeTest {
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
 
-        var clientFacade = new GenericFacadeDelegate<>(useCases);
+        var clientFacade = new GenericFacadeDelegate(useCases);
 
         var clientRequestDto = new ClientRequestDTO("123", "99988877766", "Daniel", "6122223333", true, 222, new AddressRequestDTO("Rua 1", "123", "House", "Test", "DF", "Others", "12345-123"));
         var source = new Source(EmptyOutput.INSTANCE, clientRequestDto);
@@ -84,7 +84,7 @@ class ClientFacadeTest {
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(createNewClientUseCase);
 
-        var clientFacade = new GenericFacadeDelegate<>(useCases);
+        var clientFacade = new GenericFacadeDelegate(useCases);
 
         var findClientByCpf = new FindClientByCpf("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
@@ -102,7 +102,7 @@ class ClientFacadeTest {
         Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(deactivateClientUseCase);
 
-        var clientFacade = new GenericFacadeDelegate<>(useCases);
+        var clientFacade = new GenericFacadeDelegate(useCases);
 
         var deactivateClient = new DeactivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
@@ -116,7 +116,7 @@ class ClientFacadeTest {
         var client = buildClient(true);
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(deactivateClientUseCase);
 
         var clientFacade = new GenericFacadeDelegate(useCases);
@@ -134,7 +134,7 @@ class ClientFacadeTest {
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(activateClientUseCase);
 
         var clientFacade = new GenericFacadeDelegate(useCases);

@@ -5,11 +5,11 @@ import br.net.silva.daniel.shared.business.exception.GenericException;
 
 import java.util.Queue;
 
-public class GenericFacadeDelegate<U extends UseCase> {
+public class GenericFacadeDelegate {
 
-    private final Queue<U> useCases;
+    private final Queue<UseCase<?>> useCases;
 
-    public GenericFacadeDelegate(Queue<U> useCases) {
+    public GenericFacadeDelegate(Queue<UseCase<?>> useCases) {
         this.useCases = useCases;
     }
 
@@ -18,7 +18,7 @@ public class GenericFacadeDelegate<U extends UseCase> {
     }
 
     private void execProcess(Source input) throws GenericException {
-        for (U useCase : useCases) {
+        for (UseCase<?> useCase : useCases) {
             useCase.exec(input);
         }
     }

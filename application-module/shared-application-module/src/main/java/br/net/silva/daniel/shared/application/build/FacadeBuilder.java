@@ -17,7 +17,7 @@ public interface FacadeBuilder {
 
     class Builder<T> implements UseCaseBuilderSpec<br.net.silva.daniel.shared.application.build.Builder<T>> {
 
-        private final Queue<UseCase> useCaseQueue;
+        private final Queue<UseCase<?>> useCaseQueue;
 
         public Builder() {
             useCaseQueue = new LinkedList<>();
@@ -32,7 +32,7 @@ public interface FacadeBuilder {
                     throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
                 }
             });
-            return () -> (T) new GenericFacadeDelegate<>(useCaseQueue);
+            return () -> (T) new GenericFacadeDelegate(useCaseQueue);
         }
     }
 }
