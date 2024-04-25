@@ -15,26 +15,26 @@ public interface UseCaseBuilder {
         return new UseCaseProcessor(baseRepository, clazz).withGenericMapper(mapper);
     }
 
-    class UseCaseProcessor<T extends UseCase<?>> implements MapperSpec {
+    class UseCaseProcessor implements MapperSpec {
 
-        private final Class<T> clazz;
+        private final Class<?> clazz;
         private final ApplicationBaseGateway<?> baseRepository;
 
-        public UseCaseProcessor(ApplicationBaseGateway<?> baseRepository, Class<T> clazz) {
+        public <R> UseCaseProcessor(ApplicationBaseGateway<?> baseRepository, Class<?> clazz) {
             this.baseRepository = baseRepository;
             this.clazz = clazz;
         }
 
         @Override
-        public Builder<T> withGenericMapper(GenericResponseMapper mapper) {
+        public <R> Builder<R> withGenericMapper(GenericResponseMapper mapper) {
             return () -> {
                 try {
                     Constructor[] constructors = clazz.getConstructors();
                     for (Constructor constructor : constructors) {
                         if (constructor.getParameterCount() == 1) {
-                            return clazz.cast(constructor.newInstance(baseRepository));
+                            return (R) clazz.cast(constructor.newInstance(baseRepository));
                         } else if (constructor.getParameterCount() == 2) {
-                            return clazz.cast(constructor.newInstance(baseRepository, mapper));
+                            return (R) clazz.cast(constructor.newInstance(baseRepository, mapper));
                         }
                     }
                 } catch (Exception e) {
