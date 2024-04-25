@@ -21,7 +21,7 @@ public interface UseCaseBuilder {
         return new Builder(baseRepository, clazz).withGenericMapper(mapper);
     }
 
-    class Builder<T extends UseCase<?>> implements PrepareUseCaseSpec<T>, RepositorySpec<T>, MapperSpec<T> {
+    class Builder<T extends UseCase<?>> implements PrepareUseCaseSpec<T>, RepositorySpec, MapperSpec<T> {
 
         private Class<T> clazz;
         private ApplicationBaseGateway<?> baseRepository;
