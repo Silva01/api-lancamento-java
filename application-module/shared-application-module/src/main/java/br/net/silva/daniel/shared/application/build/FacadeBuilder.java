@@ -25,14 +25,28 @@ public interface FacadeBuilder {
 
         @Override
         public Builder<GenericFacadeDelegate> withBuilderUseCases(Builder<UseCase<?>>... useCaseBuilders) {
-            Stream.of(useCaseBuilders).forEach(useCase -> {
-                try {
-                    useCaseQueue.add(useCase.build());
-                } catch (Exception e) {
-                    throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
-                }
-            });
+            Stream.of(useCaseBuilders).forEach(this::addUseCase);
             return () -> new GenericFacadeDelegate(useCaseQueue);
+        }
+
+        @Override
+        public UseCaseBuilderSpec<Builder<GenericFacadeDelegate>> withBuilderUseCase(Builder<UseCase<?>> useCaseBuilder) {
+            addUseCase(useCaseBuilder);
+            return this;
+        }
+
+        @Override
+        public Builder<GenericFacadeDelegate> andWithBuilderUseCase(Builder<UseCase<?>> useCaseBuilder) {
+            addUseCase(useCaseBuilder);
+            return () -> new GenericFacadeDelegate(useCaseQueue);
+        }
+
+        private void addUseCase(Builder<UseCase<?>> useCaseBuilder) {
+            try {
+                addUseCase(useCaseBuilder);
+            } catch (Exception e) {
+                throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
+            }
         }
     }
 }
