@@ -13,8 +13,9 @@ import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class ActivateAccountFacadeTest {
 
     private ActivateAccountUseCase activateAccountUseCase;
@@ -40,7 +42,6 @@ class ActivateAccountFacadeTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         this.activateAccountUseCase = new ActivateAccountUseCase(baseGateway);
     }
 
@@ -66,7 +67,6 @@ class ActivateAccountFacadeTest {
 
     @Test
     void shouldActivateAccountErrorWhenAccountNotExists() {
-        when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
         Queue<UseCase> useCases = new LinkedList<>();
@@ -86,7 +86,6 @@ class ActivateAccountFacadeTest {
 
     @Test
     void shouldActivateAccountErrorWhenAccountIsActive() {
-        when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
 
         Queue<UseCase> useCases = new LinkedList<>();
