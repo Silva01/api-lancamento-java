@@ -11,8 +11,8 @@ class FacadeProcessorBuilderTest {
 
     @Test
     void createQueueThatUseCase_WithBuilders_ReturnsQueue() throws Exception {
-        var useCase1 = UseCaseBuilder.make().prepareUseCaseFrom(DummyUseCase.class).withBaseRepository(null).withGenericMapper(null);
-        var useCase2 = UseCaseBuilder.make().prepareUseCaseFrom(DummyUseCase.class).withBaseRepository(null).withGenericMapper(null);
+        var useCase1 = UseCaseBuilder.makeTo(null, null, DummyUseCase.class);
+        var useCase2 = UseCaseBuilder.makeTo(null, null, DummyUseCase.class);
 
         var sut = ((Builder<?>) FacadeBuilder
                 .make()

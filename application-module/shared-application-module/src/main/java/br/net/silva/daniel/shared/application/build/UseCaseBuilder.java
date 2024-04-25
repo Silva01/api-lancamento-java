@@ -1,27 +1,23 @@
 package br.net.silva.daniel.shared.application.build;
 
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.interfaces.spec.MapperSpec;
 import br.net.silva.daniel.shared.application.interfaces.spec.PrepareUseCaseSpec;
 import br.net.silva.daniel.shared.application.interfaces.spec.RepositorySpec;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
 import java.lang.reflect.Constructor;
 
 public interface UseCaseBuilder {
 
-    static PrepareUseCaseSpec make() {
-        return new UseCaseProcessor();
-    }
-
     @SuppressWarnings("unchecked")
     static <T, R> Builder<UseCase<R>> makeTo(ApplicationBaseGateway<?> baseRepository, GenericResponseMapper mapper, Class<T> clazz) {
         return new UseCaseProcessor(baseRepository, clazz).withGenericMapper(mapper);
     }
 
-    class UseCaseProcessor<T extends UseCase<?>> implements PrepareUseCaseSpec<T>, RepositorySpec, MapperSpec<T> {
+    class UseCaseProcessor<T extends UseCase<?>> implements PrepareUseCaseSpec<T>, RepositorySpec, MapperSpec {
 
         private Class<T> clazz;
         private ApplicationBaseGateway<?> baseRepository;
