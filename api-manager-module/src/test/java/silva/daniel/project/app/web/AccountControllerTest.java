@@ -290,6 +290,12 @@ class AccountControllerTest implements RequestBuilderCommons {
         createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
+    @Test
+    void createAccount_WithClientDeactivated_ReturnsStatus409() throws Exception {
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new ClientDeactivatedException("Client is Deactivated"));
+        createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_DEACTIVATED, status().isConflict());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
