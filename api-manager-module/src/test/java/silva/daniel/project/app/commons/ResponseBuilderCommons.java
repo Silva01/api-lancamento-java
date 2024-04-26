@@ -2,6 +2,7 @@ package silva.daniel.project.app.commons;
 
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
+import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 
@@ -45,6 +46,13 @@ public interface ResponseBuilderCommons {
                 new AccountDTO(1237, 1, BigDecimal.valueOf(1000), "test", false, "12345", Collections.emptyList(), null),
                 new AccountDTO(1238, 1, BigDecimal.valueOf(1000), "test", false, "12345", Collections.emptyList(), null)
         ));
+    }
+
+    default NewAccountResponse buildNewAccountResponse() {
+        final var response = new NewAccountResponse();
+        response.setAccountNumber(1234);
+        response.setAgency(1);
+        return response;
     }
 
 
