@@ -50,10 +50,10 @@ public class FluxService {
     public GenericFacadeDelegate fluxDeactivateClient() throws Exception {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, DeactivateClientUseCase.class),
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class)
-                )
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, DeactivateClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class))
                 .build();
     }
 
