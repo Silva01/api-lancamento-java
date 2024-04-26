@@ -50,7 +50,7 @@ public class AccountService {
         fluxService.fluxChangePassword().exec(Source.of(input));
     }
 
-    public NewAccountResponse createNewAccount(CreateNewAccountByCpfDTO input) {
+    public NewAccountResponse createNewAccount(CreateNewAccountByCpfDTO input) throws Exception {
         return null;
     }
 }
