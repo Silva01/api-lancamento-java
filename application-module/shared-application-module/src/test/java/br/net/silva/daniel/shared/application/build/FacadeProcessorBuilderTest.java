@@ -1,11 +1,11 @@
 package br.net.silva.daniel.shared.application.build;
 
 import br.net.silva.daniel.commons.DummyUseCase;
-import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FacadeProcessorBuilderTest {
 
@@ -14,13 +14,13 @@ class FacadeProcessorBuilderTest {
         var useCase1 = UseCaseBuilder.makeTo(null, null, DummyUseCase.class);
         var useCase2 = UseCaseBuilder.makeTo(null, null, DummyUseCase.class);
 
-        var sut = ((Builder<?>) FacadeBuilder
+        var sut = FacadeBuilder
                 .make()
-                .withBuilderUseCases(useCase1, useCase2))
+                .withBuilderUseCase(useCase1)
+                .andWithBuilderUseCase(useCase2)
                 .build();
 
-        assertNotNull(sut);
-        assertTrue(sut instanceof GenericFacadeDelegate);
+        assertThat(sut).isNotNull();
     }
 
 }
