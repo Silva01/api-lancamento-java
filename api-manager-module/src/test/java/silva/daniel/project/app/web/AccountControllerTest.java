@@ -7,6 +7,7 @@ import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
+import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
@@ -27,6 +28,7 @@ import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountReques
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.ChangePasswordForAccountTestPrepare;
+import silva.daniel.project.app.web.account.CreateAccountTestPrepare;
 import silva.daniel.project.app.web.account.DeactivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
@@ -74,6 +76,9 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private ChangePasswordForAccountTestPrepare changePasswordForAccountTestPrepare;
+
+    @Autowired
+    private CreateAccountTestPrepare createAccountTestPrepare;
 
     @MockBean
     private AccountService accountService;
@@ -261,6 +266,15 @@ class AccountControllerTest implements RequestBuilderCommons {
     void changePassword_WithPasswordDifferentThatRegistered_ReturnsStatus400() throws Exception {
         doThrow(new PasswordDivergentException("Password is different")).when(accountService).changePassword(any(ChangePasswordDTO.class));
         changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_WITH_PASSWORD_DIFFERENT, status().isBadRequest());
+    }
+
+    @Test
+    void createAccount_WithValidData_ReturnsAgencyAndAccountNumberThatNewAccount() throws Exception {
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenReturn(createAccountTestPrepare.buildNewAccountResponse());
+        createAccountTestPrepare.successPostAssert(buildBaseNewAccountRequest(),
+                                                   status().isCreated(),
+                                                   jsonPath("$.agency").value(1),
+                                                   jsonPath("$.accountNumber").value(1234));
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
