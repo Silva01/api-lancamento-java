@@ -28,10 +28,12 @@ public class FluxService {
     public GenericFacadeDelegate fluxCreateNewClient() throws Exception {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, CreateNewClientUseCase.class),
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, CreateNewClientUseCase.class))
+                .andWithBuilderUseCase(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewAccountByCpfUseCase.class))
                 .build();
+
     }
 
     @SuppressWarnings("unchecked")
