@@ -91,10 +91,11 @@ public class FluxService {
     public GenericFacadeDelegate fluxDeactivateCreditCard() throws Exception {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class),
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateCreditCardUseCase.class)
-                ).build();
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateCreditCardUseCase.class))
+                .build();
     }
 
     @SuppressWarnings("unchecked")
