@@ -8,7 +8,6 @@ import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.stream.Stream;
 
 public interface FacadeBuilder {
 
@@ -22,12 +21,6 @@ public interface FacadeBuilder {
 
         public FacadeProcessor() {
             useCaseQueue = new LinkedList<>();
-        }
-
-        @Override
-        public Builder<GenericFacadeDelegate> withBuilderUseCases(Builder<UseCase<?>>... useCaseBuilders) {
-            Stream.of(useCaseBuilders).forEach(this::addUseCase);
-            return () -> new GenericFacadeDelegate(useCaseQueue);
         }
 
         @Override
