@@ -302,6 +302,12 @@ class AccountControllerTest implements RequestBuilderCommons {
         createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
+    @Test
+    void createAccount_WithAccountActive_ReturnsStatus409() throws Exception {
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new AccountAlreadyActiveException("Account already active"));
+        createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), ACCOUNT_ALREADY_ACTIVATED_MESSAGE, status().isConflict());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
