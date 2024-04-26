@@ -25,6 +25,7 @@ import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
+import silva.daniel.project.app.domain.account.request.NewAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.ChangePasswordForAccountTestPrepare;
@@ -277,6 +278,12 @@ class AccountControllerTest implements RequestBuilderCommons {
                                                    jsonPath("$.accountNumber").value(1234));
     }
 
+    @ParameterizedTest
+    @MethodSource("provideInvalidDataOfCreateAccount")
+    void createAccount_WithInvalidData_ReturnsStatus406(NewAccountRequest request) throws Exception {
+        createAccountTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
@@ -333,6 +340,19 @@ class AccountControllerTest implements RequestBuilderCommons {
                 Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", null)),
                 Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "")),
                 Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "12345"))
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidDataOfCreateAccount() {
+        return Stream.of(
+                Arguments.of(new NewAccountRequest(null, 123456, "123444")),
+                Arguments.of(new NewAccountRequest("", 123456, "123444")),
+                Arguments.of(new NewAccountRequest("999", 123456, "123444")),
+                Arguments.of(new NewAccountRequest("9999999999999999", 123456, "123444")),
+                Arguments.of(new NewAccountRequest("22233344455", null, "123444")),
+                Arguments.of(new NewAccountRequest("22233344455", 0, "123444")),
+                Arguments.of(new NewAccountRequest("22233344455", 123456, null)),
+                Arguments.of(new NewAccountRequest("22233344455", 123456, ""))
         );
     }
 }
