@@ -113,10 +113,10 @@ public class FluxService {
     public GenericFacadeDelegate fluxEditAgencyOfAccount() throws Exception {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangeAgencyUseCase.class)
-                )
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangeAgencyUseCase.class))
                 .build();
     }
 
