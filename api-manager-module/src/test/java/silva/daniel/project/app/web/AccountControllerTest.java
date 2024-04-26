@@ -296,6 +296,12 @@ class AccountControllerTest implements RequestBuilderCommons {
         createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_DEACTIVATED, status().isConflict());
     }
 
+    @Test
+    void createAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new AccountNotExistsException("Account not Found"));
+        createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
