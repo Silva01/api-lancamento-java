@@ -38,11 +38,10 @@ public class FluxService {
     public GenericFacadeDelegate fluxUpdateClient() throws Exception {
         return FacadeBuilder
                 .make()
-                .andWithBuilderUseCase(
+                .withBuilderUseCase(
                         UseCaseBuilder
                                 .makeTo(clientBaseRepository, responseMapper, EditClientUseCase.class)
-                )
-                .build();
+                ).build();
     }
 
     @SuppressWarnings("unchecked")
@@ -60,7 +59,7 @@ public class FluxService {
     public GenericFacadeDelegate fluxActivateClient() throws Exception {
         return FacadeBuilder
                 .make()
-                .andWithBuilderUseCase(
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, ActivateClientUseCase.class)
                 )
                 .build();
@@ -70,7 +69,7 @@ public class FluxService {
     public GenericFacadeDelegate fluxUpdateAddress() throws Exception {
         return FacadeBuilder
                 .make()
-                .andWithBuilderUseCase(
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, EditAddressUseCase.class)
                 )
                 .build();
@@ -80,7 +79,7 @@ public class FluxService {
     public GenericFacadeDelegate fluxFindClient() throws Exception {
         return FacadeBuilder
                 .make()
-                .andWithBuilderUseCase(
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class)
                 )
                 .build();
@@ -121,7 +120,7 @@ public class FluxService {
     public GenericFacadeDelegate fluxGetAccountByCpf() throws Exception {
         return FacadeBuilder
                 .make()
-                .andWithBuilderUseCase(
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, GetInformationAccountUseCase.class)
                 ).build();
     }
@@ -130,7 +129,7 @@ public class FluxService {
     public GenericFacadeDelegate fluxGetAllAccount() throws Exception {
         return FacadeBuilder
                 .make()
-                .andWithBuilderUseCase(
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, FindAllAccountsByCpfUseCase.class)
                 ).build();
     }
