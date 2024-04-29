@@ -2,6 +2,9 @@ package silva.daniel.project.app.integration.web;
 
 import br.net.silva.business.value_object.output.NewAccountResponse;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -12,9 +15,11 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import silva.daniel.project.app.commons.IntegrationAssertCommons;
 import silva.daniel.project.app.commons.MysqlTestContainer;
 import silva.daniel.project.app.commons.RequestIntegrationCommons;
-import silva.daniel.project.app.domain.account.entity.AccountKey;
 import silva.daniel.project.app.domain.account.repository.AccountRepository;
 import silva.daniel.project.app.domain.account.request.NewAccountRequest;
+import silva.daniel.project.app.domain.client.FailureResponse;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,5 +51,23 @@ class CreateAccountControllerIT extends MysqlTestContainer implements Integratio
         assertThat(sut.get().isActive()).isTrue();
         assertThat(sut.get().getKeys().getBankAgencyNumber()).isEqualTo(request.agencyNumber());
         assertThat(sut.get().getKeys().getNumber()).isNotNull();
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidData")
+    void createAccount_WithInvalidData_ReturnsStatus406(NewAccountRequest request) {
+        requestCommons.assertPostRequest(API_CREATE_NEW_ACCOUNT, request, FailureResponse.class, this::assertInvalidData);
+    }
+
+    private static Stream<Arguments> provideInvalidData() {
+        return Stream.of(
+                Arguments.of(new NewAccountRequest("123456789", 1, "123456")),
+                Arguments.of(new NewAccountRequest("1234567898888888", 1, "123456")),
+                Arguments.of(new NewAccountRequest("", 1, "123456")),
+                Arguments.of(new NewAccountRequest(null, 1, "123456")),
+                Arguments.of(new NewAccountRequest("12345678988", 0, "123456")),
+                Arguments.of(new NewAccountRequest("12345678988", -1, "123456")),
+                Arguments.of(new NewAccountRequest("12345678988", 1, "123"))
+        );
     }
 }
