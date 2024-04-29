@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Import;
 import silva.daniel.project.app.web.AccountController;
 import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.ChangePasswordForAccountTestPrepare;
+import silva.daniel.project.app.web.account.CreateAccountTestPrepare;
 import silva.daniel.project.app.web.account.DeactivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
@@ -24,7 +25,8 @@ import java.lang.annotation.Target;
         GetAccountListTestPrepare.class,
         ActivateAccountTestPrepare.class,
         DeactivateAccountTestPrepare.class,
-        ChangePasswordForAccountTestPrepare.class
+        ChangePasswordForAccountTestPrepare.class,
+        CreateAccountTestPrepare.class
 })
 public @interface EnableAccountPrepare {
 }

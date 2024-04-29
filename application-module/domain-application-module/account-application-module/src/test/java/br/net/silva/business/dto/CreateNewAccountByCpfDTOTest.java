@@ -48,31 +48,4 @@ class CreateNewAccountByCpfDTOTest {
         // Validate that the result is the same instance
         assertEquals(dto, result);
     }
-
-    @Test
-    public void testAccountNumber() {
-        // Create an instance of CreateNewAccountByCpfDTO
-        CreateNewAccountByCpfDTO dto = new CreateNewAccountByCpfDTO("00099988877", 1234, "secretpassword");
-
-        // Call the accountNumber method
-        assertThrows(Exception.class, dto::accountNumber);
-    }
-
-    @Test
-    public void testBalance() {
-        // Create an instance of CreateNewAccountByCpfDTO
-        CreateNewAccountByCpfDTO dto = new CreateNewAccountByCpfDTO("00099988877", 1234, "secretpassword");
-
-        // Call the balance method
-        assertThrows(Exception.class, dto::balance);
-    }
-
-    @Test
-    public void testActive() {
-        // Create an instance of CreateNewAccountByCpfDTO
-        CreateNewAccountByCpfDTO dto = new CreateNewAccountByCpfDTO("00099988877", 1234, "secretpassword");
-
-        // Call the active method
-        assertThrows(Exception.class, dto::active);
-    }
 }

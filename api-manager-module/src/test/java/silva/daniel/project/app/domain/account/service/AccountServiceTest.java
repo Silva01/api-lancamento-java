@@ -3,16 +3,20 @@ package silva.daniel.project.app.domain.account.service;
 import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountDeactivatedException;
+import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
+import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
+import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +40,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_WITH_PASSWORD_DIFFERENT;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_ACCOUNT_ACTIVE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
@@ -298,5 +303,51 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
                 .isInstanceOf(PasswordDivergentException.class)
                 .hasMessage(ACCOUNT_WITH_PASSWORD_DIFFERENT.getMessage());
+    }
+
+    @Test
+    void createAccount_WithValidaData_ReturnsAgencyAndAccountNumberData() throws Exception {
+        when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> {
+            var source = ((Source) argumentsOnMock.getArgument(0));
+            ((NewAccountResponse) source.output()).setAccountNumber(123456);
+            ((NewAccountResponse) source.output()).setAgency(1234);
+            return null;
+        }).when(facade).exec(any(Source.class));
+
+        final var response = service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456"));
+        assertThat(response).isNotNull();
+        assertThat(response.getAccountNumber()).isEqualTo(123456);
+        assertThat(response.getAgency()).isEqualTo(1234);
+    }
+
+    @Test
+    void createAccount_WithClientNotExists_ThrowsClientNotExistsException() throws GenericException {
+        when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456")))
+                .isInstanceOf(ClientNotExistsException.class)
+                .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void createAccount_WithClientDeactivated_ThrowsClientDeactivatedException() throws GenericException {
+        when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
+        doThrow(new ClientDeactivatedException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456")))
+                .isInstanceOf(ClientDeactivatedException.class)
+                .hasMessage(CLIENT_ALREADY_DEACTIVATED.getMessage());
+    }
+
+    @Test
+    void createAccount_WithClientWithAccountActive_ThrowsAccountExistsForCPFInformatedException() throws GenericException {
+        when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
+        doThrow(new AccountExistsForCPFInformatedException(CLIENT_ALREADY_ACCOUNT_ACTIVE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456")))
+                .isInstanceOf(AccountExistsForCPFInformatedException.class)
+                .hasMessage(CLIENT_ALREADY_ACCOUNT_ACTIVE.getMessage());
     }
 }

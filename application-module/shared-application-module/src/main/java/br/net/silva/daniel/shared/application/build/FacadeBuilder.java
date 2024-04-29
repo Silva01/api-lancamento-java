@@ -1,56 +1,50 @@
 package br.net.silva.daniel.shared.application.build;
 
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
-import br.net.silva.daniel.shared.application.interfaces.IValidations;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
+import br.net.silva.daniel.shared.application.interfaces.spec.UseCaseBuilder;
 import br.net.silva.daniel.shared.application.interfaces.spec.UseCaseBuilderSpec;
-import br.net.silva.daniel.shared.application.interfaces.spec.ValidationSpec;
 import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
-import java.util.stream.Stream;
 
 public interface FacadeBuilder {
 
-    static UseCaseBuilderSpec<ValidationSpec<br.net.silva.daniel.shared.application.build.Builder<GenericFacadeDelegate>>> make() {
-        return new Builder<>();
+    static UseCaseBuilderSpec<GenericFacadeDelegate> make() {
+        return new FacadeProcessor();
     }
 
-    class Builder<T> implements UseCaseBuilderSpec<ValidationSpec<br.net.silva.daniel.shared.application.build.Builder<T>>>, ValidationSpec<br.net.silva.daniel.shared.application.build.Builder<T>> {
+    class FacadeProcessor implements UseCaseBuilderSpec<GenericFacadeDelegate> {
 
-        private final Queue<UseCase> useCaseQueue;
-        private final List<IValidations> validations;
+        private final Queue<UseCase<?>> useCaseQueue;
 
-        public Builder() {
+        public FacadeProcessor() {
             useCaseQueue = new LinkedList<>();
-            validations = new ArrayList<>();
         }
 
         @Override
-        public ValidationSpec withBuilderUseCases(br.net.silva.daniel.shared.application.build.Builder<UseCase>... useCaseBuilders) {
-            Stream.of(useCaseBuilders).forEach(useCase -> {
-                try {
-                    useCaseQueue.add(useCase.build());
-                } catch (Exception e) {
-                    throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
-                }
-            });
+        public UseCaseBuilder<GenericFacadeDelegate> withBuilderUseCase(Builder<UseCase<?>> useCaseBuilder) {
+            addUseCase(useCaseBuilder);
             return this;
         }
 
         @Override
-        public br.net.silva.daniel.shared.application.build.Builder<T> withBuilderValidations(ObjectBuilder<IValidations>... validationBuilders) {
-            Stream.of(validationBuilders).forEach(validation -> {
-                try {
-                    validations.add(validation.build());
-                } catch (Exception e) {
-                    throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
-                }
-            });
-            return () -> (T) new GenericFacadeDelegate<>(useCaseQueue, validations);
+        public UseCaseBuilder<GenericFacadeDelegate> andWithBuilderUseCase(Builder<UseCase<?>> useCaseBuilder) {
+            return withBuilderUseCase(useCaseBuilder);
+        }
+
+        @Override
+        public GenericFacadeDelegate build() {
+            return new GenericFacadeDelegate(useCaseQueue);
+        }
+
+        private void addUseCase(Builder<UseCase<?>> useCaseBuilder) {
+            try {
+                this.useCaseQueue.add(useCaseBuilder.build());
+            } catch (Exception e) {
+                throw GenericErrorUtils.executeErrorAtExecuteBuilder(e);
+            }
         }
     }
 }

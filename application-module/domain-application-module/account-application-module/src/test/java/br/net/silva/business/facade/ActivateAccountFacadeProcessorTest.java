@@ -13,8 +13,9 @@ import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -31,7 +32,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class ActivateAccountFacadeTest {
+@ExtendWith(MockitoExtension.class)
+class ActivateAccountFacadeProcessorTest {
 
     private ActivateAccountUseCase activateAccountUseCase;
 
@@ -40,7 +42,6 @@ class ActivateAccountFacadeTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         this.activateAccountUseCase = new ActivateAccountUseCase(baseGateway);
     }
 
@@ -49,10 +50,10 @@ class ActivateAccountFacadeTest {
         when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(false)));
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
-        var facade = new GenericFacadeDelegate(useCases, Collections.emptyList());
+        var facade = new GenericFacadeDelegate(useCases);
         var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 
@@ -66,13 +67,12 @@ class ActivateAccountFacadeTest {
 
     @Test
     void shouldActivateAccountErrorWhenAccountNotExists() {
-        when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
-        var facade = new GenericFacadeDelegate(useCases, Collections.emptyList());
+        var facade = new GenericFacadeDelegate(useCases);
         var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 
@@ -86,13 +86,12 @@ class ActivateAccountFacadeTest {
 
     @Test
     void shouldActivateAccountErrorWhenAccountIsActive() {
-        when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
 
-        Queue<UseCase> useCases = new LinkedList<>();
+        Queue<UseCase<?>> useCases = new LinkedList<>();
         useCases.add(activateAccountUseCase);
 
-        var facade = new GenericFacadeDelegate(useCases, Collections.emptyList());
+        var facade = new GenericFacadeDelegate(useCases);
         var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 

@@ -7,6 +7,7 @@ import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
+import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
@@ -24,9 +25,11 @@ import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
+import silva.daniel.project.app.domain.account.request.NewAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 import silva.daniel.project.app.web.account.ActivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.ChangePasswordForAccountTestPrepare;
+import silva.daniel.project.app.web.account.CreateAccountTestPrepare;
 import silva.daniel.project.app.web.account.DeactivateAccountTestPrepare;
 import silva.daniel.project.app.web.account.EditAgencyOfAccountPrepare;
 import silva.daniel.project.app.web.account.GetAccountListTestPrepare;
@@ -47,6 +50,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_WITH_PASSWORD_DIFFERENT;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_ACCOUNT_ACTIVE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
@@ -74,6 +78,9 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private ChangePasswordForAccountTestPrepare changePasswordForAccountTestPrepare;
+
+    @Autowired
+    private CreateAccountTestPrepare createAccountTestPrepare;
 
     @MockBean
     private AccountService accountService;
@@ -263,6 +270,39 @@ class AccountControllerTest implements RequestBuilderCommons {
         changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_WITH_PASSWORD_DIFFERENT, status().isBadRequest());
     }
 
+    @Test
+    void createAccount_WithValidData_ReturnsAgencyAndAccountNumberThatNewAccount() throws Exception {
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenReturn(createAccountTestPrepare.buildNewAccountResponse());
+        createAccountTestPrepare.successPostAssert(buildBaseNewAccountRequest(),
+                                                   status().isCreated(),
+                                                   jsonPath("$.agency").value(1),
+                                                   jsonPath("$.accountNumber").value(1234));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidDataOfCreateAccount")
+    void createAccount_WithInvalidData_ReturnsStatus406(NewAccountRequest request) throws Exception {
+        createAccountTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void createAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new ClientNotExistsException("Client not Found"));
+        createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void createAccount_WithClientDeactivated_ReturnsStatus409() throws Exception {
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new ClientDeactivatedException("Client is Deactivated"));
+        createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_DEACTIVATED, status().isConflict());
+    }
+
+    @Test
+    void createAccount_WithClientWithAccountActive_ReturnsStatus409() throws Exception {
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new AccountAlreadyActiveException("Account already exists for the CPF informed"));
+        createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_ALREADY_ACCOUNT_ACTIVE, status().isConflict());
+    }
+
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
         return Stream.of(
                 Arguments.of(new EditAgencyOfAccountRequest(null, 123456, 1234, 1234)),
@@ -319,6 +359,19 @@ class AccountControllerTest implements RequestBuilderCommons {
                 Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", null)),
                 Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "")),
                 Arguments.of(new ChangePasswordRequest(1, 123456, "12345678901", "123456", "12345"))
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidDataOfCreateAccount() {
+        return Stream.of(
+                Arguments.of(new NewAccountRequest(null, 123456, "123444")),
+                Arguments.of(new NewAccountRequest("", 123456, "123444")),
+                Arguments.of(new NewAccountRequest("999", 123456, "123444")),
+                Arguments.of(new NewAccountRequest("9999999999999999", 123456, "123444")),
+                Arguments.of(new NewAccountRequest("22233344455", null, "123444")),
+                Arguments.of(new NewAccountRequest("22233344455", 0, "123444")),
+                Arguments.of(new NewAccountRequest("22233344455", 123456, null)),
+                Arguments.of(new NewAccountRequest("22233344455", 123456, ""))
         );
     }
 }

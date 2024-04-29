@@ -3,10 +3,12 @@ package silva.daniel.project.app.web;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
+import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.AccountsByCpfResponseDto;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
+import br.net.silva.business.value_object.output.NewAccountResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
+import silva.daniel.project.app.domain.account.request.NewAccountRequest;
 import silva.daniel.project.app.domain.account.service.AccountService;
 
 @RestController
@@ -74,5 +77,15 @@ public class AccountController {
                 request.getPassword(),
                 request.getNewPassword()
         ));
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<NewAccountResponse> createAccount(@Valid @RequestBody NewAccountRequest request) throws Exception {
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createNewAccount(new CreateNewAccountByCpfDTO(
+                request.cpf(),
+                request.agencyNumber(),
+                request.password()
+        )));
     }
 }

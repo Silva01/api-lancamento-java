@@ -6,6 +6,7 @@ import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateCreditCardRequest;
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
+import silva.daniel.project.app.domain.account.request.NewAccountRequest;
 
 public interface RequestBuilderCommons {
 
@@ -42,5 +43,9 @@ public interface RequestBuilderCommons {
                 .password("123456")
                 .newPassword("876543")
                 .build();
+    }
+
+    default NewAccountRequest buildBaseNewAccountRequest() {
+        return new NewAccountRequest("12345678901", 123456, "123444");
     }
 }

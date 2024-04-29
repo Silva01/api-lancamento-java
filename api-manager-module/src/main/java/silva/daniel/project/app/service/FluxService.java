@@ -1,10 +1,5 @@
 package silva.daniel.project.app.service;
 
-import br.net.silva.business.build.AccountAlreadyExistsCreditCardValidationBuilder;
-import br.net.silva.business.build.AccountExistsAndActiveValidationBuilder;
-import br.net.silva.business.build.AccountExistsValidationBuilder;
-import br.net.silva.business.build.AccountWithNewAgencyAlreadyExistsValidateBuilder;
-import br.net.silva.business.build.CreditCardNumberExistsValidationBuilder;
 import br.net.silva.business.usecase.ActivateAccountUseCase;
 import br.net.silva.business.usecase.ChangeAgencyUseCase;
 import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
@@ -15,13 +10,8 @@ import br.net.silva.business.usecase.DeactivateCreditCardUseCase;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
 import br.net.silva.business.usecase.GetInformationAccountUseCase;
 import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.build.ClientExistsAndActivatedValidateBuilder;
-import br.net.silva.daniel.build.ClientExistsAndDeactivatedValidateBuilder;
-import br.net.silva.daniel.build.ClientExistsValidateBuilder;
-import br.net.silva.daniel.build.ClientNotExistsValidateBuilder;
 import br.net.silva.daniel.shared.application.build.FacadeBuilder;
 import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
-import br.net.silva.daniel.shared.application.build.ValidationBuilder;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
@@ -48,187 +38,148 @@ public class FluxService {
         this.accountBaseRepository = accountBaseRepository;
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxCreateNewClient() throws Exception {
+    public GenericFacadeDelegate fluxCreateNewClient() {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, CreateNewClientUseCase.class),
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, CreateNewClientUseCase.class))
+                .andWithBuilderUseCase(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewAccountByCpfUseCase.class))
-                .withBuilderValidations(
-                        ValidationBuilder
-                                .create(ClientNotExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository)
-                )
                 .build();
+
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxUpdateClient() throws Exception {
+    public GenericFacadeDelegate fluxUpdateClient() {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
+                .withBuilderUseCase(
                         UseCaseBuilder
                                 .makeTo(clientBaseRepository, responseMapper, EditClientUseCase.class)
-                )
-                .withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository)
-                )
+                ).build();
+    }
+
+    public GenericFacadeDelegate fluxDeactivateClient() {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, DeactivateClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class))
                 .build();
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxDeactivateClient() throws Exception {
+    public GenericFacadeDelegate fluxActivateClient() {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, DeactivateClientUseCase.class),
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class)
-                )
-                .withBuilderValidations(
-                        ValidationBuilder
-                                .create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository)
-                )
-                .build();
-    }
-
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxActivateClient() throws Exception {
-        return FacadeBuilder
-                .make()
-                .withBuilderUseCases(
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, ActivateClientUseCase.class)
                 )
-                .withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsAndDeactivatedValidateBuilder.class)
-                                .withRepository(clientBaseRepository)
-                )
                 .build();
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxUpdateAddress() throws Exception {
+    public GenericFacadeDelegate fluxUpdateAddress() {
         return FacadeBuilder
-                .make().withBuilderUseCases(
+                .make()
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, EditAddressUseCase.class)
-                ).withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository)
-                ).build();
+                )
+                .build();
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxFindClient() throws Exception {
+    public GenericFacadeDelegate fluxFindClient() {
         return FacadeBuilder
-                .make().withBuilderUseCases(
+                .make()
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class)
-                ).withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository)
-                ).build();
-    }
-
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxDeactivateCreditCard() throws Exception {
-        return FacadeBuilder
-                .make().withBuilderUseCases(
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateCreditCardUseCase.class)
-                ).withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository),
-                        ValidationBuilder.create(AccountExistsValidationBuilder.class)
-                                .withRepository(accountBaseRepository),
-                        ValidationBuilder.create(CreditCardNumberExistsValidationBuilder.class)
-                                .withRepository(accountBaseRepository)
-                ).build();
-    }
-
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxCreateCreditCard() throws Exception {
-        return FacadeBuilder
-                .make().withBuilderUseCases(
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewCreditCardUseCase.class)
-                ).withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsAndActivatedValidateBuilder.class)
-                                .withRepository(clientBaseRepository),
-                        ValidationBuilder.create(AccountExistsAndActiveValidationBuilder.class)
-                                .withRepository(accountBaseRepository),
-                        ValidationBuilder.create(AccountAlreadyExistsCreditCardValidationBuilder.class)
-                                .withRepository(accountBaseRepository)
-                ).build();
-    }
-
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxEditAgencyOfAccount() throws Exception {
-        return FacadeBuilder
-                .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangeAgencyUseCase.class)
-                )
-                .withBuilderValidations(
-                        ValidationBuilder.create(ClientExistsValidateBuilder.class)
-                                .withRepository(clientBaseRepository),
-                        ValidationBuilder.create(AccountExistsValidationBuilder.class)
-                                .withRepository(accountBaseRepository),
-                        ValidationBuilder.create(AccountWithNewAgencyAlreadyExistsValidateBuilder.class)
-                                .withRepository(accountBaseRepository)
                 )
                 .build();
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxGetAccountByCpf() throws Exception {
+    public GenericFacadeDelegate fluxDeactivateCreditCard() {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateCreditCardUseCase.class))
+                .build();
+    }
+
+    public GenericFacadeDelegate fluxCreateCreditCard() {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewCreditCardUseCase.class))
+                .build();
+    }
+
+    public GenericFacadeDelegate fluxEditAgencyOfAccount() {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangeAgencyUseCase.class))
+                .build();
+    }
+
+    public GenericFacadeDelegate fluxGetAccountByCpf() {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, GetInformationAccountUseCase.class)
-                ).withBuilderValidations().build();
+                ).build();
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxGetAllAccount() throws Exception {
+    public GenericFacadeDelegate fluxGetAllAccount() {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
+                .withBuilderUseCase(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, FindAllAccountsByCpfUseCase.class)
-                ).withBuilderValidations().build();
+                ).build();
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxActivateAccount() throws Exception {
+    public GenericFacadeDelegate fluxActivateAccount() {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ActivateAccountUseCase.class)
-                )
-                .withBuilderValidations()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ActivateAccountUseCase.class))
                 .build();
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxDeactivateAccount() throws Exception {
+    public GenericFacadeDelegate fluxDeactivateAccount() {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class)
-                )
-                .withBuilderValidations()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, DeactivateAccountUseCase.class))
                 .build();
     }
 
-    @SuppressWarnings("unchecked")
-    public GenericFacadeDelegate fluxChangePassword() throws Exception {
+    public GenericFacadeDelegate fluxChangePassword() {
         return FacadeBuilder
                 .make()
-                .withBuilderUseCases(
-                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class),
-                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangePasswordAccountUseCase.class)
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class))
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangePasswordAccountUseCase.class))
+                .build();
+    }
+
+    public GenericFacadeDelegate fluxCreateNewAccount() {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class)
                 )
-                .withBuilderValidations()
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewAccountByCpfUseCase.class)
+                )
                 .build();
     }
 }

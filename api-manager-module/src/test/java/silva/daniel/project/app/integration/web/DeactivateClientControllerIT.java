@@ -66,6 +66,6 @@ class DeactivateClientControllerIT extends MysqlTestContainer implements Integra
     @Test
     void deactivateClient_WithAlreadyDeactivatedClient_ReturnsStatus406() {
         final var request = new DeactivateClient("12345678903");
-        requestCommons.assertPostRequest("/clients/deactivate", request, FailureResponse.class, this::assertClientAlreadyDeactivatedExists);
+        requestCommons.assertPostRequest("/clients/deactivate", request, FailureResponse.class, this::assertClientDeactivatedExists);
     }
 }

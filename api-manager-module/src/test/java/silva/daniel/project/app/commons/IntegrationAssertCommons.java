@@ -10,6 +10,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_WITH_PASSWORD_DIFFERENT;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_ACCOUNT_ACTIVE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_ACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_EXISTS;
@@ -44,6 +45,10 @@ public interface IntegrationAssertCommons {
 
     default void assertClientActivated(ResponseEntity<FailureResponse> sut) {
         assertFailureApi(sut, CLIENT_ALREADY_ACTIVATED);
+    }
+
+    default void assertClientAlreadyAccountActive(ResponseEntity<FailureResponse> sut) {
+        assertFailureApi(sut, CLIENT_ALREADY_ACCOUNT_ACTIVE);
     }
 
     default void assertAccountNotExists(ResponseEntity<FailureResponse> sut) {

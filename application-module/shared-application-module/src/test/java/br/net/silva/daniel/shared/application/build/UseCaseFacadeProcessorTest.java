@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
-class UseCaseBuilderTest {
+class UseCaseFacadeProcessorTest {
 
     @Mock
     private ApplicationBaseGateway applicationBaseGateway;
