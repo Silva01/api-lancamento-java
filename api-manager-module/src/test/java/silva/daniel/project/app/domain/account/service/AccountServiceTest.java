@@ -6,9 +6,11 @@ import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
+import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
+import br.net.silva.business.value_object.output.NewAccountResponse;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
@@ -298,5 +300,21 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThatCode(() -> service.changePassword(new ChangePasswordDTO("123444", 1, 2, "123456", "123456")))
                 .isInstanceOf(PasswordDivergentException.class)
                 .hasMessage(ACCOUNT_WITH_PASSWORD_DIFFERENT.getMessage());
+    }
+
+    @Test
+    void createAccount_WithValidaData_ReturnsAgencyAndAccountNumberData() throws Exception {
+        when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> {
+            var source = ((Source) argumentsOnMock.getArgument(0));
+            ((NewAccountResponse) source.output()).setAccountNumber(123456);
+            ((NewAccountResponse) source.output()).setAgency(1234);
+            return null;
+        }).when(facade).exec(any(Source.class));
+
+        final var response = service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456"));
+        assertThat(response).isNotNull();
+        assertThat(response.getAccountNumber()).isEqualTo(123456);
+        assertThat(response.getAgency()).isEqualTo(1234);
     }
 }
