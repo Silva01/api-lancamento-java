@@ -3,6 +3,7 @@ package silva.daniel.project.app.domain.account.service;
 import br.net.silva.business.exception.AccountAlreadyActiveException;
 import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
 import br.net.silva.business.exception.AccountDeactivatedException;
+import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
@@ -39,6 +40,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_WITH_PASSWORD_DIFFERENT;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_ACCOUNT_ACTIVE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
@@ -340,22 +342,12 @@ class AccountServiceTest implements InputBuilderCommons {
     }
 
     @Test
-    void createAccount_WithAccountNotExists_ThrowsAccountNotExistsException() throws GenericException {
+    void createAccount_WithClientWithAccountActive_ThrowsAccountExistsForCPFInformatedException() throws GenericException {
         when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
-        doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+        doThrow(new AccountExistsForCPFInformatedException(CLIENT_ALREADY_ACCOUNT_ACTIVE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456")))
-                .isInstanceOf(AccountNotExistsException.class)
-                .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
-    }
-
-    @Test
-    void createAccount_WithAccountDeactivated_ThrowsAccountDeactivatedException() throws GenericException {
-        when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
-        doThrow(new AccountDeactivatedException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
-
-        assertThatCode(() -> service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456")))
-                .isInstanceOf(AccountDeactivatedException.class)
-                .hasMessage(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
+                .isInstanceOf(AccountExistsForCPFInformatedException.class)
+                .hasMessage(CLIENT_ALREADY_ACCOUNT_ACTIVE.getMessage());
     }
 }
