@@ -1,60 +1,70 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.build.AccountBuilder;
+import br.net.silva.business.decorator.AccountAlreadyExistsForNewAgencyDecorator;
+import br.net.silva.business.validations.AccountExistsValidate;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
-import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 
-public class ChangeAgencyUseCase implements UseCase<EmptyOutput> {
+import java.util.Optional;
 
-    private final Repository<AccountOutput> findAccountByCpfAndAccountNumberRepository;
-    private final Repository<AccountOutput> saveAccountRepository;
+@ValidateStrategyOn(validations = {AccountExistsValidate.class})
+public class ChangeAgencyUseCase implements UseCase<AccountOutput> {
+
+    private final ApplicationBaseGateway<AccountOutput> baseGateway;
 
     private final IFactoryAggregate<Account, AccountDTO> factoryAggregate;
 
-    public ChangeAgencyUseCase(Repository<AccountOutput> findAccountByCpfAndAccountNumberRepository, Repository<AccountOutput> saveAccountRepository) {
-        this.findAccountByCpfAndAccountNumberRepository = findAccountByCpfAndAccountNumberRepository;
-        this.saveAccountRepository = saveAccountRepository;
+    public ChangeAgencyUseCase(ApplicationBaseGateway<AccountOutput> baseGateway) {
+        this.baseGateway = baseGateway;
         this.factoryAggregate = new CreateAccountByAccountDTOFactory();
     }
 
     @Override
-    public EmptyOutput exec(Source param) throws GenericException {
-        try {
-            var changeAgencyInput = (ChangeAgencyInput) param.input();
-            var accountOutput = findAccountByCpfAndAccountNumberRepository.exec(changeAgencyInput.cpf(), changeAgencyInput.accountNumber(), changeAgencyInput.oldAgencyNumber());
+    public AccountOutput exec(Source param) throws GenericException {
+        var changeAgencyInput = (ChangeAgencyInput) param.input();
+        var accountOpt = baseGateway.findById(changeAgencyInput);
 
-            var accountDto = AccountBuilder.buildFullAccountDto().createFrom(accountOutput);
-            var account = factoryAggregate.create(accountDto);
+        final var accountOutput = execValidate(accountOpt,
+                    new AccountAlreadyExistsForNewAgencyDecorator(getAccountWithNewAgency(changeAgencyInput)))
+                .extract();
 
-            var newAccountDto = new AccountDTO(
-                    accountDto.number(),
-                    changeAgencyInput.newAgencyNumber(),
-                    accountDto.balance(),
-                    accountDto.password(),
-                    accountDto.active(),
-                    accountDto.cpf(),
-                    accountDto.transactions(),
-                    accountDto.creditCard()
-            );
+        var accountDto = AccountBuilder.buildFullAccountDto().createFrom(accountOutput);
+        var account = factoryAggregate.create(accountDto);
 
-            account.deactivate();
-            saveAccountRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
+        var newAccountDto = new AccountDTO(
+                accountDto.number(),
+                changeAgencyInput.newAgencyNumber(),
+                accountDto.balance(),
+                accountDto.password(),
+                accountDto.active(),
+                accountDto.cpf(),
+                accountDto.transactions(),
+                accountDto.creditCard()
+        );
 
-            var newAccount = factoryAggregate.create(newAccountDto);
-            saveAccountRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(newAccount.build()));
+        account.deactivate();
+        baseGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
 
-            return EmptyOutput.INSTANCE;
-        } catch (Exception e) {
-            throw new GenericException("Generic error", e);
-        }
+        var newAccount = factoryAggregate.create(newAccountDto);
+        return baseGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(newAccount.build()));
+    }
+
+    private Optional<AccountOutput> getAccountWithNewAgency(ChangeAgencyInput changeAgencyInput) {
+        var inputNewAgency = new ChangeAgencyInput(
+                changeAgencyInput.cpf(),
+                changeAgencyInput.accountNumber(),
+                changeAgencyInput.newAgencyNumber(),
+                changeAgencyInput.oldAgencyNumber());
+        return baseGateway.findById(inputNewAgency);
     }
 }

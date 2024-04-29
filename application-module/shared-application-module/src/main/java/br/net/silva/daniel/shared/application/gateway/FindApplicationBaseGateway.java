@@ -5,5 +5,5 @@ import java.util.Optional;
 
 public interface FindApplicationBaseGateway<R> {
     Optional<R> findById(ParamGateway param);
-    List<R> findAll();
+    List<R> findAllBy(ParamGateway param);
 }

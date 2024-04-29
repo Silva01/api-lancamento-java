@@ -1,31 +1,25 @@
 package br.net.silva.business.validations;
 
-import br.net.silva.business.value_object.input.CreateCreditCardInput;
+import br.net.silva.business.exception.CreditCardAlreadyExistsException;
 import br.net.silva.business.value_object.output.AccountOutput;
+import br.net.silva.daniel.shared.application.interfaces.Validation;
 import br.net.silva.daniel.shared.business.exception.GenericException;
-import br.net.silva.daniel.shared.application.interfaces.IValidations;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
 import java.util.Optional;
 
-public class AccountAlreadyExistsCreditCardValidation implements IValidations {
-
-    private final Repository<Optional<AccountOutput>> findAccountRepository;
-
-    public AccountAlreadyExistsCreditCardValidation(Repository<Optional<AccountOutput>> findAccountRepository) {
-        this.findAccountRepository = findAccountRepository;
-    }
+public class AccountAlreadyExistsCreditCardValidation implements Validation<AccountOutput> {
 
     @Override
-    public void validate(Source input) throws GenericException {
-        var createCreditCardInput = (CreateCreditCardInput) input.input();
-        var optionalAccount = findAccountRepository.exec(createCreditCardInput.accountNumber(), createCreditCardInput.agency(), createCreditCardInput.cpf());
+    public void validate(Optional<AccountOutput> opt) throws GenericException {
+        if (opt.isEmpty()) {
+            throw GenericErrorUtils.executeExceptionNotPermissionOperation();
+        }
 
-        var account = optionalAccount.get();
+        final var account = opt.get();
 
         if (account.creditCard() != null){
-            throw new GenericException("This account already have a credit card");
+            throw new CreditCardAlreadyExistsException("Credit card already exists");
         }
     }
 }

@@ -7,24 +7,32 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
+import silva.daniel.project.app.commons.IntegrationAssertCommons;
 import silva.daniel.project.app.commons.MysqlTestContainer;
-import silva.daniel.project.app.domain.client.request.ActivateClient;
-import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
+import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.client.FailureResponse;
+import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
+import silva.daniel.project.app.domain.client.request.ActivateClient;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class ActivateClientControllerIT extends MysqlTestContainer {
+@Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
+@Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
+class ActivateClientControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
     private ClientRepository repository;
+
+    @Autowired
+    private RequestIntegrationCommons requestCommons;
 
     @Test
     void deactivateClient_WithValidData_ReturnsStatus200() {
@@ -39,38 +47,19 @@ class ActivateClientControllerIT extends MysqlTestContainer {
 
     @Test
     void deactivateClient_WithInvalidData_ReturnsStatus406() {
-        final var requestEmpty = new ActivateClient("");
-        var sutEmpty = restTemplate.postForEntity("/clients/activate", requestEmpty, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Information is not valid");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
-
-        final var requestNull = new ActivateClient(null);
-        var sutNull = restTemplate.postForEntity("/clients/activate", requestNull, Void.class);
-        assertThat(sutNull.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Information is not valid");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
+        Stream.of(new ActivateClient(""), new ActivateClient(null))
+                .forEach(request -> requestCommons.assertPostRequest("/clients/activate", request, FailureResponse.class, this::assertInvalidData));
     }
 
     @Test
     void deactivateClient_WithNoExistsClient_ReturnsStatus404() {
         final var request = new ActivateClient("00000000000");
-        var sutEmpty = restTemplate.postForEntity("/clients/activate", request, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Client not exists in database");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        requestCommons.assertPostRequest("/clients/activate", request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
     void deactivateClient_WithAlreadyActivatedClient_ReturnsStatus406() {
         final var request = new ActivateClient("12345678904");
-        var sutEmpty = restTemplate.postForEntity("/clients/activate", request, FailureResponse.class);
-        assertThat(sutEmpty.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        assertThat(sutEmpty.getBody()).isNotNull();
-        assertThat(sutEmpty.getBody().getMessage()).isEqualTo("Client already activated");
-        assertThat(sutEmpty.getBody().getStatusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        requestCommons.assertPostRequest("/clients/activate", request, FailureResponse.class, this::assertClientActivated);
     }
 }

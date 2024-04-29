@@ -1,35 +1,10 @@
 package br.net.silva.business.value_object.input;
 
-import br.net.silva.daniel.shared.application.interfaces.IAccountParam;
-import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
-
-import java.math.BigDecimal;
+import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
+import br.net.silva.daniel.shared.application.interfaces.Input;
 
 public record GetInformationAccountInput(
         String cpf
-) implements IAccountParam {
-    @Override
-    public Integer accountNumber() {
-        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
-    }
+) implements ICpfParam, Input {
 
-    @Override
-    public BigDecimal balance() {
-        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
-    }
-
-    @Override
-    public String password() {
-        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
-    }
-
-    @Override
-    public boolean active() {
-        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
-    }
-
-    @Override
-    public Integer agency() {
-        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
-    }
 }

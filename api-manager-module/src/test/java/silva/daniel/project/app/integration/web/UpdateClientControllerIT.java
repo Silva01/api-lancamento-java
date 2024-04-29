@@ -12,27 +12,36 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
+import silva.daniel.project.app.commons.IntegrationAssertCommons;
 import silva.daniel.project.app.commons.MysqlTestContainer;
+import silva.daniel.project.app.commons.RequestIntegrationCommons;
+import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.domain.client.entity.repository.ClientRepository;
 import silva.daniel.project.app.domain.client.request.EditClientRequest;
-import silva.daniel.project.app.domain.client.FailureResponse;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class UpdateClientControllerIT extends MysqlTestContainer {
+@Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
+@Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
+class UpdateClientControllerIT extends MysqlTestContainer implements IntegrationAssertCommons {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
     private ClientRepository repository;
+
+    @Autowired
+    private RequestIntegrationCommons requestCommons;
 
     @Test
     void editClient_WithValidData_Returns201AndAccountData() {
@@ -52,35 +61,19 @@ class UpdateClientControllerIT extends MysqlTestContainer {
     @ParameterizedTest
     @MethodSource("provideInvalidData")
     void editClient_WithInvalidData_ReturnsStatus406(EditClientRequest request) {
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Information is not valid");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(406);
-
+        requestCommons.assertPutRequest("/clients", request, FailureResponse.class, this::assertInvalidData);
     }
 
     @Test
     void editClient_WithCpfNotExists_ReturnsStatus404() {
         final var request = new EditClientRequest("12345600000", "Ace", "000000000");
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client not exists in database");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(404);
+        requestCommons.assertPutRequest("/clients", request, FailureResponse.class, this::assertClientNotExists);
     }
 
     @Test
     void editClient_WithCpfDeactivated_ReturnsStatus409() {
         final var request = new EditClientRequest("12345678903", "Ace", "000000000");
-        final var httpEntity = new HttpEntity<>(request);
-        var sut = restTemplate.exchange("/clients", HttpMethod.PUT, httpEntity, FailureResponse.class);
-        assertThat(sut.getStatusCode()).isEqualTo(CONFLICT);
-        assertThat(sut.getBody()).isNotNull();
-        assertThat(sut.getBody().getMessage()).isEqualTo("Client already deactivated");
-        assertThat(sut.getBody().getStatusCode()).isEqualTo(409);
+        requestCommons.assertPutRequest("/clients", request, FailureResponse.class, this::assertClientAlreadyDeactivatedExists);
     }
 
     private static Stream<Arguments> provideInvalidData() {

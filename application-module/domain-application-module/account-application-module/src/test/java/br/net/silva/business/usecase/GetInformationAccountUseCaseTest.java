@@ -7,43 +7,42 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.GetInformationAccountOutput;
 import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
+import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class GetInformationAccountUseCaseTest {
 
     private GetInformationAccountUseCase useCase;
 
     @Mock
-    private Repository<AccountOutput> findInformationRepository;
-
-    @Mock
-    private Repository<List<TransactionOutput>> transactionsRepository;
+    private ApplicationBaseGateway<AccountOutput> accountBaseGateway;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        when(findInformationRepository.exec(anyString())).thenReturn(buildMockAccount(true));
-        when(transactionsRepository.exec(anyString(), anyInt())).thenReturn(buildListTransaction());
+        when(accountBaseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
 
         // Use Case
-        useCase = new GetInformationAccountUseCase(findInformationRepository, transactionsRepository, new GenericResponseMapper(List.of(new GetInformationMapper())));
+        useCase = new GetInformationAccountUseCase(accountBaseGateway, new GenericResponseMapper(List.of(new GetInformationMapper())));
     }
 
     @Test
@@ -65,7 +64,7 @@ class GetInformationAccountUseCaseTest {
     }
 
     private AccountOutput buildMockAccount(boolean active) {
-        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, Collections.emptyList());
+        return new AccountOutput(1, 45678, BigDecimal.valueOf(1000), CryptoUtils.convertToSHA256("978534"), active, "99988877766", null, buildListTransaction());
     }
 
     private List<TransactionOutput> buildListTransaction() {

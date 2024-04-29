@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import silva.daniel.project.app.domain.client.FailureResponse;
@@ -25,6 +26,11 @@ import silva.daniel.project.app.domain.client.request.AddressRequest;
 import silva.daniel.project.app.domain.client.request.ClientRequest;
 import silva.daniel.project.app.domain.client.request.EditStatusClientRequest;
 import silva.daniel.project.app.domain.client.service.ClientService;
+import silva.daniel.project.app.web.client.ActivateClientTestPrepare;
+import silva.daniel.project.app.web.client.AddressClientTestPrepare;
+import silva.daniel.project.app.web.client.CreateClientTestPrepare;
+import silva.daniel.project.app.web.client.DeactivateClientTestPrepare;
+import silva.daniel.project.app.web.client.GetClientTestPrepare;
 
 import java.util.stream.Stream;
 
@@ -33,8 +39,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static silva.daniel.project.app.commons.ClientCommons.activateClientMock;
@@ -47,9 +51,14 @@ import static silva.daniel.project.app.commons.ClientCommons.requestInvalidNegat
 import static silva.daniel.project.app.commons.ClientCommons.requestInvalidZeroAgencyMock;
 import static silva.daniel.project.app.commons.ClientCommons.requestNullCpfMock;
 import static silva.daniel.project.app.commons.ClientCommons.requestValidMock;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_DEACTIVATED;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_EXISTS;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
 @WebMvcTest(ClientController.class)
+@Import({CreateClientTestPrepare.class, DeactivateClientTestPrepare.class, ActivateClientTestPrepare.class, AddressClientTestPrepare.class, GetClientTestPrepare.class}) //TODO: Aqui acho interessante criar uma anotação propria pois vai importar mais de um prepare
 class ClientControllerTest {
 
     @Autowired
@@ -61,228 +70,131 @@ class ClientControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private CreateClientTestPrepare prepareAsserts;
+
+    @Autowired
+    private DeactivateClientTestPrepare deactivateRequestPrepare;
+
+    @Autowired
+    private ActivateClientTestPrepare activateClientTestPrepare;
+
+    @Autowired
+    private AddressClientTestPrepare addressClientTestPrepare;
+
+    @Autowired
+    private GetClientTestPrepare getClientTestPrepare;
+
     @Test
     void createNewClient_WithValidData_Returns201AndAccountData() throws Exception {
         final var mockResponse = mockResponse();
         when(service.createNewClient(any(ClientRequestDTO.class))).thenReturn(mockResponse);
-
-        mockMvc.perform(post("/clients")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestValidMock())))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.agency").value(mockResponse.getAgency()))
-                .andExpect(jsonPath("$.accountNumber").isNotEmpty())
-                .andExpect(jsonPath("$.provisionalPassword").isNotEmpty());
+        prepareAsserts.successPostAssert(requestValidMock(), status().isCreated(),
+                jsonPath("$.agency").value(mockResponse.getAgency()),
+                jsonPath("$.accountNumber").isNotEmpty(),
+                jsonPath("$.provisionalPassword").isNotEmpty());
     }
 
     @Test
     void createNewClient_WithClientExistInDatabase_Returns409() throws Exception {
-        final var failureResponse = mockFailureResponse("Client already exists in database", 409);
+        final var failureResponse = CLIENT_ALREADY_EXISTS;
         when(service.createNewClient(any(ClientRequestDTO.class))).thenThrow(new ExistsClientRegistredException(failureResponse.getMessage()));
-
-        mockMvc.perform(post("/clients")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestValidMock())))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        prepareAsserts.failurePostAssert(requestValidMock(), failureResponse, status().isConflict());
     }
 
     @ParameterizedTest
     @MethodSource("provideRequestInvalidData")
     void createNewClient_WithInvalidData_Returns406(ClientRequest request) throws Exception {
-        final var responseMock = mockFailureResponse("Information is not valid", 406);
-        final var requestMockInvalid = requestInvalidAddressMock();
-
-        mockMvc.perform(post("/clients")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+        prepareAsserts.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
     void editClient_WithValidData_Returns200() throws Exception {
-        mockMvc.perform(put("/clients")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(editClientRequestMock())))
-                .andExpect(status().isOk());
+        prepareAsserts.successPutAssert(editClientRequestMock(), status().isOk());
     }
 
     @Test
     void editClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
-        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateClient(any(EditClientInput.class));
-        mockMvc.perform(put("/clients")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(editClientRequestMock())))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).updateClient(any(EditClientInput.class));
+        prepareAsserts.failurePutAssert(editClientRequestMock(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void editClient_WithClientAlreadyDeactivated_Returns409() throws Exception {
-        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
-        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).updateClient(any(EditClientInput.class));
-
-        mockMvc.perform(put("/clients")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestValidMock())))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotActiveException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(service).updateClient(any(EditClientInput.class));
+        prepareAsserts.failurePutAssert(editClientRequestMock(), CLIENT_ALREADY_DEACTIVATED, status().isConflict());
     }
 
     @Test
     void deactivateClient_WithValidData_Returns200() throws Exception {
-        mockMvc.perform(post("/clients/deactivate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(editStatusClientRequestMock())))
-                .andExpect(status().isOk());
+        deactivateRequestPrepare.successPostAssert(editStatusClientRequestMock(), status().isOk());
     }
 
     @Test
     void deactivateClient_WithInvalidData_Returns406() throws Exception {
-        final var responseMock = mockFailureResponse("Information is not valid", 406);
-        mockMvc.perform(post("/clients/deactivate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new EditStatusClientRequest(""))))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
-
-        mockMvc.perform(post("/clients/deactivate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new EditStatusClientRequest(null))))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+        deactivateRequestPrepare.failurePostAssert(new EditStatusClientRequest(""), INVALID_DATA_MESSAGE, status().isNotAcceptable());
+        deactivateRequestPrepare.failurePostAssert(new EditStatusClientRequest(null), INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
     void deactivateClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
-        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
-        mockMvc.perform(post("/clients/deactivate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new EditStatusClientRequest("12345678901"))))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
+        deactivateRequestPrepare.failurePostAssert(new EditStatusClientRequest("12345678901"), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void deactivateClient_WithClientAlreadyDeactivated_Returns409() throws Exception {
-        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
-        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
-
-        mockMvc.perform(post("/clients/deactivate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestValidMock())))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotActiveException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
+        deactivateRequestPrepare.failurePostAssert(editStatusClientRequestMock(), CLIENT_ALREADY_DEACTIVATED, status().isConflict());
     }
 
     @Test
     void activateClient_WithValidData_Returns200() throws Exception {
-        mockMvc.perform(post("/clients/activate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(activateClientMock())))
-                .andExpect(status().isOk());
+        deactivateRequestPrepare.successPostAssert(activateClientMock(), status().isOk());
     }
 
     @Test
     void activateClient_WithInvalidData_Returns406() throws Exception {
-        final var responseMock = mockFailureResponse("Information is not valid", 406);
-        mockMvc.perform(post("/clients/activate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ActivateClient(""))))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
-
-        mockMvc.perform(post("/clients/activate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ActivateClient(null))))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+        activateClientTestPrepare.failurePostAssert(new ActivateClient(""), INVALID_DATA_MESSAGE, status().isNotAcceptable());
+        activateClientTestPrepare.failurePostAssert(new ActivateClient(null), INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
     void activateClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
-        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
-        mockMvc.perform(post("/clients/activate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ActivateClient("12345678901"))))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
+        activateClientTestPrepare.failurePostAssert(new ActivateClient("12345678901"), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void activateClient_WithClientAlreadyDeactivated_Returns409() throws Exception {
-        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
-        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
-
-        mockMvc.perform(post("/clients/activate")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(activateClientMock())))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotActiveException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
+        activateClientTestPrepare.failurePostAssert(activateClientMock(), CLIENT_ALREADY_DEACTIVATED, status().isConflict());
     }
 
     @Test
     void updateAddress_WithValidData_Returns200() throws Exception {
         var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        mockMvc.perform(put("/clients/address")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+        addressClientTestPrepare.successPutAssert(request, status().isOk());
     }
 
     @Test
     void updateAddress_WithClientNotExistInDatabase_Returns404() throws Exception {
         var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        final var failureResponse = mockFailureResponse("Client not exists in database", 404);
-        doThrow(new ClientNotExistsException(failureResponse.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
-        mockMvc.perform(put("/clients/address")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
+        addressClientTestPrepare.failurePutAssert(request, CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void updateAddress_WithClientAlreadyDeactivated_Returns409() throws Exception {
         var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        final var failureResponse = mockFailureResponse("Client already deactivated", 409);
-        doThrow(new ClientNotActiveException(failureResponse.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
-
-        mockMvc.perform(put("/clients/address")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value(failureResponse.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureResponse.getStatusCode()));
+        doThrow(new ClientNotActiveException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
+        addressClientTestPrepare.failurePutAssert(request, CLIENT_ALREADY_DEACTIVATED, status().isConflict());
     }
 
     @ParameterizedTest
     @MethodSource("provideAddressRequestInvalidData")
     void updateAddress_WithInvalidData_ReturnsStatus406(AddressRequest request) throws Exception {
-        final var responseMock = mockFailureResponse("Information is not valid", 406);
-        mockMvc.perform(put("/clients/address")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(jsonPath("$.message").value(responseMock.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(responseMock.getStatusCode()));
+        addressClientTestPrepare.failurePutAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
     }
 
     @Test
@@ -299,30 +211,23 @@ class ClientControllerTest {
         response.setState("state");
         response.setZipCod("zipCode");
         when(service.getClientByCpf("00099988877")).thenReturn(response);
-        mockMvc.perform(get("/clients/{cpf}", "00099988877")
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cpf").value(response.getCpf()))
-                .andExpect(jsonPath("$.name").value(response.getName()))
-                .andExpect(jsonPath("$.telephone").value(response.getTelephone()))
-                .andExpect(jsonPath("$.street").value(response.getStreet()))
-                .andExpect(jsonPath("$.number").value(response.getNumber()))
-                .andExpect(jsonPath("$.complement").value(response.getComplement()))
-                .andExpect(jsonPath("$.neighborhood").value(response.getNeighborhood()))
-                .andExpect(jsonPath("$.city").value(response.getCity()))
-                .andExpect(jsonPath("$.state").value(response.getState()))
-                .andExpect(jsonPath("$.zipCod").value(response.getZipCod()));
+        getClientTestPrepare.successGetAssert(new Object[]{"00099988877"}, status().isOk(),
+                jsonPath("$.cpf").value(response.getCpf()),
+                jsonPath("$.name").value(response.getName()),
+                jsonPath("$.telephone").value(response.getTelephone()),
+                jsonPath("$.street").value(response.getStreet()),
+                jsonPath("$.number").value(response.getNumber()),
+                jsonPath("$.complement").value(response.getComplement()),
+                jsonPath("$.neighborhood").value(response.getNeighborhood()),
+                jsonPath("$.city").value(response.getCity()),
+                jsonPath("$.state").value(response.getState()),
+                jsonPath("$.zipCod").value(response.getZipCod()));
     }
 
     @Test
     void getClient_WithClientNotExists_ReturnsStatus404() throws Exception {
         when(service.getClientByCpf("00099988877")).thenThrow(new ClientNotExistsException("Client not exists in database"));
-        var failureObject = new FailureResponse("Client not exists in database", 404);
-        mockMvc.perform(get("/clients/{cpf}", "00099988877")
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(failureObject.getMessage()))
-                .andExpect(jsonPath("$.statusCode").value(failureObject.getStatusCode()));
+        getClientTestPrepare.failureGetAssert(new Object[]{"00099988877"}, CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private NewAccountByNewClientResponseSuccess mockResponse() {
@@ -333,9 +238,6 @@ class ClientControllerTest {
         return response;
     }
 
-    private FailureResponse mockFailureResponse(String message, Integer statusCode) {
-        return new FailureResponse(message, statusCode);
-    }
 
     private static Stream<Arguments> provideRequestInvalidData() {
         return Stream.of(

@@ -2,6 +2,8 @@ package silva.daniel.project.app.domain.account.entity;
 
 import br.net.silva.daniel.enuns.FlagEnum;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,8 @@ public class CreditCard {
     @Id
     private String number;
     private Integer cvv;
+
+    @Enumerated(EnumType.STRING)
     private FlagEnum flag;
     private BigDecimal balance;
     private LocalDate expirationDate;

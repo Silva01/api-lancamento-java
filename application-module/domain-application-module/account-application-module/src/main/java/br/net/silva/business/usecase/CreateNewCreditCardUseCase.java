@@ -1,46 +1,44 @@
 package br.net.silva.business.usecase;
 
 import br.net.silva.business.build.AccountBuilder;
+import br.net.silva.business.validations.AccountAlreadyExistsCreditCardValidation;
+import br.net.silva.business.validations.AccountExistsAndActiveValidate;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.entity.CreditCard;
-import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
+import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
+import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
-import br.net.silva.daniel.shared.application.gateway.Repository;
-import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 
+@ValidateStrategyOn(validations = {AccountExistsAndActiveValidate.class, AccountAlreadyExistsCreditCardValidation.class})
 public class CreateNewCreditCardUseCase implements UseCase<AccountOutput> {
 
-    private final Repository<AccountOutput> findAccountByCpfAndAgencyAndAccountNumberRepository;
-    private final Repository<AccountOutput> saveAccountRepository;
+    private final ApplicationBaseGateway<AccountOutput> baseGateway;
 
     private final IFactoryAggregate<Account, AccountDTO> aggregateFactory;
 
-    public CreateNewCreditCardUseCase(Repository<AccountOutput> findAccountByCpfAndAgencyAndAccountNumberRepository, Repository<AccountOutput> saveAccountRepository) {
-        this.findAccountByCpfAndAgencyAndAccountNumberRepository = findAccountByCpfAndAgencyAndAccountNumberRepository;
-        this.saveAccountRepository = saveAccountRepository;
+    public CreateNewCreditCardUseCase(ApplicationBaseGateway<AccountOutput> baseGateway) {
+        this.baseGateway = baseGateway;
         this.aggregateFactory = new CreateAccountByAccountDTOFactory();
     }
 
     @Override
     public AccountOutput exec(Source param) throws GenericException {
-        try {
-            var newCreditCardInput = (CreateCreditCardInput) param.input();
-            var creditCard = new CreditCard();
+        var newCreditCardInput = (CreateCreditCardInput) param.input();
+        var creditCard = new CreditCard();
 
-            var accountOutput = findAccountByCpfAndAgencyAndAccountNumberRepository.exec(
-                    newCreditCardInput.agency(), newCreditCardInput.accountNumber(), newCreditCardInput.cpf());
+        var accountOpt = baseGateway.findById(newCreditCardInput);
 
-            var account = aggregateFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
+        var accountOutput = execValidate(accountOpt).extract();
 
-            account.vinculateCreditCard(creditCard);
-            return saveAccountRepository.exec(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
-        } catch (Exception e) {
-            throw new GenericException("Generic error", e);
-        }
+        var account = aggregateFactory.create(AccountBuilder.buildFullAccountDto().createFrom(accountOutput));
+        account.vinculateCreditCard(creditCard);
+        return baseGateway.save(AccountBuilder.buildFullAccountOutput().createFrom(account.build()));
     }
 }
