@@ -320,12 +320,22 @@ class AccountServiceTest implements InputBuilderCommons {
     }
 
     @Test
-    void createAccount_WithClientNotExists_ThrowsAccountNotExistsException() throws GenericException {
+    void createAccount_WithClientNotExists_ThrowsClientNotExistsException() throws GenericException {
         when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
         doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456")))
                 .isInstanceOf(ClientNotExistsException.class)
                 .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void createAccount_WithClientDeactivated_ThrowsClientDeactivatedException() throws GenericException {
+        when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
+        doThrow(new ClientDeactivatedException(CLIENT_ALREADY_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456")))
+                .isInstanceOf(ClientDeactivatedException.class)
+                .hasMessage(CLIENT_ALREADY_DEACTIVATED.getMessage());
     }
 }
