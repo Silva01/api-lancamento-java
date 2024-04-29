@@ -170,4 +170,8 @@ public class FluxService {
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, ChangePasswordAccountUseCase.class))
                 .build();
     }
+
+    public GenericFacadeDelegate fluxCreateNewAccount() {
+        return new GenericFacadeDelegate(null);
+    }
 }
