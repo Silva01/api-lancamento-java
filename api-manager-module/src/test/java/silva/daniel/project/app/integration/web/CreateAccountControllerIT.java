@@ -65,6 +65,12 @@ class CreateAccountControllerIT extends MysqlTestContainer implements Integratio
         requestCommons.assertPostRequest(API_CREATE_NEW_ACCOUNT, request, FailureResponse.class, this::assertClientNotExists);
     }
 
+    @Test
+    void createAccount_WithClientDeactivated_ReturnsStatus409() {
+        var request = new NewAccountRequest("12345678903", 1, "123456");
+        requestCommons.assertPostRequest(API_CREATE_NEW_ACCOUNT, request, FailureResponse.class, this::assertClientDeactivatedExists);
+    }
+
     private static Stream<Arguments> provideInvalidData() {
         return Stream.of(
                 Arguments.of(new NewAccountRequest("123456789", 1, "123456")),
