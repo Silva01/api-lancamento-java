@@ -50,6 +50,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_WITH_PASSWORD_DIFFERENT;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_ALREADY_ACCOUNT_ACTIVE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
@@ -297,15 +298,9 @@ class AccountControllerTest implements RequestBuilderCommons {
     }
 
     @Test
-    void createAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new AccountNotExistsException("Account not Found"));
-        createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
-    }
-
-    @Test
-    void createAccount_WithAccountActive_ReturnsStatus409() throws Exception {
-        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new AccountAlreadyActiveException("Account already active"));
-        createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), ACCOUNT_ALREADY_ACTIVATED_MESSAGE, status().isConflict());
+    void createAccount_WithClientWithAccountActive_ReturnsStatus409() throws Exception {
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new AccountAlreadyActiveException("Account already exists for the CPF informed"));
+        createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_ALREADY_ACCOUNT_ACTIVE, status().isConflict());
     }
 
     private static Stream<Arguments> provideInvalidDataOfEditAgencyOfAccount() {
