@@ -172,6 +172,14 @@ public class FluxService {
     }
 
     public GenericFacadeDelegate fluxCreateNewAccount() {
-        return new GenericFacadeDelegate(null);
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class)
+                )
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewAccountByCpfUseCase.class)
+                )
+                .build();
     }
 }
