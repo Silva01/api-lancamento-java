@@ -51,6 +51,10 @@ public class AccountService {
     }
 
     public NewAccountResponse createNewAccount(CreateNewAccountByCpfDTO input) throws Exception {
-        return null;
+        fluxService.fluxCreateNewAccount().exec(new Source(new NewAccountResponse(), input));
+        var response = new NewAccountResponse();
+        response.setAccountNumber(123456);
+        response.setAgency(1234);
+        return response;
     }
 }
