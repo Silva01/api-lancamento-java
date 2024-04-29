@@ -1,5 +1,6 @@
 package br.net.silva.business.value_object.input;
 
+import br.net.silva.daniel.shared.application.interfaces.IAgencyParam;
 import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.business.interfaces.IGenericPort;
 import br.net.silva.daniel.shared.business.utils.ValidateUtils;
@@ -8,7 +9,7 @@ public record CreateNewAccountByCpfDTO(
         String cpf,
         Integer agency,
         String password
-) implements IGenericPort, ICpfParam {
+) implements IGenericPort, ICpfParam, IAgencyParam {
 
     @Override
     public void accept(Class<?> clazz) {
