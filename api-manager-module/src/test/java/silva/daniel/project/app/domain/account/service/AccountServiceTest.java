@@ -15,6 +15,7 @@ import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -316,5 +317,15 @@ class AccountServiceTest implements InputBuilderCommons {
         assertThat(response).isNotNull();
         assertThat(response.getAccountNumber()).isEqualTo(123456);
         assertThat(response.getAgency()).isEqualTo(1234);
+    }
+
+    @Test
+    void createAccount_WithClientNotExists_ThrowsAccountNotExistsException() throws GenericException {
+        when(fluxService.fluxCreateNewAccount()).thenReturn(facade);
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.createNewAccount(new CreateNewAccountByCpfDTO("12345678901", 1234, "123456")))
+                .isInstanceOf(ClientNotExistsException.class)
+                .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
     }
 }
