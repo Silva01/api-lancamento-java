@@ -1,5 +1,6 @@
 package silva.daniel.project.app.commons;
 
+import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import silva.daniel.project.app.domain.account.request.ActivateAccountRequest;
 import silva.daniel.project.app.domain.account.request.CreateCreditCardRequest;
 import silva.daniel.project.app.domain.account.request.DeactivateAccountRequest;
@@ -7,6 +8,11 @@ import silva.daniel.project.app.domain.account.request.DeactivateCreditCardReque
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.account.request.NewAccountRequest;
+import silva.daniel.project.app.domain.transaction.request.TransactionBatchRequest;
+import silva.daniel.project.app.domain.transaction.request.TransactionRequest;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 public interface RequestBuilderCommons {
 
@@ -47,5 +53,23 @@ public interface RequestBuilderCommons {
 
     default NewAccountRequest buildBaseNewAccountRequest() {
         return new NewAccountRequest("12345678901", 123456, "123444");
+    }
+
+    default TransactionBatchRequest buildBaseTransactionDebitBatchRequest() {
+        return new TransactionBatchRequest(
+                "99988877700",
+                1,
+                12345,
+                List.of(new TransactionRequest(
+                        123,
+                        "Compra no debito",
+                        BigDecimal.valueOf(100),
+                        1,
+                        TransactionTypeEnum.DEBIT,
+                        123L,
+                        null,
+                        null
+                ))
+        );
     }
 }
