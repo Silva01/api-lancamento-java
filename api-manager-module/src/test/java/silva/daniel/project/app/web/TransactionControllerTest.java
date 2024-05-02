@@ -2,6 +2,7 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
@@ -34,6 +35,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FO
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_DUPLICATE_MESSAGE;
 
 @ActiveProfiles("unit")
 @EnableTransactionPrepare
@@ -78,6 +80,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
     void registerTransaction_WithAccountDeactivated_ReturnsStatus409() throws Exception {
         doThrow(new AccountDeactivatedException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
+    }
+
+    @Test
+    void registerTransaction_WithDuplicationTransaction_ReturnsStatus400() throws Exception {
+        doThrow(new TransactionDuplicateException(TRANSACTION_DUPLICATE_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), TRANSACTION_DUPLICATE_MESSAGE, status().isBadRequest());
     }
 
     private static Stream<Arguments> provideInvalidDataForRegisterTransaction() {
