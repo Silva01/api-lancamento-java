@@ -8,6 +8,7 @@ import silva.daniel.project.app.domain.account.request.DeactivateCreditCardReque
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.account.request.NewAccountRequest;
+import silva.daniel.project.app.domain.transaction.request.AccountTransactionRequest;
 import silva.daniel.project.app.domain.transaction.request.TransactionBatchRequest;
 import silva.daniel.project.app.domain.transaction.request.TransactionRequest;
 
@@ -57,9 +58,12 @@ public interface RequestBuilderCommons {
 
     default TransactionBatchRequest buildBaseTransactionDebitBatchRequest() {
         return new TransactionBatchRequest(
-                "99988877700",
-                1,
-                12345,
+                new AccountTransactionRequest("99988877700",
+                                              1,
+                                              12345),
+                new AccountTransactionRequest("99900099901",
+                                              1,
+                                              12346),
                 List.of(new TransactionRequest(
                         123,
                         "Compra no debito",
