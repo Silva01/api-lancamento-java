@@ -20,4 +20,7 @@ public class FailureMessageEnum {
     public static final FailureResponse CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE = new FailureResponse("Credit card deactivated in the account", HttpStatus.CONFLICT.value());
     public static final FailureResponse CREDIT_CARD_ALREADY_EXISTS_MESSAGE = new FailureResponse("Credit card already exists", HttpStatus.CONFLICT.value());
     public static final FailureResponse TRANSACTION_DUPLICATE_MESSAGE = new FailureResponse("Transaction already exists", HttpStatus.BAD_REQUEST.value());
+
+
+    public static final FailureResponse QUEUE_ERROR_MESSAGE = new FailureResponse("Error when saving message in queue", HttpStatus.INTERNAL_SERVER_ERROR.value());
 }
