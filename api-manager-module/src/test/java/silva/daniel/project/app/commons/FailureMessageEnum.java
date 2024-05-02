@@ -19,4 +19,5 @@ public class FailureMessageEnum {
     public static final FailureResponse CREDIT_CARD_NOT_FOUND_MESSAGE = new FailureResponse("Credit card not exists in the account", HttpStatus.NOT_FOUND.value());
     public static final FailureResponse CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE = new FailureResponse("Credit card deactivated in the account", HttpStatus.CONFLICT.value());
     public static final FailureResponse CREDIT_CARD_ALREADY_EXISTS_MESSAGE = new FailureResponse("Credit card already exists", HttpStatus.CONFLICT.value());
+    public static final FailureResponse TRANSACTION_DUPLICATE_MESSAGE = new FailureResponse("Transaction already exists", HttpStatus.BAD_REQUEST.value());
 }
