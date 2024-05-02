@@ -1,5 +1,6 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
@@ -27,6 +28,7 @@ import java.util.stream.Stream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
@@ -62,6 +64,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
     void registerTransaction_WithClientDeactivated_ReturnsStatus409() throws Exception {
         doThrow(new ClientDeactivatedException(CLIENT_DEACTIVATED.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), CLIENT_DEACTIVATED, status().isConflict());
+    }
+
+    @Test
+    void registerTransaction_WithAccountNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new AccountNotExistsException("Account Not Found")).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidDataForRegisterTransaction() {
