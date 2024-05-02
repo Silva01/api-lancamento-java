@@ -1,4 +1,4 @@
-package silva.daniel.project.app.domain.transaction.request;
+package silva.daniel.project.app.domain.account.request;
 
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import jakarta.validation.constraints.NotNull;

@@ -8,9 +8,9 @@ import silva.daniel.project.app.domain.account.request.DeactivateCreditCardReque
 import silva.daniel.project.app.domain.account.request.EditAgencyOfAccountRequest;
 import silva.daniel.project.app.domain.account.request.ChangePasswordRequest;
 import silva.daniel.project.app.domain.account.request.NewAccountRequest;
-import silva.daniel.project.app.domain.transaction.request.AccountTransactionRequest;
-import silva.daniel.project.app.domain.transaction.request.TransactionBatchRequest;
-import silva.daniel.project.app.domain.transaction.request.TransactionRequest;
+import silva.daniel.project.app.domain.account.request.AccountTransactionRequest;
+import silva.daniel.project.app.domain.account.request.TransactionBatchRequest;
+import silva.daniel.project.app.domain.account.request.TransactionRequest;
 
 import java.math.BigDecimal;
 import java.util.List;

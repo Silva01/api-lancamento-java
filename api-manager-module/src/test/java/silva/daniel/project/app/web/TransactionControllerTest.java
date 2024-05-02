@@ -16,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
-import silva.daniel.project.app.domain.transaction.request.AccountTransactionRequest;
-import silva.daniel.project.app.domain.transaction.request.TransactionBatchRequest;
-import silva.daniel.project.app.domain.transaction.request.TransactionRequest;
-import silva.daniel.project.app.domain.transaction.service.TransactionService;
+import silva.daniel.project.app.domain.account.request.AccountTransactionRequest;
+import silva.daniel.project.app.domain.account.request.TransactionBatchRequest;
+import silva.daniel.project.app.domain.account.request.TransactionRequest;
+import silva.daniel.project.app.domain.account.service.TransactionService;
 import silva.daniel.project.app.web.account.annotations.EnableTransactionPrepare;
 import silva.daniel.project.app.web.account.transaction.RegisterTransactionTestPrepare;
 

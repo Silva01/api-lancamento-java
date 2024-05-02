@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import silva.daniel.project.app.domain.transaction.request.TransactionBatchRequest;
-import silva.daniel.project.app.domain.transaction.service.TransactionService;
+import silva.daniel.project.app.domain.account.request.TransactionBatchRequest;
+import silva.daniel.project.app.domain.account.service.TransactionService;
 
 @RestController
 @RequestMapping("/api/transaction")

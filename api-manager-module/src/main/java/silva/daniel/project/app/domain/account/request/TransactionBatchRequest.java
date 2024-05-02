@@ -1,4 +1,4 @@
-package silva.daniel.project.app.domain.transaction.request;
+package silva.daniel.project.app.domain.account.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
