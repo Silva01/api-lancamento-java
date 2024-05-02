@@ -1,16 +1,23 @@
 package silva.daniel.project.app.domain.transaction.request;
 
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import silva.daniel.project.app.annotation.ConditionalCreditCardValidation;
 
 import java.math.BigDecimal;
 
+@ConditionalCreditCardValidation(
+        selected = "type",
+        required = {"creditCardNumber", "creditCardCvv"},
+        values = {"CREDIT"})
 public record TransactionRequest(
-        Integer id,
+        @NotNull @Positive Integer id,
         String description,
-        BigDecimal price,
-        Integer quantity,
-        TransactionTypeEnum type,
-        Long idempotencyId,
+        @NotNull @Positive BigDecimal price,
+        @NotNull @Positive Integer quantity,
+        @NotNull TransactionTypeEnum type,
+        @NotNull @Positive Long idempotencyId,
         String creditCardNumber,
         Integer creditCardCvv
 ) {}
