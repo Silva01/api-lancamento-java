@@ -75,12 +75,47 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 null,
                                 null
                         )))),
+                Arguments.of(new TransactionBatchRequest(
+                        new AccountTransactionRequest("99900099900",
+                                                      1,
+                                                      12345),
+                        new AccountTransactionRequest("",
+                                                      1,
+                                                      12345),
+                        List.of(new TransactionRequest(
+                                123,
+                                "Compra no debito",
+                                BigDecimal.valueOf(100),
+                                1,
+                                TransactionTypeEnum.DEBIT,
+                                123L,
+                                null,
+                                null
+                        )))),
                 Arguments.of(
                         new TransactionBatchRequest(
                                 new AccountTransactionRequest(null,
                                                               1,
                                                               12345),
                                 new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest(null,
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
@@ -113,10 +148,46 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("999888777",
+                                                              1,
+                                                              12345),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
                                 new AccountTransactionRequest("9998887770088888888",
                                                               1,
                                                               12345),
                                 new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("9998887770088888888",
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
@@ -149,11 +220,47 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99988877700",
+                                                              null,
+                                                              12345),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
                                 new AccountTransactionRequest("99988877700",
                                                               -1,
                                                               12345),
                                 new AccountTransactionRequest("99900099900",
                                                               1,
+                                                              12345),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99988877700",
+                                                              -1,
                                                               12345),
                                 List.of(new TransactionRequest(
                                         123,
@@ -185,6 +292,24 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              null),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
                                 new AccountTransactionRequest("99988877700",
                                                               1,
                                                               0),
@@ -203,12 +328,80 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              0),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
                                 new AccountTransactionRequest("99988877700",
                                                               1,
                                                               -12345),
                                 new AccountTransactionRequest("99900099900",
                                                               1,
                                                               12345),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              -12345),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
+                                null,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                List.of(new TransactionRequest(
+                                        123,
+                                        "Compra no debito",
+                                        BigDecimal.valueOf(100),
+                                        1,
+                                        TransactionTypeEnum.DEBIT,
+                                        123L,
+                                        null,
+                                        null
+                                )))),
+                Arguments.of(
+                        new TransactionBatchRequest(
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
+                                null,
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
