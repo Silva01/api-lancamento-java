@@ -9,6 +9,7 @@ import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.CreditCardAlreadyExistsException;
 import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
+import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
@@ -114,5 +115,11 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<FailureResponse> handleAccountExistsForCPFInformatedException(AccountExistsForCPFInformatedException ex) {
         var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
+    }
+
+    @ExceptionHandler(TransactionDuplicateException.class)
+    public ResponseEntity<FailureResponse> handleTransactionDuplicateException(TransactionDuplicateException ex) {
+        var failureResponse = new FailureResponse(ex.getMessage(), BAD_REQUEST.value());
+        return ResponseEntity.status(BAD_REQUEST).body(failureResponse);
     }
 }
