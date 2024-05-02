@@ -1,5 +1,6 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
@@ -68,8 +70,14 @@ class TransactionControllerTest implements RequestBuilderCommons {
 
     @Test
     void registerTransaction_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException("Account Not Found")).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void registerTransaction_WithAccountDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new AccountDeactivatedException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
     private static Stream<Arguments> provideInvalidDataForRegisterTransaction() {
