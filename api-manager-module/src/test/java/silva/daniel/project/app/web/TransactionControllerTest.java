@@ -1,6 +1,8 @@
 package silva.daniel.project.app.web;
 
+import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
+import br.net.silva.daniel.exception.ClientNotExistsException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
+import silva.daniel.project.app.domain.transaction.request.AccountTransactionRequest;
 import silva.daniel.project.app.domain.transaction.request.TransactionBatchRequest;
 import silva.daniel.project.app.domain.transaction.request.TransactionRequest;
 import silva.daniel.project.app.domain.transaction.service.TransactionService;
@@ -20,7 +23,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 
 @ActiveProfiles("unit")
@@ -40,16 +46,25 @@ class TransactionControllerTest implements RequestBuilderCommons {
 
     @ParameterizedTest
     @MethodSource("provideInvalidDataForRegisterTransaction")
-    void registerTransaction_WithInvalidData_ReturnsSTatus406(TransactionBatchRequest request) throws Exception {
+    void registerTransaction_WithInvalidData_ReturnsStatus406(TransactionBatchRequest request) throws Exception {
         registerTransactionTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void registerTransaction_WithClientNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException("Client Not Found")).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     private static Stream<Arguments> provideInvalidDataForRegisterTransaction() {
         return Stream.of(
                 Arguments.of(new TransactionBatchRequest(
-                        "",
-                        1,
-                        12345,
+                        new AccountTransactionRequest("",
+                                                      1,
+                                                      12345),
+                        new AccountTransactionRequest("99900099900",
+                                                      1,
+                                                      12345),
                         List.of(new TransactionRequest(
                                 123,
                                 "Compra no debito",
@@ -62,9 +77,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                         )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                null,
-                                1,
-                                12345,
+                                new AccountTransactionRequest(null,
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -77,9 +95,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "999888777",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("999888777",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -92,9 +113,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "9998887770088888888",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("9998887770088888888",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -107,9 +131,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                null,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              null,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -122,9 +149,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                -1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              -1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -137,9 +167,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                null,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              null),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -152,9 +185,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                0,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              0),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -167,9 +203,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                -12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              -12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -182,9 +221,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         null,
                                         "Compra no debito",
@@ -197,9 +239,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         0,
                                         "Compra no debito",
@@ -212,9 +257,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         -123,
                                         "Compra no debito",
@@ -227,9 +275,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -242,9 +293,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -257,9 +311,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -272,9 +329,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -287,9 +347,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -302,9 +365,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -317,9 +383,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -332,9 +401,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -347,9 +419,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -362,9 +437,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -377,9 +455,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -392,9 +473,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -407,9 +491,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -422,9 +509,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                 )))),
                 Arguments.of(
                         new TransactionBatchRequest(
-                                "99988877700",
-                                1,
-                                12345,
+                                new AccountTransactionRequest("99988877700",
+                                                              1,
+                                                              12345),
+                                new AccountTransactionRequest("99900099900",
+                                                              1,
+                                                              12345),
                                 List.of(new TransactionRequest(
                                         123,
                                         "Compra no debito",
@@ -436,9 +526,12 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                         -1
                                 )))),
                 Arguments.of(new TransactionBatchRequest(
-                        "99988877700",
-                        1,
-                        12345,
+                        new AccountTransactionRequest("99988877700",
+                                                      1,
+                                                      12345),
+                        new AccountTransactionRequest("99900099900",
+                                                      1,
+                                                      12345),
                         Collections.emptyList()))
         );
     }
