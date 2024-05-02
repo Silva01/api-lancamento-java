@@ -1,5 +1,6 @@
 package silva.daniel.project.app.web;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +15,7 @@ public final class TransactionController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
-    public void register(@RequestBody TransactionBatchRequest request) {
+    public void register(@Valid @RequestBody TransactionBatchRequest request) {
 
     }
 }
