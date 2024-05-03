@@ -182,4 +182,13 @@ public class FluxService {
                 )
                 .build();
     }
+
+    public GenericFacadeDelegate fluxRegisterTransaction() {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class)
+                )
+                .build();
+    }
 }
