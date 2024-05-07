@@ -21,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-class RegisterTransactionUseCaseTest extends AbstractAccountBuilder {
+class ProcessorTransactionUseCaseTest extends AbstractAccountBuilder {
 
-    private RegisterTransactionUseCase useCase;
+    private ProcessorTransactionUseCase useCase;
 
     @Mock
     private Repository<AccountOutput> findAccountRepository;
@@ -37,7 +37,7 @@ class RegisterTransactionUseCaseTest extends AbstractAccountBuilder {
         when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(true, null));
         doAnswer(invocation -> invocation.getArguments()[0]).when(saveAccountRepository).exec(any(Account.class));
 
-        useCase = new RegisterTransactionUseCase(findAccountRepository, saveAccountRepository);
+        useCase = new ProcessorTransactionUseCase(findAccountRepository, saveAccountRepository);
     }
 
     @Test

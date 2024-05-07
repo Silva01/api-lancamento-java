@@ -18,14 +18,14 @@ import br.net.silva.daniel.shared.application.value_object.Source;
 
 import java.util.List;
 
-public class RegisterTransactionUseCase implements UseCase<EmptyOutput> {
+public class ProcessorTransactionUseCase implements UseCase<EmptyOutput> {
 
     private final Repository<AccountOutput> findAccountRepository;
     private final Repository<AccountOutput> saveAccountRepository;
 
     private final IFactoryAggregate<Account, AccountDTO> accountFactory;
 
-    public RegisterTransactionUseCase(Repository<AccountOutput> findAccountRepository, Repository<AccountOutput> saveAccountRepository) {
+    public ProcessorTransactionUseCase(Repository<AccountOutput> findAccountRepository, Repository<AccountOutput> saveAccountRepository) {
         this.findAccountRepository = findAccountRepository;
         this.saveAccountRepository = saveAccountRepository;
         this.accountFactory = new CreateAccountByAccountDTOFactory();
