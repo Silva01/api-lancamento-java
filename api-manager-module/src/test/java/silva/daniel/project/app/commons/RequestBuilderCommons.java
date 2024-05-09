@@ -65,7 +65,6 @@ public interface RequestBuilderCommons {
                                               1,
                                               12346),
                 List.of(new TransactionRequest(
-                        123,
                         "Compra no debito",
                         BigDecimal.valueOf(100),
                         1,
