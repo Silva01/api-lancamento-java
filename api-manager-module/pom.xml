@@ -45,6 +45,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-validation</artifactId>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-amqp</artifactId>
+                <version>3.2.5</version>
+            </dependency>
 
         <!-- Test Dependencies -->
         <dependency>
@@ -55,6 +60,12 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mysql</artifactId>
+            <version>1.19.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>rabbitmq</artifactId>
             <version>1.19.7</version>
             <scope>test</scope>
         </dependency>
@@ -82,6 +93,11 @@
             <groupId>br.net.silva.daniel</groupId>
             <artifactId>account-application-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
