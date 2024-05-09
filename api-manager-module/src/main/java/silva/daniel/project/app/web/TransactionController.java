@@ -32,7 +32,7 @@ public final class TransactionController {
                 new AccountInput(request.source().account(), request.source().agency(), request.source().cpf()),
                 new AccountInput(request.destiny().account(), request.destiny().agency(), request.destiny().cpf()),
         request.transactions().stream().map(transaction -> new TransactionInput(
-                transaction.id().longValue(),
+                null,
                 transaction.description(),
                 transaction.price(),
                 transaction.quantity(),

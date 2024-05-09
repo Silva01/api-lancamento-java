@@ -12,7 +12,6 @@ import java.math.BigDecimal;
         required = {"creditCardNumber", "creditCardCvv"},
         values = {"CREDIT"})
 public record TransactionRequest(
-        @NotNull @Positive Integer id,
         String description,
         @NotNull @Positive BigDecimal price,
         @NotNull @Positive Integer quantity,

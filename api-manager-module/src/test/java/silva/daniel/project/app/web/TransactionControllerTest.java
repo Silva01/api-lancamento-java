@@ -106,7 +106,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                       1,
                                                       12345),
                         List.of(new TransactionRequest(
-                                123,
                                 "Compra no debito",
                                 BigDecimal.valueOf(100),
                                 1,
@@ -123,7 +122,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                       1,
                                                       12345),
                         List.of(new TransactionRequest(
-                                123,
                                 "Compra no debito",
                                 BigDecimal.valueOf(100),
                                 1,
@@ -141,7 +139,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -159,7 +156,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -177,7 +173,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -195,7 +190,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -213,7 +207,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -231,7 +224,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -249,7 +241,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -267,7 +258,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               null,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -285,7 +275,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -303,7 +292,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               -1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -321,7 +309,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -339,7 +326,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               null),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -357,7 +343,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -375,7 +360,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               0),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -393,7 +377,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -411,7 +394,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               -12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -427,7 +409,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -443,7 +424,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               12345),
                                 null,
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -461,7 +441,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        null,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -479,7 +458,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        0,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -497,7 +475,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        -123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -515,7 +492,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(-100),
                                         1,
@@ -533,7 +509,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         null,
                                         1,
@@ -551,7 +526,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         null,
@@ -569,7 +543,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         -1,
@@ -587,7 +560,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         0,
@@ -605,7 +577,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -623,7 +594,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -641,7 +611,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -659,7 +628,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -677,7 +645,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -695,7 +662,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -713,7 +679,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -731,7 +696,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
@@ -749,7 +713,6 @@ class TransactionControllerTest implements RequestBuilderCommons {
                                                               1,
                                                               12345),
                                 List.of(new TransactionRequest(
-                                        123,
                                         "Compra no debito",
                                         BigDecimal.valueOf(100),
                                         1,
