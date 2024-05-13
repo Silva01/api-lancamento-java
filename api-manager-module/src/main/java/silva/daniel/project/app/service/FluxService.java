@@ -7,8 +7,11 @@ import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.usecase.DeactivateCreditCardUseCase;
+import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
 import br.net.silva.business.usecase.GetInformationAccountUseCase;
+import br.net.silva.business.usecase.RegisterTransactionUseCase;
+import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.build.FacadeBuilder;
 import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
@@ -31,11 +34,13 @@ public class FluxService {
     private final GenericResponseMapper responseMapper;
     private final ApplicationBaseGateway<ClientOutput> clientBaseRepository;
     private final ApplicationBaseGateway<AccountOutput> accountBaseRepository;
+    private final ApplicationBaseGateway<BatchTransactionInput> transactionBaseRepository;
 
-    public FluxService(GenericResponseMapper responseMapper, ApplicationBaseGateway<ClientOutput> clientBaseRepository, ApplicationBaseGateway<AccountOutput> accountBaseRepository) {
+    public FluxService(GenericResponseMapper responseMapper, ApplicationBaseGateway<ClientOutput> clientBaseRepository, ApplicationBaseGateway<AccountOutput> accountBaseRepository, ApplicationBaseGateway<BatchTransactionInput> transactionBaseRepository) {
         this.responseMapper = responseMapper;
         this.clientBaseRepository = clientBaseRepository;
         this.accountBaseRepository = accountBaseRepository;
+        this.transactionBaseRepository = transactionBaseRepository;
     }
 
     public GenericFacadeDelegate fluxCreateNewClient() {
@@ -179,6 +184,21 @@ public class FluxService {
                 )
                 .andWithBuilderUseCase(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, CreateNewAccountByCpfUseCase.class)
+                )
+                .build();
+    }
+
+    public GenericFacadeDelegate fluxRegisterTransaction() {
+        return FacadeBuilder
+                .make()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class)
+                )
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, FindAccountUseCase.class)
+                )
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(transactionBaseRepository, responseMapper, RegisterTransactionUseCase.class)
                 )
                 .build();
     }

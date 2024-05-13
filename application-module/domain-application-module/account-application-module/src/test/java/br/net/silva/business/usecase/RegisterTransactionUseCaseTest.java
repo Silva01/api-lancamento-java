@@ -1,89 +1,72 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.interfaces.AbstractAccountBuilder;
+import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
-import br.net.silva.business.value_object.output.AccountOutput;
-import br.net.silva.daniel.entity.Account;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
-import br.net.silva.daniel.shared.application.gateway.Repository;
+import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-class RegisterTransactionUseCaseTest extends AbstractAccountBuilder {
+@ExtendWith(MockitoExtension.class)
+final class RegisterTransactionUseCaseTest {
 
     private RegisterTransactionUseCase useCase;
 
     @Mock
-    private Repository<AccountOutput> findAccountRepository;
-
-    @Mock
-    private Repository<AccountOutput> saveAccountRepository;
+    private SaveApplicationBaseGateway<BatchTransactionInput> saveTransactionRepository;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        when(findAccountRepository.exec(anyInt(), anyInt(), anyString())).thenReturn(buildMockAccount(true, null));
-        doAnswer(invocation -> invocation.getArguments()[0]).when(saveAccountRepository).exec(any(Account.class));
-
-        useCase = new RegisterTransactionUseCase(findAccountRepository, saveAccountRepository);
+        useCase = new RegisterTransactionUseCase(saveTransactionRepository);
     }
 
     @Test
-    void shouldRegisterDebitTransactionWithSuccess() {
-        var sourceAccount = new AccountInput(1, 45678, "978534");
-        var destinyAccount = new AccountInput(2, 99999, "00099988877");
-        var transactionInput = new TransactionInput(generateRandomNumberLong(4), "Compra de teste", BigDecimal.valueOf(1000), 1, TransactionTypeEnum.DEBIT, generateIdempotencyId(), null, null);
+    void registerTransaction_WithValidData_RegisterWithSuccess() {
+        final var batchInput = buildBatchTransactionMock(List.of(buildTransactionDebitMock()));
+        final var source = Source.of(batchInput);
+        assertThatCode(() -> useCase.exec(source)).doesNotThrowAnyException();
 
-        var input = new BatchTransactionInput(sourceAccount, destinyAccount, List.of(transactionInput));
-        var source = new Source(input);
-
-        assertDoesNotThrow(() -> useCase.exec(source));
-
-        verify(findAccountRepository, times(2)).exec(anyInt(), anyInt(), anyString());
-        verify(saveAccountRepository, times(2)).exec(any(AccountOutput.class));
+        verify(saveTransactionRepository, times(1)).save(any());
     }
 
     @Test
-    void shouldRegisterDebitAndCreditTransactionWithSuccess() {
-        var sourceAccount = new AccountInput(1, 45678, "978534");
-        var destinyAccount = new AccountInput(2, 99999, "00099988877");
-        var transactionDebit = new TransactionInput(generateRandomNumberLong(4), "Compra de teste", BigDecimal.valueOf(1000), 1, TransactionTypeEnum.DEBIT, generateIdempotencyId(), null, null);
-        var transactionCredit = new TransactionInput(generateRandomNumberLong(4), "Compra de teste", BigDecimal.valueOf(1000), 1, TransactionTypeEnum.CREDIT, generateIdempotencyId(), "12345", 123);
+    void registerTransaction_WithDuplicatedTransaction_ReturnsException() {
+        final var batchInput = buildBatchTransactionMock(List.of(buildTransactionDebitMock(), buildTransactionDebitMock()));
+        final var source = Source.of(batchInput);
+        assertThatThrownBy(() -> useCase.exec(source))
+                .isInstanceOf(TransactionDuplicateException.class)
+                .hasMessage("Transaction has 2 or more equals transactions.");
 
-        var input = new BatchTransactionInput(sourceAccount, destinyAccount, List.of(transactionDebit, transactionCredit));
-        var source = new Source(input);
-
-        assertDoesNotThrow(() -> useCase.exec(source));
-
-        verify(findAccountRepository, times(2)).exec(anyInt(), anyInt(), anyString());
-        verify(saveAccountRepository, times(2)).exec(any(AccountOutput.class));
+        verify(saveTransactionRepository, never()).save(any(BatchTransactionInput.class));
     }
 
-    @Test
-    void shouldErrorAtRegisterDebitTransactionBalanceIsInsufficient() {
-        var sourceAccount = new AccountInput(1, 45678, "978534");
-        var destinyAccount = new AccountInput(2, 99999, "00099988877");
-        var transactionInput = new TransactionInput(generateRandomNumberLong(4), "Compra de teste", BigDecimal.valueOf(3000), 1, TransactionTypeEnum.DEBIT, generateIdempotencyId(), null, null);
+    private static BatchTransactionInput buildBatchTransactionMock(List<TransactionInput> transactions) {
+        final var sourceAccount = new AccountInput(1, 45678, "978534");
+        final var destinyAccount = new AccountInput(2, 45699, "978500");
+        return new BatchTransactionInput(
+                sourceAccount,
+                destinyAccount,
+                transactions
+        );
+    }
 
-        var input = new BatchTransactionInput(sourceAccount, destinyAccount, List.of(transactionInput));
-        var source = new Source(input);
-
-        var responseException = assertThrows(IllegalArgumentException.class, () -> useCase.exec(source));
-        assertEquals("Balance is insufficient", responseException.getMessage());
-
-        verify(findAccountRepository, times(2)).exec(anyInt(), anyInt(), anyString());
-        verify(saveAccountRepository, never()).exec(any(Account.class));
+    private static TransactionInput buildTransactionDebitMock() {
+        return new TransactionInput(1L, "Compra de teste", BigDecimal.valueOf(100), 1, TransactionTypeEnum.DEBIT, 123L, null, null);
     }
 }

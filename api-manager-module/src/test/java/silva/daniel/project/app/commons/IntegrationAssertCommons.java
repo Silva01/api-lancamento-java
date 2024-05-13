@@ -20,6 +20,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_AL
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_ALREADY_EXISTS_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_DUPLICATE_MESSAGE;
 
 public interface IntegrationAssertCommons {
 
@@ -83,10 +84,15 @@ public interface IntegrationAssertCommons {
         assertFailureApi(sut, CREDIT_CARD_ALREADY_EXISTS_MESSAGE);
     }
 
+    default void assertDuplicateTransaction(ResponseEntity<FailureResponse> sut){
+        assertFailureApi(sut, TRANSACTION_DUPLICATE_MESSAGE);
+    }
+
     default void assertFailureApi(ResponseEntity<FailureResponse> sut, FailureResponse expected) {
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.resolve(expected.getStatusCode()));
         assertThat(sut.getBody()).isNotNull();
         assertThat(sut.getBody().getMessage()).isEqualTo(expected.getMessage());
         assertThat(sut.getBody().getStatusCode()).isEqualTo(expected.getStatusCode());
     }
+
 }

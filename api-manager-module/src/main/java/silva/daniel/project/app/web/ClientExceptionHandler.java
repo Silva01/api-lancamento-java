@@ -9,10 +9,12 @@ import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.CreditCardAlreadyExistsException;
 import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
+import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.exception.ExistsClientRegistredException;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
+import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -26,6 +28,7 @@ import silva.daniel.project.app.domain.client.FailureResponse;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -36,6 +39,12 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         var failureResponse = new FailureResponse("Information is not valid", NOT_ACCEPTABLE.value());
         return super.handleExceptionInternal(ex, failureResponse, headers, NOT_ACCEPTABLE, request);
+    }
+
+    @ExceptionHandler(GenericException.class)
+    public ResponseEntity<FailureResponse> handleGenericException(GenericException ex) {
+        var failureResponse = new FailureResponse(ex.getMessage(), INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(failureResponse);
     }
 
     @ExceptionHandler(ExistsClientRegistredException.class)
@@ -114,5 +123,11 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<FailureResponse> handleAccountExistsForCPFInformatedException(AccountExistsForCPFInformatedException ex) {
         var failureResponse = new FailureResponse(ex.getMessage(), CONFLICT.value());
         return ResponseEntity.status(CONFLICT).body(failureResponse);
+    }
+
+    @ExceptionHandler(TransactionDuplicateException.class)
+    public ResponseEntity<FailureResponse> handleTransactionDuplicateException(TransactionDuplicateException ex) {
+        var failureResponse = new FailureResponse(ex.getMessage(), BAD_REQUEST.value());
+        return ResponseEntity.status(BAD_REQUEST).body(failureResponse);
     }
 }
