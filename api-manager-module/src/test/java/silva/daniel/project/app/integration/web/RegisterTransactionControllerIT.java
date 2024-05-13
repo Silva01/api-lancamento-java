@@ -71,7 +71,7 @@ final class RegisterTransactionControllerIT extends MysqlTestContainer implement
     }
 
     @Test
-    void registerTransaction_WithValidData_ReturnsStatus200() throws IOException, TimeoutException, InterruptedException {
+    void registerTransaction_WithValidData_ReturnsStatus200() throws IOException {
         final var sourceAccount = new AccountTransactionRequest("12345678901", 1, 1234);
         final var destinyAccount = new AccountTransactionRequest("12345678910", 1,1237);
         final var transaction = new TransactionRequest("Test transaction", BigDecimal.valueOf(1000), 1, TransactionTypeEnum.DEBIT, 1234L, null, null);
@@ -96,6 +96,14 @@ final class RegisterTransactionControllerIT extends MysqlTestContainer implement
     @MethodSource("silva.daniel.project.app.commons.TransactionRequestBuilder#provideInvalidDataForRegisterTransaction")
     void registerTransaction_WithInvalidData_ReturnsStatus406(TransactionBatchRequest request) throws IOException {
         requestCommons.assertPostRequest(API_REGISTER_TRANSACTION, request, FailureResponse.class, this::assertInvalidData);
+        AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        assertThat(queueDeclare.getMessageCount()).isZero();
+    }
+
+    @Test
+    void registerTransaction_WithClientNotExists_ReturnsStatus404() throws IOException {
+        final var request = new TransactionBatchRequest(new AccountTransactionRequest("12345678900", 1, 1234), new AccountTransactionRequest("12345678910", 1, 1237), List.of(new TransactionRequest("Test transaction", BigDecimal.valueOf(1000), 1, TransactionTypeEnum.DEBIT, 1234L, null, null)));
+        requestCommons.assertPostRequest(API_REGISTER_TRANSACTION, request, FailureResponse.class, this::assertClientNotExists);
         AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         assertThat(queueDeclare.getMessageCount()).isZero();
     }
