@@ -124,4 +124,13 @@ final class RegisterTransactionControllerIT extends MysqlTestContainer implement
         AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         assertThat(queueDeclare.getMessageCount()).isZero();
     }
+
+    @Test
+    void registerTransaction_WithAccountDeactivated_ReturnsStatus409() throws IOException {
+        final var request = new TransactionBatchRequest(new AccountTransactionRequest("12345678904", 1, 1236), new AccountTransactionRequest("12345678910", 1, 1237), List.of(new TransactionRequest("Test transaction", BigDecimal.valueOf(1000), 1, TransactionTypeEnum.DEBIT, 1234L, null, null)));
+        requestCommons.assertPostRequest(API_REGISTER_TRANSACTION, request, FailureResponse.class, this::assertAccountAlreadyDeactivated);
+
+        AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        assertThat(queueDeclare.getMessageCount()).isZero();
+    }
 }
