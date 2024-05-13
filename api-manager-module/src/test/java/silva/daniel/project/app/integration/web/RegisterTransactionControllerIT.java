@@ -8,6 +8,8 @@ import com.rabbitmq.client.GetResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -22,6 +24,7 @@ import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.account.request.AccountTransactionRequest;
 import silva.daniel.project.app.domain.account.request.TransactionBatchRequest;
 import silva.daniel.project.app.domain.account.request.TransactionRequest;
+import silva.daniel.project.app.domain.client.FailureResponse;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -84,7 +87,16 @@ final class RegisterTransactionControllerIT extends MysqlTestContainer implement
         assertThat(response).isNotNull();
 
         final var sut = new String(response.getBody(), StandardCharsets.UTF_8);
-        assertThat(sut).isNotEmpty();
-        assertThat(sut).contains("12345678901");
+        assertThat(sut).contains(sourceAccount.cpf());
+        assertThat(sut).contains(destinyAccount.cpf());
+        assertThat(sut).contains(transaction.idempotencyId().toString());
+    }
+
+    @ParameterizedTest
+    @MethodSource("silva.daniel.project.app.commons.TransactionRequestBuilder#provideInvalidDataForRegisterTransaction")
+    void registerTransaction_WithInvalidData_ReturnsStatus406(TransactionBatchRequest request) throws IOException {
+        requestCommons.assertPostRequest(API_REGISTER_TRANSACTION, request, FailureResponse.class, this::assertInvalidData);
+        AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        assertThat(queueDeclare.getMessageCount()).isZero();
     }
 }
