@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import silva.daniel.project.app.commons.RequestBuilderCommons;
+import silva.daniel.project.app.domain.account.request.RefundRequest;
 import silva.daniel.project.app.domain.account.request.TransactionBatchRequest;
 import silva.daniel.project.app.domain.account.service.TransactionService;
 import silva.daniel.project.app.web.account.annotations.EnableTransactionPrepare;
+import silva.daniel.project.app.web.account.transaction.RefundTransactionTestPrepare;
 import silva.daniel.project.app.web.account.transaction.RegisterTransactionTestPrepare;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -36,6 +38,9 @@ class TransactionControllerTest implements RequestBuilderCommons {
 
     @Autowired
     private RegisterTransactionTestPrepare registerTransactionTestPrepare;
+
+    @Autowired
+    private RefundTransactionTestPrepare refundTransactionTestPrepare;
 
     @MockBean
     private TransactionService transactionService;
@@ -85,5 +90,10 @@ class TransactionControllerTest implements RequestBuilderCommons {
     void registerTransaction_WithFailRegisterInQueue_ReturnsStatus500() throws Exception {
         doThrow(new GenericException(QUEUE_ERROR_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), QUEUE_ERROR_MESSAGE, status().isInternalServerError());
+    }
+
+    @Test
+    void refundTransaction_WithValidData_ReturnsStatus200() throws Exception {
+        refundTransactionTestPrepare.successPostAssert(buildBaseTransactionRefundBatchRequest(), status().isOk());
     }
 }
