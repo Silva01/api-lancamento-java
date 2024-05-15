@@ -24,5 +24,6 @@ public final class TransactionService {
     }
 
     public void refundTransaction(ReversalTransactionInput input) throws GenericException {
+        fluxService.fluxRefundTransaction().exec(Source.of(input));
     }
 }
