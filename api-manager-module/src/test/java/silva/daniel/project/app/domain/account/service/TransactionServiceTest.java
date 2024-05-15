@@ -2,6 +2,7 @@ package silva.daniel.project.app.domain.account.service;
 
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
+import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
@@ -41,7 +42,15 @@ class TransactionServiceTest {
 
         assertThatCode(() -> service.registerTransaction(createMockBatchTransactionInput()))
                 .doesNotThrowAnyException();
+    }
 
+    @Test
+    void refundTransaction_WithValidData_ProcessWithSuccess() throws GenericException {
+        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
+        doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
+                .doesNotThrowAnyException();
     }
 
     private static BatchTransactionInput createMockBatchTransactionInput() {
@@ -61,5 +70,9 @@ class TransactionServiceTest {
                         )
                 )
         );
+    }
+
+    private static ReversalTransactionInput createMockReversalTransactionInput() {
+        return new ReversalTransactionInput("99988877766", 1L, 1234L);
     }
 }
