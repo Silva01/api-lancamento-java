@@ -5,6 +5,7 @@ import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
+import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.exception.GenericException;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import silva.daniel.project.app.commons.FailureMessageEnum;
 import silva.daniel.project.app.service.FluxService;
 
 import java.math.BigDecimal;
@@ -21,7 +23,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionServiceTest {
@@ -51,6 +55,16 @@ class TransactionServiceTest {
 
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    void refundTransaction_WithClientNotExists_ReturnsClientNotExistsException() throws GenericException {
+        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
+                .isInstanceOf(ClientNotExistsException.class)
+                .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
     }
 
     private static BatchTransactionInput createMockBatchTransactionInput() {
