@@ -2,6 +2,7 @@ package silva.daniel.project.app.web;
 
 import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.ReversalTransactionAlreadyRefundedException;
 import br.net.silva.business.exception.ReversalTransactionNotFoundException;
 import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
@@ -32,6 +33,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIV
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.QUEUE_ERROR_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_ALREADY_REFUNDED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_DUPLICATE_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_NOT_FOUND_MESSAGE;
 
@@ -134,5 +136,11 @@ class TransactionControllerTest implements RequestBuilderCommons {
     void refundTransaction_WithTransactionNotExists_ReturnsStatus404() throws Exception {
         doThrow(new ReversalTransactionNotFoundException(TRANSACTION_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
         refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), TRANSACTION_NOT_FOUND_MESSAGE, status().isNotFound());
+    }
+
+    @Test
+    void refundTransaction_WithTransactionAlreadyRefunded_ReturnsStatus409() throws Exception {
+        doThrow(new ReversalTransactionAlreadyRefundedException(TRANSACTION_ALREADY_REFUNDED_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
+        refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), TRANSACTION_ALREADY_REFUNDED_MESSAGE, status().isConflict());
     }
 }
