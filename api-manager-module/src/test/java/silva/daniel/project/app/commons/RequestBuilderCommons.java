@@ -11,6 +11,7 @@ import silva.daniel.project.app.domain.account.request.NewAccountRequest;
 import silva.daniel.project.app.domain.account.request.AccountTransactionRequest;
 import silva.daniel.project.app.domain.account.request.TransactionBatchRequest;
 import silva.daniel.project.app.domain.account.request.TransactionRequest;
+import silva.daniel.project.app.domain.account.request.RefundRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -74,5 +75,9 @@ public interface RequestBuilderCommons {
                         null
                 ))
         );
+    }
+
+    default RefundRequest buildBaseTransactionRefundBatchRequest() {
+        return new RefundRequest("00099988877", 1L, 12345L);
     }
 }
