@@ -109,4 +109,10 @@ class TransactionControllerTest implements RequestBuilderCommons {
         doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
         refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
+
+    @Test
+    void refundTransaction_WithClientDeactivated_ReturnsStatus409() throws Exception {
+        doThrow(new ClientDeactivatedException(CLIENT_DEACTIVATED.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
+        refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), CLIENT_DEACTIVATED, status().isConflict());
+    }
 }
