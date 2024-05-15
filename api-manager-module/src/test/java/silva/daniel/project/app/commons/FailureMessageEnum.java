@@ -21,6 +21,7 @@ public class FailureMessageEnum {
     public static final FailureResponse CREDIT_CARD_ALREADY_EXISTS_MESSAGE = new FailureResponse("Credit card already exists", HttpStatus.CONFLICT.value());
     public static final FailureResponse TRANSACTION_DUPLICATE_MESSAGE = new FailureResponse("Transaction has 2 or more equals transactions.", HttpStatus.BAD_REQUEST.value());
     public static final FailureResponse TRANSACTION_NOT_FOUND_MESSAGE = new FailureResponse("Transaction not found", HttpStatus.NOT_FOUND.value());
+    public static final FailureResponse TRANSACTION_ALREADY_REFUNDED_MESSAGE = new FailureResponse("Transaction already refunded", HttpStatus.CONFLICT.value());
 
 
     public static final FailureResponse QUEUE_ERROR_MESSAGE = new FailureResponse("Error when saving message in queue", HttpStatus.INTERNAL_SERVER_ERROR.value());
