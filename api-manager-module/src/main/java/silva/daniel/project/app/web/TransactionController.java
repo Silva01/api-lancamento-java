@@ -48,7 +48,7 @@ public final class TransactionController {
 
     @PostMapping("/refund")
     @ResponseStatus(HttpStatus.OK)
-    public void refund(@RequestBody RefundRequest request) {
+    public void refund(@Valid @RequestBody RefundRequest request) {
 
     }
 }
