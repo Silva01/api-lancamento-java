@@ -202,4 +202,10 @@ public class FluxService {
                 )
                 .build();
     }
+
+    public GenericFacadeDelegate fluxRefundTransaction() {
+        return FacadeBuilder
+                .make()
+                .build();
+    }
 }
