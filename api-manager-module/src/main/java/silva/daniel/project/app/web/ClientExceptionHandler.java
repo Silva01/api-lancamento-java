@@ -9,6 +9,7 @@ import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.CreditCardAlreadyExistsException;
 import br.net.silva.business.exception.CreditCardDeactivatedException;
 import br.net.silva.business.exception.CreditCardNotExistsException;
+import br.net.silva.business.exception.ReversalTransactionAlreadyRefundedException;
 import br.net.silva.business.exception.ReversalTransactionNotFoundException;
 import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
@@ -121,6 +122,11 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ReversalTransactionNotFoundException.class)
     public ResponseEntity<FailureResponse> handleReversalTransactionNotFoundException(ReversalTransactionNotFoundException ex) {
         return createFailureMessage(ex.getMessage(), NOT_FOUND);
+    }
+
+    @ExceptionHandler(ReversalTransactionAlreadyRefundedException.class)
+    public ResponseEntity<FailureResponse> handleReversalTransactionAlreadyRefundedException(ReversalTransactionAlreadyRefundedException ex) {
+        return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 
     private static ResponseEntity<FailureResponse> createFailureMessage(String ex, HttpStatus statusCode) {
