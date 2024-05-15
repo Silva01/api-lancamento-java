@@ -96,4 +96,10 @@ class TransactionControllerTest implements RequestBuilderCommons {
     void refundTransaction_WithValidData_ReturnsStatus200() throws Exception {
         refundTransactionTestPrepare.successPostAssert(buildBaseTransactionRefundBatchRequest(), status().isOk());
     }
+
+    @ParameterizedTest
+    @MethodSource("silva.daniel.project.app.commons.TransactionRequestBuilder#provideInvalidDataForRefundTransaction")
+    void refundTransaction_WithInvalidData_ReturnsStatus406(RefundRequest request) throws Exception {
+        refundTransactionTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
 }
