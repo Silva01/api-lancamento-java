@@ -43,7 +43,7 @@ class ReversalTransactionUseCaseTest extends AbstractAccountBuilder {
 
     @Test
     void shouldReverseTransactionWithSuccess() {
-        var input = new ReversalTransactionInput(generateRandomIdTransaction(), generateIdempotencyId());
+        var input = new ReversalTransactionInput("00099988877", generateRandomIdTransaction(), generateIdempotencyId());
         var source = new Source(input);
 
         assertDoesNotThrow(() -> useCase.exec(source));
