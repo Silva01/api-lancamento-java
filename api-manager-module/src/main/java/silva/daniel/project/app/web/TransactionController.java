@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import silva.daniel.project.app.domain.account.request.RefundRequest;
 import silva.daniel.project.app.domain.account.request.TransactionBatchRequest;
 import silva.daniel.project.app.domain.account.service.TransactionService;
 
@@ -43,5 +44,11 @@ public final class TransactionController {
         )).toList());
 
         transactionService.registerTransaction(input);
+    }
+
+    @PostMapping("/refund")
+    @ResponseStatus(HttpStatus.OK)
+    public void refund(@RequestBody RefundRequest request) {
+
     }
 }
