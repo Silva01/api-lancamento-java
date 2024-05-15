@@ -4,6 +4,7 @@ import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;
 import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
+import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.business.exception.GenericException;
@@ -101,5 +102,11 @@ class TransactionControllerTest implements RequestBuilderCommons {
     @MethodSource("silva.daniel.project.app.commons.TransactionRequestBuilder#provideInvalidDataForRefundTransaction")
     void refundTransaction_WithInvalidData_ReturnsStatus406(RefundRequest request) throws Exception {
         refundTransactionTestPrepare.failurePostAssert(request, INVALID_DATA_MESSAGE, status().isNotAcceptable());
+    }
+
+    @Test
+    void refundTransaction_WithClientNotExists_ReturnsStatus404() throws Exception {
+        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
+        refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 }
