@@ -1,6 +1,7 @@
 package silva.daniel.project.app.domain.account.service;
 
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.TransactionNotExistsException;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
@@ -27,9 +28,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREADY_DEACTIVATED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_NOT_FOUND_MESSAGE;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionServiceTest {
@@ -90,6 +93,17 @@ class TransactionServiceTest {
                 .isInstanceOf(AccountNotExistsException.class)
                 .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
     }
+
+    @Test
+    void refundTransaction_WithAccountDeactivated_ReturnsAccountDeactivatedException() throws GenericException {
+        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
+        doThrow(new AccountNotExistsException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
+                .isInstanceOf(AccountNotExistsException.class)
+                .hasMessage(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
+    }
+
 
     private static BatchTransactionInput createMockBatchTransactionInput() {
         return new BatchTransactionInput(
