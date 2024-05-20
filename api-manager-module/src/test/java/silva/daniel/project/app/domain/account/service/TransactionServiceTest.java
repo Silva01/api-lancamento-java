@@ -105,6 +105,16 @@ class TransactionServiceTest {
     }
 
 
+    @Test
+    void refundTransaction_WithTransactionNotExists_ReturnsNotExistsException() throws GenericException {
+        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
+        doThrow(new TransactionNotExistsException(TRANSACTION_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
+                .isInstanceOf(TransactionNotExistsException.class)
+                .hasMessage(TRANSACTION_NOT_FOUND_MESSAGE.getMessage());
+    }
+
     private static BatchTransactionInput createMockBatchTransactionInput() {
         return new BatchTransactionInput(
                 new AccountInput(1234, 1, "99988877766"),
