@@ -5,6 +5,7 @@ import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
+import br.net.silva.daniel.exception.ClientDeactivatedException;
 import br.net.silva.daniel.exception.ClientNotExistsException;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
@@ -25,6 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,6 +67,16 @@ class TransactionServiceTest {
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
                 .isInstanceOf(ClientNotExistsException.class)
                 .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void refundTransaction_WithClientDeactivated_ReturnsClientDeactivatedException() throws GenericException {
+        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
+        doThrow(new ClientDeactivatedException(CLIENT_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
+                .isInstanceOf(ClientDeactivatedException.class)
+                .hasMessage(CLIENT_DEACTIVATED.getMessage());
     }
 
     private static BatchTransactionInput createMockBatchTransactionInput() {
