@@ -1,6 +1,7 @@
 package silva.daniel.project.app.domain.account.service;
 
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.ReversalTransactionAlreadyRefundedException;
 import br.net.silva.business.exception.TransactionNotExistsException;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import silva.daniel.project.app.commons.FailureMessageEnum;
 import silva.daniel.project.app.service.FluxService;
 
 import java.math.BigDecimal;
@@ -32,6 +32,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_ALREAD
 import static silva.daniel.project.app.commons.FailureMessageEnum.ACCOUNT_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_DEACTIVATED;
 import static silva.daniel.project.app.commons.FailureMessageEnum.CLIENT_NOT_FOUND_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_ALREADY_REFUNDED_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_NOT_FOUND_MESSAGE;
 
 @ExtendWith(MockitoExtension.class)
@@ -104,15 +105,24 @@ class TransactionServiceTest {
                 .hasMessage(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
     }
 
-
     @Test
-    void refundTransaction_WithTransactionNotExists_ReturnsNotExistsException() throws GenericException {
+    void refundTransaction_WithTransactionNotExists_ReturnsTransactionNotExistsException() throws GenericException {
         when(fluxService.fluxRefundTransaction()).thenReturn(facade);
         doThrow(new TransactionNotExistsException(TRANSACTION_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
                 .isInstanceOf(TransactionNotExistsException.class)
                 .hasMessage(TRANSACTION_NOT_FOUND_MESSAGE.getMessage());
+    }
+
+    @Test
+    void refundTransaction_WithTransactionAlreadyRefunded_ReturnsReversalTransactionAlreadyRefundedException() throws GenericException {
+        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
+        doThrow(new ReversalTransactionAlreadyRefundedException(TRANSACTION_ALREADY_REFUNDED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+
+        assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
+                .isInstanceOf(ReversalTransactionAlreadyRefundedException.class)
+                .hasMessage(TRANSACTION_ALREADY_REFUNDED_MESSAGE.getMessage());
     }
 
     private static BatchTransactionInput createMockBatchTransactionInput() {
