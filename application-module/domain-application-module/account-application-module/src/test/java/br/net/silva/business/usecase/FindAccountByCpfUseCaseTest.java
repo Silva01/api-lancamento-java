@@ -43,28 +43,28 @@ class FindAccountByCpfUseCaseTest {
 
     @Test
     void findAccountByCpf_WithValidParams_ReturnAccount() throws GenericException {
-        when(findActiveAccountRepository.findById(Mockito.any())).thenReturn(Optional.of(createAccountOutputMock()));
+        when(findActiveAccountRepository.findById(Mockito.any())).thenReturn(Optional.of(createAccountOutputMock(true)));
         final var findAccountRequest = new FindAccountDTO("88899900055", 1, 2, "test");
 
         final var sut = findAccountByCpfUseCase.exec(Source.of(findAccountRequest));
         assertThat(sut).isNotNull();
-        assertThat(sut.cpf()).isEqualTo(createAccountOutputMock().cpf());
-        assertThat(sut.agency()).isEqualTo(createAccountOutputMock().agency());
-        assertThat(sut.number()).isEqualTo(createAccountOutputMock().number());
-        assertThat(sut.balance()).isEqualTo(createAccountOutputMock().balance());
-        assertThat(sut.active()).isEqualTo(createAccountOutputMock().active());
-        assertThat(sut.password()).isEqualTo(createAccountOutputMock().password());
+        assertThat(sut.cpf()).isEqualTo(createAccountOutputMock(true).cpf());
+        assertThat(sut.agency()).isEqualTo(createAccountOutputMock(true).agency());
+        assertThat(sut.number()).isEqualTo(createAccountOutputMock(true).number());
+        assertThat(sut.balance()).isEqualTo(createAccountOutputMock(true).balance());
+        assertThat(sut.active()).isEqualTo(createAccountOutputMock(true).active());
+        assertThat(sut.password()).isEqualTo(createAccountOutputMock(true).password());
 
         verify(findActiveAccountRepository, times(1)).findById(Mockito.any());
     }
 
-    private static AccountOutput createAccountOutputMock() {
+    private static AccountOutput createAccountOutputMock(boolean status) {
         return new AccountOutput(
                 1,
                 2,
                 BigDecimal.valueOf(2000),
                 "test",
-                true,
+                status,
                 "00099988877",
                 null,
                 new ArrayList<>()
