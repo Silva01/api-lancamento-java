@@ -7,6 +7,8 @@ import com.rabbitmq.client.GetResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -19,6 +21,7 @@ import silva.daniel.project.app.commons.MysqlTestContainer;
 import silva.daniel.project.app.commons.RabbitMQTestContainer;
 import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.account.request.RefundRequest;
+import silva.daniel.project.app.domain.client.FailureResponse;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -79,5 +82,13 @@ class ReversalTransactionControllerIT extends MysqlTestContainer implements Inte
         assertThat(sut).contains(request.cpf());
         assertThat(sut).contains(request.transactionId().toString());
         assertThat(sut).contains(request.idempotencyId().toString());
+    }
+
+    @ParameterizedTest
+    @MethodSource("silva.daniel.project.app.commons.TransactionRequestBuilder#provideInvalidDataForRefundTransaction")
+    void refundTransaction_WithInvalidData_ReturnsStatus406(RefundRequest request) throws IOException {
+        requestCommons.assertPostRequest(API_REFUND_TRANSACTION, request, FailureResponse.class, this::assertInvalidData);
+        AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        assertThat(queueDeclare.getMessageCount()).isZero();
     }
 }
