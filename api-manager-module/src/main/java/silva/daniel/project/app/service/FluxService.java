@@ -211,6 +211,9 @@ public class FluxService {
         return FacadeBuilder
                 .make()
                 .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class)
+                )
+                .andWithBuilderUseCase(
                         UseCaseBuilder.makeTo(reversalTransactionGateway, responseMapper, ReversalTransactionUseCase.class)
                 )
                 .build();
