@@ -27,3 +27,7 @@ INSERT INTO account (number, bank_agency_number, balance, password, active, cpf)
 INSERT INTO account (number, bank_agency_number, balance, password, active, cpf) VALUES (1234, 5, 3000, SHA2('123456', 256), false, '12345678905');
 INSERT INTO account (number, bank_agency_number, balance, password, active, cpf, credit_card_number) VALUES (1237, 1, 3000, SHA2('123456', 256), true, '12345678910', '1234567890123456');
 INSERT INTO account (number, bank_agency_number, balance, password, active, cpf, credit_card_number) VALUES (1238, 1, 3000, SHA2('123456', 256), true, '12345678911', '1234567890123457');
+
+
+-- Transactions
+INSERT INTO transaction (id, description, price, quantity, type, origin_account_agency, origin_account_number, destination_account_agency, destination_account_number, idempotency_id) VALUES (1, 'Product of test', 200.00, 1, 'DEBIT', 1, 1234, 1, 1237, 2222);
