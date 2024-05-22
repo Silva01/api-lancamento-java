@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitConfiguration {
+public class RabbitRegisterTransactionConfiguration {
 
     @Value("${spring.rabbitmq.queue-name:transaction-queue}")
     public String queueName;
@@ -31,10 +31,10 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Binding configureBinding(Queue queue, Exchange exchange) {
+    public Binding configureBinding() {
         return BindingBuilder
-                .bind(queue)
-                .to(exchange)
+                .bind(configureQueue())
+                .to(configureExchange())
                 .with(queueName)
                 .noargs();
     }
