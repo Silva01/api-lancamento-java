@@ -11,7 +11,9 @@ import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
 import br.net.silva.business.usecase.GetInformationAccountUseCase;
 import br.net.silva.business.usecase.RegisterTransactionUseCase;
+import br.net.silva.business.usecase.ReversalTransactionUseCase;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
+import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.build.FacadeBuilder;
 import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
@@ -35,12 +37,14 @@ public class FluxService {
     private final ApplicationBaseGateway<ClientOutput> clientBaseRepository;
     private final ApplicationBaseGateway<AccountOutput> accountBaseRepository;
     private final ApplicationBaseGateway<BatchTransactionInput> transactionBaseRepository;
+    private final ApplicationBaseGateway<ReversalTransactionInput> reversalTransactionGateway;
 
-    public FluxService(GenericResponseMapper responseMapper, ApplicationBaseGateway<ClientOutput> clientBaseRepository, ApplicationBaseGateway<AccountOutput> accountBaseRepository, ApplicationBaseGateway<BatchTransactionInput> transactionBaseRepository) {
+    public FluxService(GenericResponseMapper responseMapper, ApplicationBaseGateway<ClientOutput> clientBaseRepository, ApplicationBaseGateway<AccountOutput> accountBaseRepository, ApplicationBaseGateway<BatchTransactionInput> transactionBaseRepository, ApplicationBaseGateway<ReversalTransactionInput> reversalTransactionGateway) {
         this.responseMapper = responseMapper;
         this.clientBaseRepository = clientBaseRepository;
         this.accountBaseRepository = accountBaseRepository;
         this.transactionBaseRepository = transactionBaseRepository;
+        this.reversalTransactionGateway = reversalTransactionGateway;
     }
 
     public GenericFacadeDelegate fluxCreateNewClient() {
@@ -206,6 +210,9 @@ public class FluxService {
     public GenericFacadeDelegate fluxRefundTransaction() {
         return FacadeBuilder
                 .make()
+                .withBuilderUseCase(
+                        UseCaseBuilder.makeTo(reversalTransactionGateway, responseMapper, ReversalTransactionUseCase.class)
+                )
                 .build();
     }
 }
