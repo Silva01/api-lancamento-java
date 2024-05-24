@@ -21,6 +21,7 @@ import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_AL
 import static silva.daniel.project.app.commons.FailureMessageEnum.CREDIT_CARD_NOT_FOUND_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.INVALID_DATA_MESSAGE;
 import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_DUPLICATE_MESSAGE;
+import static silva.daniel.project.app.commons.FailureMessageEnum.TRANSACTION_NOT_FOUND_MESSAGE;
 
 public interface IntegrationAssertCommons {
 
@@ -86,6 +87,10 @@ public interface IntegrationAssertCommons {
 
     default void assertDuplicateTransaction(ResponseEntity<FailureResponse> sut){
         assertFailureApi(sut, TRANSACTION_DUPLICATE_MESSAGE);
+    }
+
+    default void assertTransactionNotFound(ResponseEntity<FailureResponse> sut){
+        assertFailureApi(sut, TRANSACTION_NOT_FOUND_MESSAGE);
     }
 
     default void assertFailureApi(ResponseEntity<FailureResponse> sut, FailureResponse expected) {
