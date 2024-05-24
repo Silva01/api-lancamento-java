@@ -107,4 +107,12 @@ class ReversalTransactionControllerIT extends MysqlTestContainer implements Inte
         AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         assertThat(queueDeclare.getMessageCount()).isZero();
     }
+
+    @Test
+    void refundTransaction_WithAccountNotExists_ReturnsStatus404() throws IOException {
+        final var request = new RefundRequest("12345678988", 2L, 2222L);
+        requestCommons.assertPostRequest(API_REFUND_TRANSACTION, request, FailureResponse.class, this::assertAccountNotExists);
+        AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        assertThat(queueDeclare.getMessageCount()).isZero();
+    }
 }
