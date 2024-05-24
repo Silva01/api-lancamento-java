@@ -7,6 +7,7 @@ import br.net.silva.business.usecase.CreateNewAccountByCpfUseCase;
 import br.net.silva.business.usecase.CreateNewCreditCardUseCase;
 import br.net.silva.business.usecase.DeactivateAccountUseCase;
 import br.net.silva.business.usecase.DeactivateCreditCardUseCase;
+import br.net.silva.business.usecase.FindAccountByCpfUseCase;
 import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
 import br.net.silva.business.usecase.GetInformationAccountUseCase;
@@ -212,6 +213,9 @@ public class FluxService {
                 .make()
                 .withBuilderUseCase(
                         UseCaseBuilder.makeTo(clientBaseRepository, responseMapper, FindActiveClientUseCase.class)
+                )
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, FindAccountByCpfUseCase.class)
                 )
                 .andWithBuilderUseCase(
                         UseCaseBuilder.makeTo(reversalTransactionGateway, responseMapper, ReversalTransactionUseCase.class)
