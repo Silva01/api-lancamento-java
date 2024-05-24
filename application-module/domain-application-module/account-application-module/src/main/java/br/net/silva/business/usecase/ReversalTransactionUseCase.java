@@ -18,7 +18,6 @@ public class ReversalTransactionUseCase implements UseCase<ReversalTransactionIn
     public ReversalTransactionInput exec(Source param) throws GenericException {
         var input = (ReversalTransactionInput) param.input();
         baseGateway.save(input);
-
         return input;
     }
 }
