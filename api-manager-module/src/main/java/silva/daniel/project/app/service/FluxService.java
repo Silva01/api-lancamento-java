@@ -10,12 +10,14 @@ import br.net.silva.business.usecase.DeactivateCreditCardUseCase;
 import br.net.silva.business.usecase.FindAccountByCpfUseCase;
 import br.net.silva.business.usecase.FindAccountUseCase;
 import br.net.silva.business.usecase.FindAllAccountsByCpfUseCase;
+import br.net.silva.business.usecase.FindTransactionUseCase;
 import br.net.silva.business.usecase.GetInformationAccountUseCase;
 import br.net.silva.business.usecase.RegisterTransactionUseCase;
 import br.net.silva.business.usecase.ReversalTransactionUseCase;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.business.value_object.output.AccountOutput;
+import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.shared.application.build.FacadeBuilder;
 import br.net.silva.daniel.shared.application.build.UseCaseBuilder;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
@@ -39,13 +41,15 @@ public class FluxService {
     private final ApplicationBaseGateway<AccountOutput> accountBaseRepository;
     private final ApplicationBaseGateway<BatchTransactionInput> transactionBaseRepository;
     private final ApplicationBaseGateway<ReversalTransactionInput> reversalTransactionGateway;
+    private final ApplicationBaseGateway<TransactionOutput> transactionBaseGateway;
 
-    public FluxService(GenericResponseMapper responseMapper, ApplicationBaseGateway<ClientOutput> clientBaseRepository, ApplicationBaseGateway<AccountOutput> accountBaseRepository, ApplicationBaseGateway<BatchTransactionInput> transactionBaseRepository, ApplicationBaseGateway<ReversalTransactionInput> reversalTransactionGateway) {
+    public FluxService(GenericResponseMapper responseMapper, ApplicationBaseGateway<ClientOutput> clientBaseRepository, ApplicationBaseGateway<AccountOutput> accountBaseRepository, ApplicationBaseGateway<BatchTransactionInput> transactionBaseRepository, ApplicationBaseGateway<ReversalTransactionInput> reversalTransactionGateway, ApplicationBaseGateway<TransactionOutput> transactionBaseGateway) {
         this.responseMapper = responseMapper;
         this.clientBaseRepository = clientBaseRepository;
         this.accountBaseRepository = accountBaseRepository;
         this.transactionBaseRepository = transactionBaseRepository;
         this.reversalTransactionGateway = reversalTransactionGateway;
+        this.transactionBaseGateway = transactionBaseGateway;
     }
 
     public GenericFacadeDelegate fluxCreateNewClient() {
@@ -216,6 +220,9 @@ public class FluxService {
                 )
                 .andWithBuilderUseCase(
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, FindAccountByCpfUseCase.class)
+                )
+                .andWithBuilderUseCase(
+                        UseCaseBuilder.makeTo(transactionBaseGateway, responseMapper, FindTransactionUseCase.class)
                 )
                 .andWithBuilderUseCase(
                         UseCaseBuilder.makeTo(reversalTransactionGateway, responseMapper, ReversalTransactionUseCase.class)
