@@ -222,9 +222,6 @@ public class FluxService {
                         UseCaseBuilder.makeTo(accountBaseRepository, responseMapper, FindAccountByCpfUseCase.class)
                 )
                 .andWithBuilderUseCase(
-                        UseCaseBuilder.makeTo(transactionBaseGateway, responseMapper, FindTransactionUseCase.class)
-                )
-                .andWithBuilderUseCase(
                         UseCaseBuilder.makeTo(reversalTransactionGateway, responseMapper, ReversalTransactionUseCase.class)
                 )
                 .build();
