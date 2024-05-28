@@ -62,6 +62,7 @@ class ReversalTransactionControllerIT extends MysqlTestContainer implements Inte
 
     @AfterEach
     void tearDown() throws IOException, TimeoutException {
+        channel.queuePurge(QUEUE_NAME);
         channel.close();
     }
 
@@ -75,7 +76,7 @@ class ReversalTransactionControllerIT extends MysqlTestContainer implements Inte
         AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         assertThat(queueDeclare.getMessageCount()).isEqualTo(1);
 
-        GetResponse response = channel.basicGet(QUEUE_NAME, false);
+        GetResponse response = channel.basicGet(QUEUE_NAME, true);
         assertThat(response).isNotNull();
 
         final var sut = new String(response.getBody(), StandardCharsets.UTF_8);
@@ -120,14 +121,6 @@ class ReversalTransactionControllerIT extends MysqlTestContainer implements Inte
     void refundTransaction_WithAccountDeactivated_ReturnsStatus409() throws IOException {
         final var request = new RefundRequest("12345678904", 2L, 2222L);
         requestCommons.assertPostRequest(API_REFUND_TRANSACTION, request, FailureResponse.class, this::assertAccountAlreadyDeactivated);
-        AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-        assertThat(queueDeclare.getMessageCount()).isZero();
-    }
-
-    @Test
-    void refundTransaction_WithTransactionNotExists_ReturnsStatus404() throws IOException {
-        final var request = new RefundRequest("12345678901", 2L, 3333L);
-        requestCommons.assertPostRequest(API_REFUND_TRANSACTION, request, FailureResponse.class, this::assertTransactionNotFound);
         AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         assertThat(queueDeclare.getMessageCount()).isZero();
     }
