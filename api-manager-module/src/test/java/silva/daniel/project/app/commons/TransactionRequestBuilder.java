@@ -3,6 +3,7 @@ package silva.daniel.project.app.commons;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import org.junit.jupiter.params.provider.Arguments;
 import silva.daniel.project.app.domain.account.request.AccountTransactionRequest;
+import silva.daniel.project.app.domain.account.request.RefundRequest;
 import silva.daniel.project.app.domain.account.request.TransactionBatchRequest;
 import silva.daniel.project.app.domain.account.request.TransactionRequest;
 
@@ -596,5 +597,16 @@ public final class TransactionRequestBuilder {
                                                       12345),
                         Collections.emptyList()))
         );
+    }
+    public static Stream<Arguments> provideInvalidDataForRefundTransaction() {
+            return Stream.of(
+                    Arguments.of(new RefundRequest("", 1L, 12345L)),
+                    Arguments.of(new RefundRequest("000999", 1L, 12345L)),
+                    Arguments.of(new RefundRequest("00099977788888888", 1L, 12345L)),
+                    Arguments.of(new RefundRequest("00099977788", 0L, 12345L)),
+                    Arguments.of(new RefundRequest("00099977788", -1L, 12345L)),
+                    Arguments.of(new RefundRequest("00099977788", 1L, 0L)),
+                    Arguments.of(new RefundRequest("00099977788", 1L, -12345L))
+            );
     }
 }

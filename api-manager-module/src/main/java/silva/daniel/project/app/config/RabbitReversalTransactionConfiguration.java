@@ -10,31 +10,31 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitConfiguration {
+public class RabbitReversalTransactionConfiguration {
 
-    @Value("${spring.rabbitmq.queue-name:transaction-queue}")
+    @Value("${spring.rabbitmq.queue-name:transaction-reversal-queue}")
     public String queueName;
 
-    @Value("${spring.rabbitmq.exchange-name:transaction-exchange}")
+    @Value("${spring.rabbitmq.exchange-name:transaction-reversal-exchange}")
     public String exchangeName;
 
     @Bean
-    public Queue configureQueue() {
+    public Queue configureReversalQueue() {
         return new Queue(queueName, false);
     }
 
     @Bean
-    public Exchange configureExchange() {
+    public Exchange configureReversalExchange() {
         return ExchangeBuilder
                 .directExchange(exchangeName)
                 .build();
     }
 
     @Bean
-    public Binding configureBinding(Queue queue, Exchange exchange) {
+    public Binding configureReversalBinding() {
         return BindingBuilder
-                .bind(queue)
-                .to(exchange)
+                .bind(configureReversalQueue())
+                .to(configureReversalExchange())
                 .with(queueName)
                 .noargs();
     }
