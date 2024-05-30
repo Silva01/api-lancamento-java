@@ -5,7 +5,6 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.GetResponse;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,8 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import silva.daniel.project.app.commons.IntegrationAssertCommons;
-import silva.daniel.project.app.commons.MysqlTestContainer;
-import silva.daniel.project.app.commons.RabbitMQTestContainer;
+import silva.daniel.project.app.commons.MysqlAndRabbitMQTestContainer;
 import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.account.request.AccountTransactionRequest;
 import silva.daniel.project.app.domain.account.request.TransactionBatchRequest;
@@ -38,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
-final class RegisterTransactionControllerIT extends MysqlTestContainer implements IntegrationAssertCommons, RabbitMQTestContainer {
+class RegisterTransactionControllerIT extends MysqlAndRabbitMQTestContainer implements IntegrationAssertCommons {
 
     private static final String API_REGISTER_TRANSACTION = "/api/transaction/register";
 
@@ -65,11 +63,6 @@ final class RegisterTransactionControllerIT extends MysqlTestContainer implement
         this.channel = connection.createChannel();
     }
 
-    @AfterEach
-    void tearDown() throws IOException, TimeoutException {
-        channel.close();
-    }
-
     @Test
     void registerTransaction_WithValidData_ReturnsStatus200() throws IOException {
         final var sourceAccount = new AccountTransactionRequest("12345678901", 1, 1234);
@@ -83,7 +76,7 @@ final class RegisterTransactionControllerIT extends MysqlTestContainer implement
         AMQP.Queue.DeclareOk queueDeclare = channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         assertThat(queueDeclare.getMessageCount()).isEqualTo(1);
 
-        GetResponse response = channel.basicGet(QUEUE_NAME, false);
+        GetResponse response = channel.basicGet(QUEUE_NAME, true);
         assertThat(response).isNotNull();
 
         final var sut = new String(response.getBody(), StandardCharsets.UTF_8);
