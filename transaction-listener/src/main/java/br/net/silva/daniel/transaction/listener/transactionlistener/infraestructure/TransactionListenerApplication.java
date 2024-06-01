@@ -1,4 +1,4 @@
-package br.net.silva.daniel.transaction.listener.transactionlistener;
+package br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

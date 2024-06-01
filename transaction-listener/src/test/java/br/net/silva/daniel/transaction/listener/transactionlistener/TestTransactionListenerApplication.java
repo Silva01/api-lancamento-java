@@ -1,5 +1,6 @@
 package br.net.silva.daniel.transaction.listener.transactionlistener;
 
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.TransactionListenerApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
