@@ -75,6 +75,18 @@
             <artifactId>rabbitmq</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Internal Dependency -->
+        <dependency>
+            <groupId>br.net.silva.daniel</groupId>
+            <artifactId>client-application-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>br.net.silva.daniel</groupId>
+            <artifactId>account-application-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
