@@ -28,9 +28,7 @@ class TransactionRegisterServiceTest {
     @Test
     void registerTransaction_WithValidData_RegisterWithSuccess() {
         // Arrange
-        final var sourceAccount = new AccountInput(123, 1, "55544433322");
-        final var destinyAccount = new AccountInput(456, 2, "55544433300");
-        final var message = new BatchTransactionInput(sourceAccount, destinyAccount, generateMockTransactions());
+        final var message = createMockMessageRequest();
 
         // Act
         final var response = service.registerTransaction(message);
@@ -38,13 +36,24 @@ class TransactionRegisterServiceTest {
         // Assert
         assertThat(response).isNotNull();
         assertThat(response.status()).isEqualTo(ResponseStatus.SUCCESS);
-        assertThat(response.sourceAccountNumber()).isEqualTo(sourceAccount.accountNumber());
-        assertThat(response.sourceAccountAgency()).isEqualTo(sourceAccount.agency());
-        assertThat(response.destinyAccountNumber()).isEqualTo(destinyAccount.accountNumber());
-        assertThat(response.destinyAccountAgency()).isEqualTo(destinyAccount.agency());
+        assertThat(response.sourceAccountNumber()).isEqualTo(message.sourceAccount().accountNumber());
+        assertThat(response.sourceAccountAgency()).isEqualTo(message.sourceAccount().agency());
+        assertThat(response.destinyAccountNumber()).isEqualTo(message.destinyAccount().accountNumber());
+        assertThat(response.destinyAccountAgency()).isEqualTo(message.destinyAccount().agency());
         assertThat(response.transactions()).hasSize(1);
         assertThat(response.transactions().get(0).id()).isEqualTo(1L);
         assertThat(response.transactions().get(0).idempotency()).isEqualTo(123L);
+    }
+
+    @Test
+    void registerTransaction_WithAccountNotExists_ThrowsException() {
+        createMockMessageRequest();
+    }
+
+    private BatchTransactionInput createMockMessageRequest() {
+        final var sourceAccount = new AccountInput(123, 1, "55544433322");
+        final var destinyAccount = new AccountInput(456, 2, "55544433300");
+        return new BatchTransactionInput(sourceAccount, destinyAccount, generateMockTransactions());
     }
 
     private List<TransactionInput> generateMockTransactions() {
