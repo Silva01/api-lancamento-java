@@ -42,7 +42,7 @@ class TransactionRegisterServiceTest {
     @Test
     void registerTransaction_WithValidData_RegisterWithSuccess() {
         // Arrange
-        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(generateMockAccount()));
+        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(generateMockAccount(true)));
         final var message = createMockMessageRequest();
 
         // Act
@@ -68,13 +68,13 @@ class TransactionRegisterServiceTest {
         final var sut = service.registerTransaction(message);
         assertThat(sut).isNotNull();
         assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
-        assertThat(sut.message()).isEqualTo("Account 123 and agency 1 not found");
+        assertThat(sut.message()).isEqualTo("Account 123 and agency 1: Account not found");
     }
 
     @Test
     void registerTransaction_WithDestinyAccountNotExists_ThrowsAccountNotExistsException() {
         when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(generateMockAccount()))
+                .thenReturn(Optional.of(generateMockAccount(true)))
                 .thenReturn(Optional.empty());
 
         final var message = createMockMessageRequest();
@@ -82,7 +82,19 @@ class TransactionRegisterServiceTest {
         final var sut = service.registerTransaction(message);
         assertThat(sut).isNotNull();
         assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
-        assertThat(sut.message()).isEqualTo("Account 456 and agency 2 not found");
+        assertThat(sut.message()).isEqualTo("Account 456 and agency 2: Account not found");
+    }
+
+    @Test
+    void registerTransaction_WithSourceAccountDeactivated_ThrowsAccountDeactivateException() {
+        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(generateMockAccount(false)));
+        final var message = createMockMessageRequest();
+
+        final var sut = service.registerTransaction(message);
+        assertThat(sut).isNotNull();
+        assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
+        assertThat(sut.message()).isEqualTo("Account 123 and agency 1: Account is not active");
     }
 
     private BatchTransactionInput createMockMessageRequest() {
@@ -97,12 +109,12 @@ class TransactionRegisterServiceTest {
         );
     }
 
-    private Account generateMockAccount() {
+    private Account generateMockAccount(boolean active) {
         return new Account(
                 new AccountKey(1, 1234),
                 BigDecimal.ONE,
                 "Test",
-                true,
+                active,
                 "55544433322",
                 null,
                 null,
