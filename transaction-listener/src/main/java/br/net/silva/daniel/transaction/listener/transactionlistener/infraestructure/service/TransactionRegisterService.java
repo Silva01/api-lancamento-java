@@ -1,5 +1,6 @@
 package br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.service;
 
+import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.RegisterResponse;
@@ -26,8 +27,8 @@ public class TransactionRegisterService {
         final var destinyAccount = repository.findByAccountNumberAndAgencyAndCpf(message.destinyAccount().accountNumber(), message.destinyAccount().agency(), message.destinyAccount().cpf());
 
         try {
-            accountValidation.validate(sourceAccount);
-            accountValidation.validate(destinyAccount);
+            accountValidation.validate(sourceAccount, generateMessage(message.sourceAccount()));
+            accountValidation.validate(destinyAccount, generateMessage(message.destinyAccount()));
 
             return new RegisterResponse(
                     ResponseStatus.SUCCESS,
@@ -51,5 +52,9 @@ public class TransactionRegisterService {
         }
 
 
+    }
+
+    private static String generateMessage(AccountInput account) {
+        return String.format("Account %d and agency %d not found", account.accountNumber(), account.agency());
     }
 }
