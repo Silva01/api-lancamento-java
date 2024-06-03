@@ -97,6 +97,20 @@ class TransactionRegisterServiceTest {
         assertThat(sut.message()).isEqualTo("Account 123 and agency 1: Account is not active");
     }
 
+    @Test
+    void registerTransaction_WithDestinyAccountDeactivate_ThrowsAccountDeactivatedException() {
+        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(generateMockAccount(true)))
+                .thenReturn(Optional.of(generateMockAccount(false)));
+
+        final var message = createMockMessageRequest();
+
+        final var sut = service.registerTransaction(message);
+        assertThat(sut).isNotNull();
+        assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
+        assertThat(sut.message()).isEqualTo("Account 456 and agency 2: Account is not active");
+    }
+
     private BatchTransactionInput createMockMessageRequest() {
         final var sourceAccount = new AccountInput(123, 1, "55544433322");
         final var destinyAccount = new AccountInput(456, 2, "55544433300");
