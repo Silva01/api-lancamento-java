@@ -3,31 +3,46 @@ package br.net.silva.daniel.transaction.listener.transactionlistener.infraestruc
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.validation.AccountValidation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.enuns.ResponseStatus;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.AccountKey;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static br.net.silva.daniel.enuns.TransactionTypeEnum.DEBIT;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionRegisterServiceTest {
 
     private TransactionRegisterService service;
 
+    @Mock
+    private AccountRepository accountRepository;
+
     @BeforeEach
     void setUp() {
-        service = new TransactionRegisterService();
+        service = new TransactionRegisterService(new AccountValidation(), accountRepository);
     }
 
     @Test
     void registerTransaction_WithValidData_RegisterWithSuccess() {
         // Arrange
+        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(generateMockAccount()));
         final var message = createMockMessageRequest();
 
         // Act
@@ -46,8 +61,14 @@ class TransactionRegisterServiceTest {
     }
 
     @Test
-    void registerTransaction_WithAccountNotExists_ThrowsException() {
-        createMockMessageRequest();
+    void registerTransaction_WithAccountNotExists_ThrowsAccountNotExistsException() {
+        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+        final var message = createMockMessageRequest();
+
+        final var sut = service.registerTransaction(message);
+        assertThat(sut).isNotNull();
+        assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
+        assertThat(sut.message()).isEqualTo("Account not found");
     }
 
     private BatchTransactionInput createMockMessageRequest() {
@@ -60,5 +81,17 @@ class TransactionRegisterServiceTest {
         return List.of(
                 new TransactionInput(1L, "Test", BigDecimal.ONE, 1, DEBIT, 123L, null, null)
         );
+    }
+
+    private Account generateMockAccount() {
+        return new Account(
+                new AccountKey(1, 1234),
+                BigDecimal.ONE,
+                "Test",
+                true,
+                "55544433322",
+                null,
+                null,
+                LocalDateTime.now());
     }
 }
