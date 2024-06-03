@@ -55,6 +55,6 @@ public class TransactionRegisterService {
     }
 
     private static String generateMessage(AccountInput account) {
-        return String.format("Account %d and agency %d not found", account.accountNumber(), account.agency());
+        return String.format("Account %d and agency %d:", account.accountNumber(), account.agency());
     }
 }
