@@ -10,6 +10,7 @@ public record RegisterResponse(
         Integer sourceAccountAgency,
         Integer destinyAccountNumber,
         Integer destinyAccountAgency,
-        List<TransactionResponse> transactions
+        List<TransactionResponse> transactions,
+        String message
 ) {
 }
