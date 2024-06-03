@@ -61,14 +61,28 @@ class TransactionRegisterServiceTest {
     }
 
     @Test
-    void registerTransaction_WithAccountNotExists_ThrowsAccountNotExistsException() {
+    void registerTransaction_WithSourceAccountNotExists_ThrowsAccountNotExistsException() {
         when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString())).thenReturn(Optional.empty());
         final var message = createMockMessageRequest();
 
         final var sut = service.registerTransaction(message);
         assertThat(sut).isNotNull();
         assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
-        assertThat(sut.message()).isEqualTo("Account not found");
+        assertThat(sut.message()).isEqualTo("Account 123 and agency 1 not found");
+    }
+
+    @Test
+    void registerTransaction_WithDestinyAccountNotExists_ThrowsAccountNotExistsException() {
+        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(generateMockAccount()))
+                .thenReturn(Optional.empty());
+
+        final var message = createMockMessageRequest();
+
+        final var sut = service.registerTransaction(message);
+        assertThat(sut).isNotNull();
+        assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
+        assertThat(sut.message()).isEqualTo("Account 456 and agency 2 not found");
     }
 
     private BatchTransactionInput createMockMessageRequest() {
