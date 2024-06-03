@@ -1,4 +1,4 @@
-package br.net.silva.daniel.transaction.listener.transactionlistener.domain.validation;
+package br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.validation;
 
 import br.net.silva.business.exception.AccountDeactivatedException;
 import br.net.silva.business.exception.AccountNotExistsException;

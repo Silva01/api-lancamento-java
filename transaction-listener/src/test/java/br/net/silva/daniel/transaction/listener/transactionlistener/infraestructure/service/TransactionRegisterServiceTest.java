@@ -3,7 +3,7 @@ package br.net.silva.daniel.transaction.listener.transactionlistener.infraestruc
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
-import br.net.silva.daniel.transaction.listener.transactionlistener.domain.validation.AccountValidation;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.validation.AccountValidation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.enuns.ResponseStatus;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.AccountKey;

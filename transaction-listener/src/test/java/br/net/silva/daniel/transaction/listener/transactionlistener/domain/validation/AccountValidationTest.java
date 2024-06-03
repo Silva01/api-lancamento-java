@@ -1,6 +1,8 @@
 package br.net.silva.daniel.transaction.listener.transactionlistener.domain.validation;
 
 import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.validation.AccountValidation;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.validation.Validation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.AccountKey;
 import org.assertj.core.api.Assertions;

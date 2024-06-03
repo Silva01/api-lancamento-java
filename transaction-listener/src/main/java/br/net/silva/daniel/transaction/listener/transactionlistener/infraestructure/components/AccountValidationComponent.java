@@ -1,7 +1,7 @@
 package br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.components;
 
-import br.net.silva.daniel.transaction.listener.transactionlistener.domain.validation.AccountValidation;
-import br.net.silva.daniel.transaction.listener.transactionlistener.domain.validation.Validation;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.validation.AccountValidation;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.validation.Validation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;

@@ -5,7 +5,7 @@ import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.RegisterResponse;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.TransactionResponse;
-import br.net.silva.daniel.transaction.listener.transactionlistener.domain.validation.Validation;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.validation.Validation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.enuns.ResponseStatus;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.repository.AccountRepository;
