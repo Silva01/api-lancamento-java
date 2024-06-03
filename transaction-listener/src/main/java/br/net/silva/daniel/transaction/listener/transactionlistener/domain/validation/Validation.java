@@ -9,7 +9,7 @@ public interface Validation <T> {
         try {
             validate(t);
         } catch (GenericException e) {
-            throw new GenericException(message);
+            throw new GenericException(String.format("%s %s", message, e.getMessage()));
         }
     }
 }
