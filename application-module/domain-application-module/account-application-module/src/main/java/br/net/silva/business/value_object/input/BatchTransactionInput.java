@@ -1,7 +1,6 @@
 package br.net.silva.business.value_object.input;
 
 import br.net.silva.daniel.shared.application.interfaces.IAccountParam;
-import br.net.silva.daniel.shared.business.utils.GenericErrorUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,24 +10,14 @@ public record BatchTransactionInput(
         AccountInput destinyAccount,
         List<TransactionInput> batchTransaction
 ) implements IAccountParam {
+
+    public BigDecimal calculateTotal() {
+        return batchTransaction.stream().map(TransactionInput::price).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
+
     @Override
     public Integer accountNumber() {
         return sourceAccount().accountNumber();
-    }
-
-    @Override
-    public BigDecimal balance() {
-        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
-    }
-
-    @Override
-    public String password() {
-        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
-    }
-
-    @Override
-    public boolean active() {
-        throw GenericErrorUtils.executeExceptionNotPermissionOperation();
     }
 
     @Override
