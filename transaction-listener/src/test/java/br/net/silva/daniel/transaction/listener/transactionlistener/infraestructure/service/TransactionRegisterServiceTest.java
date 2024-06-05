@@ -42,7 +42,7 @@ class TransactionRegisterServiceTest {
     @Test
     void registerTransaction_WithValidData_RegisterWithSuccess() {
         // Arrange
-        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(generateMockAccount(true)));
+        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), anyString())).thenReturn(Optional.of(generateMockAccount(true, BigDecimal.ONE)));
         final var message = createMockMessageRequest();
 
         // Act
@@ -74,7 +74,7 @@ class TransactionRegisterServiceTest {
     @Test
     void registerTransaction_WithDestinyAccountNotExists_ThrowsAccountNotExistsException() {
         when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(generateMockAccount(true)))
+                .thenReturn(Optional.of(generateMockAccount(true, BigDecimal.ONE)))
                 .thenReturn(Optional.empty());
 
         final var message = createMockMessageRequest();
@@ -88,7 +88,7 @@ class TransactionRegisterServiceTest {
     @Test
     void registerTransaction_WithSourceAccountDeactivated_ThrowsAccountDeactivateException() {
         when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(generateMockAccount(false)));
+                .thenReturn(Optional.of(generateMockAccount(false, BigDecimal.ONE)));
         final var message = createMockMessageRequest();
 
         final var sut = service.registerTransaction(message);
@@ -100,8 +100,8 @@ class TransactionRegisterServiceTest {
     @Test
     void registerTransaction_WithDestinyAccountDeactivate_ThrowsAccountDeactivatedException() {
         when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(generateMockAccount(true)))
-                .thenReturn(Optional.of(generateMockAccount(false)));
+                .thenReturn(Optional.of(generateMockAccount(true, BigDecimal.ONE)))
+                .thenReturn(Optional.of(generateMockAccount(false, BigDecimal.ONE)));
 
         final var message = createMockMessageRequest();
 
@@ -109,6 +109,19 @@ class TransactionRegisterServiceTest {
         assertThat(sut).isNotNull();
         assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
         assertThat(sut.message()).isEqualTo("Account 456 and agency 2: Account is not active");
+    }
+
+    @Test
+    void registerTransaction_WithSourceAccountNotHasBalance_ThrowsAccountNotHasBalanceException() {
+        when(accountRepository.findByAccountNumberAndAgencyAndCpf(anyInt(), anyInt(), ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(generateMockAccount(true, BigDecimal.ZERO)));
+
+        final var message = createMockMessageRequest();
+
+        final var sut = service.registerTransaction(message);
+        assertThat(sut).isNotNull();
+        assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
+        assertThat(sut.message()).isEqualTo("Account 123 and agency 1: Insufficient balance");
     }
 
     private BatchTransactionInput createMockMessageRequest() {
@@ -123,10 +136,10 @@ class TransactionRegisterServiceTest {
         );
     }
 
-    private Account generateMockAccount(boolean active) {
+    private Account generateMockAccount(boolean active, BigDecimal balance) {
         return new Account(
                 new AccountKey(1, 1234),
-                BigDecimal.ONE,
+                balance,
                 "Test",
                 active,
                 "55544433322",
