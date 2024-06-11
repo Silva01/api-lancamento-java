@@ -1,7 +1,9 @@
 package br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.service;
 
+import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
+import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.validation.Validation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.AccountConfiguration;
@@ -30,6 +32,8 @@ public class TransactionRegisterService {
         try {
             validateAccount(message.calculateTotal(), message.sourceAccount(), sourceAccount,  AccountConfiguration.sourceAccountConfiguration());
             validateAccount(message.calculateTotal(), message.destinyAccount(), destinyAccount, AccountConfiguration.destinyAccountConfiguration());
+
+            validateDuplicatedTransaction(message);
 
             return new RegisterResponse(
                     ResponseStatus.SUCCESS,
@@ -62,6 +66,13 @@ public class TransactionRegisterService {
 
         if (configuration.isValidateBalance()) {
             validation.validateIfBalanceIsSufficient();
+        }
+    }
+
+    private void validateDuplicatedTransaction(BatchTransactionInput message) throws GenericException {
+        final var quantityOfIdempotency = message.batchTransaction().stream().map(TransactionInput::idempotencyId).distinct().count();
+        if (message.batchTransaction().size() != quantityOfIdempotency) {
+            throw new TransactionDuplicateException("Transaction has 2 or more equals transactions.");
         }
     }
 }
