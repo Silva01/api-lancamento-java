@@ -36,6 +36,7 @@ public class TransactionRegisterService {
             validateDuplicatedTransaction(message);
 
             calculateSourceAccountBalance(sourceAccount.get(), message.calculateTotal());
+            calculateDestinyAccountBalance(destinyAccount.get(), message.calculateTotal());
 
             return new RegisterResponse(
                     ResponseStatus.SUCCESS,
@@ -61,6 +62,11 @@ public class TransactionRegisterService {
 
     private void calculateSourceAccountBalance(Account account, BigDecimal totalTransaction) {
         account.setBalance(account.getBalance().subtract(totalTransaction));
+        repository.save(account);
+    }
+
+    private void calculateDestinyAccountBalance(Account account, BigDecimal totalTransaction) {
+        account.setBalance(account.getBalance().add(totalTransaction));
         repository.save(account);
     }
 
