@@ -56,6 +56,12 @@ class RegisterTransactionTest {
 
         assertThat(account).isNotNull();
         assertThat(account.getBalance()).isEqualTo(BigDecimal.valueOf(2800));
+
+        final var destiny = entityManager
+                .find(Account.class, new AccountKey(message.destinyAccount().accountNumber(), message.destinyAccount().agency()));
+
+        assertThat(destiny).isNotNull();
+        assertThat(destiny.getBalance()).isEqualTo(BigDecimal.valueOf(3200));
     }
 
     private BatchTransactionInput createMockMessageRequest(List<TransactionInput> transactions) {
