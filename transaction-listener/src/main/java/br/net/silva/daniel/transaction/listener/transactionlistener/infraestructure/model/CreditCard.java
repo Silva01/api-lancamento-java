@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "credit_card", schema = "account")
+@Table(name = "credit_card")
 public class CreditCard {
 
     @Id

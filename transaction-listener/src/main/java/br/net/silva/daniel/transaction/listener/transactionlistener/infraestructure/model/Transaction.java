@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "transaction", schema = "account")
+@Table(name = "transaction")
 public class Transaction {
 
     @Id

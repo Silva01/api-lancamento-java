@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "account", schema = "account")
+@Table(name = "account")
 public class Account {
 
     @EmbeddedId
