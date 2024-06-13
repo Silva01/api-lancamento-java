@@ -35,6 +35,8 @@ public class TransactionRegisterService {
 
             validateDuplicatedTransaction(message);
 
+            calculateSourceAccountBalance(sourceAccount.get(), message.calculateTotal());
+
             return new RegisterResponse(
                     ResponseStatus.SUCCESS,
                     message.sourceAccount().accountNumber(),
@@ -55,8 +57,11 @@ public class TransactionRegisterService {
                     e.getMessage()
             );
         }
+    }
 
-
+    private void calculateSourceAccountBalance(Account account, BigDecimal totalTransaction) {
+        account.setBalance(account.getBalance().subtract(totalTransaction));
+        repository.save(account);
     }
 
     private static void validateAccount(BigDecimal totalTransaction, AccountInput accountInput, Optional<Account> accountOpt, AccountConfiguration configuration) throws GenericException {
