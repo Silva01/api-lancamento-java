@@ -27,7 +27,7 @@ public class TransactionRegisterService {
 
     public RegisterResponse registerTransaction(BatchTransactionInput message) {
         final var sourceAccount = findAccountFrom(message.sourceAccount());
-        final var destinyAccount = repository.findByAccountNumberAndAgencyAndCpf(message.destinyAccount().accountNumber(), message.destinyAccount().agency(), message.destinyAccount().cpf());
+        final var destinyAccount = findAccountFrom(message.destinyAccount());
 
         try {
             validateAccount(message.calculateTotal(), message.sourceAccount(), sourceAccount,  AccountConfiguration.sourceAccountConfiguration());
