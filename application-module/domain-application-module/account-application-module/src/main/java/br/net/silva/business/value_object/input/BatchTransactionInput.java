@@ -29,4 +29,9 @@ public record BatchTransactionInput(
     public String cpf() {
         return sourceAccount().cpf();
     }
+
+    public boolean hasTransactionDuplicated() {
+        final var quantityOfIdempotency = batchTransaction.stream().map(TransactionInput::idempotencyId).distinct().count();
+        return quantityOfIdempotency != batchTransaction.size();
+    }
 }
