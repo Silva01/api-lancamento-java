@@ -14,6 +14,12 @@ public final class ValidationHandler {
 
     private final List<IValidation> validations;
 
+    public void executeValidations(List<ValidatorConfigurator> configurators) throws GenericException {
+        for (ValidatorConfigurator configurator : configurators) {
+            executeValidations(configurator);
+        }
+    }
+
     public void executeValidations(ValidatorConfigurator configurator) throws GenericException {
         for (IValidation validation : validations) {
             if (validation.isExecute(configurator)) {
