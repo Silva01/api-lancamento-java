@@ -17,4 +17,9 @@ public record ValidatorConfigurator(
     public boolean validateIfBalanceIsSufficient() {
         return AccountType.SOURCE.equals(type);
     }
+
+    @Override
+    public boolean validateIfTransactionIsDuplicated() {
+        return AccountType.SOURCE.equals(type);
+    }
 }
