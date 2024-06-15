@@ -4,6 +4,7 @@ package br.net.silva.daniel.transaction.listener.transactionlistener.infraestruc
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.commons.Fixture;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.ValidationHandler;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.enuns.ResponseStatus;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.AccountKey;
@@ -33,13 +34,16 @@ class RegisterTransactionTest {
     private AccountRepository accountRepository;
 
     @Autowired
+    private ValidationHandler validationHandler;
+
+    @Autowired
     private TestEntityManager entityManager;
 
     private Fixture fixture;
 
     @BeforeEach
     void setUp() {
-        service = new TransactionRegisterService(accountRepository);
+        service = new TransactionRegisterService(accountRepository, validationHandler);
         fixture = new Fixture(entityManager);
     }
 

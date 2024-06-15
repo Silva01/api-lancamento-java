@@ -3,6 +3,10 @@ package br.net.silva.daniel.transaction.listener.transactionlistener.infraestruc
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.AccountActiveValidator;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.AccountBalanceValidator;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.AccountExistsValidator;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.ValidationHandler;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.enuns.ResponseStatus;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.AccountKey;
@@ -13,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -35,7 +40,9 @@ class TransactionRegisterServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new TransactionRegisterService(accountRepository);
+        final var validations = List.of(new AccountExistsValidator(), new AccountActiveValidator(), new AccountBalanceValidator());
+        final var validationHandler = new ValidationHandler(validations);
+        service = new TransactionRegisterService(accountRepository, validationHandler);
     }
 
     @Test
