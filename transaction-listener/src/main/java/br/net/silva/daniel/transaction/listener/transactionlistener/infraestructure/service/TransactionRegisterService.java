@@ -9,7 +9,9 @@ import br.net.silva.daniel.transaction.listener.transactionlistener.domain.trans
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.AccountConfiguration;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.RegisterResponse;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.TransactionResponse;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.ValidationHandler;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.enuns.ResponseStatus;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.factory.ValidatorFactory;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.repository.AccountRepository;
 import lombok.AllArgsConstructor;
@@ -24,14 +26,18 @@ import java.util.Optional;
 public class TransactionRegisterService {
 
     private final AccountRepository repository;
+    private final ValidationHandler validationHandler;
 
     public RegisterResponse registerTransaction(BatchTransactionInput message) {
         final var sourceAccount = findAccountFrom(message.sourceAccount());
         final var destinyAccount = findAccountFrom(message.destinyAccount());
 
         try {
-            validateAccount(message.calculateTotal(), message.sourceAccount(), sourceAccount,  AccountConfiguration.sourceAccountConfiguration());
-            validateAccount(message.calculateTotal(), message.destinyAccount(), destinyAccount, AccountConfiguration.destinyAccountConfiguration());
+            final var sourceAccountValidator = ValidatorFactory.createValidatorConfiguratorForSourceAccount(message, sourceAccount);
+            final var destinyAccountValidator = ValidatorFactory.createValidatorConfiguratorForDestinyAccount(message, destinyAccount);
+
+            validationHandler.executeValidations(sourceAccountValidator);
+            validationHandler.executeValidations(destinyAccountValidator);
 
             validateDuplicatedTransaction(message);
 
