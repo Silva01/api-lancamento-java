@@ -11,7 +11,7 @@ public final class AccountConfigFactory {
 
     public static AccountConfigValidationParam createAccountForValidation(Optional<Account> accountOpt) {
         return accountOpt
-                .map(account -> new AccountConfigValidationParam(true, account.getBalance(), account.isActive()))
-                .orElseGet(() -> new AccountConfigValidationParam(false, null, false));
+                .map(account -> new AccountConfigValidationParam(true, account.getBalance(), account.isActive(), false))
+                .orElseGet(() -> new AccountConfigValidationParam(false, null, false, false));
     }
 }
