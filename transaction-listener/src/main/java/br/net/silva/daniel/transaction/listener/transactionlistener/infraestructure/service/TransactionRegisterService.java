@@ -26,7 +26,7 @@ public class TransactionRegisterService {
     private final AccountRepository repository;
 
     public RegisterResponse registerTransaction(BatchTransactionInput message) {
-        final var sourceAccount = repository.findByAccountNumberAndAgencyAndCpf(message.sourceAccount().accountNumber(), message.sourceAccount().agency(), message.sourceAccount().cpf());
+        final var sourceAccount = findAccountFrom(message.sourceAccount());
         final var destinyAccount = repository.findByAccountNumberAndAgencyAndCpf(message.destinyAccount().accountNumber(), message.destinyAccount().agency(), message.destinyAccount().cpf());
 
         try {
@@ -70,7 +70,7 @@ public class TransactionRegisterService {
         repository.save(account);
     }
 
-    private static void validateAccount(BigDecimal totalTransaction, AccountInput accountInput, Optional<Account> accountOpt, AccountConfiguration configuration) throws GenericException {
+    private void validateAccount(BigDecimal totalTransaction, AccountInput accountInput, Optional<Account> accountOpt, AccountConfiguration configuration) throws GenericException {
         final var validation = Validation.buildValidation(totalTransaction, accountInput.toString())
                         .validateIfAccountExists(accountOpt)
                         .validateIfAccountIsActive();
@@ -85,5 +85,9 @@ public class TransactionRegisterService {
         if (message.batchTransaction().size() != quantityOfIdempotency) {
             throw new TransactionDuplicateException("Transaction has 2 or more equals transactions.");
         }
+    }
+
+    private Optional<Account> findAccountFrom(AccountInput accountInput) {
+        return repository.findByAccountNumberAndAgencyAndCpf(accountInput.accountNumber(), accountInput.agency(), accountInput.cpf());
     }
 }
