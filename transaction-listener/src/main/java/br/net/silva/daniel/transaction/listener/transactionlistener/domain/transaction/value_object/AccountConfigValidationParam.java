@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 public record AccountConfigValidationParam(
         boolean accountExists,
         BigDecimal balance,
-        boolean isActive
+        boolean isActive,
+        boolean hasTransactionDuplicated
 ) {
     public boolean accountNotExists() {
         return !accountExists;
@@ -13,5 +14,9 @@ public record AccountConfigValidationParam(
 
     public boolean accountIsInactive() {
         return !isActive;
+    }
+
+    public boolean transactionIsDuplicated() {
+        return hasTransactionDuplicated;
     }
 }
