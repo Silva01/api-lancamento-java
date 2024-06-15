@@ -3,10 +3,7 @@ package br.net.silva.daniel.transaction.listener.transactionlistener.infraestruc
 import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
-import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.shared.business.exception.GenericException;
-import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.validation.Validation;
-import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.AccountConfiguration;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.RegisterResponse;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.TransactionResponse;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.ValidationHandler;
@@ -35,12 +32,12 @@ public class TransactionRegisterService {
         try {
             final var sourceAccountValidator = ValidatorFactory.createValidatorConfiguratorForSourceAccount(message, sourceAccount);
             final var destinyAccountValidator = ValidatorFactory.createValidatorConfiguratorForDestinyAccount(message, destinyAccount);
+            validationHandler.executeValidations(List.of(sourceAccountValidator, destinyAccountValidator));
 
-            validationHandler.executeValidations(sourceAccountValidator);
-            validationHandler.executeValidations(destinyAccountValidator);
-
+            //TODO: Primeiro preciso se livrar disso aqui
             validateDuplicatedTransaction(message);
 
+            //TODO: Ao salvar o saldo calculado, é necessário gravar a transação no banco de dados
             calculateSourceAccountBalance(sourceAccount.get(), message.calculateTotal());
             calculateDestinyAccountBalance(destinyAccount.get(), message.calculateTotal());
 
@@ -76,19 +73,8 @@ public class TransactionRegisterService {
         repository.save(account);
     }
 
-    private void validateAccount(BigDecimal totalTransaction, AccountInput accountInput, Optional<Account> accountOpt, AccountConfiguration configuration) throws GenericException {
-        final var validation = Validation.buildValidation(totalTransaction, accountInput.toString())
-                        .validateIfAccountExists(accountOpt)
-                        .validateIfAccountIsActive();
-
-        if (configuration.isValidateBalance()) {
-            validation.validateIfBalanceIsSufficient();
-        }
-    }
-
     private void validateDuplicatedTransaction(BatchTransactionInput message) throws GenericException {
-        final var quantityOfIdempotency = message.batchTransaction().stream().map(TransactionInput::idempotencyId).distinct().count();
-        if (message.batchTransaction().size() != quantityOfIdempotency) {
+        if (message.hasTransactionDuplicated()) {
             throw new TransactionDuplicateException("Transaction has 2 or more equals transactions.");
         }
     }
