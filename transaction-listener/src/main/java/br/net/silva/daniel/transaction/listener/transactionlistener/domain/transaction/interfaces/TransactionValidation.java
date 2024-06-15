@@ -13,4 +13,8 @@ public interface TransactionValidation {
     default boolean validateIfBalanceIsSufficient() {
         return true;
     }
+
+    default boolean validateIfTransactionIsDuplicated() {
+        return true;
+    }
 }
