@@ -2,8 +2,10 @@ package br.net.silva.daniel.transaction.listener.transactionlistener.infraestruc
 
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
-import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.enums.AccountType;
-import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.ValidatorConfigurator;
+import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.aggregate.BaseAccountAggregate;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.DestinyAccountAggregate;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.SourceAccountAggregate;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import lombok.NoArgsConstructor;
 
@@ -13,19 +15,22 @@ import java.util.Optional;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class ValidatorFactory {
 
-    public static ValidatorConfigurator createValidatorConfiguratorForSourceAccount(BatchTransactionInput message, Optional<Account> accountOpt) {
-        return createValidator(message.sourceAccount(), message.calculateTotal(), accountOpt, AccountType.SOURCE, message.hasTransactionDuplicated());
+    public static BaseAccountAggregate createValidatorConfiguratorForSourceAccount(BatchTransactionInput message, Optional<Account> accountOpt) throws GenericException {
+        return createValidator(message.sourceAccount(), message.calculateTotal(), accountOpt, SourceAccountAggregate.class, message.hasTransactionDuplicated());
     }
 
-    public static ValidatorConfigurator createValidatorConfiguratorForDestinyAccount(BatchTransactionInput message, Optional<Account> accountOpt) {
-        return createValidator(message.destinyAccount(), message.calculateTotal(), accountOpt, AccountType.DESTINY, false);
+    public static BaseAccountAggregate createValidatorConfiguratorForDestinyAccount(BatchTransactionInput message, Optional<Account> accountOpt) throws GenericException {
+        return createValidator(message.destinyAccount(), message.calculateTotal(), accountOpt, DestinyAccountAggregate.class, false);
     }
 
-    private static ValidatorConfigurator createValidator(AccountInput accountInput, BigDecimal totalTransaction, Optional<Account> accountOpt, AccountType accountType, boolean hasDuplicatedTransaction) {
-        return new ValidatorConfigurator(
-                accountInput,
-                accountType,
-                totalTransaction,
-                AccountConfigFactory.createAccountForValidation(accountOpt, hasDuplicatedTransaction));
+    private static BaseAccountAggregate createValidator(AccountInput accountInput, BigDecimal totalTransaction, Optional<Account> accountOpt, Class<? extends BaseAccountAggregate> clazz, boolean hasDuplicatedTransaction) throws GenericException {
+        try {
+            return (BaseAccountAggregate) clazz.getConstructors()[0].newInstance(
+                    accountInput,
+                    totalTransaction,
+                    AccountConfigFactory.createAccountForValidation(accountOpt, hasDuplicatedTransaction));
+        } catch (Exception e) {
+            throw new GenericException(e.getMessage());
+        }
     }
 }
