@@ -10,6 +10,7 @@ import br.net.silva.daniel.transaction.listener.transactionlistener.infraestruct
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.factory.ValidatorFactory;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.repository.AccountRepository;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.utils.ExtractorUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +35,8 @@ public class TransactionRegisterService {
             validationHandler.executeValidations(List.of(sourceAccountValidator, destinyAccountValidator));
 
             //TODO: Ao salvar o saldo calculado, é necessário gravar a transação no banco de dados
-            calculateSourceAccountBalance(((Account) sourceAccountValidator.accountConfigValidation().accountExtractor().extract()), message.calculateTotal());
-            calculateDestinyAccountBalance(((Account) destinyAccountValidator.accountConfigValidation().accountExtractor().extract()), message.calculateTotal());
+            calculateSourceAccountBalance(ExtractorUtils.accountExtractor(sourceAccountValidator), message.calculateTotal());
+            calculateDestinyAccountBalance(ExtractorUtils.accountExtractor(destinyAccountValidator), message.calculateTotal());
 
             return new RegisterResponse(
                     ResponseStatus.SUCCESS,
