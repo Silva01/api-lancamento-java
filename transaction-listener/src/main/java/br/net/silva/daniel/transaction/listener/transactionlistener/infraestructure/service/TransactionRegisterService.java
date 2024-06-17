@@ -1,6 +1,5 @@
 package br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.service;
 
-import br.net.silva.business.exception.TransactionDuplicateException;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.daniel.shared.business.exception.GenericException;
@@ -33,9 +32,6 @@ public class TransactionRegisterService {
             final var sourceAccountValidator = ValidatorFactory.createValidatorConfiguratorForSourceAccount(message, sourceAccount);
             final var destinyAccountValidator = ValidatorFactory.createValidatorConfiguratorForDestinyAccount(message, destinyAccount);
             validationHandler.executeValidations(List.of(sourceAccountValidator, destinyAccountValidator));
-
-            //TODO: Primeiro preciso se livrar disso aqui
-            validateDuplicatedTransaction(message);
 
             //TODO: Ao salvar o saldo calculado, é necessário gravar a transação no banco de dados
             calculateSourceAccountBalance(sourceAccount.get(), message.calculateTotal());
@@ -71,12 +67,6 @@ public class TransactionRegisterService {
     private void calculateDestinyAccountBalance(Account account, BigDecimal totalTransaction) {
         account.setBalance(account.getBalance().add(totalTransaction));
         repository.save(account);
-    }
-
-    private void validateDuplicatedTransaction(BatchTransactionInput message) throws GenericException {
-        if (message.hasTransactionDuplicated()) {
-            throw new TransactionDuplicateException("Transaction has 2 or more equals transactions.");
-        }
     }
 
     private Optional<Account> findAccountFrom(AccountInput accountInput) {
