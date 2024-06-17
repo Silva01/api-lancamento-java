@@ -6,6 +6,7 @@ import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.AccountActiveValidator;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.AccountBalanceValidator;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.AccountExistsValidator;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.TransactionDuplicatedValidator;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.ValidationHandler;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.enuns.ResponseStatus;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
@@ -39,7 +40,12 @@ class TransactionRegisterServiceTest {
 
     @BeforeEach
     void setUp() {
-        final var validations = List.of(new AccountExistsValidator(), new AccountActiveValidator(), new AccountBalanceValidator());
+        final var validations = List.of(
+                new AccountExistsValidator(),
+                new AccountActiveValidator(),
+                new AccountBalanceValidator(),
+                new TransactionDuplicatedValidator()
+        );
         final var validationHandler = new ValidationHandler(validations);
         service = new TransactionRegisterService(accountRepository, validationHandler);
     }
@@ -137,7 +143,7 @@ class TransactionRegisterServiceTest {
         final var sut = service.registerTransaction(message);
         assertThat(sut).isNotNull();
         assertThat(sut.status()).isEqualTo(ResponseStatus.ERROR);
-        assertThat(sut.message()).isEqualTo("Transaction has 2 or more equals transactions.");
+        assertThat(sut.message()).isEqualTo("Account 123 and agency 1: Transaction is duplicated");
     }
 
     private BatchTransactionInput createMockMessageRequest(List<TransactionInput> transactions) {
