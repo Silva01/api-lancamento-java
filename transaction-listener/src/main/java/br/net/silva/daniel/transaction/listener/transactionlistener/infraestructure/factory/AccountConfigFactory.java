@@ -9,9 +9,9 @@ import java.util.Optional;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class AccountConfigFactory {
 
-    public static AccountConfigValidationParam createAccountForValidation(Optional<Account> accountOpt) {
+    public static AccountConfigValidationParam createAccountForValidation(Optional<Account> accountOpt, boolean hasDuplicatedTransaction) {
         return accountOpt
-                .map(account -> new AccountConfigValidationParam(true, account.getBalance(), account.isActive(), false))
-                .orElseGet(() -> new AccountConfigValidationParam(false, null, false, false));
+                .map(account -> new AccountConfigValidationParam(true, account.getBalance(), account.isActive(), hasDuplicatedTransaction))
+                .orElseGet(() -> new AccountConfigValidationParam(false, null, false, hasDuplicatedTransaction));
     }
 }
