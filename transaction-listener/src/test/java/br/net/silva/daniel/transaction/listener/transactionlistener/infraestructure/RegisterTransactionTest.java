@@ -4,6 +4,10 @@ package br.net.silva.daniel.transaction.listener.transactionlistener.infraestruc
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.commons.Fixture;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.AccountActiveValidator;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.AccountBalanceValidator;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.AccountExistsValidator;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.TransactionDuplicatedValidator;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.ValidationHandler;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.enuns.ResponseStatus;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
@@ -18,7 +22,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static br.net.silva.daniel.enuns.TransactionTypeEnum.DEBIT;
@@ -34,16 +37,20 @@ class RegisterTransactionTest {
     private AccountRepository accountRepository;
 
     @Autowired
-    private ValidationHandler validationHandler;
-
-    @Autowired
     private TestEntityManager entityManager;
 
     private Fixture fixture;
 
     @BeforeEach
     void setUp() {
-        service = new TransactionRegisterService(accountRepository, validationHandler);
+        final var validations = List.of(
+                new AccountExistsValidator(),
+                new AccountActiveValidator(),
+                new AccountBalanceValidator(),
+                new TransactionDuplicatedValidator()
+        );
+
+        service = new TransactionRegisterService(accountRepository, new ValidationHandler(validations));
         fixture = new Fixture(entityManager);
     }
 
@@ -78,24 +85,5 @@ class RegisterTransactionTest {
         return List.of(
                 new TransactionInput(1L, "Test", BigDecimal.valueOf(200), 1, DEBIT, 123L, null, null)
         );
-    }
-
-    private List<TransactionInput> generateMockDuplicatedTransactions() {
-        return List.of(
-                new TransactionInput(1L, "Test", BigDecimal.ONE, 1, DEBIT, 123L, null, null),
-                new TransactionInput(1L, "Test", BigDecimal.ONE, 1, DEBIT, 123L, null, null)
-        );
-    }
-
-    private Account generateMockAccount(boolean active, BigDecimal balance) {
-        return new Account(
-                new AccountKey(1, 1234),
-                balance,
-                "Test",
-                active,
-                "55544433322",
-                null,
-                null,
-                LocalDateTime.now());
     }
 }
