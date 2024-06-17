@@ -11,7 +11,7 @@ public final class AccountConfigFactory {
 
     public static AccountConfigValidationParam createAccountForValidation(Optional<Account> accountOpt, boolean hasDuplicatedTransaction) {
         return accountOpt
-                .map(account -> new AccountConfigValidationParam(true, account.getBalance(), account.isActive(), hasDuplicatedTransaction))
-                .orElseGet(() -> new AccountConfigValidationParam(false, null, false, hasDuplicatedTransaction));
+                .map(account -> new AccountConfigValidationParam(() -> account, true, account.getBalance(), account.isActive(), hasDuplicatedTransaction))
+                .orElseGet(() -> new AccountConfigValidationParam(() -> null, false, null, false, hasDuplicatedTransaction));
     }
 }
