@@ -34,8 +34,8 @@ public class TransactionRegisterService {
             validationHandler.executeValidations(List.of(sourceAccountValidator, destinyAccountValidator));
 
             //TODO: Ao salvar o saldo calculado, é necessário gravar a transação no banco de dados
-            calculateSourceAccountBalance(sourceAccount.get(), message.calculateTotal());
-            calculateDestinyAccountBalance(destinyAccount.get(), message.calculateTotal());
+            calculateSourceAccountBalance(((Account) sourceAccountValidator.accountConfigValidation().accountExtractor().extract()), message.calculateTotal());
+            calculateDestinyAccountBalance(((Account) destinyAccountValidator.accountConfigValidation().accountExtractor().extract()), message.calculateTotal());
 
             return new RegisterResponse(
                     ResponseStatus.SUCCESS,
