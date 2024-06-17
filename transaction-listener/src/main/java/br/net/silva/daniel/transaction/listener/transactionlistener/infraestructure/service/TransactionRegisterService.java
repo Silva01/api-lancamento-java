@@ -3,6 +3,7 @@ package br.net.silva.daniel.transaction.listener.transactionlistener.infraestruc
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.aggregate.BaseAccountAggregate;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.RegisterResponse;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.TransactionResponse;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component.ValidationHandler;
@@ -14,7 +15,6 @@ import br.net.silva.daniel.transaction.listener.transactionlistener.infraestruct
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +30,13 @@ public class TransactionRegisterService {
         final var destinyAccount = findAccountFrom(message.destinyAccount());
 
         try {
-            final var sourceAccountValidator = ValidatorFactory.createValidatorConfiguratorForSourceAccount(message, sourceAccount);
-            final var destinyAccountValidator = ValidatorFactory.createValidatorConfiguratorForDestinyAccount(message, destinyAccount);
-            validationHandler.executeValidations(List.of(sourceAccountValidator, destinyAccountValidator));
+            final var sourceAccountAggregate = ValidatorFactory.createValidatorConfiguratorForSourceAccount(message, sourceAccount);
+            final var destinyAccountAggregate = ValidatorFactory.createValidatorConfiguratorForDestinyAccount(message, destinyAccount);
+            validationHandler.executeValidations(List.of(sourceAccountAggregate, destinyAccountAggregate));
 
             //TODO: Ao salvar o saldo calculado, é necessário gravar a transação no banco de dados
-            calculateSourceAccountBalance(ExtractorUtils.accountExtractor(sourceAccountValidator), message.calculateTotal());
-            calculateDestinyAccountBalance(ExtractorUtils.accountExtractor(destinyAccountValidator), message.calculateTotal());
+            registerTransaction(sourceAccountAggregate);
+            registerTransaction(destinyAccountAggregate);
 
             return new RegisterResponse(
                     ResponseStatus.SUCCESS,
@@ -60,13 +60,9 @@ public class TransactionRegisterService {
         }
     }
 
-    private void calculateSourceAccountBalance(Account account, BigDecimal totalTransaction) {
-        account.setBalance(account.getBalance().subtract(totalTransaction));
-        repository.save(account);
-    }
-
-    private void calculateDestinyAccountBalance(Account account, BigDecimal totalTransaction) {
-        account.setBalance(account.getBalance().add(totalTransaction));
+    private void registerTransaction(BaseAccountAggregate aggregate) {
+        final var account = ExtractorUtils.accountExtractor(aggregate);
+        account.setBalance(aggregate.calculateBalance());
         repository.save(account);
     }
 
