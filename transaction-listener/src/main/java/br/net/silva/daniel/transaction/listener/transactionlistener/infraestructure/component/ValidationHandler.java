@@ -2,7 +2,7 @@ package br.net.silva.daniel.transaction.listener.transactionlistener.infraestruc
 
 import br.net.silva.daniel.shared.business.exception.GenericException;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.interfaces.IValidation;
-import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.value_object.ValidatorConfigurator;
+import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.aggregate.BaseAccountAggregate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +14,13 @@ public final class ValidationHandler {
 
     private final List<IValidation> validations;
 
-    public void executeValidations(List<ValidatorConfigurator> configurators) throws GenericException {
-        for (ValidatorConfigurator configurator : configurators) {
+    public void executeValidations(List<BaseAccountAggregate> configurators) throws GenericException {
+        for (BaseAccountAggregate configurator : configurators) {
             executeValidations(configurator);
         }
     }
 
-    public void executeValidations(ValidatorConfigurator configurator) throws GenericException {
+    public void executeValidations(BaseAccountAggregate configurator) throws GenericException {
         for (IValidation validation : validations) {
             if (validation.isExecute(configurator)) {
                 try {
