@@ -14,18 +14,18 @@ import java.util.Optional;
 public final class ValidatorFactory {
 
     public static ValidatorConfigurator createValidatorConfiguratorForSourceAccount(BatchTransactionInput message, Optional<Account> accountOpt) {
-        return createValidator(message.sourceAccount(), message.calculateTotal(), accountOpt, AccountType.SOURCE);
+        return createValidator(message.sourceAccount(), message.calculateTotal(), accountOpt, AccountType.SOURCE, message.hasTransactionDuplicated());
     }
 
     public static ValidatorConfigurator createValidatorConfiguratorForDestinyAccount(BatchTransactionInput message, Optional<Account> accountOpt) {
-        return createValidator(message.destinyAccount(), message.calculateTotal(), accountOpt, AccountType.DESTINY);
+        return createValidator(message.destinyAccount(), message.calculateTotal(), accountOpt, AccountType.DESTINY, false);
     }
 
-    private static ValidatorConfigurator createValidator(AccountInput accountInput, BigDecimal totalTransaction, Optional<Account> accountOpt, AccountType accountType) {
+    private static ValidatorConfigurator createValidator(AccountInput accountInput, BigDecimal totalTransaction, Optional<Account> accountOpt, AccountType accountType, boolean hasDuplicatedTransaction) {
         return new ValidatorConfigurator(
                 accountInput,
                 accountType,
                 totalTransaction,
-                AccountConfigFactory.createAccountForValidation(accountOpt));
+                AccountConfigFactory.createAccountForValidation(accountOpt, hasDuplicatedTransaction));
     }
 }
