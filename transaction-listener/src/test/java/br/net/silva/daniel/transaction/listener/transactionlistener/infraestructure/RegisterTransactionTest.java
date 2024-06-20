@@ -12,7 +12,9 @@ import br.net.silva.daniel.transaction.listener.transactionlistener.infraestruct
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.enuns.ResponseStatus;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.AccountKey;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Transaction;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.repository.AccountRepository;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.repository.TransactionRepository;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.service.TransactionRegisterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +39,9 @@ class RegisterTransactionTest {
     private AccountRepository accountRepository;
 
     @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
     private TestEntityManager entityManager;
 
     private Fixture fixture;
@@ -50,7 +55,7 @@ class RegisterTransactionTest {
                 new TransactionDuplicatedValidator()
         );
 
-        service = new TransactionRegisterService(accountRepository, new ValidationHandler(validations));
+        service = new TransactionRegisterService(accountRepository, transactionRepository, new ValidationHandler(validations));
         fixture = new Fixture(entityManager);
     }
 
@@ -73,6 +78,13 @@ class RegisterTransactionTest {
 
         assertThat(destiny).isNotNull();
         assertThat(destiny.getBalance()).isEqualTo(BigDecimal.valueOf(3200));
+
+        final var transactions = entityManager.find(Transaction.class, 1L);
+        assertThat(transactions).isNotNull();
+        assertThat(transactions.getOriginAccountNumber().getKeys().getNumber()).isEqualTo(account.getKeys().getNumber());
+        assertThat(transactions.getOriginAccountNumber().getKeys().getBankAgencyNumber()).isEqualTo(account.getKeys().getBankAgencyNumber());
+        assertThat(transactions.getDestinationAccountNumber().getKeys().getNumber()).isEqualTo(destiny.getKeys().getNumber());
+        assertThat(transactions.getDestinationAccountNumber().getKeys().getBankAgencyNumber()).isEqualTo(destiny.getKeys().getBankAgencyNumber());
     }
 
     private BatchTransactionInput createMockMessageRequest(List<TransactionInput> transactions) {

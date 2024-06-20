@@ -12,6 +12,7 @@ import br.net.silva.daniel.transaction.listener.transactionlistener.infraestruct
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.Account;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.model.AccountKey;
 import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.repository.AccountRepository;
+import br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +39,9 @@ class TransactionRegisterServiceTest {
     @Mock
     private AccountRepository accountRepository;
 
+    @Mock
+    private TransactionRepository transactionRepository;
+
     @BeforeEach
     void setUp() {
         final var validations = List.of(
@@ -47,7 +51,7 @@ class TransactionRegisterServiceTest {
                 new TransactionDuplicatedValidator()
         );
         final var validationHandler = new ValidationHandler(validations);
-        service = new TransactionRegisterService(accountRepository, validationHandler);
+        service = new TransactionRegisterService(accountRepository, transactionRepository, validationHandler);
     }
 
     @Test
