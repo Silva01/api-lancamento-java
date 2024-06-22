@@ -4,7 +4,6 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.GetResponse;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,8 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import silva.daniel.project.app.commons.IntegrationAssertCommons;
-import silva.daniel.project.app.commons.MysqlTestContainer;
-import silva.daniel.project.app.commons.RabbitMQTestContainer;
+import silva.daniel.project.app.commons.MysqlAndRabbitMQTestContainer;
 import silva.daniel.project.app.commons.RequestIntegrationCommons;
 import silva.daniel.project.app.domain.account.request.RefundRequest;
 import silva.daniel.project.app.domain.client.FailureResponse;
@@ -33,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/delete_client.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
 @Sql(scripts = {"/sql/import_client.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR))
-class ReversalTransactionControllerIT extends MysqlTestContainer implements IntegrationAssertCommons, RabbitMQTestContainer {
+class ReversalTransactionControllerIT extends MysqlAndRabbitMQTestContainer implements IntegrationAssertCommons {
 
     private static final String API_REFUND_TRANSACTION = "/api/transaction/refund";
 
@@ -58,12 +56,6 @@ class ReversalTransactionControllerIT extends MysqlTestContainer implements Inte
 
         final var connection = factory.newConnection();
         this.channel = connection.createChannel();
-    }
-
-    @AfterEach
-    void tearDown() throws IOException, TimeoutException {
-        channel.queuePurge(QUEUE_NAME);
-        channel.close();
     }
 
     @Test

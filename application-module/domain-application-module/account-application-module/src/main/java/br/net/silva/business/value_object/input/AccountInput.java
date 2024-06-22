@@ -8,4 +8,9 @@ public record AccountInput(
         Integer agency,
         String cpf
 ) implements Input, IBasicAccountParam {
+
+    @Override
+    public String toString() {
+        return String.format("Account %d and agency %d:", accountNumber, agency);
+    }
 }
