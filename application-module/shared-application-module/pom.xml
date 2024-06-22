@@ -45,6 +45,8 @@
                     <excludes>
                         <!-- Padrões Ant para excluir classes específicas -->
                         <exclude>**/*GeneratorRandomNumber.*</exclude>
+                        <exclude>**/*Source.*</exclude>
+                        <exclude>**/*BuildValidationException.*</exclude>
                         <exclude>**/*GenericErrorUtils.*</exclude>
                         <exclude>**/*UseCase.*</exclude>
                         <exclude>**/utils/*</exclude>
