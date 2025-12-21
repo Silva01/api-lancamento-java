@@ -1,6 +1,6 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.exception.ExistsClientRegistredException;
+import br.net.silva.daniel.exception.ExistsClientRegistredExceptionDomain;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
@@ -74,7 +74,7 @@ class CreateNewClientUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, newRequestClient);
 
         // Act & Assert
-        assertThrows(ExistsClientRegistredException.class, () -> {
+        assertThrows(ExistsClientRegistredExceptionDomain.class, () -> {
             createNewClientUseCase.exec(source);
         });
 

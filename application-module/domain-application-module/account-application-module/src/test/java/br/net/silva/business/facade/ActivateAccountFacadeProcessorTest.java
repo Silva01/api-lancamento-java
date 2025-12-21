@@ -9,7 +9,7 @@ import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class ActivateAccountFacadeProcessorTest {
     }
 
     @Test
-    void shouldActivateAccountWithSuccess() throws GenericException {
+    void shouldActivateAccountWithSuccess() throws DomainGenericException {
         when(baseGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount(true));
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(false)));
 
@@ -76,7 +76,7 @@ class ActivateAccountFacadeProcessorTest {
         var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 
-        var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(source));
+        var exceptionResponse = assertThrows(DomainGenericException.class, () -> facade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account not exists", exceptionResponse.getMessage());
 
@@ -95,7 +95,7 @@ class ActivateAccountFacadeProcessorTest {
         var dtoRequest = new ActivateAccount( 45678, 4321888, "99988877766");
         var source = new Source(EmptyOutput.INSTANCE, dtoRequest);
 
-        var exceptionResponse = assertThrows(GenericException.class, () -> facade.exec(source));
+        var exceptionResponse = assertThrows(DomainGenericException.class, () -> facade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account already active", exceptionResponse.getMessage());
 

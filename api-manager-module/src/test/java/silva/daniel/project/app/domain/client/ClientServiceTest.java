@@ -14,8 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import silva.daniel.project.app.domain.client.service.ClientFacade;
 import silva.daniel.project.app.domain.client.service.ClientService;
-import silva.daniel.project.app.service.FluxService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -30,14 +30,14 @@ class ClientServiceTest {
     private ClientService service;
 
     @Mock
-    private FluxService fluxService;
+    private ClientFacade clientFacade;
 
     @Mock
     private GenericFacadeDelegate facade;
 
     @Test
     void createNewClient_WithValidData_ReturnsNewAccountByNewClientResponseSuccess() throws Exception {
-        when(fluxService.fluxCreateNewClient()).thenReturn(facade);
+        when(clientFacade.createNewClient()).thenReturn(facade);
         doAnswer((argumentsOnMock) -> {
             var source = (Source) argumentsOnMock.getArgument(0);
             final var response = (NewAccountByNewClientResponseSuccess) source.output();
@@ -65,7 +65,7 @@ class ClientServiceTest {
                 )
         );
 
-        final var sut = service.createNewClient(requestDto);
+        final var sut = (NewAccountByNewClientResponseSuccess) service.createNewClient(requestDto);
         assertThat(sut).isNotNull();
         assertThat(sut.getAgency()).isEqualTo(1);
         assertThat(sut.getAccountNumber()).isEqualTo(2);
@@ -74,7 +74,7 @@ class ClientServiceTest {
 
     @Test
     void updateClient_WithValidData_ReturnsDoesNotThrows() throws Exception {
-        when(fluxService.fluxUpdateClient()).thenReturn(facade);
+        when(clientFacade.updateClient()).thenReturn(facade);
         doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
 
         final var request = new EditClientInput(
@@ -88,7 +88,7 @@ class ClientServiceTest {
 
     @Test
     void deactivateClient_WithValidData_ReturnsDoesNotThrows() throws Exception {
-        when(fluxService.fluxDeactivateClient()).thenReturn(facade);
+        when(clientFacade.deactivateClient()).thenReturn(facade);
         doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
 
         final var request = new DeactivateClient("12345678901");
@@ -98,7 +98,7 @@ class ClientServiceTest {
 
     @Test
     void activateClient_WithValidData_ReturnsDoesNotThrows() throws Exception {
-        when(fluxService.fluxActivateClient()).thenReturn(facade);
+        when(clientFacade.activateClient()).thenReturn(facade);
         doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
 
         final var request = new ActivateClient("12345678901");
@@ -107,7 +107,7 @@ class ClientServiceTest {
 
     @Test
     void updateAddress_WithValidData_ReturnsDoesNotThrows() throws Exception {
-        when(fluxService.fluxUpdateAddress()).thenReturn(facade);
+        when(clientFacade.updateAddress()).thenReturn(facade);
         doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
 
         var request = new EditAddressInput("333444555", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");

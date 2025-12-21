@@ -1,17 +1,17 @@
 package silva.daniel.project.app.web;
 
-import br.net.silva.business.exception.AccountAlreadyActiveException;
-import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
-import br.net.silva.business.exception.AccountDeactivatedException;
-import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.AccountAlreadyActiveExceptionDomain;
+import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyExceptionDomain;
+import br.net.silva.business.exception.AccountDeactivatedExceptionDomain;
+import br.net.silva.business.exception.AccountNotExistsExceptionDomain;
 import br.net.silva.business.value_object.input.ActivateAccount;
 import br.net.silva.business.value_object.input.ChangeAgencyInput;
 import br.net.silva.business.value_object.input.ChangePasswordDTO;
 import br.net.silva.business.value_object.input.CreateNewAccountByCpfDTO;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.input.GetInformationAccountInput;
-import br.net.silva.daniel.exception.ClientDeactivatedException;
-import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.exception.ClientDeactivatedExceptionDomain;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
 import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -98,19 +98,19 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Test
     void editAgencyOfAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).editAgencyOfAccount(any(ChangeAgencyInput.class));
+        doThrow(new ClientNotExistsExceptionDomain("Client not Found")).when(accountService).editAgencyOfAccount(any(ChangeAgencyInput.class));
         editAgencyOfAccountPrepare.failurePutAssert(buildBaseEditAgencyOfAccountRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void editAgencyOfAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException("Account not Found")).when(accountService).editAgencyOfAccount(any(ChangeAgencyInput.class));
+        doThrow(new AccountNotExistsExceptionDomain("Account not Found")).when(accountService).editAgencyOfAccount(any(ChangeAgencyInput.class));
         editAgencyOfAccountPrepare.failurePutAssert(buildBaseEditAgencyOfAccountRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void editAgencyOfAccount_WithAlreadyAccountWithNewAgency_ReturnsStatus409() throws Exception {
-        doThrow(new AccountAlreadyExistsForNewAgencyException(ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE.getMessage())).when(accountService).editAgencyOfAccount(any(ChangeAgencyInput.class));
+        doThrow(new AccountAlreadyExistsForNewAgencyExceptionDomain(ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE.getMessage())).when(accountService).editAgencyOfAccount(any(ChangeAgencyInput.class));
         editAgencyOfAccountPrepare.failurePutAssert(buildBaseEditAgencyOfAccountRequest(), ACCOUNT_ALREADY_WITH_NEW_AGENCY_NUMBER_MESSAGE, status().isConflict());
     }
 
@@ -138,13 +138,13 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Test
     void getInformationAccount_WithCpfNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).getAccountByCpf(any(GetInformationAccountInput.class));
+        doThrow(new ClientNotExistsExceptionDomain("Client not Found")).when(accountService).getAccountByCpf(any(GetInformationAccountInput.class));
         getInformationAccountTestPrepare.failureGetAssert(new Object[]{"1234"}, CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void getInformationAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException("Account not Found")).when(accountService).getAccountByCpf(any(GetInformationAccountInput.class));
+        doThrow(new AccountNotExistsExceptionDomain("Account not Found")).when(accountService).getAccountByCpf(any(GetInformationAccountInput.class));
         getInformationAccountTestPrepare.failureGetAssert(new Object[]{"1234"}, ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
@@ -172,25 +172,25 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Test
     void activateAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).activateAccount(any(ActivateAccount.class));
+        doThrow(new ClientNotExistsExceptionDomain("Client not Found")).when(accountService).activateAccount(any(ActivateAccount.class));
         activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void activateAccount_WithClientDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new ClientDeactivatedException("Client is Deactivated")).when(accountService).activateAccount(any(ActivateAccount.class));
+        doThrow(new ClientDeactivatedExceptionDomain("Client is Deactivated")).when(accountService).activateAccount(any(ActivateAccount.class));
         activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), CLIENT_DEACTIVATED, status().isConflict());
     }
 
     @Test
     void activateAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException("Account not Found")).when(accountService).activateAccount(any(ActivateAccount.class));
+        doThrow(new AccountNotExistsExceptionDomain("Account not Found")).when(accountService).activateAccount(any(ActivateAccount.class));
         activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void activateAccount_WithAccountAlreadyActivated_ReturnsStatus409() throws Exception {
-        doThrow(new AccountAlreadyActiveException("Account already active")).when(accountService).activateAccount(any(ActivateAccount.class));
+        doThrow(new AccountAlreadyActiveExceptionDomain("Account already active")).when(accountService).activateAccount(any(ActivateAccount.class));
         activateAccountTestPrepare.failurePostAssert(buildBaseActivateAccount(), ACCOUNT_ALREADY_ACTIVATED_MESSAGE, status().isConflict());
     }
 
@@ -207,25 +207,25 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Test
     void deactivateAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
+        doThrow(new ClientNotExistsExceptionDomain("Client not Found")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
         deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void deactivateAccount_WithClientDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new ClientDeactivatedException("Client is Deactivated")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
+        doThrow(new ClientDeactivatedExceptionDomain("Client is Deactivated")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
         deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), CLIENT_DEACTIVATED, status().isConflict());
     }
 
     @Test
     void deactivateAccount_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException("Account not Found")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
+        doThrow(new AccountNotExistsExceptionDomain("Account not Found")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
         deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void deactivateAccount_WithAlreadyAccountDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new AccountDeactivatedException("Account is Deactivated")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
+        doThrow(new AccountDeactivatedExceptionDomain("Account is Deactivated")).when(accountService).deactivateAccount(any(DeactivateAccount.class));
         deactivateAccountTestPrepare.failurePostAssert(buildBaseDeactivateAccount(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
@@ -242,25 +242,25 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Test
     void changePassword_WithClientNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new ClientNotExistsException("Client not Found")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        doThrow(new ClientNotExistsExceptionDomain("Client not Found")).when(accountService).changePassword(any(ChangePasswordDTO.class));
         changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void changePassword_WithClientDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new ClientDeactivatedException("Client is Deactivated")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        doThrow(new ClientDeactivatedExceptionDomain("Client is Deactivated")).when(accountService).changePassword(any(ChangePasswordDTO.class));
         changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), CLIENT_DEACTIVATED, status().isConflict());
     }
 
     @Test
     void changePassword_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException("Account not Found")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        doThrow(new AccountNotExistsExceptionDomain("Account not Found")).when(accountService).changePassword(any(ChangePasswordDTO.class));
         changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void changePassword_WithAccountDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new AccountDeactivatedException("Account is Deactivated")).when(accountService).changePassword(any(ChangePasswordDTO.class));
+        doThrow(new AccountDeactivatedExceptionDomain("Account is Deactivated")).when(accountService).changePassword(any(ChangePasswordDTO.class));
         changePasswordForAccountTestPrepare.failurePutAssert(buildBaseCreateNewPasswordForAccount(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
@@ -287,19 +287,19 @@ class AccountControllerTest implements RequestBuilderCommons {
 
     @Test
     void createAccount_WithClientNotExists_ReturnsStatus404() throws Exception {
-        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new ClientNotExistsException("Client not Found"));
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new ClientNotExistsExceptionDomain("Client not Found"));
         createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void createAccount_WithClientDeactivated_ReturnsStatus409() throws Exception {
-        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new ClientDeactivatedException("Client is Deactivated"));
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new ClientDeactivatedExceptionDomain("Client is Deactivated"));
         createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_DEACTIVATED, status().isConflict());
     }
 
     @Test
     void createAccount_WithClientWithAccountActive_ReturnsStatus409() throws Exception {
-        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new AccountAlreadyActiveException("Account already exists for the CPF informed"));
+        when(accountService.createNewAccount(any(CreateNewAccountByCpfDTO.class))).thenThrow(new AccountAlreadyActiveExceptionDomain("Account already exists for the CPF informed"));
         createAccountTestPrepare.failurePostAssert(buildBaseNewAccountRequest(), CLIENT_ALREADY_ACCOUNT_ACTIVE, status().isConflict());
     }
 

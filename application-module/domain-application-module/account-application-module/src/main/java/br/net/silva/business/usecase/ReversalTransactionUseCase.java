@@ -4,7 +4,7 @@ import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 
 public class ReversalTransactionUseCase implements UseCase<ReversalTransactionInput> {
 
@@ -15,7 +15,7 @@ public class ReversalTransactionUseCase implements UseCase<ReversalTransactionIn
     }
 
     @Override
-    public ReversalTransactionInput exec(Source param) throws GenericException {
+    public ReversalTransactionInput exec(Source param) throws DomainGenericException {
         var input = (ReversalTransactionInput) param.input();
         baseGateway.save(input);
         return input;

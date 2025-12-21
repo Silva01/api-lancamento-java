@@ -5,7 +5,7 @@ import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.validation.ClientActivedValidation;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
@@ -21,7 +21,7 @@ public class FindActiveClientUseCase implements UseCase<ClientOutput> {
     }
 
     @Override
-    public ClientOutput exec(Source param) throws GenericException {
+    public ClientOutput exec(Source param) throws DomainGenericException {
         var clientOutput = findClientUseCase.exec(param);
         return execValidate(Optional.of(clientOutput)).extract();
     }

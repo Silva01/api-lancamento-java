@@ -12,7 +12,7 @@ import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 
 @ValidateStrategyOn(validations = AccountExistsAndActiveValidate.class)
@@ -30,7 +30,7 @@ public class FindAccountByCpfUseCase implements UseCase<AccountOutput> {
     }
 
     @Override
-    public AccountOutput exec(Source param) throws GenericException {
+    public AccountOutput exec(Source param) throws DomainGenericException {
         var accountOpt = findActiveAccountRepository.findById((ICpfParam) param.input());
         final var accountOutput = execValidate(accountOpt).extract();
         factory.fillIn(AccountBuilder.buildFullAccountDto().createFrom(accountOutput), param.output());

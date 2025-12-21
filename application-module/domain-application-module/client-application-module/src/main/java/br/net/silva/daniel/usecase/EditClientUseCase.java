@@ -3,7 +3,7 @@ package br.net.silva.daniel.usecase;
 import br.net.silva.daniel.build.ClientBuilder;
 import br.net.silva.daniel.dto.ClientDTO;
 import br.net.silva.daniel.entity.Client;
-import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
@@ -12,7 +12,7 @@ import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -30,7 +30,7 @@ public final class EditClientUseCase implements UseCase<ClientOutput> {
     }
 
     @Override
-    public ClientOutput exec(Source param) throws GenericException {
+    public ClientOutput exec(Source param) throws DomainGenericException {
         try {
             var clientOutput = execValidate(findRepository.findById(getParameters(param))).extract();
 
@@ -40,10 +40,10 @@ public final class EditClientUseCase implements UseCase<ClientOutput> {
             return saveRepository.save(convertToOutput(client));
         } catch (ClientNotActiveException cae) {
             throw new ClientNotActiveException(cae.getMessage());
-        } catch (ClientNotExistsException cne) {
+        } catch (ClientNotExistsExceptionDomain cne) {
             throw cne;
         } catch (Exception e) {
-            throw new GenericException("Generic error");
+            throw new DomainGenericException("Generic error");
         }
     }
 

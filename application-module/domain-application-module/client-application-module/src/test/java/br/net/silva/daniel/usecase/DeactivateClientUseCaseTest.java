@@ -5,7 +5,7 @@ import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -42,7 +42,7 @@ class DeactivateClientUseCaseTest {
     }
 
     @Test
-    void mustDeactivateClientWithSuccess() throws GenericException {
+    void mustDeactivateClientWithSuccess() throws DomainGenericException {
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient(true)));
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient(false));
 
@@ -58,7 +58,7 @@ class DeactivateClientUseCaseTest {
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
         var deactivateClient = new DeactivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
-        var exceptionReponse = assertThrows(GenericException.class, () -> deactivateClientUseCase.exec(source));
+        var exceptionReponse = assertThrows(DomainGenericException.class, () -> deactivateClientUseCase.exec(source));
 
         assertEquals("Client not exists in database", exceptionReponse.getMessage());
     }

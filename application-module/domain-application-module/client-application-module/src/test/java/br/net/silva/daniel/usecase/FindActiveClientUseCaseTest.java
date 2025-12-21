@@ -1,13 +1,13 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.exception.ClientDeactivatedException;
-import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.exception.ClientDeactivatedExceptionDomain;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.value_object.input.FindClientByCpf;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -44,7 +44,7 @@ class FindActiveClientUseCaseTest {
     }
 
     @Test
-    void must_looking_for_client_in_database_with_success() throws GenericException {
+    void must_looking_for_client_in_database_with_success() throws DomainGenericException {
         var findClientByCpf = new FindClientByCpf("22233344455");
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
         var clientDto = findClientUseCase.exec(source);
@@ -59,7 +59,7 @@ class FindActiveClientUseCaseTest {
         var findClientByCpf = new FindClientByCpf("22233344455");
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
         when(findClientRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
-        Assertions.assertThrows(ClientNotExistsException.class, () -> findClientUseCase.exec(source));
+        Assertions.assertThrows(ClientNotExistsExceptionDomain.class, () -> findClientUseCase.exec(source));
     }
 
     @Test
@@ -67,7 +67,7 @@ class FindActiveClientUseCaseTest {
         var findClientByCpf = new FindClientByCpf("22233344455");
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
         when(findClientRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient(false)));
-        Assertions.assertThrows(ClientDeactivatedException.class, () -> findClientUseCase.exec(source));
+        Assertions.assertThrows(ClientDeactivatedExceptionDomain.class, () -> findClientUseCase.exec(source));
     }
 
     private ClientOutput buildClient(boolean active) {

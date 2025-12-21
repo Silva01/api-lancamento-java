@@ -1,6 +1,6 @@
 package br.net.silva.daniel.usecase;
 
-import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
@@ -57,7 +57,7 @@ class EditAddressUseCaseTest {
         final var source = new Source(EmptyOutput.INSTANCE, editAddressInput);
 
         assertThatThrownBy(() -> editAddressUseCase.exec(source))
-                .isInstanceOf(ClientNotExistsException.class)
+                .isInstanceOf(ClientNotExistsExceptionDomain.class)
                 .hasMessageContaining("Client not exists in database");
 
         verify(baseRepository, times(1)).findById(editAddressInput);

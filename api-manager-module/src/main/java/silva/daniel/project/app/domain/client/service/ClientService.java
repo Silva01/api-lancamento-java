@@ -2,65 +2,63 @@ package silva.daniel.project.app.domain.client.service;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
+import br.net.silva.daniel.shared.application.interfaces.Output;
 import br.net.silva.daniel.shared.application.value_object.Source;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.value_object.input.ActivateClient;
-import br.net.silva.daniel.value_object.input.AddressRequestDTO;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import br.net.silva.daniel.value_object.input.FindClientByCpf;
-import br.net.silva.daniel.value_object.output.ClientOutput;
 import br.net.silva.daniel.value_object.output.GetInformationClientResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import silva.daniel.project.app.domain.client.request.ClientRequest;
-import silva.daniel.project.app.service.FluxService;
 
 @Service
 public class ClientService {
 
-    private final FluxService fluxService;
+    private final ClientFacade clientFacade;
 
-    public ClientService(FluxService fluxService) {
-        this.fluxService = fluxService;
+    public ClientService(ClientFacade clientFacade) {
+        this.clientFacade = clientFacade;
     }
 
     @Transactional
-    public NewAccountByNewClientResponseSuccess createNewClient(ClientRequestDTO request) throws Exception {
+    public Output createNewClient(ClientRequestDTO request) throws DomainGenericException {
         var source = new Source(new NewAccountByNewClientResponseSuccess(), request);
-        fluxService.fluxCreateNewClient().exec(source);
-        return (NewAccountByNewClientResponseSuccess) source.output();
+        clientFacade.createNewClient().exec(source);
+        return source.output();
     }
 
     @Transactional
-    public void updateClient(EditClientInput request) throws Exception {
+    public void updateClient(EditClientInput request) throws DomainGenericException {
         var source = new Source(EmptyOutput.INSTANCE, request);
-        fluxService.fluxUpdateClient().exec(source);
+        clientFacade.updateClient().exec(source);
     }
 
     @Transactional
-    public void deactivateClient(DeactivateClient deactivateClient) throws Exception {
+    public void deactivateClient(DeactivateClient deactivateClient) throws DomainGenericException {
         final var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
-        fluxService.fluxDeactivateClient().exec(source);
+        clientFacade.deactivateClient().exec(source);
     }
 
     @Transactional
-    public void activateClient(ActivateClient deactivateClient) throws Exception {
-        final var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
-        fluxService.fluxActivateClient().exec(source);
+    public void activateClient(ActivateClient activateClient) throws DomainGenericException {
+        final var source = new Source(EmptyOutput.INSTANCE, activateClient);
+        clientFacade.activateClient().exec(source);
     }
 
     @Transactional
-    public void updateAddress(EditAddressInput addressInput) throws Exception {
+    public void updateAddress(EditAddressInput addressInput) throws DomainGenericException {
         final var source = new Source(EmptyOutput.INSTANCE, addressInput);
-        fluxService.fluxUpdateAddress().exec(source);
+        clientFacade.updateAddress().exec(source);
     }
 
-    public GetInformationClientResponse getClientByCpf(String cpf) throws Exception {
+    public Output getClientByCpf(String cpf) throws DomainGenericException {
         final var clientByCpf = new FindClientByCpf(cpf);
         final var source = new Source(new GetInformationClientResponse(), clientByCpf);
-        fluxService.fluxFindClient().exec(source);
-        return (GetInformationClientResponse) source.output();
+        clientFacade.findClient().exec(source);
+        return source.output();
     }
 }

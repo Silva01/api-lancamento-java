@@ -5,7 +5,7 @@ import br.net.silva.daniel.shared.application.interfaces.Input;
 import br.net.silva.daniel.shared.application.interfaces.Output;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -42,7 +42,7 @@ class GenericFacadeProcessorDelegateTest {
 
     }
     @Test
-    void mustExecuteFacadeWithSucess() throws GenericException {
+    void mustExecuteFacadeWithSucess() throws DomainGenericException {
 
         var basicInput = new BasicTest();
         basicInput.setName("Teste com input");

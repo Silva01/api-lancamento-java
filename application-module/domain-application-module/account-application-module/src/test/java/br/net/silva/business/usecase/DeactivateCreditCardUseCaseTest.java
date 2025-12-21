@@ -1,9 +1,9 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.exception.AccountNotExistsException;
-import br.net.silva.business.exception.CreditCardDeactivatedException;
-import br.net.silva.business.exception.CreditCardNotExistsException;
-import br.net.silva.business.exception.CreditCardNumberDifferentException;
+import br.net.silva.business.exception.AccountNotExistsExceptionDomain;
+import br.net.silva.business.exception.CreditCardDeactivatedExceptionDomain;
+import br.net.silva.business.exception.CreditCardNotExistsExceptionDomain;
+import br.net.silva.business.exception.CreditCardNumberDifferentExceptionDomain;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.CreditCardOutput;
@@ -13,7 +13,6 @@ import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,7 +63,7 @@ class DeactivateCreditCardUseCaseTest {
         var input = new DeactivateCreditCardInput("1234", 1, 1234, "1234456653");
         var source = new Source(EmptyOutput.INSTANCE, input);
 
-        var responseException = assertThrows(CreditCardNumberDifferentException.class, () -> useCase.exec(source));
+        var responseException = assertThrows(CreditCardNumberDifferentExceptionDomain.class, () -> useCase.exec(source));
         assertEquals("Credit Card number is different at register in account", responseException.getMessage());
 
         verify(baseAccountGateway, times(1)).findById(any(ParamGateway.class));
@@ -77,7 +76,7 @@ class DeactivateCreditCardUseCaseTest {
         var input = new DeactivateCreditCardInput("1234", 1, 1234, "1234456653");
         var source = new Source(EmptyOutput.INSTANCE, input);
         assertThatThrownBy(() -> useCase.exec(source))
-                .isInstanceOf(CreditCardNotExistsException.class)
+                .isInstanceOf(CreditCardNotExistsExceptionDomain.class)
                 .hasMessage("Credit card not exists in the account");
     }
 
@@ -88,7 +87,7 @@ class DeactivateCreditCardUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         assertThatThrownBy(() -> useCase.exec(source))
-            .isInstanceOf(CreditCardDeactivatedException.class)
+            .isInstanceOf(CreditCardDeactivatedExceptionDomain.class)
             .hasMessage("Credit card deactivated in the account");
     }
 
@@ -99,7 +98,7 @@ class DeactivateCreditCardUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         assertThatThrownBy(() -> useCase.exec(source))
-                .isInstanceOf(CreditCardNumberDifferentException.class)
+                .isInstanceOf(CreditCardNumberDifferentExceptionDomain.class)
                 .hasMessage("Credit Card number is different at register in account");
     }
 
@@ -110,7 +109,7 @@ class DeactivateCreditCardUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         assertThatThrownBy(() -> useCase.exec(source))
-                .isInstanceOf(AccountNotExistsException.class)
+                .isInstanceOf(AccountNotExistsExceptionDomain.class)
                 .hasMessage("Account not exists");
     }
 

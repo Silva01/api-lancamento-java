@@ -7,7 +7,7 @@ import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
@@ -23,7 +23,7 @@ public final class FindClientUseCase implements UseCase<ClientOutput> {
     }
 
     @Override
-    public ClientOutput exec(Source param) throws GenericException {
+    public ClientOutput exec(Source param) throws DomainGenericException {
         var cpfParam = (ICpfParam) param.input();
         var optionalClient = findClientRepository.findById(cpfParam);
 

@@ -4,22 +4,21 @@ import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
 import br.net.silva.daniel.shared.application.value_object.Source;
 import org.springframework.stereotype.Service;
-import silva.daniel.project.app.service.FluxService;
 
 @Service
 public final class CreditCardService {
 
-    private final FluxService fluxService;
+    private final CreditCardFacade creditCardFacade;
 
-    public CreditCardService(FluxService fluxService) {
-        this.fluxService = fluxService;
+    public CreditCardService(CreditCardFacade creditCardFacade) {
+        this.creditCardFacade = creditCardFacade;
     }
 
     public void deactivateCreditCard(final DeactivateCreditCardInput deactivateCreditCard) throws Exception {
-        fluxService.fluxDeactivateCreditCard().exec(Source.of(deactivateCreditCard));
+        creditCardFacade.deactivateCreditCard().exec(Source.of(deactivateCreditCard));
     }
 
     public void createCreditCard(final CreateCreditCardInput input) throws Exception {
-        fluxService.fluxCreateCreditCard().exec(Source.of(input));
+        creditCardFacade.createCreditCard().exec(Source.of(input));
     }
 }

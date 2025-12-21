@@ -8,7 +8,7 @@ import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 
 @ValidateStrategyOn(validations = {AccountExistsAndActiveValidate.class})
 public class DeactivateAccountUseCase implements UseCase<AccountOutput> {
@@ -20,7 +20,7 @@ public class DeactivateAccountUseCase implements UseCase<AccountOutput> {
     }
 
     @Override
-    public AccountOutput exec(Source param) throws GenericException {
+    public AccountOutput exec(Source param) throws DomainGenericException {
         var optAccount = baseAccountGateway.findById((ParamGateway) param.input());
 
         var accountOutput = execValidate(optAccount).extract();

@@ -1,6 +1,7 @@
 package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
+import br.net.silva.daniel.shared.application.interfaces.Output;
 import br.net.silva.daniel.value_object.input.ActivateClient;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
@@ -34,7 +35,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<NewAccountByNewClientResponseSuccess> createNewClient(@RequestBody @Valid ClientRequest newClient) throws Exception {
+    public ResponseEntity<Output> createNewClient(@RequestBody @Valid ClientRequest newClient) throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.createNewClient(
                 new ClientRequestDTO(
                     newClient.id(),
@@ -83,7 +84,7 @@ public class ClientController {
     }
 
     @GetMapping("/{cpf}")
-    public ResponseEntity<GetInformationClientResponse> getClientByCpf(@PathVariable String cpf) throws Exception {
+    public ResponseEntity<Output> getClientByCpf(@PathVariable String cpf) throws Exception {
         return ResponseEntity.ok(clientService.getClientByCpf(cpf));
     }
 

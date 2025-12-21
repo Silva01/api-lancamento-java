@@ -1,24 +1,23 @@
 package silva.daniel.project.app.domain.account.service;
 
-import br.net.silva.business.exception.AccountNotExistsException;
-import br.net.silva.business.exception.ReversalTransactionAlreadyRefundedException;
-import br.net.silva.business.exception.TransactionNotExistsException;
+import br.net.silva.business.exception.AccountNotExistsExceptionDomain;
+import br.net.silva.business.exception.ReversalTransactionAlreadyRefundedExceptionDomain;
+import br.net.silva.business.exception.TransactionNotExistsExceptionDomain;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
-import br.net.silva.daniel.exception.ClientDeactivatedException;
-import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.exception.ClientDeactivatedExceptionDomain;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
 import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import silva.daniel.project.app.service.FluxService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -42,14 +41,14 @@ class TransactionServiceTest {
     private TransactionService service;
 
     @Mock
-    private FluxService fluxService;
+    private TransactionFacade transactionFacade;
 
     @Mock
     private GenericFacadeDelegate facade;
 
     @Test
-    void registerTransaction_WithValidData_ProcessWithSuccess() throws GenericException {
-        when(fluxService.fluxRegisterTransaction()).thenReturn(facade);
+    void registerTransaction_WithValidData_ProcessWithSuccess() throws DomainGenericException {
+        when(transactionFacade.registerTransaction()).thenReturn(facade);
         doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.registerTransaction(createMockBatchTransactionInput()))
@@ -57,8 +56,8 @@ class TransactionServiceTest {
     }
 
     @Test
-    void refundTransaction_WithValidData_ProcessWithSuccess() throws GenericException {
-        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
+    void refundTransaction_WithValidData_ProcessWithSuccess() throws DomainGenericException {
+        when(transactionFacade.refundTransaction()).thenReturn(facade);
         doAnswer((argumentsOnMock) -> null).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
@@ -66,62 +65,62 @@ class TransactionServiceTest {
     }
 
     @Test
-    void refundTransaction_WithClientNotExists_ReturnsClientNotExistsException() throws GenericException {
-        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
-        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+    void refundTransaction_WithClientNotExists_ReturnsClientNotExistsException() throws DomainGenericException {
+        when(transactionFacade.refundTransaction()).thenReturn(facade);
+        doThrow(new ClientNotExistsExceptionDomain(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
-                .isInstanceOf(ClientNotExistsException.class)
+                .isInstanceOf(ClientNotExistsExceptionDomain.class)
                 .hasMessage(CLIENT_NOT_FOUND_MESSAGE.getMessage());
     }
 
     @Test
-    void refundTransaction_WithClientDeactivated_ReturnsClientDeactivatedException() throws GenericException {
-        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
-        doThrow(new ClientDeactivatedException(CLIENT_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
+    void refundTransaction_WithClientDeactivated_ReturnsClientDeactivatedException() throws DomainGenericException {
+        when(transactionFacade.refundTransaction()).thenReturn(facade);
+        doThrow(new ClientDeactivatedExceptionDomain(CLIENT_DEACTIVATED.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
-                .isInstanceOf(ClientDeactivatedException.class)
+                .isInstanceOf(ClientDeactivatedExceptionDomain.class)
                 .hasMessage(CLIENT_DEACTIVATED.getMessage());
     }
 
     @Test
-    void refundTransaction_WithAccountNotExists_ReturnsAccountNotExistsException() throws GenericException {
-        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
-        doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+    void refundTransaction_WithAccountNotExists_ReturnsAccountNotExistsException() throws DomainGenericException {
+        when(transactionFacade.refundTransaction()).thenReturn(facade);
+        doThrow(new AccountNotExistsExceptionDomain(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
-                .isInstanceOf(AccountNotExistsException.class)
+                .isInstanceOf(AccountNotExistsExceptionDomain.class)
                 .hasMessage(ACCOUNT_NOT_FOUND_MESSAGE.getMessage());
     }
 
     @Test
-    void refundTransaction_WithAccountDeactivated_ReturnsAccountDeactivatedException() throws GenericException {
-        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
-        doThrow(new AccountNotExistsException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+    void refundTransaction_WithAccountDeactivated_ReturnsAccountDeactivatedException() throws DomainGenericException {
+        when(transactionFacade.refundTransaction()).thenReturn(facade);
+        doThrow(new AccountNotExistsExceptionDomain(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
-                .isInstanceOf(AccountNotExistsException.class)
+                .isInstanceOf(AccountNotExistsExceptionDomain.class)
                 .hasMessage(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage());
     }
 
     @Test
-    void refundTransaction_WithTransactionNotExists_ReturnsTransactionNotExistsException() throws GenericException {
-        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
-        doThrow(new TransactionNotExistsException(TRANSACTION_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+    void refundTransaction_WithTransactionNotExists_ReturnsTransactionNotExistsException() throws DomainGenericException {
+        when(transactionFacade.refundTransaction()).thenReturn(facade);
+        doThrow(new TransactionNotExistsExceptionDomain(TRANSACTION_NOT_FOUND_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
-                .isInstanceOf(TransactionNotExistsException.class)
+                .isInstanceOf(TransactionNotExistsExceptionDomain.class)
                 .hasMessage(TRANSACTION_NOT_FOUND_MESSAGE.getMessage());
     }
 
     @Test
-    void refundTransaction_WithTransactionAlreadyRefunded_ReturnsReversalTransactionAlreadyRefundedException() throws GenericException {
-        when(fluxService.fluxRefundTransaction()).thenReturn(facade);
-        doThrow(new ReversalTransactionAlreadyRefundedException(TRANSACTION_ALREADY_REFUNDED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
+    void refundTransaction_WithTransactionAlreadyRefunded_ReturnsReversalTransactionAlreadyRefundedException() throws DomainGenericException {
+        when(transactionFacade.refundTransaction()).thenReturn(facade);
+        doThrow(new ReversalTransactionAlreadyRefundedExceptionDomain(TRANSACTION_ALREADY_REFUNDED_MESSAGE.getMessage())).when(facade).exec(any(Source.class));
 
         assertThatCode(() -> service.refundTransaction(createMockReversalTransactionInput()))
-                .isInstanceOf(ReversalTransactionAlreadyRefundedException.class)
+                .isInstanceOf(ReversalTransactionAlreadyRefundedExceptionDomain.class)
                 .hasMessage(TRANSACTION_ALREADY_REFUNDED_MESSAGE.getMessage());
     }
 

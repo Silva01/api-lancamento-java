@@ -1,9 +1,9 @@
 package br.net.silva.business.decorator;
 
-import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
+import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyExceptionDomain;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.decorator.ValidationDecorator;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 
 import java.util.Optional;
 
@@ -16,8 +16,8 @@ public final class AccountAlreadyExistsForNewAgencyDecorator implements Validati
     }
 
     @Override
-    public void decorator(AccountOutput accountOutput) throws GenericException {
+    public void decorator(AccountOutput accountOutput) throws DomainGenericException {
         if (accountWithNewAgency.isPresent())
-            throw new AccountAlreadyExistsForNewAgencyException("Account With new agency already exists");
+            throw new AccountAlreadyExistsForNewAgencyExceptionDomain("Account With new agency already exists");
     }
 }

@@ -11,7 +11,7 @@ import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class FindAllAccountsByCpfUseCaseTest {
     }
 
     @Test
-    void shouldListAllAccountsByCpf() throws GenericException {
+    void shouldListAllAccountsByCpf() throws DomainGenericException {
         when(findGateway.findAllBy(any(ParamGateway.class))).thenReturn(buildMockListAccount());
         var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
         var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);
@@ -65,7 +65,7 @@ class FindAllAccountsByCpfUseCaseTest {
     }
 
     @Test
-    void shouldListEmptyAccountsByCpf() throws GenericException {
+    void shouldListEmptyAccountsByCpf() throws DomainGenericException {
         when(findGateway.findAllBy(any(ParamGateway.class))).thenReturn(Collections.emptyList());
         var findAccountDto = new FindAccountDTO("99988877766", null, null, null);
         var source = new Source(new AccountsByCpfResponseDto(), findAccountDto);

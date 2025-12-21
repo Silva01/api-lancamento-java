@@ -1,8 +1,8 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.exception.AccountDeactivatedException;
-import br.net.silva.business.exception.AccountNotExistsException;
-import br.net.silva.business.exception.CreditCardAlreadyExistsException;
+import br.net.silva.business.exception.AccountDeactivatedExceptionDomain;
+import br.net.silva.business.exception.AccountNotExistsExceptionDomain;
+import br.net.silva.business.exception.CreditCardAlreadyExistsExceptionDomain;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.business.value_object.output.CreditCardOutput;
@@ -66,7 +66,7 @@ class CreateNewCreditCardUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         assertThatThrownBy(() -> useCase.exec(source))
-                .isInstanceOf(AccountNotExistsException.class)
+                .isInstanceOf(AccountNotExistsExceptionDomain.class)
                 .hasMessage("Account not found");
 
         verify(baseGateway, times(1)).findById(any(ParamGateway.class));
@@ -80,7 +80,7 @@ class CreateNewCreditCardUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         assertThatThrownBy(() -> useCase.exec(source))
-                .isInstanceOf(AccountDeactivatedException.class)
+                .isInstanceOf(AccountDeactivatedExceptionDomain.class)
                 .hasMessage("Account is Deactivated");
 
         verify(baseGateway, times(1)).findById(any(ParamGateway.class));
@@ -98,7 +98,7 @@ class CreateNewCreditCardUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, input);
 
         assertThatThrownBy(() -> useCase.exec(source))
-                .isInstanceOf(CreditCardAlreadyExistsException.class)
+                .isInstanceOf(CreditCardAlreadyExistsExceptionDomain.class)
                 .hasMessage("Credit card already exists");
 
 
@@ -107,7 +107,7 @@ class CreateNewCreditCardUseCaseTest {
                 .thenReturn(Optional.of(buildMockAccount(true, buildMockCreditCard(false))));
 
         assertThatThrownBy(() -> useCase.exec(source))
-                .isInstanceOf(CreditCardAlreadyExistsException.class)
+                .isInstanceOf(CreditCardAlreadyExistsExceptionDomain.class)
                 .hasMessage("Credit card already exists");
 
         verify(baseGateway, times(2)).findById(any(ParamGateway.class));

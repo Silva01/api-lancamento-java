@@ -1,13 +1,13 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.exception.TransactionNotExistsException;
+import br.net.silva.business.exception.TransactionNotExistsExceptionDomain;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.business.value_object.output.TransactionOutput;
 import br.net.silva.daniel.enuns.TransactionTypeEnum;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +36,7 @@ class FindTransactionUseCaseTest {
     }
 
     @Test
-    void findTransaction_WithById_ReturnsTransaction() throws GenericException {
+    void findTransaction_WithById_ReturnsTransaction() throws DomainGenericException {
         final var reversal = new ReversalTransactionInput("1234567890", 1L, 2L);
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockTransaction()));
 
@@ -60,7 +60,7 @@ class FindTransactionUseCaseTest {
         when(baseGateway.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> findTransactionUseCase.exec(Source.of(reversal)))
-                .isInstanceOf(TransactionNotExistsException.class)
+                .isInstanceOf(TransactionNotExistsExceptionDomain.class)
                 .hasMessage("Transaction not found");
     }
 

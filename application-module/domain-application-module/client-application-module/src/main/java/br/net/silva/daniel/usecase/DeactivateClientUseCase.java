@@ -12,7 +12,7 @@ import br.net.silva.daniel.shared.application.interfaces.IClientParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 import br.net.silva.daniel.validation.ClientExistsAndActivedValidate;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -36,7 +36,7 @@ public final class DeactivateClientUseCase implements UseCase<ClientOutput> {
     }
 
     @Override
-    public ClientOutput exec(Source param) throws GenericException {
+    public ClientOutput exec(Source param) throws DomainGenericException {
         var clientOutput = execValidate(getClient(param)).extract();
 
         var client = factory.create(ClientBuilder.buildFullClientDto().createFrom(clientOutput));

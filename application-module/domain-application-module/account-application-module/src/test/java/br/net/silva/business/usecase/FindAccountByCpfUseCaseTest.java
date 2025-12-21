@@ -7,7 +7,7 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ class FindAccountByCpfUseCaseTest {
     }
 
     @Test
-    void findAccountByCpf_WithValidParams_ReturnAccount() throws GenericException {
+    void findAccountByCpf_WithValidParams_ReturnAccount() throws DomainGenericException {
         when(findActiveAccountRepository.findById(Mockito.any())).thenReturn(Optional.of(createAccountOutputMock(true)));
         final var findAccountRequest = new FindAccountDTO("88899900055", 1, 2, "test");
 

@@ -7,7 +7,7 @@ import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 
 public class GetInformationAccountUseCase implements UseCase<AccountOutput> {
 
@@ -20,7 +20,7 @@ public class GetInformationAccountUseCase implements UseCase<AccountOutput> {
     }
 
     @Override
-    public AccountOutput exec(Source param) throws GenericException {
+    public AccountOutput exec(Source param) throws DomainGenericException {
         var cpf = (ICpfParam) param.input();
         var accountOutput = baseGateway.findById(cpf).get();
         var accountDto = AccountBuilder.buildFullAccountDto().createFrom(accountOutput);

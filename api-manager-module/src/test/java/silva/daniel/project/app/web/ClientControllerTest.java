@@ -1,8 +1,8 @@
 package silva.daniel.project.app.web;
 
 import br.net.silva.business.value_object.output.NewAccountByNewClientResponseSuccess;
-import br.net.silva.daniel.exception.ClientNotExistsException;
-import br.net.silva.daniel.exception.ExistsClientRegistredException;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
+import br.net.silva.daniel.exception.ExistsClientRegistredExceptionDomain;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.input.DeactivateClient;
@@ -20,7 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import silva.daniel.project.app.domain.client.FailureResponse;
 import silva.daniel.project.app.domain.client.request.ActivateClient;
 import silva.daniel.project.app.domain.client.request.AddressRequest;
 import silva.daniel.project.app.domain.client.request.ClientRequest;
@@ -37,7 +36,6 @@ import java.util.stream.Stream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -98,7 +96,7 @@ class ClientControllerTest {
     @Test
     void createNewClient_WithClientExistInDatabase_Returns409() throws Exception {
         final var failureResponse = CLIENT_ALREADY_EXISTS;
-        when(service.createNewClient(any(ClientRequestDTO.class))).thenThrow(new ExistsClientRegistredException(failureResponse.getMessage()));
+        when(service.createNewClient(any(ClientRequestDTO.class))).thenThrow(new ExistsClientRegistredExceptionDomain(failureResponse.getMessage()));
         prepareAsserts.failurePostAssert(requestValidMock(), failureResponse, status().isConflict());
     }
 
@@ -115,7 +113,7 @@ class ClientControllerTest {
 
     @Test
     void editClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).updateClient(any(EditClientInput.class));
+        doThrow(new ClientNotExistsExceptionDomain(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).updateClient(any(EditClientInput.class));
         prepareAsserts.failurePutAssert(editClientRequestMock(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
@@ -138,7 +136,7 @@ class ClientControllerTest {
 
     @Test
     void deactivateClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
+        doThrow(new ClientNotExistsExceptionDomain(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).deactivateClient(any(DeactivateClient.class));
         deactivateRequestPrepare.failurePostAssert(new EditStatusClientRequest("12345678901"), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
@@ -161,7 +159,7 @@ class ClientControllerTest {
 
     @Test
     void activateClient_WithClientNotExistInDatabase_Returns404() throws Exception {
-        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
+        doThrow(new ClientNotExistsExceptionDomain(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).activateClient(any(br.net.silva.daniel.value_object.input.ActivateClient.class));
         activateClientTestPrepare.failurePostAssert(new ActivateClient("12345678901"), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
@@ -180,7 +178,7 @@ class ClientControllerTest {
     @Test
     void updateAddress_WithClientNotExistInDatabase_Returns404() throws Exception {
         var request = new AddressRequest("88899988800", "street", "number", "complement", "neighborhood", "city", "state", "zipCode");
-        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
+        doThrow(new ClientNotExistsExceptionDomain(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(service).updateAddress(any(EditAddressInput.class));
         addressClientTestPrepare.failurePutAssert(request, CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
@@ -226,7 +224,7 @@ class ClientControllerTest {
 
     @Test
     void getClient_WithClientNotExists_ReturnsStatus404() throws Exception {
-        when(service.getClientByCpf("00099988877")).thenThrow(new ClientNotExistsException("Client not exists in database"));
+        when(service.getClientByCpf("00099988877")).thenThrow(new ClientNotExistsExceptionDomain("Client not exists in database"));
         getClientTestPrepare.failureGetAssert(new Object[]{"00099988877"}, CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 

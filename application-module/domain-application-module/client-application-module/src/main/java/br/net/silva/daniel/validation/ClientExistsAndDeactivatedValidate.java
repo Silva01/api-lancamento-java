@@ -1,9 +1,9 @@
 package br.net.silva.daniel.validation;
 
-import br.net.silva.daniel.exception.ClientNotExistsException;
-import br.net.silva.daniel.exception.ExistsClientRegistredException;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
+import br.net.silva.daniel.exception.ExistsClientRegistredExceptionDomain;
 import br.net.silva.daniel.shared.application.interfaces.Validation;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
 import java.util.Optional;
@@ -11,13 +11,13 @@ import java.util.Optional;
 public class ClientExistsAndDeactivatedValidate implements Validation<ClientOutput> {
 
     @Override
-    public void validate(Optional<ClientOutput> optClient) throws GenericException {
+    public void validate(Optional<ClientOutput> optClient) throws DomainGenericException {
         if (optClient.isEmpty()) {
-            throw new ClientNotExistsException("Client not exists in database");
+            throw new ClientNotExistsExceptionDomain("Client not exists in database");
         }
 
         if (optClient.get().active()) {
-            throw new ExistsClientRegistredException("Client already activated");
+            throw new ExistsClientRegistredExceptionDomain("Client already activated");
         }
     }
 }

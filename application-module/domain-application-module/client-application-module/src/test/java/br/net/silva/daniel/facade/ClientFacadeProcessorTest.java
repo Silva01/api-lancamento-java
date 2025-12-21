@@ -7,7 +7,7 @@ import br.net.silva.daniel.shared.application.interfaces.GenericFacadeDelegate;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.usecase.ActivateClientUseCase;
 import br.net.silva.daniel.usecase.CreateNewClientUseCase;
 import br.net.silva.daniel.usecase.DeactivateClientUseCase;
@@ -52,7 +52,7 @@ class ClientFacadeProcessorTest {
     }
 
     @Test
-    void mustCreateNewClientAndAccountWithSuccess() throws GenericException {
+    void mustCreateNewClientAndAccountWithSuccess() throws DomainGenericException {
 
         var client = buildClient(true);
 
@@ -89,12 +89,12 @@ class ClientFacadeProcessorTest {
         var findClientByCpf = new FindClientByCpf("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, findClientByCpf);
 
-        var exception = assertThrows(GenericException.class, () -> clientFacade.exec(source));
+        var exception = assertThrows(DomainGenericException.class, () -> clientFacade.exec(source));
         assertEquals("Client already exists in database", exception.getMessage());
     }
 
     @Test
-    void mustDeactivateClientWithSuccess() throws GenericException {
+    void mustDeactivateClientWithSuccess() throws DomainGenericException {
         var client = buildClient(true);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));
@@ -112,7 +112,7 @@ class ClientFacadeProcessorTest {
     }
 
     @Test
-    void mustDeactivateClientErrorClientNotExists() throws GenericException {
+    void mustDeactivateClientErrorClientNotExists() throws DomainGenericException {
         var client = buildClient(true);
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.empty());
 
@@ -124,12 +124,12 @@ class ClientFacadeProcessorTest {
         var deactivateClient = new DeactivateClient("99988877766");
         var source = new Source(EmptyOutput.INSTANCE, deactivateClient);
 
-        var exceptionResponse = assertThrows(GenericException.class, () -> clientFacade.exec(source));
+        var exceptionResponse = assertThrows(DomainGenericException.class, () -> clientFacade.exec(source));
         assertEquals("Client not exists in database", exceptionResponse.getMessage());
     }
 
     @Test
-    void mustActivateClientWithSuccess() throws GenericException {
+    void mustActivateClientWithSuccess() throws DomainGenericException {
         var client = buildClient(false);
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(client);
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(client));

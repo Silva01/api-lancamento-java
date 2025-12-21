@@ -7,7 +7,7 @@ import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.ITransactionParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 
 @ValidateStrategyOn(validations = { TransactionExistsValidation.class })
 public final class FindTransactionUseCase implements UseCase<TransactionOutput> {
@@ -19,7 +19,7 @@ public final class FindTransactionUseCase implements UseCase<TransactionOutput> 
     }
 
     @Override
-    public TransactionOutput exec(Source param) throws GenericException {
+    public TransactionOutput exec(Source param) throws DomainGenericException {
         final var input = ((ITransactionParam) param.input());
         final var transactionOpt = baseGateway.findById(input);
         return execValidate(transactionOpt).extract();

@@ -6,7 +6,7 @@ import br.net.silva.business.value_object.output.GetInformationAccountOutput;
 import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +37,7 @@ class FindAccountUseCaseTest {
     }
 
     @Test
-    void findAccount_WithValidData_ReturnsAccount() throws GenericException {
+    void findAccount_WithValidData_ReturnsAccount() throws DomainGenericException {
         var accountOutput = new AccountOutput(
                 123,
                 1,
@@ -66,7 +66,7 @@ class FindAccountUseCaseTest {
     }
 
     @Test
-    void findAccount_WithAccountNotExists_ReturnsException() throws GenericException {
+    void findAccount_WithAccountNotExists_ReturnsException() throws DomainGenericException {
         var accountOutput = new AccountOutput(
                 123,
                 1,
@@ -82,7 +82,7 @@ class FindAccountUseCaseTest {
         var source = new Source(new GetInformationAccountOutput(), new FindAccountDTO("333444", 1, 123, "abc"));
 
         assertThatThrownBy(() -> findAccountUseCase.exec(source))
-                .isInstanceOf(GenericException.class)
+                .isInstanceOf(DomainGenericException.class)
                 .hasMessage("Account not found");
     }
 }

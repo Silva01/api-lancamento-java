@@ -7,7 +7,7 @@ import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.dto.AccountDTO;
 import br.net.silva.daniel.dto.TransactionDTO;
 import br.net.silva.daniel.entity.Account;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.factory.CreateAccountByAccountDTOFactory;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
@@ -32,7 +32,7 @@ public class ProcessorTransactionUseCase implements UseCase<EmptyOutput> {
     }
 
     @Override
-    public EmptyOutput exec(Source param) throws GenericException {
+    public EmptyOutput exec(Source param) throws DomainGenericException {
         var input = (BatchTransactionInput) param.input();
         var transactionDTO = buildTransactionDTO(input);
 

@@ -9,7 +9,7 @@ import br.net.silva.daniel.shared.application.interfaces.IGenericBuilder;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class FindAllAccountsByCpfUseCase implements UseCase<List<AccountOutput>>
     }
 
     @Override
-    public List<AccountOutput> exec(Source param) throws GenericException {
+    public List<AccountOutput> exec(Source param) throws DomainGenericException {
         var findAccountDto = (ICpfParam) param.input();
         var outputAccounts = findGateway.findAllBy(findAccountDto);
         var dtoList = outputAccounts.stream().map(AccountBuilder.buildFullAccountDto()::createFrom).toList();

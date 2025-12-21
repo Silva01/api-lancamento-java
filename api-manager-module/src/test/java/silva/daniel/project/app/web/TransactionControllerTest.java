@@ -1,15 +1,15 @@
 package silva.daniel.project.app.web;
 
-import br.net.silva.business.exception.AccountDeactivatedException;
-import br.net.silva.business.exception.AccountNotExistsException;
-import br.net.silva.business.exception.ReversalTransactionAlreadyRefundedException;
-import br.net.silva.business.exception.TransactionDuplicateException;
-import br.net.silva.business.exception.TransactionNotExistsException;
+import br.net.silva.business.exception.AccountDeactivatedExceptionDomain;
+import br.net.silva.business.exception.AccountNotExistsExceptionDomain;
+import br.net.silva.business.exception.ReversalTransactionAlreadyRefundedExceptionDomain;
+import br.net.silva.business.exception.TransactionDuplicateExceptionDomain;
+import br.net.silva.business.exception.TransactionNotExistsExceptionDomain;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
-import br.net.silva.daniel.exception.ClientDeactivatedException;
-import br.net.silva.daniel.exception.ClientNotExistsException;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.exception.ClientDeactivatedExceptionDomain;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -63,37 +63,37 @@ class TransactionControllerTest implements RequestBuilderCommons {
 
     @Test
     void registerTransaction_WithClientNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new ClientNotExistsException("Client Not Found")).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        doThrow(new ClientNotExistsExceptionDomain("Client Not Found")).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void registerTransaction_WithClientDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new ClientDeactivatedException(CLIENT_DEACTIVATED.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        doThrow(new ClientDeactivatedExceptionDomain(CLIENT_DEACTIVATED.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), CLIENT_DEACTIVATED, status().isConflict());
     }
 
     @Test
     void registerTransaction_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        doThrow(new AccountNotExistsExceptionDomain(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void registerTransaction_WithAccountDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new AccountDeactivatedException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        doThrow(new AccountDeactivatedExceptionDomain(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
     @Test
     void registerTransaction_WithDuplicationTransaction_ReturnsStatus400() throws Exception {
-        doThrow(new TransactionDuplicateException(TRANSACTION_DUPLICATE_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        doThrow(new TransactionDuplicateExceptionDomain(TRANSACTION_DUPLICATE_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), TRANSACTION_DUPLICATE_MESSAGE, status().isBadRequest());
     }
 
     @Test
     void registerTransaction_WithFailRegisterInQueue_ReturnsStatus500() throws Exception {
-        doThrow(new GenericException(QUEUE_ERROR_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
+        doThrow(new DomainGenericException(QUEUE_ERROR_MESSAGE.getMessage())).when(transactionService).registerTransaction(any(BatchTransactionInput.class));
         registerTransactionTestPrepare.failurePostAssert(buildBaseTransactionDebitBatchRequest(), QUEUE_ERROR_MESSAGE, status().isInternalServerError());
     }
 
@@ -110,37 +110,37 @@ class TransactionControllerTest implements RequestBuilderCommons {
 
     @Test
     void refundTransaction_WithClientNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new ClientNotExistsException(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
+        doThrow(new ClientNotExistsExceptionDomain(CLIENT_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
         refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void refundTransaction_WithClientDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new ClientDeactivatedException(CLIENT_DEACTIVATED.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
+        doThrow(new ClientDeactivatedExceptionDomain(CLIENT_DEACTIVATED.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
         refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), CLIENT_DEACTIVATED, status().isConflict());
     }
 
     @Test
     void refundTransaction_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
+        doThrow(new AccountNotExistsExceptionDomain(ACCOUNT_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
         refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void refundTransaction_WithAccountDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new AccountDeactivatedException(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
+        doThrow(new AccountDeactivatedExceptionDomain(ACCOUNT_ALREADY_DEACTIVATED_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
         refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
     @Test
     void refundTransaction_WithTransactionNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new TransactionNotExistsException(TRANSACTION_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
+        doThrow(new TransactionNotExistsExceptionDomain(TRANSACTION_NOT_FOUND_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
         refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), TRANSACTION_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void refundTransaction_WithTransactionAlreadyRefunded_ReturnsStatus409() throws Exception {
-        doThrow(new ReversalTransactionAlreadyRefundedException(TRANSACTION_ALREADY_REFUNDED_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
+        doThrow(new ReversalTransactionAlreadyRefundedExceptionDomain(TRANSACTION_ALREADY_REFUNDED_MESSAGE.getMessage())).when(transactionService).refundTransaction(any(ReversalTransactionInput.class));
         refundTransactionTestPrepare.failurePostAssert(buildBaseTransactionRefundBatchRequest(), TRANSACTION_ALREADY_REFUNDED_MESSAGE, status().isConflict());
     }
 }

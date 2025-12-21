@@ -8,7 +8,7 @@ import br.net.silva.daniel.shared.application.gateway.FindApplicationBaseGateway
 import br.net.silva.daniel.shared.application.gateway.SaveApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.validation.ClientExistsValidate;
 import br.net.silva.daniel.value_object.Address;
 import br.net.silva.daniel.value_object.input.EditAddressInput;
@@ -28,7 +28,7 @@ public final class EditAddressUseCase implements UseCase<ClientOutput> {
     }
 
     @Override
-    public ClientOutput exec(Source param) throws GenericException {
+    public ClientOutput exec(Source param) throws DomainGenericException {
         final var editAddressInput = (EditAddressInput) param.input();
         final var clientOutput = execValidate(getClient(editAddressInput)).extract();
         final var client = registerNewAddress(clientOutput, editAddressInput);

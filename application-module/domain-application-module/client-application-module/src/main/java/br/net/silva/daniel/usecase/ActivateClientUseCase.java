@@ -6,7 +6,7 @@ import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.IClientParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.validation.ClientExistsAndDeactivatedValidate;
 import br.net.silva.daniel.value_object.output.ClientOutput;
 
@@ -22,7 +22,7 @@ public final class ActivateClientUseCase implements UseCase<ClientOutput> {
     }
 
     @Override
-    public ClientOutput exec(Source param) throws GenericException {
+    public ClientOutput exec(Source param) throws DomainGenericException {
         final var clientOpt = getClient(param);
 
         final var clientOutput = execValidate(clientOpt).extract();

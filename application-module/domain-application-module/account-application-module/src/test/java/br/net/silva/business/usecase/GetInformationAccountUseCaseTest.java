@@ -11,7 +11,7 @@ import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class GetInformationAccountUseCaseTest {
     }
 
     @Test
-    void shouldGetInformationAccountWithSuccess() throws GenericException {
+    void shouldGetInformationAccountWithSuccess() throws DomainGenericException {
         var getInformationInput = new GetInformationAccountInput("99988877766");
         var source = new Source(new GetInformationAccountOutput(), getInformationInput);
 

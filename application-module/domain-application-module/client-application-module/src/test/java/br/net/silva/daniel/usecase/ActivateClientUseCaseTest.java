@@ -4,7 +4,7 @@ import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.value_object.input.ClientRequestDTO;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -36,7 +36,7 @@ class ActivateClientUseCaseTest {
     }
 
     @Test
-    void mustActivateClientWithSucess() throws GenericException {
+    void mustActivateClientWithSucess() throws DomainGenericException {
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(createClient(false)));
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(createClient(true));
         var dto = new ClientRequestDTO("1234", "00099988877", "Daniel", "61933334444", true, 1234, null);

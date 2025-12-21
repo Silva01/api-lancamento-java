@@ -9,7 +9,7 @@ import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 
 @ValidateStrategyOn(validations = {AccountExistsAndDeactivatedValidate.class})
 public final class ActivateAccountUseCase implements UseCase<AccountOutput> {
@@ -24,7 +24,7 @@ public final class ActivateAccountUseCase implements UseCase<AccountOutput> {
     }
 
     @Override
-    public AccountOutput exec(Source param) throws GenericException {
+    public AccountOutput exec(Source param) throws DomainGenericException {
         var dto = (ActivateAccount) param.input();
         var accountOutput = execValidate(baseGateway.findById(dto)).extract();
 

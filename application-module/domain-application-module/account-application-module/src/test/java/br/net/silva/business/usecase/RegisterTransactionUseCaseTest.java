@@ -1,6 +1,6 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.exception.TransactionDuplicateException;
+import br.net.silva.business.exception.TransactionDuplicateExceptionDomain;
 import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
@@ -50,7 +50,7 @@ final class RegisterTransactionUseCaseTest {
         final var batchInput = buildBatchTransactionMock(List.of(buildTransactionDebitMock(), buildTransactionDebitMock()));
         final var source = Source.of(batchInput);
         assertThatThrownBy(() -> useCase.exec(source))
-                .isInstanceOf(TransactionDuplicateException.class)
+                .isInstanceOf(TransactionDuplicateExceptionDomain.class)
                 .hasMessage("Transaction has 2 or more equals transactions.");
 
         verify(saveTransactionRepository, never()).save(any(BatchTransactionInput.class));

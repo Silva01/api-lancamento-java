@@ -1,22 +1,22 @@
 package silva.daniel.project.app.web;
 
 
-import br.net.silva.business.exception.AccountAlreadyActiveException;
-import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyException;
-import br.net.silva.business.exception.AccountDeactivatedException;
-import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
-import br.net.silva.business.exception.AccountNotExistsException;
-import br.net.silva.business.exception.CreditCardAlreadyExistsException;
-import br.net.silva.business.exception.CreditCardDeactivatedException;
-import br.net.silva.business.exception.CreditCardNotExistsException;
-import br.net.silva.business.exception.ReversalTransactionAlreadyRefundedException;
-import br.net.silva.business.exception.TransactionDuplicateException;
-import br.net.silva.business.exception.TransactionNotExistsException;
-import br.net.silva.daniel.exception.ClientDeactivatedException;
-import br.net.silva.daniel.exception.ClientNotExistsException;
-import br.net.silva.daniel.exception.ExistsClientRegistredException;
+import br.net.silva.business.exception.AccountAlreadyActiveExceptionDomain;
+import br.net.silva.business.exception.AccountAlreadyExistsForNewAgencyExceptionDomain;
+import br.net.silva.business.exception.AccountDeactivatedExceptionDomain;
+import br.net.silva.business.exception.AccountExistsForCPFInformatedExceptionDomain;
+import br.net.silva.business.exception.AccountNotExistsExceptionDomain;
+import br.net.silva.business.exception.CreditCardAlreadyExistsExceptionDomain;
+import br.net.silva.business.exception.CreditCardDeactivatedExceptionDomain;
+import br.net.silva.business.exception.CreditCardNotExistsExceptionDomain;
+import br.net.silva.business.exception.ReversalTransactionAlreadyRefundedExceptionDomain;
+import br.net.silva.business.exception.TransactionDuplicateExceptionDomain;
+import br.net.silva.business.exception.TransactionNotExistsExceptionDomain;
+import br.net.silva.daniel.exception.ClientDeactivatedExceptionDomain;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
+import br.net.silva.daniel.exception.ExistsClientRegistredExceptionDomain;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.shared.business.exception.PasswordDivergentException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -44,23 +44,23 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, failureResponse, headers, NOT_ACCEPTABLE, request);
     }
 
-    @ExceptionHandler(GenericException.class)
-    public ResponseEntity<FailureResponse> handleGenericException(GenericException ex) {
+    @ExceptionHandler(DomainGenericException.class)
+    public ResponseEntity<FailureResponse> handleGenericException(DomainGenericException ex) {
         return createFailureMessage(ex.getMessage(), INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(ExistsClientRegistredException.class)
-    public ResponseEntity<FailureResponse> handleExistsClientRegistredException(ExistsClientRegistredException ex) {
+    @ExceptionHandler(ExistsClientRegistredExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleExistsClientRegistredException(ExistsClientRegistredExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 
-    @ExceptionHandler(ClientNotExistsException.class)
-    public ResponseEntity<FailureResponse> handleClientNotExistsException(ClientNotExistsException ex) {
+    @ExceptionHandler(ClientNotExistsExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleClientNotExistsException(ClientNotExistsExceptionDomain ex) {
         return createFailureMessage("Client not exists in database", NOT_FOUND);
     }
 
-    @ExceptionHandler(CreditCardNotExistsException.class)
-    public ResponseEntity<FailureResponse> handleCreditCardNotExistsException(CreditCardNotExistsException ex) {
+    @ExceptionHandler(CreditCardNotExistsExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleCreditCardNotExistsException(CreditCardNotExistsExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), NOT_FOUND);
     }
 
@@ -69,38 +69,38 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
         return createFailureMessage("Client already deactivated", CONFLICT);
     }
 
-    @ExceptionHandler(CreditCardDeactivatedException.class)
-    public ResponseEntity<FailureResponse> handleCreditCardDeactivatedException(CreditCardDeactivatedException ex) {
+    @ExceptionHandler(CreditCardDeactivatedExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleCreditCardDeactivatedException(CreditCardDeactivatedExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 
-    @ExceptionHandler(AccountNotExistsException.class)
-    public ResponseEntity<FailureResponse> handleAccountNotExistsException(AccountNotExistsException ex) {
+    @ExceptionHandler(AccountNotExistsExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleAccountNotExistsException(AccountNotExistsExceptionDomain ex) {
         return createFailureMessage("Account not Found", NOT_FOUND);
     }
 
-    @ExceptionHandler(CreditCardAlreadyExistsException.class)
-    public ResponseEntity<FailureResponse> handleCreditCardAlreadyExistsException(CreditCardAlreadyExistsException ex) {
+    @ExceptionHandler(CreditCardAlreadyExistsExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleCreditCardAlreadyExistsException(CreditCardAlreadyExistsExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 
-    @ExceptionHandler(AccountDeactivatedException.class)
-    public ResponseEntity<FailureResponse> handleAccountDeactivatedException(AccountDeactivatedException ex) {
+    @ExceptionHandler(AccountDeactivatedExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleAccountDeactivatedException(AccountDeactivatedExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 
-    @ExceptionHandler(ClientDeactivatedException.class)
-    public ResponseEntity<FailureResponse> handleAccountDeactivatedException(ClientDeactivatedException ex) {
+    @ExceptionHandler(ClientDeactivatedExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleAccountDeactivatedException(ClientDeactivatedExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 
-    @ExceptionHandler(AccountAlreadyExistsForNewAgencyException.class)
-    public ResponseEntity<FailureResponse> handleAccountAlreadyExistsForNewAgencyException(AccountAlreadyExistsForNewAgencyException ex) {
+    @ExceptionHandler(AccountAlreadyExistsForNewAgencyExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleAccountAlreadyExistsForNewAgencyException(AccountAlreadyExistsForNewAgencyExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 
-    @ExceptionHandler(AccountAlreadyActiveException.class)
-    public ResponseEntity<FailureResponse> handleAccountAlreadyActiveException(AccountAlreadyActiveException ex) {
+    @ExceptionHandler(AccountAlreadyActiveExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleAccountAlreadyActiveException(AccountAlreadyActiveExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 
@@ -109,23 +109,23 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
         return createFailureMessage(ex.getMessage(), BAD_REQUEST);
     }
 
-    @ExceptionHandler(AccountExistsForCPFInformatedException.class)
-    public ResponseEntity<FailureResponse> handleAccountExistsForCPFInformatedException(AccountExistsForCPFInformatedException ex) {
+    @ExceptionHandler(AccountExistsForCPFInformatedExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleAccountExistsForCPFInformatedException(AccountExistsForCPFInformatedExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 
-    @ExceptionHandler(TransactionDuplicateException.class)
-    public ResponseEntity<FailureResponse> handleTransactionDuplicateException(TransactionDuplicateException ex) {
+    @ExceptionHandler(TransactionDuplicateExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleTransactionDuplicateException(TransactionDuplicateExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), BAD_REQUEST);
     }
 
-    @ExceptionHandler(TransactionNotExistsException.class)
-    public ResponseEntity<FailureResponse> handleReversalTransactionNotFoundException(TransactionNotExistsException ex) {
+    @ExceptionHandler(TransactionNotExistsExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleReversalTransactionNotFoundException(TransactionNotExistsExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), NOT_FOUND);
     }
 
-    @ExceptionHandler(ReversalTransactionAlreadyRefundedException.class)
-    public ResponseEntity<FailureResponse> handleReversalTransactionAlreadyRefundedException(ReversalTransactionAlreadyRefundedException ex) {
+    @ExceptionHandler(ReversalTransactionAlreadyRefundedExceptionDomain.class)
+    public ResponseEntity<FailureResponse> handleReversalTransactionAlreadyRefundedException(ReversalTransactionAlreadyRefundedExceptionDomain ex) {
         return createFailureMessage(ex.getMessage(), CONFLICT);
     }
 

@@ -1,14 +1,14 @@
 package br.net.silva.business.usecase;
 
-import br.net.silva.business.exception.AccountDeactivatedException;
-import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.AccountDeactivatedExceptionDomain;
+import br.net.silva.business.exception.AccountNotExistsExceptionDomain;
 import br.net.silva.business.value_object.input.DeactivateAccount;
 import br.net.silva.business.value_object.output.AccountOutput;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class DeactivateAccountUseCaseTest {
     }
 
     @Test
-    void mustDeactivateAccountWithSuccess() throws GenericException {
+    void mustDeactivateAccountWithSuccess() throws DomainGenericException {
         when(deactivateAccountRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount(true)));
         when(deactivateAccountRepository.save(any(AccountOutput.class))).thenReturn(buildMockAccount(false));
 
@@ -67,7 +67,7 @@ class DeactivateAccountUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, deactivateAccount);
 
         assertThatThrownBy(() -> deactivateAccountUseCase.exec(source))
-                .isInstanceOf(AccountNotExistsException.class)
+                .isInstanceOf(AccountNotExistsExceptionDomain.class)
                 .hasMessage("Account not found");
 
         verify(deactivateAccountRepository, never()).save(any(AccountOutput.class));
@@ -82,7 +82,7 @@ class DeactivateAccountUseCaseTest {
         var source = new Source(EmptyOutput.INSTANCE, deactivateAccount);
 
         assertThatThrownBy(() -> deactivateAccountUseCase.exec(source))
-                .isInstanceOf(AccountDeactivatedException.class)
+                .isInstanceOf(AccountDeactivatedExceptionDomain.class)
                 .hasMessage("Account is Deactivated");
 
         verify(deactivateAccountRepository, never()).save(any(AccountOutput.class));

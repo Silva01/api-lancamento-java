@@ -13,7 +13,7 @@ import br.net.silva.daniel.shared.application.annotations.ValidateStrategyOn;
 import br.net.silva.daniel.shared.application.gateway.ApplicationBaseGateway;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.shared.business.factory.IFactoryAggregate;
 
 @ValidateStrategyOn(validations = {AccountExistsValidate.class, CreditCardNumberExistsValidate.class})
@@ -28,7 +28,7 @@ public class DeactivateCreditCardUseCase implements UseCase<AccountOutput> {
     }
 
     @Override
-    public AccountOutput exec(Source param) throws GenericException {
+    public AccountOutput exec(Source param) throws DomainGenericException {
         var input = (DeactivateCreditCardInput) param.input();
         var accountOpt = accountBaseGateway.findById(input);
 

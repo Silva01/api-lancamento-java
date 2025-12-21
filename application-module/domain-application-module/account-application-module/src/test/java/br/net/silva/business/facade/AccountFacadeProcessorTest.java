@@ -1,6 +1,6 @@
 package br.net.silva.business.facade;
 
-import br.net.silva.business.exception.AccountExistsForCPFInformatedException;
+import br.net.silva.business.exception.AccountExistsForCPFInformatedExceptionDomain;
 import br.net.silva.business.mapper.CreateResponseToNewAccountByClientFactory;
 import br.net.silva.business.mapper.CreateResponseToNewAccountFactory;
 import br.net.silva.business.usecase.ChangePasswordAccountUseCase;
@@ -19,7 +19,7 @@ import br.net.silva.daniel.shared.application.interfaces.ICpfParam;
 import br.net.silva.daniel.shared.application.interfaces.UseCase;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.shared.business.utils.CryptoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,7 +56,7 @@ class AccountFacadeProcessorTest {
     }
 
     @Test
-    void mustCreateNewAccountByCpf() throws GenericException {
+    void mustCreateNewAccountByCpf() throws DomainGenericException {
         when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.empty());
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase<?>> useCases = new LinkedList<>();
@@ -78,7 +78,7 @@ class AccountFacadeProcessorTest {
     }
 
     @Test
-    void mustCreateNewAccountByCpfWithObjectResponseOfClient() throws GenericException {
+    void mustCreateNewAccountByCpfWithObjectResponseOfClient() throws DomainGenericException {
         when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.empty());
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
         Queue<UseCase<?>> useCases = new LinkedList<>();
@@ -112,7 +112,7 @@ class AccountFacadeProcessorTest {
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
         var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
 
-        var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(source));
+        var exceptionResponse = assertThrows(AccountExistsForCPFInformatedExceptionDomain.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account already exists for the CPF informed", exceptionResponse.getMessage());
     }
@@ -128,13 +128,13 @@ class AccountFacadeProcessorTest {
         CreateNewAccountByCpfDTO createNewAccountByCpfDTO = new CreateNewAccountByCpfDTO("123456", 1222, "978534");
         var source = new Source(EmptyOutput.INSTANCE, createNewAccountByCpfDTO);
 
-        var exceptionResponse = assertThrows(AccountExistsForCPFInformatedException.class, () -> accountFacade.exec(source));
+        var exceptionResponse = assertThrows(AccountExistsForCPFInformatedExceptionDomain.class, () -> accountFacade.exec(source));
         assertNotNull(exceptionResponse);
         assertEquals("Account already exists for the CPF informed", exceptionResponse.getMessage());
     }
 
     @Test
-    void mustChangePasswordWithSuccess() throws GenericException {
+    void mustChangePasswordWithSuccess() throws DomainGenericException {
         when(baseAccountGateway.findById(any(ICpfParam.class))).thenReturn(Optional.of(buildMockAccount()));
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
 
@@ -150,7 +150,7 @@ class AccountFacadeProcessorTest {
     }
 
     @Test
-    void mustDeactivateAccountWithSuccess() throws GenericException {
+    void mustDeactivateAccountWithSuccess() throws DomainGenericException {
         when(baseAccountGateway.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildMockAccount()));
         when(baseAccountGateway.save(any(AccountOutput.class))).thenReturn(buildMockAccount());
 

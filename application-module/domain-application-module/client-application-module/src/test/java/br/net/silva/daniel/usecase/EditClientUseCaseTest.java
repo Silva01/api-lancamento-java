@@ -5,7 +5,7 @@ import br.net.silva.daniel.shared.application.gateway.ParamGateway;
 import br.net.silva.daniel.shared.application.interfaces.EmptyOutput;
 import br.net.silva.daniel.shared.application.mapper.GenericResponseMapper;
 import br.net.silva.daniel.shared.application.value_object.Source;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.value_object.input.EditClientInput;
 import br.net.silva.daniel.value_object.output.AddressOutput;
 import br.net.silva.daniel.value_object.output.ClientOutput;
@@ -36,7 +36,7 @@ class EditClientUseCaseTest {
     }
 
     @Test
-    void shouldEditClientWithSuccess() throws GenericException {
+    void shouldEditClientWithSuccess() throws DomainGenericException {
         when(baseRepository.findById(any(ParamGateway.class))).thenReturn(Optional.of(buildClient()));
         when(baseRepository.save(any(ClientOutput.class))).thenReturn(buildClient());
 
@@ -59,7 +59,7 @@ class EditClientUseCaseTest {
         var editClientInput = new EditClientInput("22233344455", "Daniel", "22344445555");
         var source = new Source(EmptyOutput.INSTANCE, editClientInput);
 
-        var exceptionResponse = assertThrows(GenericException.class, () -> editClientUseCase.exec(source));
+        var exceptionResponse = assertThrows(DomainGenericException.class, () -> editClientUseCase.exec(source));
         assertEquals("Client not exists in database", exceptionResponse.getMessage());
 
         verify(baseRepository, times(1)).findById(editClientInput);
@@ -73,7 +73,7 @@ class EditClientUseCaseTest {
         var editClientInput = new EditClientInput("22233344455", "Daniel", "22344445555");
         var source = new Source(EmptyOutput.INSTANCE, editClientInput);
 
-        var exceptionResponse = assertThrows(GenericException.class, () -> editClientUseCase.exec(source));
+        var exceptionResponse = assertThrows(DomainGenericException.class, () -> editClientUseCase.exec(source));
         assertEquals("Generic error", exceptionResponse.getMessage());
 
         verify(baseRepository, times(1)).findById(editClientInput);

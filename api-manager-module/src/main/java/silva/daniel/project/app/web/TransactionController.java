@@ -4,7 +4,7 @@ import br.net.silva.business.value_object.input.AccountInput;
 import br.net.silva.business.value_object.input.BatchTransactionInput;
 import br.net.silva.business.value_object.input.ReversalTransactionInput;
 import br.net.silva.business.value_object.input.TransactionInput;
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public final class TransactionController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
-    public void register(@Valid @RequestBody TransactionBatchRequest request) throws GenericException {
+    public void register(@Valid @RequestBody TransactionBatchRequest request) throws DomainGenericException {
         final var input = new BatchTransactionInput(
                 new AccountInput(request.source().account(), request.source().agency(), request.source().cpf()),
                 new AccountInput(request.destiny().account(), request.destiny().agency(), request.destiny().cpf()),
@@ -50,7 +50,7 @@ public final class TransactionController {
 
     @PostMapping("/refund")
     @ResponseStatus(HttpStatus.OK)
-    public void refund(@Valid @RequestBody RefundRequest request) throws GenericException {
+    public void refund(@Valid @RequestBody RefundRequest request) throws DomainGenericException {
         transactionService.refundTransaction(new ReversalTransactionInput(request.cpf(), request.transactionId(), request.idempotencyId()));
     }
 }

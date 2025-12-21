@@ -1,6 +1,6 @@
 package br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component;
 
-import br.net.silva.business.exception.AccountNotExistsException;
+import br.net.silva.business.exception.AccountNotExistsExceptionDomain;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.interfaces.IValidation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.interfaces.TransactionValidation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.aggregate.BaseAccountAggregate;
@@ -15,9 +15,9 @@ public class AccountExistsValidator implements IValidation {
     }
 
     @Override
-    public void executeValidation(BaseAccountAggregate configurator) throws AccountNotExistsException {
+    public void executeValidation(BaseAccountAggregate configurator) throws AccountNotExistsExceptionDomain {
         if (configurator.accountConfigValidation().accountNotExists()) {
-            throw new AccountNotExistsException("Account not found");
+            throw new AccountNotExistsExceptionDomain("Account not found");
         }
     }
 }

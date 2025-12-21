@@ -1,6 +1,6 @@
 package br.net.silva.daniel.transaction.listener.transactionlistener.infraestructure.component;
 
-import br.net.silva.daniel.shared.business.exception.GenericException;
+import br.net.silva.daniel.shared.business.exception.DomainGenericException;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.interfaces.IValidation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.interfaces.TransactionValidation;
 import br.net.silva.daniel.transaction.listener.transactionlistener.domain.transaction.aggregate.BaseAccountAggregate;
@@ -14,9 +14,9 @@ public class TransactionDuplicatedValidator implements IValidation {
     }
 
     @Override
-    public void executeValidation(BaseAccountAggregate configurator) throws GenericException {
+    public void executeValidation(BaseAccountAggregate configurator) throws DomainGenericException {
         if (configurator.accountConfigValidation().transactionIsDuplicated()) {
-            throw new GenericException("Transaction is duplicated");
+            throw new DomainGenericException("Transaction is duplicated");
         }
     }
 }

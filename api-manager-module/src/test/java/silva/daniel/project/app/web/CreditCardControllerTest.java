@@ -1,13 +1,13 @@
 package silva.daniel.project.app.web;
 
-import br.net.silva.business.exception.AccountDeactivatedException;
-import br.net.silva.business.exception.AccountNotExistsException;
-import br.net.silva.business.exception.CreditCardAlreadyExistsException;
-import br.net.silva.business.exception.CreditCardDeactivatedException;
-import br.net.silva.business.exception.CreditCardNotExistsException;
+import br.net.silva.business.exception.AccountDeactivatedExceptionDomain;
+import br.net.silva.business.exception.AccountNotExistsExceptionDomain;
+import br.net.silva.business.exception.CreditCardAlreadyExistsExceptionDomain;
+import br.net.silva.business.exception.CreditCardDeactivatedExceptionDomain;
+import br.net.silva.business.exception.CreditCardNotExistsExceptionDomain;
 import br.net.silva.business.value_object.input.CreateCreditCardInput;
 import br.net.silva.business.value_object.input.DeactivateCreditCardInput;
-import br.net.silva.daniel.exception.ClientNotExistsException;
+import br.net.silva.daniel.exception.ClientNotExistsExceptionDomain;
 import br.net.silva.daniel.exceptions.ClientNotActiveException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,25 +66,25 @@ class CreditCardControllerTest implements RequestBuilderCommons {
 
     @Test
     void deactivateCreditCard_WithClientNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new ClientNotExistsException("Client not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
+        doThrow(new ClientNotExistsExceptionDomain("Client not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
         deactivateCreditCardPrepare.failurePostAssert(buildBaseRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void deactivateCreditCard_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException("Account not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
+        doThrow(new AccountNotExistsExceptionDomain("Account not exists")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
         deactivateCreditCardPrepare.failurePostAssert(buildBaseRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void deactivateCreditCard_WithCreditCardNotFound_ReturnsStatus404() throws Exception {
-        doThrow(new CreditCardNotExistsException("Credit card not exists in the account")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
+        doThrow(new CreditCardNotExistsExceptionDomain("Credit card not exists in the account")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
         deactivateCreditCardPrepare.failurePostAssert(buildBaseRequest(), CREDIT_CARD_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void deactivateCreditCard_WithCreditCardDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new CreditCardDeactivatedException("Credit card deactivated in the account")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
+        doThrow(new CreditCardDeactivatedExceptionDomain("Credit card deactivated in the account")).when(service).deactivateCreditCard(any(DeactivateCreditCardInput.class));
         deactivateCreditCardPrepare.failurePostAssert(buildBaseRequest(), CREDIT_CARD_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
@@ -101,7 +101,7 @@ class CreditCardControllerTest implements RequestBuilderCommons {
 
     @Test
     void createCreditCard_WithClientNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new ClientNotExistsException("Client not exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
+        doThrow(new ClientNotExistsExceptionDomain("Client not exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
         createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), CLIENT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
@@ -113,19 +113,19 @@ class CreditCardControllerTest implements RequestBuilderCommons {
 
     @Test
     void createCreditCard_WithAccountNotExists_ReturnsStatus404() throws Exception {
-        doThrow(new AccountNotExistsException("Account not exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
+        doThrow(new AccountNotExistsExceptionDomain("Account not exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
         createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), ACCOUNT_NOT_FOUND_MESSAGE, status().isNotFound());
     }
 
     @Test
     void createCreditCard_WithAccountDeactivated_ReturnsStatus409() throws Exception {
-        doThrow(new AccountDeactivatedException("Account is Deactivated")).when(service).createCreditCard(any(CreateCreditCardInput.class));
+        doThrow(new AccountDeactivatedExceptionDomain("Account is Deactivated")).when(service).createCreditCard(any(CreateCreditCardInput.class));
         createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), ACCOUNT_ALREADY_DEACTIVATED_MESSAGE, status().isConflict());
     }
 
     @Test
     void createCreditCard_WithAlreadyCreditCard_ReturnsStatus409() throws Exception {
-        doThrow(new CreditCardAlreadyExistsException("Credit card already exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
+        doThrow(new CreditCardAlreadyExistsExceptionDomain("Credit card already exists")).when(service).createCreditCard(any(CreateCreditCardInput.class));
         createCreditCardPrepare.failurePostAssert(buildBaseCreateCreditCardRequest(), CREDIT_CARD_ALREADY_EXISTS_MESSAGE, status().isConflict());
     }
 
